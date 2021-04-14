@@ -30,7 +30,9 @@
     "serve:ssr": "node dist/frontend/server/main.js",
     "build:ssr": "ng build --prod && ng run frontend:server:production",
     "prerender": "ng run frontend:prerender",
-    "prebuild:ssr": "ngcc"
+    "prebuild:ssr": "ngcc",
+    "postinstall": "npm run build:ssr",
+    "start:heroku": "npm run serve:ssr"
   },
   "private": true,
   "dependencies": {
