@@ -1,1 +1,113 @@
+@use './variables' as variables;
+
+@import '@angular/material/theming';
+
 /* You can add global styles to this file, and also import other style files */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+body {
+  margin: 0;
+  font-family: variables.$primary-font-family;
+}
+
+img:hover {
+  cursor: pointer;
+}
+
+a {
+  color: #0060b6;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #00a0c6;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+mark {
+  background-color: white !important;
+  color: variables.$rms-green !important;
+}
+
+small {
+  color: variables.$primary-text-color;
+}
+
+table {
+  width: 100%;
+  border: 0.5px solid rgba(0, 0, 0, 0.12);
+}
+
+td,
+th {
+  color: black;
+
+  a {
+    color: #0060b6;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #00a0c6;
+    text-decoration: none;
+    cursor: pointer;
+  }
+}
+
+/** Global Classes */
+.page-container {
+  margin-bottom: 100px;
+}
+
+.primary-rms-btn {
+  background-color: variables.$rms-green;
+  color: white;
+}
+
+.success-snackbar {
+  .mat-simple-snackbar-action {
+    color: #24d660 !important;
+  }
+}
+
+.warn-snackbar {
+  .mat-simple-snackbar-action {
+    color: #fc7208 !important;
+  }
+}
+
+.error-snackbar {
+  .mat-simple-snackbar-action {
+    color: #eb0505 !important;
+  }
+}
+
+.inactive-breadcrumb {
+  color: variables.$primary-text-color;
+}
+
+.inactive-breadcrumb:hover {
+  cursor: pointer;
+  color: black;
+}
+
+.centered-content {
+  display: flex !important;
+  align-items: center !important;
+}
+
+/** Angular Material Overrides */
+mat-paginator {
+  border-left: 0.5px solid rgba(0, 0, 0, 0.12);
+  border-right: 0.5px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.12);
+}

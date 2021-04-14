@@ -51,7 +51,7 @@
               "apps/frontend/src/favicon.ico",
               "apps/frontend/src/assets"
             ],
-            "styles": ["apps/frontend/src/styles.scss"],
+            "styles": ["./node_modules/@angular/material/prebuilt-themes/purple-green.css", "apps/frontend/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -164,9 +164,7 @@
           "options": {
             "browserTarget": "frontend:build:production",
             "serverTarget": "frontend:server:production",
-            "routes": [
-              "/"
-            ]
+            "routes": ["/"]
           },
           "configurations": {
             "production": {}
@@ -245,6 +243,27 @@
           "outputs": ["coverage/apps/backend"],
           "options": {
             "jestConfig": "apps/backend/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "api-interface": {
+      "root": "libs/api-interface",
+      "sourceRoot": "libs/api-interface/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/api-interface/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/api-interface"],
+          "options": {
+            "jestConfig": "libs/api-interface/jest.config.js",
             "passWithNoTests": true
           }
         }
