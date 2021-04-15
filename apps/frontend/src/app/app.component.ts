@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { AppService } from './app.service';
 
 @Component({
   selector: 'ratemystocks-root',
@@ -6,5 +8,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'frontend';
+  title = 'ratemystocks';
+
+  data: { message: string };
+
+  constructor(private appService: AppService) {
+    this.appService.helloWorld().subscribe((result: { message: string }) => {
+      this.data = result;
+    });
+  }
 }

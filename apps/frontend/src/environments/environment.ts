@@ -4,6 +4,8 @@
 
 export const environment = {
   production: false,
+  // NOTE: When running npm run dev:ssr, the api & frontend are both accessible via port 4200.
+  apiUrl: 'http://localhost:4000/api',
 };
 
 /*
