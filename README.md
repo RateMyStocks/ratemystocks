@@ -1,6 +1,15 @@
+# RateMyStocks
 
+ratemystocks.com is a community-driven stock market research platform and investor social network.
 
-# Ratemystocks
+# Getting Started - Running the app
+
+1. Install Node.js & npm: [Node.js Download](https://nodejs.org/en/download/)
+2. `npm install` - Install the dependencies i nthe local node_modules folder.
+3. `npm install -g nx` - This installs the Nx CLI.
+4. `npm run dev` - This will run NestJS (backend) & Angular (frontend) dev servers in parallel, both in watch mode.
+
+# Nx
 
 This project was generated using [Nx](https://nx.dev).
 
@@ -86,11 +95,6 @@ Run `nx dep-graph` to see a diagram of the dependencies of your projects.
 ## Further help
 
 Visit the [Nx Documentation](https://nx.dev/angular) to learn more.
-
-
-
-
-
 
 ## ☁ Nx Cloud
 

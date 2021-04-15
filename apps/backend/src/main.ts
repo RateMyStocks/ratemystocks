@@ -9,7 +9,18 @@ import { AppModule } from './app/app.module'; // * After
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.setGlobalPrefix('api');
+
+  // TODO: Only allow requests from frontend
+  app.enableCors({
+    credentials: true,
+    origin: true,
+    allowedHeaders: [
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+    ],
+    methods: ['GET, POST, PATCH, DELETE, PUT, OPTIONS'],
+  });
   await app.listen(process.env.PORT || 4000);
 }
 
