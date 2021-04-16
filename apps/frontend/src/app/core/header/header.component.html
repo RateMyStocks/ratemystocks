@@ -1,1 +1,69 @@
-<p>header works!</p>
+<mat-toolbar class="centered-content">
+  <mat-toolbar-row>
+    <button mat-icon-button (click)="toggleSideBar()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <a routerLink="/">
+      <span id="header-wrapper"><img src="../../../assets/images/rms_primary_logomark.png" id="header-logo" /></span>
+    </a>
+
+    <div class="stock-search-container">
+      <!-- TODO: UNCOMMENT THIS -->
+      <!-- <app-stock-search [placeholder]="'Search stocks by ticker or name'" [redirect]="true"></app-stock-search> -->
+    </div>
+
+    <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
+      <ul fxLayout="row" fxLayoutGap="20px">
+        <li>
+          <button mat-flat-button style="background-color: #f5a442; color: white;">
+            <mat-icon style="font-size: 20px;">star_rate</mat-icon> Premium
+          </button>
+        </li>
+        <li>
+          <button mat-icon-button>
+            <mat-icon>settings</mat-icon>
+          </button>
+        </li>
+        <li>
+          <button mat-icon-button>
+            <mat-icon>help_outline</mat-icon>
+          </button>
+        </li>
+        <li *ngIf="userName && isAuth">
+          <button mat-icon-button>
+            <mat-icon>notifications_none</mat-icon>
+          </button>
+        </li>
+        <li>
+          <a mat-list-item routerLinkActive="list-item-active" routerLink="/auth/signin" (click)="closeSideNav()">
+            <button *ngIf="!isAuth" mat-stroked-button id="login-btn">Login</button>
+          </a>
+          <div *ngIf="isAuth" id="profile-header" class="centered-content" [matMenuTriggerFor]="menu">
+            <img src=".../../../assets/images/avatars/antelope.png" class="profile-picture" />
+            <mat-icon>arrow_drop_down</mat-icon>
+          </div>
+          <mat-menu #menu="matMenu">
+            <div mat-menu-item class="centered-content">
+              <img src="../../../assets/images/avatars/antelope.png" class="profile-picture" />
+              <strong>{{ userName }}</strong>
+            </div>
+            <hr />
+            <button mat-menu-item><mat-icon class="material-icons-outlined">person</mat-icon>View Profile</button>
+            <button mat-menu-item>
+              <mat-icon class="material-icons-outlined">assessment</mat-icon>Your Portfolios
+            </button>
+            <button mat-menu-item><mat-icon>favorite_outline</mat-icon>Favorites</button>
+            <button mat-menu-item><mat-icon>settings</mat-icon>Settings</button>
+            <hr />
+            <button mat-menu-item (click)="logOut()"><mat-icon>logout</mat-icon>Logout</button>
+          </mat-menu>
+        </li>
+        <li>
+          <a mat-list-item routerLinkActive="list-item-active" routerLink="/auth/register" (click)="closeSideNav()">
+            <button *ngIf="!isAuth" mat-flat-button color="primary">Sign Up</button>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>

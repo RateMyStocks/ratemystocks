@@ -6,42 +6,40 @@ import { PORTFOLIO_ROUTES } from './modules/portfolio/portfolio.routes';
 import { PortfoliosComponent } from './modules/portfolio/pages/portfolios/portfolios.component';
 
 const routes: Routes = [
-  // {
-  //   path: '',
-  //   component: HomeComponent,
-
-  //   children: [
-  //     // {
-
-  //     //   path: '',
-  //     //   component: PortfoliosComponent,
-  //     // },
-  //     // {
-  //     //   path: 'auth/:mode',
-  //     //   component: LoginComponent,
-  //     // },
-  //     {
-  //       path: 'stocks',
-  //       children: STOCKS_ROUTES,
-  //     },
-  //     {
-  //       path: 'portfolios',
-  //       children: PORTFOLIO_ROUTES,
-  //     },
-  //   ],
-  // },
   {
     path: '',
-    component: PortfoliosComponent,
+    component: HomeComponent,
+    children: [
+      {
+        path: '',
+        component: PortfoliosComponent,
+      },
+      // {
+      //   path: 'auth/:mode',
+      //   component: LoginComponent,
+      // },
+      {
+        path: 'stocks',
+        children: STOCKS_ROUTES,
+      },
+      {
+        path: 'portfolios',
+        children: PORTFOLIO_ROUTES,
+      },
+    ],
   },
-  {
-    path: 'stocks',
-    children: STOCKS_ROUTES,
-  },
-  {
-    path: 'portfolios',
-    children: PORTFOLIO_ROUTES,
-  },
+  // {
+  //   path: '',
+  //   component: PortfoliosComponent,
+  // },
+  // {
+  //   path: 'stocks',
+  //   children: STOCKS_ROUTES,
+  // },
+  // {
+  //   path: 'portfolios',
+  //   children: PORTFOLIO_ROUTES,
+  // },
 ];
 
 @NgModule({

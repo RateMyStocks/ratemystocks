@@ -1,0 +1,47 @@
+@use '../../../variables' as variables;
+
+:host {
+  .mat-icon {
+    vertical-align: middle;
+    margin-right: 20px;
+    color: #d4d4d4;
+  }
+}
+
+mat-sidenav-container {
+  height: 100%;
+
+  mat-sidenav {
+    width: 250px;
+
+    #sidenav-main-subheader {
+      color: variables.$rms-green;
+    }
+
+    #sidenav-profile-subheader {
+      color: variables.$rms-blue;
+    }
+
+    #sidenav-resources-subheader {
+      color: variables.$rms-orange;
+    }
+
+    .sidenav-item-text {
+      color: #000000;
+      font-size: 0.9em;
+      font-weight: 500;
+    }
+  }
+
+  mat-sidenav-content {
+    padding: 20px;
+  }
+
+  #rms-footer {
+    font-size: 0.85em;
+    position: absolute;
+    bottom: 15px;
+    left: 20px;
+    color: variables.$primary-text-color;
+  }
+}
