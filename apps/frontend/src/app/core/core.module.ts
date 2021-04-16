@@ -11,6 +11,7 @@ import { SidenavComponent } from './sidenav/sidenav.component';
 
 // Angular Material
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutServerModule } from '@angular/flex-layout/server';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
@@ -27,6 +28,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   imports: [
     CommonModule,
     FlexLayoutModule,
+    FlexLayoutServerModule,
     FormsModule,
     MatAutocompleteModule,
     MatButtonModule,
