@@ -7,6 +7,7 @@ import { join } from 'path';
 
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { AppServerModule } from './../../../frontend/src/app/app.server.module'; // * After
+import { SidenavService } from 'apps/frontend/src/app/core/sidenav/sidenav.service';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { AppServerModule } from './../../../frontend/src/app/app.server.module';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, SidenavService],
 })
 export class AppModule {}

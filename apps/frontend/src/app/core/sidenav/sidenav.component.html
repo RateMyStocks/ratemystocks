@@ -1,1 +1,67 @@
-<p>sidenav works!</p>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav mode="side" [opened]="!currentRoute.includes('auth')" (window:resize)="onResize($event)">
+    <mat-nav-list>
+      <h2 matSubheader id="sidenav-main-subheader">Main</h2>
+
+      <a mat-list-item routerLinkActive="list-item-active" routerLink="/stocks">
+        <mat-icon class="nav-item-stocks-icon">show_chart</mat-icon>
+        <span class="sidenav-item-text">Stocks</span>
+      </a>
+      <a mat-list-item routerLinkActive="list-item-active" routerLink="/portfolios">
+        <mat-icon class="nav-item-portfolio-icon material-icons-outlined">pie_chart</mat-icon>
+        <span class="sidenav-item-text">Portfolios</span>
+      </a>
+
+      <mat-divider></mat-divider>
+      <h2 matSubheader id="sidenav-profile-subheader">Profile</h2>
+
+      <a mat-list-item routerLinkActive="list-item-active" routerLink="/">
+        <mat-icon class="material-icons-outlined">person</mat-icon>
+        <span class="sidenav-item-text">My Profile</span>
+      </a>
+
+      <a mat-list-item routerLinkActive="list-item-active" routerLink="/">
+        <mat-icon class="material-icons-outlined">assessment</mat-icon>
+        <span class="sidenav-item-text">My Portfolios</span>
+      </a>
+
+      <a mat-list-item routerLinkActive="list-item-active" routerLink="/">
+        <mat-icon class="material-icons-outlined">favorite_outline</mat-icon>
+        <span class="sidenav-item-text">Favorites</span>
+      </a>
+
+      <a mat-list-item routerLinkActive="list-item-active" routerLink="/settings">
+        <mat-icon class="material-icons-outlined">settings</mat-icon>
+        <span class="sidenav-item-text">Settings</span>
+      </a>
+
+      <mat-divider></mat-divider>
+      <h2 matSubheader id="sidenav-resources-subheader">Resources</h2>
+
+      <a mat-list-item routerLinkActive="list-item-active" routerLink="/">
+        <mat-icon>info</mat-icon>
+        <span class="sidenav-item-text">About Us</span>
+      </a>
+
+      <a mat-list-item routerLinkActive="list-item-active" routerLink="/">
+        <mat-icon>help_outline</mat-icon>
+        <span class="sidenav-item-text">Help</span>
+      </a>
+
+      <a mat-list-item routerLinkActive="list-item-active" routerLink="/">
+        <mat-icon class="material-icons-outlined">contact_page</mat-icon>
+        <span class="sidenav-item-text">Contact Us</span>
+      </a>
+      <a mat-list-item routerLinkActive="list-item-active" routerLink="/">
+        <mat-icon class="material-icons-outlined">privacy_tip</mat-icon>
+        <span class="sidenav-item-text">Privacy Policy</span>
+      </a>
+
+      <mat-divider></mat-divider>
+      <footer id="rms-footer">&copy; 2021 ratemystocks LLC</footer>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

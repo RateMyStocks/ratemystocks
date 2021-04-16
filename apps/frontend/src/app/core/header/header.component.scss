@@ -1,0 +1,71 @@
+@use '../../../variables' as variables;
+
+mat-toolbar {
+  background-color: #ffffff;
+  color: variables.$primary-text-color;
+  border-bottom: solid 1px rgba(0, 0, 0, 0.12);
+
+  button:hover {
+    filter: brightness(75%);
+  }
+
+  .stock-search-container {
+    margin-left: 75px;
+    margin-top: 15px;
+  }
+
+  ul li {
+    list-style: none;
+  }
+
+  #header-logo {
+    width: 230px !important;
+    height: auto;
+  }
+
+  #login-btn {
+    color: variables.$rms-green;
+    border-color: variables.$rms-green;
+  }
+
+  #profile-header {
+    margin-left: 40px;
+    cursor: pointer;
+
+    #navbar-logged-in-username {
+      font-size: 0.75em;
+      color: black;
+    }
+
+    #navbar-logged-in-username:hover {
+      color: variables.$primary-text-color;
+    }
+
+    .profile-picture:hover {
+      cursor: pointer;
+      filter: brightness(75%);
+    }
+  }
+
+  /** Mobile view */
+  @media screen and (max-width: 768px) {
+    #header-wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #header-logo {
+      content: url('../../../assets/images/rms_monogram_small.png');
+      width: 75px !important;
+      height: auto;
+    }
+  }
+}
+
+.profile-picture {
+  width: 40px !important;
+  height: auto;
+  margin-right: 10px;
+}
