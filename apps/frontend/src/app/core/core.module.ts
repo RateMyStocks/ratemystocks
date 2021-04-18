@@ -6,12 +6,10 @@ import { RouterModule } from '@angular/router';
 
 // Core Components
 import { HeaderComponent } from './header/header.component';
-import { FooterComponent } from './footer/footer.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 
 // Angular Material
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FlexLayoutServerModule } from '@angular/flex-layout/server';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
@@ -24,11 +22,10 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 @NgModule({
-  declarations: [HeaderComponent, FooterComponent, SidenavComponent],
+  declarations: [HeaderComponent, SidenavComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
-    FlexLayoutServerModule,
     FormsModule,
     MatAutocompleteModule,
     MatButtonModule,
@@ -43,6 +40,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     ReactiveFormsModule,
     RouterModule,
   ],
-  exports: [HeaderComponent, SidenavComponent, FooterComponent],
+  exports: [HeaderComponent, SidenavComponent],
 })
 export class CoreModule {}
