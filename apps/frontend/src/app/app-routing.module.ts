@@ -28,18 +28,6 @@ const routes: Routes = [
       },
     ],
   },
-  // {
-  //   path: '',
-  //   component: PortfoliosComponent,
-  // },
-  // {
-  //   path: 'stocks',
-  //   children: STOCKS_ROUTES,
-  // },
-  // {
-  //   path: 'portfolios',
-  //   children: PORTFOLIO_ROUTES,
-  // },
 ];
 
 @NgModule({

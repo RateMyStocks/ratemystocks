@@ -1,15 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'ratemystocks-portfolios',
   templateUrl: './portfolios.component.html',
-  styleUrls: ['./portfolios.component.scss']
+  styleUrls: ['./portfolios.component.scss'],
 })
-export class PortfoliosComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-}
+export class PortfoliosComponent {}

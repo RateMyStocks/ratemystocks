@@ -3,7 +3,9 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
 
 /** Service that handles the toggling (opening & closing) of the sidebar.component (#sidenav). */
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class SidenavService {
   private sidenav: MatSidenav;
 
