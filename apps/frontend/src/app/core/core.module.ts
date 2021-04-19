@@ -20,6 +20,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { SharedModule } from '../shared/shared.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [HeaderComponent, SidenavComponent],
@@ -27,6 +29,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     CommonModule,
     FlexLayoutModule,
     FormsModule,
+    HttpClientModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
@@ -39,6 +42,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatToolbarModule,
     ReactiveFormsModule,
     RouterModule,
+    SharedModule,
   ],
   exports: [HeaderComponent, SidenavComponent],
 })

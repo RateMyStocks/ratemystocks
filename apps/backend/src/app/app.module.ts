@@ -8,6 +8,7 @@ import { join } from 'path';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { AppServerModule } from './../../../frontend/src/app/app.server.module'; // * After
 import { SidenavService } from 'apps/frontend/src/app/core/sidenav/sidenav.service';
+import { IexCloudModule } from './modules/iex-cloud/iex-cloud.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { SidenavService } from 'apps/frontend/src/app/core/sidenav/sidenav.servi
       bootstrap: AppServerModule,
       viewsPath: join(process.cwd(), 'dist/frontend/browser'),
     }),
+    IexCloudModule,
   ],
   controllers: [AppController],
   providers: [AppService, SidenavService],
