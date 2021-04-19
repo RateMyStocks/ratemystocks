@@ -1,3 +1,230 @@
-export function apiInterface(): string {
-  return 'api-interface';
+/**
+ * Represents the JSON response from IEX Cloud API for a batch stock request.
+ * The response will vary based on the number of ticker symbols request, and number of IEX Cloud endpoints requested.
+ * Refer to their documentation for field descriptions.
+ * {@link https://iexcloud.io/docs/api/#batch-requests}
+ */
+export interface IexBatchResponseDto {
+  [ticker: string]: StockEndpoints;
+}
+
+interface StockEndpoints {
+  [endpoint: string]: StockEndpointData;
+}
+
+interface StockEndpointData {
+  [field: string]: unknown;
+}
+
+/**
+ * Represents the JSON response from IEX Cloud API for a company request.
+ * Refer to their documentation for field descriptions.
+ * {@link https://iexcloud.io/docs/api/#company}
+ */
+export class IexCloudCompanyDto {
+  symbol: string;
+  companyName: string;
+  exchange: string;
+  industry: string;
+  website: string;
+  description: string;
+  CEO: string;
+  securityName: string;
+  issueType: IexCloudSecurityType;
+  sector: string;
+  primarySicCode: string;
+  employees: number;
+  tags: string[];
+  address: string;
+  address2: string;
+  state: string;
+  city: string;
+  zip: string;
+  country: string;
+  phone: string;
+}
+
+/**
+ * Represents the JSON response from IEX Cloud API for historical prices.
+ * Refer to their documentation for field descriptions.
+ * {@link https://iexcloud.io/docs/api/#historical-prices}
+ */
+export interface IexCloudHistoricalPriceDto {
+  close: number;
+  high: number;
+  low: number;
+  open: number;
+  symbol: string;
+  volume: number;
+  id: string;
+  key: string;
+  subkey: string;
+  date: string;
+  updated: number;
+  changeOverTime: number;
+  marketChangeOverTime: number;
+  uOpen: number;
+  uClose: number;
+  uHigh: number;
+  uLow: number;
+  uVolume: number;
+  fOpen: number;
+  fClose: number;
+  fHigh: number;
+  fLow: number;
+  fVolume: number;
+  label: string;
+  change: number;
+  changePercent: number;
+}
+
+/**
+ * Represents the JSON response from IEX Cloud API for historical prices.
+ * Refer to their documentation for field descriptions.
+ * {@link https://iexcloud.io/docs/api/#intraday-prices}
+ */
+export interface IexCloudIntradayPriceDto {
+  date: string;
+  minute: string;
+  label: string;
+  marketOpen: number;
+  marketClose: number;
+  marketHigh: number;
+  marketLow: number;
+  marketAverage: number;
+  marketVolume: number;
+  marketNotional: number;
+  marketNumberOfTrades: number;
+  marketChangeOverTime: number;
+  high: number;
+  low: number;
+  open: number;
+  close: number;
+  average: number;
+  volume: number;
+  notional: number;
+  numberOfTrades: number;
+  changeOverTime: number;
+}
+
+/**
+ * Represents the JSON response from IEX Cloud API for a news request.
+ * Refer to their documentation for field descriptions.
+ * {@link https://iexcloud.io/docs/api/#news}
+ */
+export class IexCloudNewsDto {
+  datetime: number;
+  headline: string;
+  source: string;
+  url: string;
+  summary: string;
+  related: string;
+  image: string;
+  lang: string;
+  hasPaywall: boolean;
+}
+
+/**
+ * Represents the JSON response from IEX Cloud API for a stock search request.
+ * Refer to their documentation for field descriptions.
+ * {@link https://iexcloud.io/docs/api/#search}
+ */
+export class IexCloudSearchDto {
+  symbol: string;
+  cik: string;
+  securityName: string;
+  securityType: IexCloudSecurityType;
+  region: string;
+  exchange: string;
+  sector: string;
+}
+
+export enum IexCloudSecurityType {
+  ad, // ADR
+  cs, // Common Stock
+  cef, // Closed End Fund
+  et, // ETF
+  oef, // Open Ended Fund
+  ps, // Preferred Stock
+  rt, // Right
+  struct, // Structured Product
+  ut, // Unit
+  wi, // When Issued
+  wt, // Warrant
+}
+
+/**
+ * Represents the JSON response from IEX Cloud API for a stats request.
+ * Refer to their documentation for field descriptions.
+ * {@link https://iexcloud.io/docs/api/#key-stats}
+ */
+export class IexCloudStatsDto {
+  companyName: string;
+  marketcap: number;
+  week52high: number;
+  week52low: number;
+  week52highSplitAdjustOnly: number;
+  week52lowSplitAdjustOnly: number;
+  week52change: number;
+  sharesOutstanding: number;
+  float: number;
+  avg10Volume: number;
+  avg30Volume: number;
+  day200MovingAvg: number;
+  day50MovingAvg: number;
+  employees: number;
+  ttmEPS: number;
+  ttmDividendRate: number;
+  dividendYield: number;
+  nextDividendDate: string;
+  exDividendDate: string;
+  nextEarningsDate: string;
+  peRatio: number;
+  beta: number;
+  maxChangePercent: number;
+  year5ChangePercent: number;
+  year2ChangePercent: number;
+  year1ChangePercent: number;
+  ytdChangePercent: number;
+  month6ChangePercent: number;
+  month3ChangePercent: number;
+  month1ChangePercent: number;
+  day30ChangePercent: number;
+  day5ChangePercent: number;
+}
+
+/**
+ * Represents the "data" object from IEX Cloud API response for a single stock batch request to multiple /stock endpoints.
+ * Currently only contains the data from "Company", "News", & "Stats" endpoints from IEX Cloud.
+ * Refer to their documentation for field descriptions.
+ * {@link https://iexcloud.io/docs/api/#batch-requests}
+ */
+export class IexCloudStockDataDto {
+  stats: IexCloudStatsDto;
+  company: IexCloudCompanyDto;
+  news: IexCloudNewsDto;
+}
+
+/**
+ * Represents the JSON response from IEX Cloud API for a single stock batch request to multiple /stock endpoints.
+ * Currently, only contains data from the "Company", "News", & "Stats" endpoints from IEX Cloud.
+ * Refer to their documentation for field descriptions.
+ * {@link https://iexcloud.io/docs/api/#batch-requests}
+ */
+export class IexCloudStockInfoDto {
+  data: IexCloudStockDataDto;
+}
+
+/** Range values for stock price charts based off of {@link https://iexcloud.io/docs/api/#historical-prices} */
+export const enum StockPriceRange {
+  MAX = 'max',
+  FIVE_YEAR = '5y',
+  TWO_YEAR = '2y',
+  ONE_YEAR = ' 1y',
+  YEAR_TO_DATE = 'ytd',
+  SIX_MONTH = '6m',
+  THREE_MONTH = '3m',
+  ONE_MONTH = '1m',
+  FIVE_DAY = '5d',
+  ONE_DAY = '1d',
 }
