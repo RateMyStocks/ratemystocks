@@ -29,13 +29,16 @@
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --config ormconfig.ts",
+    "typeorm:migration:generate": "npm run typeorm -- migration:generate -n",
+    "typeorm:migration:run": "npm run typeorm -- migration:run",
     "dev:ssr": "ng run frontend:serve-ssr",
     "build:ssr": "ng build --prod && ng run frontend:server:production",
     "serve:ssr": "node dist/frontend/server/main.js",
     "heroku-postbuild": "npm run build:ssr",
     "prerender": "ng run frontend:prerender",
     "prebuild:ssr": "ngcc",
-    "start:heroku": "npm run serve:ssr"
+    "start:heroku": "npm run typeorm:migration:run && npm run serve:ssr"
   },
   "private": true,
   "dependencies": {
@@ -55,15 +58,19 @@
     "@nestjs/core": "^7.0.0",
     "@nestjs/ng-universal": "^4.3.0",
     "@nestjs/platform-express": "^7.0.0",
+    "@nestjs/typeorm": "^7.1.5",
     "@nguniversal/express-engine": "^11.1.2",
     "@nrwl/angular": "12.0.4",
+    "bcryptjs": "^2.4.3",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.9.1",
     "dotenv": "^8.2.0",
     "express": "^4.15.2",
+    "pg": "^8.6.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "~6.6.3",
     "tslib": "^2.0.0",
+    "typeorm": "^0.2.32",
     "zone.js": "^0.10.2"
   },
   "devDependencies": {
