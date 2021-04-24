@@ -38,7 +38,7 @@
     "heroku-postbuild": "npm run build:ssr",
     "prerender": "ng run frontend:prerender",
     "prebuild:ssr": "ngcc",
-    "start:heroku": "npm run typeorm:migration:run && npm run serve:ssr"
+    "start:heroku": "npm run serve:ssr"
   },
   "private": true,
   "dependencies": {
