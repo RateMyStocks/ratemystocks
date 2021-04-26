@@ -1,3 +1,32 @@
+import { IsNotEmpty, IsNumber, IsPositive, IsString, Max, MaxLength, Matches, Min, MinLength } from 'class-validator';
+
+///////////////////////////////////////////
+//                AUTH                   //
+//////////////////////////////////////////
+
+export class AuthCredentialDto {
+  @IsString()
+  @MinLength(4)
+  @MaxLength(20)
+  username: string;
+
+  @IsString()
+  @MinLength(8)
+  @MaxLength(20)
+  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'Password too weak' })
+  password: string;
+}
+
+export class UserDto extends AuthCredentialDto {
+  @IsString()
+  @Matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, { message: 'Email is not valid' })
+  email: string;
+}
+
+///////////////////////////////////////////
+//                IEX                    //
+//////////////////////////////////////////
+
 /**
  * Represents the JSON response from IEX Cloud API for a batch stock request.
  * The response will vary based on the number of ticker symbols request, and number of IEX Cloud endpoints requested.
@@ -227,4 +256,98 @@ export const enum StockPriceRange {
   ONE_MONTH = '1m',
   FIVE_DAY = '5d',
   ONE_DAY = '1d',
+}
+
+///////////////////////////////////////////
+//                PORTFOLIO              //
+//////////////////////////////////////////
+
+export class CreatePortfolioRatingDto {
+  id: string;
+  isLiked: boolean;
+}
+
+/**
+ * DTO representing a Portfolio object with minimal data needed to be created.
+ * @param name The name of the portfolio.
+ * @param description The optional description of the portfolio.
+ * @param holdings The array of stock DTOs the portfolio will have.
+ */
+export class CreatePortfolioDto {
+  @IsNotEmpty()
+  @MaxLength(40)
+  name: string;
+
+  @MaxLength(500)
+  description: string;
+
+  @MaxLength(30)
+  holdings: PortfolioStockDto[];
+}
+
+export class ListPortfoliosDto {
+  items: {
+    id: string;
+    name: string;
+    largest_holding: string;
+    username: string;
+    num_likes: number;
+    num_dislikes: number;
+    last_updated: string;
+    num_holdings: number;
+  }[];
+  totalCount: number;
+}
+
+export class PortfolioRatingCountsDto {
+  likes: number;
+  dislikes: number;
+}
+
+export class PortfolioStockDto {
+  @IsNotEmpty()
+  @MaxLength(5)
+  ticker: string;
+
+  @IsNotEmpty()
+  @IsPositive()
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  weighting: number;
+}
+
+///////////////////////////////////////////
+//                STOCKS                 //
+//////////////////////////////////////////
+
+export class StockRatingAggregation {
+  ticker: string;
+  sell_count: number;
+  buy_count: number;
+  hold_count: number;
+}
+
+/**
+ * Dto for the number of buy/hold/sell ratings for a stock
+ */
+export class StockRatingCountDto {
+  buy: number;
+  hold: number;
+  sell: number;
+}
+
+export interface StockRatingListDto {
+  items: StockRatingAggregation[];
+  totalCount: number;
+}
+
+// export const enum StockRatingEnum {
+//   BUY = 'buy',
+//   HOLD = 'hold',
+//   SELL = 'sell',
+// }
+
+export class StockRatingDto {
+  stockRating: any;
 }
