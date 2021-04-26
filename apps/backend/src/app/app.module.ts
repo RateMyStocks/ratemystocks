@@ -1,16 +1,18 @@
 import { Module } from '@nestjs/common';
 
 import { AngularUniversalModule } from '@nestjs/ng-universal';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { configService } from '../config/config.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { AppServerModule } from './../../../frontend/src/app/app.server.module';
-import { SidenavService } from 'apps/frontend/src/app/core/sidenav/sidenav.service';
 import { IexCloudModule } from './modules/iex-cloud/iex-cloud.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { StockModule } from './modules/stock/stock.module';
+import { PortfolioModule } from './modules/portfolio/portfolio.module';
 
 @Module({
   imports: [
@@ -18,10 +20,13 @@ import { IexCloudModule } from './modules/iex-cloud/iex-cloud.module';
       bootstrap: AppServerModule,
       viewsPath: join(process.cwd(), 'dist/frontend/browser'),
     }),
+    AuthModule,
     IexCloudModule,
+    PortfolioModule,
+    StockModule,
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
   ],
   controllers: [AppController],
-  providers: [AppService, SidenavService],
+  providers: [AppService],
 })
 export class AppModule {}

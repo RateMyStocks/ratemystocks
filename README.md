@@ -7,7 +7,10 @@ ratemystocks.com is a community-driven stock market research platform and invest
 1. Install Node.js & npm: [Node.js Download](https://nodejs.org/en/download/)
 2. `npm install` - Install the dependencies i nthe local node_modules folder.
 3. `npm install -g nx` - This installs the Nx CLI.
-4. `npm run dev` - This will run NestJS (backend) & Angular (frontend) dev servers in parallel, both in watch mode.
+4. Create a `.env` file based off of `.env.example` but with real database connection info and API keys.
+5. Install Postgres locally and create a database with database called `ratemystocks`.
+6. `npm run typeorm:migration:run` - Run the TypeORM Migrations to update the database schema.
+7. `npm run dev` - This will run NestJS (backend) & Angular (frontend) dev servers in parallel, both in watch mode.
 
 # Nx
 

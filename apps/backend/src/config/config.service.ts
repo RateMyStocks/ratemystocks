@@ -1,4 +1,10 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { InitialSchema1619147036371 } from '../migrations/1619147036371-Initial_Schema';
+import { Portfolio } from '../models/portfolio.entity';
+import { PortfolioRating } from '../models/portfolioRating.entity';
+import { PortfolioStock } from '../models/portfolioStock.entity';
+import { StockRating } from '../models/stockRating.entity';
+import { UserAccount } from '../models/userAccount.entity';
 
 require('dotenv').config();
 
@@ -35,6 +41,15 @@ export class ConfigService {
       url: this.getValue('DATABASE_URL'),
       ssl: this.isProduction(),
       logging: true,
+      entities: [Portfolio, PortfolioRating, PortfolioStock, StockRating, UserAccount],
+      // entities: [__dirname + '/models/*.entity{.ts,.js}'],
+      // migrationsRun: true,
+      migrationsTableName: 'migration',
+      // migrations: [__dirname + '/migrations/*.ts'],
+      migrations: [InitialSchema1619147036371],
+      cli: {
+        migrationsDir: 'src/migration',
+      },
     };
   }
 }
