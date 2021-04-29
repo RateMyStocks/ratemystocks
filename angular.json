@@ -51,7 +51,10 @@
               "apps/frontend/src/favicon.ico",
               "apps/frontend/src/assets"
             ],
-            "styles": ["./node_modules/@angular/material/prebuilt-themes/indigo-pink.css", "apps/frontend/src/styles.scss"],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "apps/frontend/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -112,7 +115,9 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/frontend"],
+          "outputs": [
+            "coverage/apps/frontend"
+          ],
           "options": {
             "jestConfig": "apps/frontend/jest.config.js",
             "passWithNoTests": true
@@ -165,7 +170,9 @@
           "options": {
             "browserTarget": "frontend:build:production",
             "serverTarget": "frontend:server:production",
-            "routes": ["/"]
+            "routes": [
+              "/"
+            ]
           },
           "configurations": {
             "production": {}
@@ -194,24 +201,30 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/frontend-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/frontend-e2e/**/*.{js,ts}"
+            ]
           }
         }
       }
     },
     "backend": {
       "root": "apps/backend",
-      "sourceRoot": "apps\\backend\\src",
+      "sourceRoot": "apps/backend/src",
       "projectType": "application",
       "architect": {
         "build": {
           "builder": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/backend",
             "main": "apps/backend/src/main.ts",
             "tsConfig": "apps/backend/tsconfig.app.json",
-            "assets": ["apps/backend/src/assets"]
+            "assets": [
+              "apps/backend/src/assets"
+            ]
           },
           "configurations": {
             "production": {
@@ -236,12 +249,16 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/backend/**/*.ts"]
+            "lintFilePatterns": [
+              "apps/backend/**/*.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/backend"],
+          "outputs": [
+            "coverage/apps/backend"
+          ],
           "options": {
             "jestConfig": "apps/backend/jest.config.js",
             "passWithNoTests": true
@@ -257,12 +274,16 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/api-interface/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/api-interface/**/*.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/api-interface"],
+          "outputs": [
+            "coverage/libs/api-interface"
+          ],
           "options": {
             "jestConfig": "libs/api-interface/jest.config.js",
             "passWithNoTests": true
