@@ -1,5 +1,8 @@
 import { IsNotEmpty, IsNumber, IsPositive, IsString, Max, MaxLength, Matches, Min, MinLength } from 'class-validator';
 
+// TODO: Standarize using interfaces rather than classes
+// TODO: Split each API interface into its own library
+
 ///////////////////////////////////////////
 //                AUTH                   //
 //////////////////////////////////////////
@@ -267,6 +270,19 @@ export class CreatePortfolioRatingDto {
   isLiked: boolean;
 }
 
+export interface PortfolioDto {
+  id: string;
+  name: string;
+  description: string;
+  dateCreated: string;
+  lastUpdated: string;
+  user: {
+    id: string;
+    username: string;
+    email: string;
+  };
+}
+
 /**
  * DTO representing a Portfolio object with minimal data needed to be created.
  * @param name The name of the portfolio.
@@ -315,6 +331,14 @@ export class PortfolioStockDto {
   @Min(0)
   @Max(100)
   weighting: number;
+}
+
+export interface PortfolioRatingDto {
+  id: string;
+  userId: string;
+  portfolioId: string;
+  isLiked: boolean;
+  lastUpdated: Date;
 }
 
 ///////////////////////////////////////////

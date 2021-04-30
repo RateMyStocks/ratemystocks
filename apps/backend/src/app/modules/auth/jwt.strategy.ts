@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
@@ -6,8 +8,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { Request } from 'express';
 import { UserAccount } from '../../../models/userAccount.entity';
-
-require('dotenv').config();
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -26,6 +26,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: JwtPayload): Promise<UserAccount> {
     const { username } = payload;
     const user = await this.userRepo.findOne({ username });
+
     if (!user) {
       throw new UnauthorizedException();
     }

@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>Edit Portfolio Name</h2>
+<form [formGroup]="portfolioNameForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content class="mat-typography">
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Enter a name" formControlName="name" maxlength="40" required />
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-raised-button color="warn" mat-dialog-close>Cancel</button>
+    <button type="submit" mat-raised-button color="primary">Save</button>
+  </mat-dialog-actions>
+</form>

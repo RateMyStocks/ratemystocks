@@ -1,0 +1,88 @@
+@use '../../../../../variables' as variables;
+
+/* Structure */
+.example-container {
+  position: relative;
+  min-height: 200px;
+}
+
+.example-table-container {
+  position: relative;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}
+
+td,
+th {
+  color: black;
+
+  .profile-picture {
+    margin-right: 10px;
+    width: 30px !important;
+    height: auto;
+  }
+
+  a {
+    color: #0060b6;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #00a0c6;
+    text-decoration: none;
+    cursor: pointer;
+  }
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.example-loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-rate-limit-reached {
+  color: #980000;
+  max-width: 360px;
+  text-align: center;
+}
+
+/* Column Widths */
+.mat-column-number,
+.mat-column-state {
+  max-width: 64px;
+}
+
+.mat-column-created {
+  max-width: 124px;
+}
+
+.portfolios-table-filter {
+  ::ng-deep .mat-form-field-outline {
+    background-color: white;
+    width: 350px;
+  }
+}
+
+@media screen and (max-width: variables.$mobile-screen-size-max-width) {
+  .portfolios-table-filter {
+    ::ng-deep .mat-form-field-outline {
+      width: 100%;
+    }
+  }
+}

@@ -79,6 +79,7 @@ export class PortfolioService {
     return { items: portfolios, totalCount: totalPortfoliosCount };
   }
 
+  // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
   /**
    * Gets a Portfolio entity from the database by its unique identifier.
    * @param id The UUID of the Portfolio entity in the database.
@@ -89,6 +90,7 @@ export class PortfolioService {
       throw new NotFoundException(`Portfolio with ID ${id} not found.`);
     }
 
+    // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
     // This data should not be sent back to the client
     delete found.user.password;
     delete found.user.salt;

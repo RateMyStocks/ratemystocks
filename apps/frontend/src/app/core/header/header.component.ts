@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-// import { AuthService } from 'src/app/modules/login/auth.service';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 import { SidenavService } from '../sidenav/sidenav.service';
 @Component({
   selector: 'ratemystocks-header',
@@ -16,26 +16,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
    * Injects the SidenavService, allowing us to toggle the side navbar.
    * @param sidenav The SidenavService
    */
-  // TODO: UNCOMMENT THIS
-  // constructor(private sidenav: SidenavService, private authService: AuthService) {}
-  constructor(private sidenav: SidenavService) {}
+  constructor(private sidenav: SidenavService, private authService: AuthService) {}
 
   ngOnDestroy(): void {
-    console.log('ON DESTROY');
-    // this.isAuth$.unsubscribe();
+    this.isAuth$.unsubscribe();
   }
 
   ngOnInit(): void {
-    console.log('ON INIT');
-    // this.authService.getLoggedInName.subscribe((name: string) => (this.userName = name));
-    // this.isAuth = this.authService.isAuthorized();
-    // const loggedInUsername = localStorage.getItem('loggedInUsername');
-    // this.isAuth$ = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
-    //   this.isAuth = authStatus;
-    // });
-    // if (loggedInUsername) {
-    //   this.userName = loggedInUsername;
-    // }
+    this.authService.getLoggedInName.subscribe((name: string) => (this.userName = name));
+    this.isAuth = this.authService.isAuthorized();
+    const loggedInUsername = localStorage.getItem('loggedInUsername');
+    this.isAuth$ = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
+      this.isAuth = authStatus;
+    });
+    if (loggedInUsername) {
+      this.userName = loggedInUsername;
+    }
   }
 
   /** Opens & closes the sidebar.component (#sidenav) using the injected SidenavService */
@@ -48,6 +44,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   logOut(): void {
-    // this.authService.logOut();
+    this.authService.logOut();
   }
 }

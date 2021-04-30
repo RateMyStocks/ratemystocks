@@ -1,1 +1,223 @@
-<p>portfolio works!</p>
+<div class="portfolio-page-container page-container" *ngIf="portfolioLoaded">
+  <div id="portfolio-banner" class="row">
+    <div class="row-left">
+      <div class="portfolio-info-container">
+        <h1 id="portfolio-title">
+          <strong>
+            <span class="active-breadcrumb">{{ portfolio.name }}</span>
+          </strong>
+          <!-- TODO: This icon should only show if the logged-in user owns the portfolio -->
+          <mat-icon
+            *ngIf="isAuth"
+            matTooltip="Edit portfolio name"
+            class="edit-portfolio-icon"
+            (click)="openEditPortfolioNameDialog()"
+            >mode_edit</mat-icon
+          >
+        </h1>
+        <p id="portfolio-creator">
+          <!-- TODO: SHOW CREATOR'S PROFILE PICTURE -->
+          <strong>Creator: </strong> <a routerLink="/">{{ portfolio.user.username }}</a>
+        </p>
+        <div id="portfolio-created-date">
+          <small>Created on {{ moment(portfolio.dateCreated).format('MMMM D, YYYY') }} </small>
+        </div>
+        <div id="portfolio-last-updated-date">
+          <small>Last Updated on {{ moment(portfolio.lastUpdated).format('MMMM D, YYYY') }}</small>
+        </div>
+      </div>
+    </div>
+    <div class="row-right">
+      <div>
+        <mat-icon *ngIf="true" class="portfolio-save-btn" matTooltip="Add portfolio to favorites"
+          >favorite_outline</mat-icon
+        >
+        <mat-icon *ngIf="false" class="portfolio-save-btn" matTooltip="Remove portfolio from favorites"
+          >favorite</mat-icon
+        >
+      </div>
+
+      <div class="social-media-icons-container">
+        <img
+          src="../../../../../assets/images/reddit.png"
+          (click)="shareOnSocialMedia('http://www.reddit.com/submit?url=')"
+          title="Share on Reddit"
+        />
+        <img
+          src="../../../../../assets/images/facebook.png"
+          (click)="shareOnSocialMedia('https://www.facebook.com/sharer/sharer.php?u=')"
+          title="Share on Facebook"
+        />
+        <img
+          src="../../../../../assets/images/twitter.png"
+          (click)="shareOnSocialMedia('http://twitter.com/share?text=Check out my portfolio!&url=')"
+          title="Share on Twitter"
+        />
+        <img
+          src="../../../../../assets/images/link.png"
+          title="Copy Link"
+          [cdkCopyToClipboard]="copiedPortfolioLink"
+          (click)="onCopyPageLink()"
+        />
+      </div>
+
+      <div class="portfolio-ratings-container">
+        <span class="portfolio-likes-container">
+          <mat-icon
+            (click)="onRatePortfolio(true)"
+            [ngClass]="{ 'user-liked': portfolioRating && portfolioRating.isLiked }"
+            id="portfolio-like-icon"
+            >thumb_up</mat-icon
+          >
+          <span id="portfolio-likes-value" [ngClass]="{ 'user-liked': portfolioRating && portfolioRating.isLiked }">{{
+            numLikes
+          }}</span>
+        </span>
+        <span class="portfolio-dislikes-container">
+          <mat-icon
+            (click)="onRatePortfolio(false)"
+            [ngClass]="{ 'user-disliked': portfolioRating && !portfolioRating.isLiked }"
+            id="portfolio-dislike-icon"
+            >thumb_down</mat-icon
+          >
+          <span
+            id="portfolio-dislikes-value"
+            [ngClass]="{ 'user-disliked': portfolioRating && !portfolioRating.isLiked }"
+          >
+            {{ numDislikes }}</span
+          >
+        </span>
+
+        <div [ngClass]="{ 'portfolio-ratings-exist': numLikes || numDislikes }">
+          <mat-progress-bar
+            id="portfolio-like-dislike-bar"
+            mode="determinate"
+            value="{{ numLikes > 0 ? (numLikes / (numLikes + numDislikes)) * 100 : 0 }}"
+          ></mat-progress-bar>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br />
+
+  <div *ngIf="stocksLoaded">
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="20px">
+      <div fxFlex="50%;" fxFlex.xs="80%">
+        <mat-card id="portfolio-description-card">
+          <h2>
+            <strong>Description</strong>
+            <!-- TODO: ONLY SHOW IF USER IS VIEWING THEIR OWN PORTFOLIO -->
+            <mat-icon
+              *ngIf="isAuth"
+              matTooltip="Edit portfolio description"
+              class="edit-portfolio-icon"
+              (click)="openEditPortfolioDescriptionDialog()"
+              >mode_edit</mat-icon
+            >
+          </h2>
+          <p *ngIf="portfolio.description" id="portfolio-description">
+            {{ portfolio.description }}
+          </p>
+          <p *ngIf="!portfolio.description" id="portfolio-description"><i>No description</i></p>
+        </mat-card>
+
+        <br />
+
+        <mat-card id="portfolio-stats-card">
+          <h2><strong>Stats</strong></h2>
+          <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="20px">
+            <div fxFlex="33%;" fxFlex.xs="80%">
+              <p><strong>Overview</strong></p>
+              <p class="portfolio-stat">
+                # of Holdings: <strong>{{ portfolioStocks.length }}</strong>
+              </p>
+              <p class="portfolio-stat">
+                Top 10 Weighting:
+                <span *ngIf="iexStockDataMap">
+                  <strong>{{ calculateTopTenTotalWeighting().toFixed(2) }}%</strong>
+                </span>
+              </p>
+              <p class="portfolio-stat">
+                Top Holding: <a routerLink="/stocks/{{ getLargestHolding() }}">{{ getLargestHolding() }}</a>
+              </p>
+              <p class="portfolio-stat">
+                Top Country:
+                <span *ngIf="iexStockDataMap">
+                  <strong>{{ getHighestWeightedIexCloudValue('country') }}</strong>
+                </span>
+              </p>
+              <p class="portfolio-stat">
+                Top Sector:
+                <span *ngIf="iexStockDataMap">
+                  <strong>{{ getHighestWeightedIexCloudValue('sector') }}</strong>
+                </span>
+              </p>
+            </div>
+            <div fxFlex="33%;" fxFlex.xs="80%">
+              <p><strong>Weighted Averages</strong></p>
+              <p class="portfolio-stat">
+                Dividend Yield:
+                <span *ngIf="iexStockDataMap">
+                  <strong>{{ (calculateWeightedAvg('dividendYield') * 100).toFixed(2) }}%</strong>
+                </span>
+              </p>
+              <p class="portfolio-stat">
+                Market Cap:
+                <span *ngIf="iexStockDataMap">
+                  <strong>${{ MoneyFormatter.formatCash(calculateWeightedAvg('marketcap')) }}</strong>
+                </span>
+              </p>
+              <p class="portfolio-stat">
+                P/E Ratio:
+                <span *ngIf="iexStockDataMap">
+                  <strong>{{ calculateWeightedAvg('peRatio').toFixed(2) }}</strong>
+                </span>
+              </p>
+              <p class="portfolio-stat">
+                Beta:
+                <span *ngIf="iexStockDataMap">
+                  <strong>{{ calculateWeightedAvg('beta').toFixed(2) }}</strong>
+                </span>
+              </p>
+            </div>
+            <div fxFlex="33%;" fxFlex.xs="80%">
+              <p><strong>Social</strong></p>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+
+      <mat-card fxFlex="50%;" fxFlex.xs="80%">
+        <h2><strong>Breakdowns</strong></h2>
+        <mat-form-field appearance="outline">
+          <mat-label>Category</mat-label>
+          <mat-select [(value)]="selectedBreakdownCategory" (selectionChange)="setPieChartItems($event)">
+            <mat-option value="company">Company</mat-option>
+            <mat-option value="country">Country</mat-option>
+            <mat-option value="marketCap">Market Cap</mat-option>
+            <mat-option value="sector">Sector</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <app-ngx-pie-chart [pieChartItems]="pieChartItems"></app-ngx-pie-chart>
+      </mat-card>
+    </div>
+
+    <br />
+
+    <!-- HOLDINGS TABLE -->
+    <mat-card>
+      <h2>
+        <strong>Holdings</strong>
+        <!-- TODO: ONLY SHOW IF USER IS VIEWING THEIR OWN PORTFOLIO -->
+        <mat-icon *ngIf="isAuth" matTooltip="Edit portfolio holdings" class="edit-portfolio-icon">mode_edit</mat-icon>
+      </h2>
+      <app-portfolio-holdings-table-readonly
+        [portfolioStocks]="portfolioStocks"
+        [iexStockDataMap]="iexStockDataMap"
+      ></app-portfolio-holdings-table-readonly>
+    </mat-card>
+
+    <br />
+  </div>
+</div>
