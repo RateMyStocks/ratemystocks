@@ -1,0 +1,79 @@
+@use '../../../../../variables' as variables;
+
+.portfolio-stocks-table-container {
+  .portfolios-table-filter {
+    ::ng-deep .mat-form-field-outline {
+      background-color: white;
+    }
+
+    mat-form-field {
+      margin-right: 10px;
+    }
+  }
+
+  @media screen and (max-width: variables.$mobile-screen-size-max-width) {
+    .portfolios-table-filter {
+      ::ng-deep .mat-form-field-outline {
+        width: 100%;
+      }
+    }
+  }
+
+  td,
+  th {
+    .stock-logo {
+      margin-top: 5px;
+      width: 40px !important;
+      height: auto;
+    }
+  }
+
+  /** The .mat-column widths should add up to 100% */
+  .mat-column-logo {
+    width: 8%;
+  }
+
+  .mat-column-ticker {
+    width: 5%;
+  }
+
+  .mat-column-companyName {
+    width: 15%;
+  }
+
+  .mat-column-weighting {
+    width: 8%;
+  }
+
+  .mat-column-price {
+    width: 8%;
+  }
+
+  .mat-column-sector {
+    width: 15%;
+  }
+
+  .mat-column-country {
+    width: 10%;
+  }
+
+  .mat-column-dividendYield {
+    width: 12%;
+  }
+
+  .mat-column-marketCap {
+    width: 12%;
+  }
+
+  .mat-column-peRatio {
+    width: 8%;
+  }
+
+  .porfolio-holdings-aggregate-data {
+    text-align: center;
+  }
+
+  .portfolio-table-summary-data {
+    margin-right: 40px;
+  }
+}

@@ -5,9 +5,12 @@
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
+import * as CookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: console,
+  });
 
   app.setGlobalPrefix('api');
 
@@ -24,6 +27,7 @@ async function bootstrap() {
     allowedHeaders: ['Origin, X-Requested-With, Content-Type, Accept, Authorization'],
     methods: ['GET, POST, PATCH, DELETE, PUT, OPTIONS'],
   });
+  app.use(CookieParser());
   await app.listen(process.env.PORT || 4000);
 }
 

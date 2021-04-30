@@ -9,6 +9,7 @@ import { HomeModule } from './modules/home/home.module';
 import { PortfolioModule } from './modules/portfolio/portfolio.module';
 import { StockModule } from './modules/stock/stock.module';
 import { AppRoutingModule } from './app-routing.module';
+import { LoginModule } from './modules/login/login.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,6 +20,7 @@ import { AppRoutingModule } from './app-routing.module';
     CoreModule,
     HomeModule,
     HttpClientModule,
+    LoginModule,
     PortfolioModule,
     StockModule,
   ],

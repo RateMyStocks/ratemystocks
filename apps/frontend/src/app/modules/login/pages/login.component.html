@@ -1,0 +1,27 @@
+<div class="authContainer">
+  <mat-card>
+    <div class="login-header">
+      <img src="../../../../assets/images/rms_primary_logomark.png" />
+    </div>
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <form [formGroup]="form" (submit)="submitForm()">
+      <mat-form-field *ngIf="mode != 'reset'" appearance="outline">
+        <input formControlName="username" type="text" matInput placeholder="Username" />
+      </mat-form-field>
+      <mat-form-field *ngIf="mode != 'signin'" appearance="outline">
+        <input formControlName="email" type="email" matInput placeholder="Email" />
+      </mat-form-field>
+      <mat-form-field *ngIf="mode != 'reset'" appearance="outline">
+        <input formControlName="password" type="password" matInput placeholder="Password" />
+      </mat-form-field>
+      <mat-form-field *ngIf="mode == 'register'" appearance="outline">
+        <input formControlName="passwordReenter" type="password" matInput placeholder="Re-enter Password" />
+      </mat-form-field>
+      <button mat-raised-button type="submit" color="primary">{{ buttonLabel }}</button>
+      <div class="forgotRegister">
+        <a *ngIf="mode != 'reset'" routerLink="/auth/reset">Forgot Password?</a>
+        <a *ngIf="mode != 'register'" routerLink="/auth/register">Register</a>
+      </div>
+    </form>
+  </mat-card>
+</div>

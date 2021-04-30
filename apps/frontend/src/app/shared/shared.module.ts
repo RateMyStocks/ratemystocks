@@ -20,12 +20,13 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 // import { GlobalErrorHandler } from './error-handlers/global-error-handler';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 // import { NgxPieChartComponent } from './components/ngx-pie-chart/ngx-pie-chart.component';
-// import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatCardModule } from '@angular/material/card';
+import { NgxPieChartComponent } from './components/ngx-pie-chart/ngx-pie-chart.component';
 // import { CoreModule } from '../core/core.module';
 
 @NgModule({
-  declarations: [StockSearchComponent],
+  declarations: [StockSearchComponent, NgxPieChartComponent],
   imports: [
     CommonModule,
     // CoreModule,
@@ -39,7 +40,7 @@ import { MatCardModule } from '@angular/material/card';
     MatSidenavModule,
     MatAutocompleteModule,
     MatFormFieldModule,
-    // NgxChartsModule,
+    NgxChartsModule,
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
@@ -58,6 +59,6 @@ import { MatCardModule } from '@angular/material/card';
     //   useClass: GlobalErrorHandler,
     // },
   ],
-  exports: [StockSearchComponent],
+  exports: [StockSearchComponent, NgxPieChartComponent],
 })
 export class SharedModule {}

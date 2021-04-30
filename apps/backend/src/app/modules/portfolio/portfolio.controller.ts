@@ -27,6 +27,7 @@ export class PortfolioController {
     return this.portfolioService.getPortfolios(pageSize, skip, orderBy, sortDirection, filter);
   }
 
+  // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
   @Get('/:id')
   getPortfolioById(@Param('id') id: string): Promise<Portfolio> {
     return this.portfolioService.getPortfolioById(id);

@@ -1,20 +1,17 @@
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
-import { AppService } from './app.service';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'ratemystocks-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'ratemystocks';
 
-  data: { message: string };
+  constructor(private authService: AuthService) {}
 
-  constructor(private appService: AppService) {
-    this.appService.helloWorld().subscribe((result: { message: string }) => {
-      this.data = result;
-    });
+  ngOnInit(): void {
+    this.authService.setUpAuthStatus();
   }
 }
