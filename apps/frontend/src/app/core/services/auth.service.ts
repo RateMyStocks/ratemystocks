@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StatusCodes } from '../../shared/utilities/status-codes.enum';
 import { AuthCredentialDto, UserDto } from '@ratemystocks/api-interface';
+import { LocalStorageService } from './local-storage.service';
 
 const httpUrl: string = environment.apiUrl + '/auth';
 
@@ -17,7 +18,12 @@ export class AuthService {
   private authStatusListener: Subject<boolean> = new Subject<boolean>();
   public getLoggedInName = new Subject();
 
-  constructor(private httpClient: HttpClient, private router: Router, private snackBar: MatSnackBar) {}
+  constructor(
+    private httpClient: HttpClient,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private localStorageService: LocalStorageService
+  ) {}
 
   signUp(user: UserDto): void {
     this.httpClient.post<{ message: string }>(`${httpUrl}/signup`, user).subscribe(
@@ -57,8 +63,8 @@ export class AuthService {
         this.authStatusListener.next(this.isAuth);
         const now: Date = new Date();
         const expiration: Date = new Date(now.getTime() + response.expiresIn * 1000);
-        localStorage.setItem('rmsAuthExpirationDate', expiration.toISOString());
-        localStorage.setItem('loggedInUsername', authCredentials.username);
+        this.localStorageService.setItem('rmsAuthExpirationDate', expiration.toISOString());
+        this.localStorageService.setItem('loggedInUsername', authCredentials.username);
 
         this.router.navigate(['/']);
         this.getLoggedInName.next(authCredentials.username);
@@ -99,7 +105,7 @@ export class AuthService {
    * Gets the logged-in username from local storage.
    */
   getLoggedUsername(): void {
-    this.getLoggedInName.next(localStorage.getItem('loggedInUsername'));
+    this.getLoggedInName.next(this.localStorageService.getItem('loggedInUsername'));
   }
 
   /**
@@ -121,7 +127,7 @@ export class AuthService {
    * Used when initalizing the app, this removes
    */
   setUpAuthStatus(): void {
-    const localStorageExpirationDate: string = localStorage.getItem('rmsAuthExpirationDate');
+    const localStorageExpirationDate: string = this.localStorageService.getItem('rmsAuthExpirationDate');
     if (localStorageExpirationDate === null) {
       this.isAuth = false;
     }
@@ -139,8 +145,8 @@ export class AuthService {
    * Invalidates user credentials
    */
   invalidateCredentials(): void {
-    localStorage.removeItem('rmsAuthExpirationDate');
-    localStorage.removeItem('loggedInUsername');
+    this.localStorageService.removeItem('rmsAuthExpirationDate');
+    this.localStorageService.removeItem('loggedInUsername');
     this.httpClient.post<{}>(`${httpUrl}/invalidateCookie`, {}, { withCredentials: true }).subscribe();
   }
   /**

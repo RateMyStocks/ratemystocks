@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { LocalStorageService } from '../services/local-storage.service';
 import { SidenavService } from '../sidenav/sidenav.service';
 @Component({
   selector: 'ratemystocks-header',
@@ -16,7 +17,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
    * Injects the SidenavService, allowing us to toggle the side navbar.
    * @param sidenav The SidenavService
    */
-  constructor(private sidenav: SidenavService, private authService: AuthService) {}
+  constructor(
+    private sidenav: SidenavService,
+    private authService: AuthService,
+    private localStorageService: LocalStorageService
+  ) {}
 
   ngOnDestroy(): void {
     this.isAuth$.unsubscribe();
@@ -25,7 +30,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.authService.getLoggedInName.subscribe((name: string) => (this.userName = name));
     this.isAuth = this.authService.isAuthorized();
-    const loggedInUsername = localStorage.getItem('loggedInUsername');
+    const loggedInUsername = this.localStorageService.getItem('loggedInUsername');
     this.isAuth$ = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
       this.isAuth = authStatus;
     });

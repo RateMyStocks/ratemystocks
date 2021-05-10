@@ -16,7 +16,7 @@ export class NgxPieChartComponent implements AfterViewInit {
   chartData: any[];
 
   @Input()
-  pieChartItems: PieChartItem[]; // TODO: Set interface for the object type of the array
+  pieChartItems: PieChartItem[];
 
   // NGX Charts options
   gradient = true;
