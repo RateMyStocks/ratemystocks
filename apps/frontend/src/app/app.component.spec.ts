@@ -3,12 +3,13 @@ import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AppModule } from './app.module';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [AppComponent],
-      imports: [HttpClientTestingModule, RouterTestingModule, MatSnackBarModule],
+      imports: [HttpClientTestingModule, AppModule, RouterTestingModule, MatSnackBarModule],
     }).compileComponents();
   });
 

@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [LoginComponent],
@@ -23,6 +24,7 @@ import { RouterModule } from '@angular/router';
     MatProgressSpinnerModule,
     ReactiveFormsModule,
     RouterModule,
+    MatSnackBarModule,
   ],
 })
 export class LoginModule {}

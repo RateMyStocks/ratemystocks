@@ -1,14 +1,12 @@
 import { DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatOption } from '@angular/material/core';
-import { MatInputModule } from '@angular/material/input';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
-import { MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
+import { MatSelectChange } from '@angular/material/select';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { PortfolioStockDto } from '@ratemystocks/api-interface';
+import { PortfolioModule } from '../../portfolio.module';
 
 import { PortfolioHoldingsTableReadonlyComponent } from './portfolio-holdings-table-readonly.component';
 
@@ -34,14 +32,7 @@ describe('PortfolioHoldingsTableReadonlyComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [PortfolioHoldingsTableReadonlyComponent],
-      imports: [
-        MatTableModule,
-        MatSortModule,
-        MatPaginatorModule,
-        MatInputModule,
-        BrowserAnimationsModule,
-        MatSelectModule,
-      ],
+      imports: [PortfolioModule, RouterTestingModule, BrowserAnimationsModule],
     }).compileComponents();
   }));
 
@@ -114,7 +105,7 @@ describe('PortfolioHoldingsTableReadonlyComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should populate the table with data from the portfolio stocks & sorted by weighting by default', () => {
+  it('should populate the table with data from the portfolio stocks & sorted by weighting by default', async(() => {
     component.ngAfterViewInit();
     fixture.detectChanges();
     fixture.whenStable().then(() => {
@@ -164,7 +155,7 @@ describe('PortfolioHoldingsTableReadonlyComponent', () => {
       const weightedAvgMarketCap: DebugElement = fixture.debugElement.query(By.css('#weighted-avg-market-cap'));
       expect(weightedAvgMarketCap.nativeElement.textContent).toEqual('Weighted Avg. Market Cap: $1.5T');
     });
-  });
+  }));
 
   it('should set the countries and sectors from the porfolio stocks onto the multi-select dropdown filters', () => {
     component.ngOnChanges();

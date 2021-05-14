@@ -1,5 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { PortfolioModule } from '../../portfolio.module';
 
 import { PortfolioHoldingsTableComponent } from './portfolio-holdings-table.component';
 
@@ -10,7 +11,7 @@ describe('PortfolioHoldingsTableComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [PortfolioHoldingsTableComponent],
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, PortfolioModule],
     }).compileComponents();
   }));
 

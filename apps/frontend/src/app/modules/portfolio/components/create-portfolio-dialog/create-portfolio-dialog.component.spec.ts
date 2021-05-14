@@ -1,9 +1,8 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogRef } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
+import { PortfolioModule } from '../../portfolio.module';
 
 import { CreatePortfolioDialogComponent } from './create-portfolio-dialog.component';
 
@@ -14,14 +13,7 @@ describe('CreatePortfolioDialogComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [CreatePortfolioDialogComponent],
-      imports: [
-        HttpClientTestingModule,
-        MatDialogModule,
-        MatSnackBarModule,
-        FormsModule,
-        ReactiveFormsModule,
-        RouterTestingModule,
-      ],
+      imports: [HttpClientTestingModule, PortfolioModule, RouterTestingModule],
       providers: [{ provide: MatDialogRef, useValue: {} }],
     }).compileComponents();
   }));
