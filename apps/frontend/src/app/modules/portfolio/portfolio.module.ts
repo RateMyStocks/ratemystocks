@@ -33,6 +33,7 @@ import { PortfoliosTableComponent } from './components/portfolios-table/portfoli
 import { UpdatePortfolioNameDialogComponent } from './components/update-portfolio-name-dialog/update-portfolio-name-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UpdatePortfolioDescriptionDialogComponent } from './components/update-portfolio-description-dialog/update-portfolio-description-dialog.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { UpdatePortfolioDescriptionDialogComponent } from './components/update-p
     MatSnackBarModule,
     MatSelectModule,
     MatSortModule,
+    MatProgressSpinnerModule,
     MatStepperModule,
     MatTableModule,
     MatTooltipModule,

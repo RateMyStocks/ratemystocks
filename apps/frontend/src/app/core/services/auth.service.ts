@@ -15,6 +15,7 @@ const httpUrl: string = environment.apiUrl + '/auth';
 })
 export class AuthService {
   private isAuth = false;
+  private loggedInUserId: string;
   private authStatusListener: Subject<boolean> = new Subject<boolean>();
   public getLoggedInName = new Subject();
 
@@ -60,6 +61,8 @@ export class AuthService {
     this.httpClient.post(`${httpUrl}/signin`, authCredentials, { withCredentials: true }).subscribe(
       (response: SignInResponse) => {
         this.isAuth = true;
+        // TODO: Update backend to return a response containing the userId
+        // this.loggedInUserId = response.userId
         this.authStatusListener.next(this.isAuth);
         const now: Date = new Date();
         const expiration: Date = new Date(now.getTime() + response.expiresIn * 1000);
@@ -101,6 +104,14 @@ export class AuthService {
 
     this.router.navigate(['/auth/signin']);
   }
+
+  /**
+   * Gets the UUID of the logged-in user.
+   */
+  getloggedInUserId(): string {
+    return this.loggedInUserId;
+  }
+
   /**
    * Gets the logged-in username from local storage.
    */
@@ -147,7 +158,7 @@ export class AuthService {
   invalidateCredentials(): void {
     this.localStorageService.removeItem('rmsAuthExpirationDate');
     this.localStorageService.removeItem('loggedInUsername');
-    this.httpClient.post<{}>(`${httpUrl}/invalidateCookie`, {}, { withCredentials: true }).subscribe();
+    this.httpClient.post(`${httpUrl}/invalidateCookie`, {}, { withCredentials: true }).subscribe();
   }
   /**
    * Returns an auth observable to listen for auth updates

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'ratemystocks-stock',
+  selector: 'app-stock',
   templateUrl: './stock.component.html',
   styleUrls: ['./stock.component.scss'],
 })

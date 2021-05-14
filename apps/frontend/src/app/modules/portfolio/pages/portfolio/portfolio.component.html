@@ -7,6 +7,7 @@
             <span class="active-breadcrumb">{{ portfolio.name }}</span>
           </strong>
           <!-- TODO: This icon should only show if the logged-in user owns the portfolio -->
+          <!-- i.e. *ngIf="isAuth && loggedInUserId === portfolio.userId" -->
           <mat-icon
             *ngIf="isAuth"
             matTooltip="Edit portfolio name"

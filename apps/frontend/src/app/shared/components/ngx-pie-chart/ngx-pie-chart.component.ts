@@ -1,10 +1,6 @@
 import { Component, ChangeDetectorRef, AfterViewInit, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { PieChartItem } from '../../models/interfaces/pie-chart-item';
 import { ColorList } from '../../utilities/color-list';
-
-export interface PieChartItem {
-  name: string;
-  value: string;
-}
 
 @Component({
   selector: 'app-ngx-pie-chart',
@@ -13,8 +9,6 @@ export interface PieChartItem {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgxPieChartComponent implements AfterViewInit {
-  chartData: any[];
-
   @Input()
   pieChartItems: PieChartItem[];
 

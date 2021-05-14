@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
-import { StockSearchService } from 'apps/frontend/src/app/core/services/stock-search.service';
+import { StockSearchService } from '../../../../core/services/stock-search.service';
 import { IexCloudSearchDto } from '@ratemystocks/api-interface';
 
 export interface PortfolioStock {

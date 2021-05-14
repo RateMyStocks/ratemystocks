@@ -14,17 +14,10 @@ import {
   PortfolioRatingDto,
   PortfolioStockDto,
 } from '@ratemystocks/api-interface';
-import { AuthService } from 'apps/frontend/src/app/core/services/auth.service';
-import { IexCloudService } from 'apps/frontend/src/app/core/services/iex-cloud.service';
-import { PortfolioService } from 'apps/frontend/src/app/core/services/portfolio.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { IexCloudService } from '../../../../core/services/iex-cloud.service';
+import { PortfolioService } from '../../../../core/services/portfolio.service';
 import { Observable, of } from 'rxjs';
-// import { AuthService } from 'src/app/modules/login/auth.service';
-// import { CreatePortfolioRatingDto } from 'src/app/shared/models/interfaces/create-portfolio-rating-dto';
-// import { PortfolioRating } from 'src/app/shared/models/interfaces/portfolio-rating';
-// import { PortfolioStock } from 'src/app/shared/models/interfaces/portfolio-stock';
-// import { IexCloudService } from 'src/app/shared/services/iex-cloud.service';
-// import { PortfolioService } from 'src/app/shared/services/portfolio.service';
-// import { PortfolioEntity } from '../../../../shared/models/interfaces/portfolio-entity';
 
 import { PortfolioComponent } from './portfolio.component';
 
@@ -88,7 +81,7 @@ class MockPortfolioService {
 
 class MockIexCloudService {
   batchGetStocks(symbols: string[], endpoints: string[]) {
-    const iexStockDataMap: object = {
+    const iexStockDataMap = {
       MSFT: {
         company: {
           companyName: 'Microsoft Corp.',

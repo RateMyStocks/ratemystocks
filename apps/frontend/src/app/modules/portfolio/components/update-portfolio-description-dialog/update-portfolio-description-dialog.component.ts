@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PortfolioDto } from '@ratemystocks/api-interface';
-import { PortfolioService } from 'apps/frontend/src/app/core/services/portfolio.service';
+import { PortfolioService } from '../../../../core/services/portfolio.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

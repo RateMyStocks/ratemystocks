@@ -15,6 +15,7 @@ export class AuthController {
     return this.authService.signUp(userDto);
   }
 
+  // TODO: Return the logged-in userId as well
   @Post('/signin')
   async signIn(@Body() authCredentialDto: AuthCredentialDto, @Res() response: Response): Promise<Response> {
     const token: string = await this.authService.signIn(authCredentialDto);

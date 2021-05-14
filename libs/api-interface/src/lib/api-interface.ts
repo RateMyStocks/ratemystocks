@@ -373,5 +373,6 @@ export interface StockRatingListDto {
 // }
 
 export class StockRatingDto {
+  // TODO: Set this to the enum
   stockRating: any;
 }

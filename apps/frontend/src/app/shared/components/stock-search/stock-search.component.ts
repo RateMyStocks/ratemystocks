@@ -9,7 +9,7 @@ import { StockSearchService } from '../../../core/services/stock-search.service'
 import type { IexCloudSearchDto } from '@ratemystocks/api-interface';
 
 @Component({
-  selector: 'ratemystocks-stock-search',
+  selector: 'app-stock-search',
   templateUrl: './stock-search.component.html',
   styleUrls: ['./stock-search.component.scss'],
 })

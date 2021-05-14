@@ -4,7 +4,7 @@ import { isPlatformBrowser } from '@angular/common';
 /** This service is needed because Angular Universal will not recognize local storage b/c it is a browser API */
 @Injectable({ providedIn: 'root' })
 export class LocalStorageService {
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Record<string, unknown>) {}
 
   clear() {
     if (isPlatformBrowser(this.platformId)) {
