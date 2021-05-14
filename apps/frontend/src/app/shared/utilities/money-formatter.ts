@@ -2,7 +2,7 @@ export class MoneyFormatter {
   /**
    * Formats & abbreviates large numbers.
    */
-  static formatCash(n: number): any {
+  static formatCash(n: number): number | string {
     if (n < 1e3) {
       return n;
     }

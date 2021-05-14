@@ -48,7 +48,7 @@ export class PortfolioService {
     // TODO: USED PARAMETERIZED QUERIES ONLY
     const portfolios: any[] = await getManager().query(
       `
-      SELECT p.id, p.name, largest_holding.ticker AS largest_holding, u.username, COUNT(DISTINCT(p_likes.id)) AS num_likes, COUNT(DISTINCT(p_dislikes.id)) AS num_dislikes, COUNT(DISTINCT(holdings.id)) as num_holdings
+      SELECT p.id, p.name, p.last_updated, largest_holding.ticker AS largest_holding, u.username, COUNT(DISTINCT(p_likes.id)) AS num_likes, COUNT(DISTINCT(p_dislikes.id)) AS num_dislikes, COUNT(DISTINCT(holdings.id)) as num_holdings
       FROM portfolio p
       INNER JOIN user_account u ON (u.id = p.user_id)
       LEFT JOIN portfolio_rating p_likes ON (p.id = p_likes.portfolio_id AND p_likes.is_liked IS TRUE)
@@ -60,7 +60,7 @@ export class PortfolioService {
         LIMIT 1
       )
       LEFT JOIN portfolio_stock holdings ON (holdings.portfolio_id = p.id)
-      WHERE ${!filter} IS TRUE OR (LOWER(p.name) like LOWER('%${filter}%'))
+      WHERE ${!filter} IS TRUE OR (LOWER(p.name) like LOWER('%${filter}%')) OR (LOWER(u.username) like LOWER('%${filter}%'))
       GROUP BY p.id, u.id, largest_holding.id
       ORDER BY ${orderByStatement} ${sortDirection}
       LIMIT $1
@@ -79,7 +79,7 @@ export class PortfolioService {
     return { items: portfolios, totalCount: totalPortfoliosCount };
   }
 
-  // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
+  // TODO: Don't return the entity and delete sensitive info - instead map the entity to a dto
   /**
    * Gets a Portfolio entity from the database by its unique identifier.
    * @param id The UUID of the Portfolio entity in the database.

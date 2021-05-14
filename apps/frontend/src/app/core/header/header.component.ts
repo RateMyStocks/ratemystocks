@@ -4,7 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { LocalStorageService } from '../services/local-storage.service';
 import { SidenavService } from '../sidenav/sidenav.service';
 @Component({
-  selector: 'ratemystocks-header',
+  selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })

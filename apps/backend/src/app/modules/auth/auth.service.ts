@@ -13,6 +13,7 @@ export class AuthService {
     return this.userRepo.signup(userDto);
   }
 
+  // TODO: Return more than just username (return userId as well)
   async signIn(authCredentialsDto: AuthCredentialDto): Promise<string> {
     const username = await this.userRepo.validateUserPassword(authCredentialsDto);
     if (!username) {

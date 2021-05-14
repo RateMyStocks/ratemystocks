@@ -2,15 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { AuthService } from 'apps/frontend/src/app/core/services/auth.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { CreatePortfolioDialogComponent } from '../../components/create-portfolio-dialog/create-portfolio-dialog.component';
 
 @Component({
-  selector: 'ratemystocks-portfolios',
+  selector: 'app-portfolios',
   templateUrl: './portfolios.component.html',
   styleUrls: ['./portfolios.component.scss'],
 })
-export class PortfoliosComponent implements OnInit {
+export class PortfoliosComponent {
   constructor(
     public dialog: MatDialog,
     private authService: AuthService,
@@ -32,6 +32,4 @@ export class PortfoliosComponent implements OnInit {
       });
     }
   }
-
-  ngOnInit(): void {}
 }

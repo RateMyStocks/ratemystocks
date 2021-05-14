@@ -53,8 +53,9 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
   @Input()
   portfolioStocks: PortfolioStockDto[];
 
+  // TODO: Need interface for this
   @Input()
-  iexStockDataMap: object;
+  iexStockDataMap: any;
 
   topTenTotalWeighting: number;
 
@@ -96,9 +97,10 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
           return parseFloat(this.iexStockDataMap[item.ticker]?.stats?.marketcap);
         case 'price':
           return this.iexStockDataMap[item.ticker]?.price;
-        default:
+        default: {
           const sortValueToNumber = parseFloat(item[property]);
           return sortValueToNumber ? sortValueToNumber : item[property];
+        }
       }
     };
 

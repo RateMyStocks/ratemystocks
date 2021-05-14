@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  AfterViewInit,
-  OnDestroy,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 
 import { MatSidenav } from '@angular/material/sidenav';
 import { SidenavService } from './sidenav.service';
@@ -13,7 +7,7 @@ import { WindowService } from '../services/window.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'ratemystocks-sidenav',
+  selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],
 })
@@ -29,11 +23,7 @@ export class SidenavComponent implements AfterViewInit, OnInit, OnDestroy {
    * Injects the SidenavService, allowing us to toggle the side navbar.
    * @param sidenav The SidenavService
    */
-  constructor(
-    private router: Router,
-    private sidenavService: SidenavService,
-    private windowService: WindowService
-  ) {}
+  constructor(private router: Router, private sidenavService: SidenavService, private windowService: WindowService) {}
 
   ngOnInit(): void {
     this.currentRoute = this.router.url;
@@ -50,13 +40,11 @@ export class SidenavComponent implements AfterViewInit, OnInit, OnDestroy {
       this.sidenav.close();
     }
 
-    this.resizeSubscription = this.windowService.onResize$.subscribe(
-      (eventTarget: any) => {
-        if (eventTarget.innerWidth < 600) {
-          this.sidenav.close();
-        }
+    this.resizeSubscription = this.windowService.onResize$.subscribe((eventTarget: any) => {
+      if (eventTarget.innerWidth < 600) {
+        this.sidenav.close();
       }
-    );
+    });
   }
 
   ngOnDestroy() {

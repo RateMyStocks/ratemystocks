@@ -4,7 +4,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { PortfolioDto } from '@ratemystocks/api-interface';
-import { PortfolioService } from 'apps/frontend/src/app/core/services/portfolio.service';
+import { PortfolioService } from '../../../../core/services/portfolio.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PortfolioHoldingsTableComponent } from '../portfolio-holdings-table/portfolio-holdings-table.component';
@@ -43,7 +43,7 @@ export class CreatePortfolioDialogComponent implements OnInit, OnDestroy {
   }
 
   /** Validates the form, ensuring the fields have valid inputs and the total weighting equals 100%. */
-  public portfolioFormIsValid(): boolean {
+  portfolioFormIsValid(): boolean {
     const portfolioTableValid =
       this.portfolioTable.getHoldings().length === 0 ||
       (this.portfolioTable.getHoldings().length > 0 && this.portfolioTable.getTotalWeighting() === 100);
@@ -52,7 +52,7 @@ export class CreatePortfolioDialogComponent implements OnInit, OnDestroy {
   }
 
   /** Submits the form to create a new portfolio in the database. */
-  public onSubmit() {
+  onSubmit(): void {
     this.portfolioForm.setControl('holdings', this.fb.array(this.portfolioTable.getHoldings() || []));
 
     if (this.portfolioFormIsValid()) {

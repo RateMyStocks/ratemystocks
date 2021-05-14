@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import { fromEvent, merge, of as observableOf } from 'rxjs';
 import { catchError, debounceTime, delay, distinctUntilChanged, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { ListPortfoliosDto } from '@ratemystocks/api-interface';
-import { PortfolioService } from 'apps/frontend/src/app/core/services/portfolio.service';
+import { PortfolioService } from '../../../../core/services/portfolio.service';
 
 /**
  * Displays all portfolios in the system in a single paginated/sortable table.

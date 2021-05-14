@@ -6,7 +6,6 @@ import { Injectable } from '@angular/core';
 // Requirement by angular to put a injectable tag
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor() {}
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     // Need to clone outgoing requests and not edit them outright because how it functions in the back
     const authRequest = req.clone({

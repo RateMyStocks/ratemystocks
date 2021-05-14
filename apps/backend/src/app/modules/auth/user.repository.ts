@@ -28,6 +28,7 @@ export class UserRepository extends Repository<UserAccount> {
     }
   }
 
+  // TODO: Return more than just username (return userId as well)
   async validateUserPassword(authCredentialDto: AuthCredentialDto): Promise<string> {
     const { username, password } = authCredentialDto;
     const user = await this.findOne({ username });

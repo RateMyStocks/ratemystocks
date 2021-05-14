@@ -7,21 +7,21 @@ import { MatSelectChange } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdatePortfolioNameDialogComponent } from '../../components/update-portfolio-name-dialog/update-portfolio-name-dialog.component';
 import { UpdatePortfolioDescriptionDialogComponent } from '../../components/update-portfolio-description-dialog/update-portfolio-description-dialog.component';
-import { MoneyFormatter } from 'apps/frontend/src/app/shared/utilities/money-formatter';
+import { MoneyFormatter } from '../../../../shared/utilities/money-formatter';
 import {
   CreatePortfolioRatingDto,
   PortfolioDto,
   PortfolioRatingDto,
   PortfolioStockDto,
 } from '@ratemystocks/api-interface';
-import { PortfolioService } from 'apps/frontend/src/app/core/services/portfolio.service';
-import { IexCloudService } from 'apps/frontend/src/app/core/services/iex-cloud.service';
-import { MarketCapThresholds } from 'apps/frontend/src/app/shared/models/enums/market-cap-thresholds';
-import { MarketCap } from 'apps/frontend/src/app/shared/models/enums/market-cap';
-import { AuthService } from 'apps/frontend/src/app/core/services/auth.service';
+import { PortfolioService } from '../../../../core/services/portfolio.service';
+import { IexCloudService } from '../../../../core/services/iex-cloud.service';
+import { MarketCapThresholds } from '../../../../shared/models/enums/market-cap-thresholds';
+import { MarketCap } from '../../../../shared/models/enums/market-cap';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
-  selector: 'ratemystocks-portfolio',
+  selector: 'app-portfolio',
   templateUrl: './portfolio.component.html',
   styleUrls: ['./portfolio.component.scss'],
 })
@@ -37,15 +37,16 @@ export class PortfolioComponent implements OnInit {
   portfolioRating: PortfolioRatingDto;
 
   selectedBreakdownCategory = 'company';
-  pieChartItems: object[] = [];
+  pieChartItems: any[] = [];
 
   isAuth: boolean;
+  loggedInUserId: string;
   numLikes = 0;
   numDislikes = 0;
 
   // Object representing the response from IEX Cloud API Batch requests (https://iexcloud.io/docs/api/#batch-requests)
   // Maps stock ticker symbols to corresponding data. Visit IEX Cloud API docs to see example JSON response.
-  iexStockDataMap: { symbol: object };
+  iexStockDataMap: { symbol: any };
 
   portfolioLoaded: boolean;
   stocksLoaded: boolean;

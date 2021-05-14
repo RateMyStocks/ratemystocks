@@ -7,7 +7,7 @@ import { MatTableModule } from '@angular/material/table';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ListPortfoliosDto } from '@ratemystocks/api-interface';
-import { PortfolioService } from 'apps/frontend/src/app/core/services/portfolio.service';
+import { PortfolioService } from '../../../../core/services/portfolio.service';
 import { Observable, of } from 'rxjs';
 import { PortfoliosTableComponent } from './portfolios-table.component';
 

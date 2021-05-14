@@ -36,7 +36,7 @@
       "projectType": "application",
       "root": "apps/frontend",
       "sourceRoot": "apps/frontend/src",
-      "prefix": "ratemystocks",
+      "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",

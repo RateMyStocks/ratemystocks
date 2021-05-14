@@ -14,13 +14,13 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "ratemystocks",
+            "prefix": "app",
             "style": "camelCase"
           }
         ],
         "@angular-eslint/component-selector": [
           "error",
-          { "type": "element", "prefix": "ratemystocks", "style": "kebab-case" }
+          { "type": "element", "prefix": "app", "style": "kebab-case" }
         ]
       }
     },
