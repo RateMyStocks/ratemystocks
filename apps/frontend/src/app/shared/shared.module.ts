@@ -23,11 +23,13 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatCardModule } from '@angular/material/card';
 import { NgxPieChartComponent } from './components/ngx-pie-chart/ngx-pie-chart.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // import { CoreModule } from '../core/core.module';
 
 @NgModule({
   declarations: [StockSearchComponent, NgxPieChartComponent],
   imports: [
+    BrowserAnimationsModule,
     CommonModule,
     // CoreModule,
     MatDividerModule,

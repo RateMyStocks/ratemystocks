@@ -1,8 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
+import { PortfolioModule } from '../../portfolio.module';
 
 import { PortfoliosComponent } from './portfolios.component';
 
@@ -13,7 +12,7 @@ describe('PortfoliosComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [PortfoliosComponent],
-      imports: [HttpClientTestingModule, RouterTestingModule, MatSnackBarModule, MatDialogModule],
+      imports: [HttpClientTestingModule, RouterTestingModule, PortfolioModule],
     }).compileComponents();
   }));
 

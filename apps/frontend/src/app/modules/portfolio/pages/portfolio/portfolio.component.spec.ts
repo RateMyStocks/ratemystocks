@@ -1,8 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core';
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,6 +18,7 @@ import { PortfolioService } from '../../../../core/services/portfolio.service';
 import { Observable, of } from 'rxjs';
 
 import { PortfolioComponent } from './portfolio.component';
+import { PortfolioModule } from '../../portfolio.module';
 
 class MockAuthService {
   isAuthorized() {
@@ -124,6 +123,27 @@ describe('PortfolioComponent', () => {
   let mockIexCloudService: MockIexCloudService;
   let mockAuthService: MockAuthService;
 
+  /**
+   * Official Jest workaround for mocking methods that are not implemented in JSDOM
+   * {@link https://jestjs.io/docs/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom}
+   * {@link https://stackoverflow.com/questions/39830580/jest-test-fails-typeerror-window-matchmedia-is-not-a-function}
+   */
+  beforeAll(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: jest.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(), // Deprecated
+        removeListener: jest.fn(), // Deprecated
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      })),
+    });
+  });
+
   beforeEach(async(() => {
     mockPortfolioService = new MockPortfolioService();
     mockIexCloudService = new MockIexCloudService();
@@ -131,13 +151,7 @@ describe('PortfolioComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [PortfolioComponent, MatSort],
-      imports: [
-        HttpClientTestingModule,
-        BrowserAnimationsModule,
-        RouterTestingModule,
-        MatSnackBarModule,
-        MatDialogModule,
-      ],
+      imports: [HttpClientTestingModule, PortfolioModule, BrowserAnimationsModule, RouterTestingModule],
       providers: [
         {
           provide: ActivatedRoute,
@@ -168,10 +182,6 @@ describe('PortfolioComponent', () => {
     component.portfolioLoaded = true;
 
     fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
   });
 
   it('should call the /GET portfolio API endpoint with the portfolio ID from URL path param', () => {
