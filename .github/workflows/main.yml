@@ -1,0 +1,75 @@
+name: Node.js CI
+
+# Workflow will run when pull requests are created for merging into the main branch
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    # Operating system we are running the action on
+    runs-on: ubuntu-latest
+
+    # Allow us to determine multiple versions of node to use for running the tests
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x]
+
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        ports:
+          - 5432:5432
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ratemystocks_ci_test
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # fetch-depth: 0 ensures that we get the full git history, which is necessary for running the Nx affected commands
+          fetch-depth: 0
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # # Fetches the latest information from the main branch. This info is needed b/c Nx compares the current branch to the main branch to determine what has changed
+      - run: git fetch origin main
+
+      # # Ensures that all necessary packages are ready for the application to be built and tested.
+      - run: npm install
+
+      # # Run an npm command declared in the package.json. This will run the Nx command that runs tests against projects that have changed between the branch of the pull request and the main branch
+      - name: Run Affected Tests
+        shell: bash
+        run: npm run affected:test -- --base=remotes/origin/main
+
+      # # Run an npm command declared in the package.json. This will run the Nx command that runs linting against projects that have changed between the branch of the pull request and the main branch
+      - name: Run Affected Linting
+        shell: bash
+        run: npm run affected:lint -- --base=remotes/origin/main
+
+      # TODO: Uncomment this when Cypress E2E Tests are added
+      # - name: Run Affected e2e Tests
+      #   shell: bash
+      #   run: npm run affected:e2e -- --base=remotes/origin/main
+
+      # Attempt to run migrations against a newly created database (that was setup earlier in this action) to ensure the migrations aren't broken.
+      - name: Connect to PostgreSQL & Run TypeORM Migrations
+        run: npm run typeorm:migration:run
+
+        env:
+          CI: true
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/ratemystocks_ci_test
+          MODE: DEV
