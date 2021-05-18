@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MatDividerModule } from '@angular/material/divider';
@@ -16,22 +16,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-// import { HttpErrorInterceptor } from './interceptors/error-interceptor';
-// import { GlobalErrorHandler } from './error-handlers/global-error-handler';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-// import { NgxPieChartComponent } from './components/ngx-pie-chart/ngx-pie-chart.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatCardModule } from '@angular/material/card';
 import { NgxPieChartComponent } from './components/ngx-pie-chart/ngx-pie-chart.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-// import { CoreModule } from '../core/core.module';
+import { HttpErrorInterceptor } from './interceptors/error-interceptor';
+import { GlobalErrorHandler } from './error-handlers/global-error-handler';
 
 @NgModule({
   declarations: [StockSearchComponent, NgxPieChartComponent],
   imports: [
     BrowserAnimationsModule,
     CommonModule,
-    // CoreModule,
     MatDividerModule,
     MatToolbarModule,
     MatIconModule,
@@ -51,15 +48,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatProgressBarModule,
   ],
   providers: [
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: HttpErrorInterceptor,
-    //   multi: true,
-    // },
-    // {
-    //   provide: ErrorHandler,
-    //   useClass: GlobalErrorHandler,
-    // },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
+      multi: true,
+    },
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler,
+    },
   ],
   exports: [StockSearchComponent, NgxPieChartComponent],
 })
