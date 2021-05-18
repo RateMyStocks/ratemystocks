@@ -1,33 +1,26 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { HomeComponent } from './modules/home/pages/home/home.component';
 import { STOCKS_ROUTES } from './modules/stock/stock.routes';
 import { PORTFOLIO_ROUTES } from './modules/portfolio/portfolio.routes';
-import { PortfoliosComponent } from './modules/portfolio/pages/portfolios/portfolios.component';
 import { LoginComponent } from './modules/login/pages/login.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
-    children: [
-      {
-        path: '',
-        component: PortfoliosComponent,
-      },
-      {
-        path: 'auth/:mode',
-        component: LoginComponent,
-      },
-      {
-        path: 'stocks',
-        children: STOCKS_ROUTES,
-      },
-      {
-        path: 'portfolios',
-        children: PORTFOLIO_ROUTES,
-      },
-    ],
+    redirectTo: '/portfolios',
+    pathMatch: 'full',
+  },
+  {
+    path: 'auth/:mode',
+    component: LoginComponent,
+  },
+  {
+    path: 'stocks',
+    children: STOCKS_ROUTES,
+  },
+  {
+    path: 'portfolios',
+    children: PORTFOLIO_ROUTES,
   },
 ];
 
