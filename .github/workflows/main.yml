@@ -44,28 +44,28 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # # Fetches the latest information from the main branch. This info is needed b/c Nx compares the current branch to the main branch to determine what has changed
+      # Fetches the latest information from the main branch. This info is needed b/c Nx compares the current branch to the main branch to determine what has changed
       - run: git fetch origin main
 
-      # # Ensures that all necessary packages are ready for the application to be built and tested.
+      # Ensures that all necessary packages are ready for the application to be built and tested.
       - run: npm install
 
-      # # Run an npm command declared in the package.json. This will run the Nx command that runs tests against projects that have changed between the branch of the pull request and the main branch
+      # Run an npm command declared in the package.json. This will run the Nx command that runs tests against projects that have changed between the branch of the pull request and the main branch
       - name: Run Affected Tests
         shell: bash
         run: npm run affected:test -- --base=remotes/origin/main
 
-      # # Run an npm command declared in the package.json. This will run the Nx command that runs linting against projects that have changed between the branch of the pull request and the main branch
+      # Run an npm command declared in the package.json. This will run the Nx command that runs linting against projects that have changed between the branch of the pull request and the main branch
       - name: Run Affected Linting
         shell: bash
         run: npm run affected:lint -- --base=remotes/origin/main
 
-      # TODO: Uncomment this when Cypress E2E Tests are added
-      # - name: Run Affected e2e Tests
-      #   shell: bash
-      #   run: npm run affected:e2e -- --base=remotes/origin/main
+      # Run an npm command declared in the package.json. This will run the Nx command that runs Cypress.io e2e tests against projects that have changed between the branch of the pull request and the main branch
+      - name: Run Affected e2e Tests
+        shell: bash
+        run: npm run affected:e2e -- --base=remotes/origin/main
 
-      # Attempt to run migrations against a newly created database (that was setup earlier in this action) to ensure the migrations aren't broken.
+      # Attempt to run migrations against the newly created database to ensure the migrations aren't broken.
       - name: Connect to PostgreSQL & Run TypeORM Migrations
         run: npm run typeorm:migration:run
 
