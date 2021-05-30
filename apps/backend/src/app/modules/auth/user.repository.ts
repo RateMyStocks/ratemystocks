@@ -1,11 +1,15 @@
 import { Repository, EntityRepository } from 'typeorm';
 import { ConflictException, InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { AuthCredentialDto, UserDto } from '@ratemystocks/api-interface';
+import { AuthCredentialDto, SpiritAnimal, UserDto } from '@ratemystocks/api-interface';
 import { UserAccount } from '../../../models/userAccount.entity';
 
 @EntityRepository(UserAccount)
 export class UserRepository extends Repository<UserAccount> {
+  /**
+   * Creates a new UserAccount in the database using info from the signup process.
+   * @param userDto The DTO object containing the new user's registration information
+   */
   async signup(userDto: UserDto): Promise<void> {
     const { username, password, email } = userDto;
     const user = new UserAccount();
@@ -14,6 +18,7 @@ export class UserRepository extends Repository<UserAccount> {
     user.salt = await bcrypt.genSalt();
     user.password = await this.hashPassword(password, user.salt);
     user.email = email;
+    user.spiritAnimal = this.selectRandomSpiritAnimal(SpiritAnimal);
 
     try {
       await user.save();
@@ -28,11 +33,23 @@ export class UserRepository extends Repository<UserAccount> {
     }
   }
 
+  /**
+   * Randomly select a spirit animal enum hehe.
+   * @returns The randomly selected enum value.
+   */
+  private selectRandomSpiritAnimal<T>(anEnum: T): T[keyof T] {
+    const enumValues = (Object.values(anEnum) as unknown) as T[keyof T][];
+    const randomIndex = Math.floor(Math.random() * enumValues.length);
+    return enumValues[randomIndex];
+  }
+
   // TODO: Return more than just username (return userId as well)
   async validateUserPassword(authCredentialDto: AuthCredentialDto): Promise<string> {
     const { username, password } = authCredentialDto;
     const user = await this.findOne({ username });
+    console.log(user);
     if (user && user.validatePassword(password)) {
+      // TODO: return DTO
       return user.username;
     } else {
       return null;

@@ -7,6 +7,10 @@ import { IsNotEmpty, IsNumber, IsPositive, IsString, Max, MaxLength, Matches, Mi
 //                AUTH                   //
 //////////////////////////////////////////
 
+/**
+ * TODO: Rename to something like LoginDTO
+ * Incoming DTO for a user signing in or signing up
+ */
 export class AuthCredentialDto {
   @IsString()
   @MinLength(4)
@@ -20,10 +24,70 @@ export class AuthCredentialDto {
   password: string;
 }
 
+// TODO: Rename to something like SignupDto
 export class UserDto extends AuthCredentialDto {
   @IsString()
   @Matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, { message: 'Email is not valid' })
   email: string;
+}
+
+export interface SignedInUserDto {
+  id: string;
+  username: string;
+  email: string;
+  spiritAnimal: SpiritAnimal;
+}
+
+/** Preset Spirit Animals that map to User Avatar images of the same name */
+export enum SpiritAnimal {
+  ANTELOPE = 'antelope',
+  ARCTIC_WOLF = 'arctic-wolf',
+  BABY_FOX = 'baby-fox',
+  BEAVER = 'beaver',
+  BOAR = 'boar',
+  BULL = 'bull',
+  BULLDOG = 'bulldog',
+  BUNNY = 'bunny',
+  CAMEL = 'camel',
+  CAT = 'cat',
+  CHICKEN = 'chicken',
+  CHIMPANZEE = 'chimpanzee',
+  CHIPMUNK = 'chipmunk',
+  COBRA = 'cobra',
+  COW = 'cow',
+  DEER = 'deer',
+  DONKEY = 'donkey',
+  ELEPHANT = 'elephant',
+  FOX = 'fox',
+  FOXFOUND = 'foxhound',
+  GERBIL = 'gerbil',
+  GIRAFFE = 'giraffe',
+  GOAT = 'goat',
+  GOLDFISH = 'goldfish',
+  GOOSE = 'goose',
+  GREYHOUND = 'greyhound',
+  HAMSTER = 'hamster',
+  HARE = 'hare',
+  HEN = 'hen',
+  HIPPO = 'hippo',
+  KOALA = 'koala',
+  LAMB = 'lamb',
+  LION = 'lion',
+  MACAQUE = 'macaque',
+  MONKEY = 'monkey',
+  MOUSE = 'mouse',
+  OSTRICH = 'ostrich',
+  PANDA = 'panda',
+  PENGUIN = 'penguin',
+  PIG = 'pig',
+  POLAR_BEAR = 'polar-bear',
+  POODLE = 'poodle',
+  RABBIT = 'rabbit',
+  RED_PANDA = 'red-panda',
+  RHINO = 'rhino',
+  TIGER = 'tiger',
+  WESTIE = 'westie',
+  WOLF = 'wolf',
 }
 
 ///////////////////////////////////////////

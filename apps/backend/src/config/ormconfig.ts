@@ -1,5 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { InitialSchema1619147036371 } from '../migrations/1619147036371-Initial_Schema';
+import { InitialSchema1622094105302 } from '../migrations/1622094105302-Initial_Schema';
 import { Portfolio } from '../models/portfolio.entity';
 import { PortfolioRating } from '../models/portfolioRating.entity';
 import { PortfolioStock } from '../models/portfolioStock.entity';
@@ -23,7 +23,7 @@ const typeOrmConfig: TypeOrmModuleOptions = {
   ssl: process.env.MODE !== 'DEV' ? true : false,
   // Unfortunately Nx will use webpack to generate a single main.js, so glob patterns won't work right when you deploy the dist.
   // Therefore, you must manually import & add new migrations to this array.
-  migrations: [InitialSchema1619147036371],
+  migrations: [InitialSchema1622094105302],
   // Run migrations automatically, you can disable this if you prefer running migration manually.
   // If you set migrationsRun to false, you will have to use npm run typeorm:run to apply the migration, otherwise all migrations are applied automatically at application start.
   // migrationsRun: true,

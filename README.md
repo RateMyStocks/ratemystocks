@@ -9,8 +9,15 @@ ratemystocks.com is a community-driven stock market research platform and invest
 3. `npm install -g nx` - This installs the Nx CLI globally on your machine.
 4. Create a `.env` file based off of `.env.example` but with real database connection info and API keys.
 5. Install PostgresSQL locally and create a database with database called `ratemystocks`.
-6. `npm run typeorm:migration:run` - Run the TypeORM Migrations to update the database schema.
-7. `npm run dev` - This will run NestJS (backend) & Angular (frontend) dev servers in parallel, both in watch mode.
+6. `npm run dev` - This will run NestJS (backend) & Angular (frontend) dev servers in parallel, both in watch mode.
+
+## Generating TypeORM Migrations:
+
+1. Update or add a new .entity.ts file.
+2. Import the new enitity into the `entities` array of `ormconfig.ts`.
+3. Generate a Migration file under the src/migration directory using `npm run typeorm:migration:generate -- Some_Migration_Name` (replace Some_Migration_Name with something appropriate). This will automatically create a new migration file with SQL statements to update the schema and rollbacks to revert those changes.
+4. Import the new migration into the `migrations` array of `ormconfig.ts`.
+5. Since we have `migrationsRun: true` in `ormconfig.ts`, you just have to run the application to run the migrations. If you for some reason do need to run migrations manually, you can do `npm run typeorm:migration:run`.
 
 # Nx
 
