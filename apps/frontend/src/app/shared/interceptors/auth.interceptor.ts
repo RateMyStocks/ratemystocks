@@ -2,17 +2,18 @@
 // Works like a middleware for outgoing requests
 import { HttpInterceptor, HttpRequest, HttpHandler } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { AuthService } from '../../core/services/auth.service';
 
 // Requirement by angular to put a injectable tag
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  intercept(req: HttpRequest<any>, next: HttpHandler) {
-    // Need to clone outgoing requests and not edit them outright because how it functions in the back
-    const authRequest = req.clone({
-      // TODO: Local storage is currently the place holder for storing jwt tokens
-      // headers: req.headers.set('Authorization', 'Bearer ' + localStorage.getItem('accessToken')),
-    });
+  constructor(private authService: AuthService) {}
 
+  intercept(req: HttpRequest<any>, next: HttpHandler) {
+    const authToken = this.authService.getToken();
+    const authRequest = req.clone({
+      headers: req.headers.set('Authorization', 'Bearer ' + authToken),
+    });
     return next.handle(authRequest);
   }
 }

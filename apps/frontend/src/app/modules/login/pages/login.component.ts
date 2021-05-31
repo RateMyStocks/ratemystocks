@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { AuthCredentialDto, UserDto } from '@ratemystocks/api-interface';
+import { AuthCredentialDto, SignUpDto } from '@ratemystocks/api-interface';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 @Component({
@@ -96,7 +96,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   submitForm(): void {
     if (this.mode === 'register') {
-      const user: UserDto = {
+      const user: SignUpDto = {
         username: this.form.value.username,
         password: this.form.value.password,
         email: this.form.value.email,

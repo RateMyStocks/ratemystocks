@@ -12,6 +12,7 @@ import { UserAccount } from '../../../models/userAccount.entity';
 import { GetUser } from '../auth/get-user.decorator';
 import { CreatePortfolioValidationPipe } from './pipes/create-portfolio-validation.pipe';
 import { PortfolioService } from './portfolio.service';
+
 @Controller('portfolio')
 export class PortfolioController {
   constructor(private portfolioService: PortfolioService) {}
