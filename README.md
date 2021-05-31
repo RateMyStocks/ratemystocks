@@ -2,6 +2,8 @@
 
 ratemystocks.com is a community-driven stock market research platform and investor social network.
 
+For more info, visit our [wiki](https://github.com/RateMyStocks/ratemystocks/wiki)
+
 # Getting Started - Running the app
 
 1. Install Node.js & npm: [Node.js Download](https://nodejs.org/en/download/)
