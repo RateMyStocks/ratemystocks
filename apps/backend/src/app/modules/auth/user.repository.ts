@@ -26,7 +26,6 @@ export class UserRepository extends Repository<UserAccount> {
       switch (error.code) {
         case '23505': //duplicate username
           throw new ConflictException('Username already exists');
-          break;
         default:
           throw new InternalServerErrorException();
       }
@@ -44,9 +43,9 @@ export class UserRepository extends Repository<UserAccount> {
   }
 
   /**
-   *
-   * @param authCredentialDto
-   * @returns
+   * Validates that a user attempting to login has supplied the correct password.
+   * @param authCredentialDto A DTO containing username & password.
+   * @returns The UserAccount entity if the login credentials are valid, otherwise return null
    */
   async validateUserPassword(authCredentialDto: AuthCredentialDto): Promise<UserAccount> {
     const { username, password } = authCredentialDto;

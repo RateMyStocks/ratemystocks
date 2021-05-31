@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { STOCKS_ROUTES } from './modules/stock/stock.routes';
 import { PORTFOLIO_ROUTES } from './modules/portfolio/portfolio.routes';
 import { LoginComponent } from './modules/login/pages/login.component';
+import { RESOURCES_ROUTES } from './modules/resources/resources.routes';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path: 'portfolios',
     children: PORTFOLIO_ROUTES,
+  },
+  {
+    path: '',
+    children: RESOURCES_ROUTES,
   },
 ];
 
