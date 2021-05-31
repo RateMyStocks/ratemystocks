@@ -65,6 +65,8 @@ export class PortfolioComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loggedInUserId = this.authService.getUserId();
+
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       const portfolioId = paramMap.get('id');
 

@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
 import { AuthCredentialDto, SignUpDto } from '@ratemystocks/api-interface';
-import { UserAccount } from 'apps/backend/src/models/userAccount.entity';
+import { UserAccount } from '../../../models/userAccount.entity';
 
 @Injectable()
 export class AuthService {

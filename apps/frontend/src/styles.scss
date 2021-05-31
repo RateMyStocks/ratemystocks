@@ -64,6 +64,12 @@ th {
 }
 
 /** Global Classes */
+.page-header {
+  display: inline-block;
+  border-bottom: 4px solid variables.$rms-green;
+  padding-bottom: 2px;
+}
+
 .page-container {
   margin-bottom: 100px;
 }
