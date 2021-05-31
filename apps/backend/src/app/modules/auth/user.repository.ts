@@ -1,17 +1,17 @@
 import { Repository, EntityRepository } from 'typeorm';
 import { ConflictException, InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { AuthCredentialDto, SpiritAnimal, UserDto } from '@ratemystocks/api-interface';
+import { AuthCredentialDto, SpiritAnimal, SignUpDto } from '@ratemystocks/api-interface';
 import { UserAccount } from '../../../models/userAccount.entity';
 
 @EntityRepository(UserAccount)
 export class UserRepository extends Repository<UserAccount> {
   /**
    * Creates a new UserAccount in the database using info from the signup process.
-   * @param userDto The DTO object containing the new user's registration information
+   * @param signUpDto The DTO object containing the new user's registration information
    */
-  async signup(userDto: UserDto): Promise<void> {
-    const { username, password, email } = userDto;
+  async signup(signUpDto: SignUpDto): Promise<void> {
+    const { username, password, email } = signUpDto;
     const user = new UserAccount();
 
     user.username = username;
@@ -43,14 +43,17 @@ export class UserRepository extends Repository<UserAccount> {
     return enumValues[randomIndex];
   }
 
-  // TODO: Return more than just username (return userId as well)
-  async validateUserPassword(authCredentialDto: AuthCredentialDto): Promise<string> {
+  /**
+   *
+   * @param authCredentialDto
+   * @returns
+   */
+  async validateUserPassword(authCredentialDto: AuthCredentialDto): Promise<UserAccount> {
     const { username, password } = authCredentialDto;
     const user = await this.findOne({ username });
-    console.log(user);
-    if (user && user.validatePassword(password)) {
-      // TODO: return DTO
-      return user.username;
+
+    if (user && (await user.validatePassword(password))) {
+      return user;
     } else {
       return null;
     }

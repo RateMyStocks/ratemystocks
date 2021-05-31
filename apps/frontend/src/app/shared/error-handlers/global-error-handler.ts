@@ -23,7 +23,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     }
     this.ngZone.run(() => {
       snackBar.open(
-        `An unexpected error occurred. If you continue to receive this error please report it to xxx@xxx.com`,
+        `An unexpected error occurred. If you continue to receive this error please report it to support@ratemystocks.com`,
         errorType,
         {
           duration: 3000,

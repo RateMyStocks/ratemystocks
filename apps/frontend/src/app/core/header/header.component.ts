@@ -30,13 +30,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.authService.getLoggedInName.subscribe((name: string) => (this.userName = name));
     this.isAuth = this.authService.isAuthorized();
-    const loggedInUsername = this.localStorageService.getItem('loggedInUsername');
+    // const loggedInUsername = this.localStorageService.getItem('loggedInUsername');
     this.isAuth$ = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
       this.isAuth = authStatus;
     });
-    if (loggedInUsername) {
-      this.userName = loggedInUsername;
-    }
+    // if (loggedInUsername) {
+    //   this.userName = loggedInUsername;
+    // }
   }
 
   /** Opens & closes the sidebar.component (#sidenav) using the injected SidenavService */

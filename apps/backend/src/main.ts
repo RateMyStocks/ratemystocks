@@ -5,21 +5,23 @@
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-import * as CookieParser from 'cookie-parser';
+import { Logger } from '@nestjs/common';
+
+require('dotenv').config();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    logger: console,
-  });
+  const logger = new Logger('bootstrap');
+  const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api');
 
-  // TODO: Only allow requests from frontend
+  // TODO: Only allow requests from frontend (or use a whitelist https://stackoverflow.com/questions/50949231/nestjs-enable-cors-in-production)
   // if (process.env.NODE_ENV === 'development') {
+  // if (process.env.MODE === 'DEV') {
   //   app.enableCors();
   // } else {
-  //   app.enableCors({ origin: serverConfig.origin });
-  //   logger.log(`Accepting requests from origin "${serverConfig.origin}"`);
+  //   app.enableCors({ origin: 'https://ratemystocks.com' });
+  //   logger.log(`Accepting requests from origin https://ratemystocks.com`);
   // }
   app.enableCors({
     credentials: true,
@@ -27,7 +29,7 @@ async function bootstrap() {
     allowedHeaders: ['Origin, X-Requested-With, Content-Type, Accept, Authorization'],
     methods: ['GET, POST, PATCH, DELETE, PUT, OPTIONS'],
   });
-  app.use(CookieParser());
+
   await app.listen(process.env.PORT || 4000);
 }
 

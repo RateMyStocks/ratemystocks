@@ -8,7 +8,7 @@ import { IsNotEmpty, IsNumber, IsPositive, IsString, Max, MaxLength, Matches, Mi
 //////////////////////////////////////////
 
 /**
- * TODO: Rename to something like LoginDTO
+ * TODO: Rename to something like LoginDTO or SignInDto
  * Incoming DTO for a user signing in or signing up
  */
 export class AuthCredentialDto {
@@ -20,15 +20,21 @@ export class AuthCredentialDto {
   @IsString()
   @MinLength(8)
   @MaxLength(20)
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'Password too weak' })
+  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'Password too weak' }) // TODO: Fix this Regex
   password: string;
 }
 
 // TODO: Rename to something like SignupDto
-export class UserDto extends AuthCredentialDto {
+export class SignUpDto extends AuthCredentialDto {
   @IsString()
   @Matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, { message: 'Email is not valid' })
   email: string;
+}
+
+export interface SignInResponseDto {
+  accessToken: string;
+  expiresIn: number;
+  userId: string;
 }
 
 export interface SignedInUserDto {

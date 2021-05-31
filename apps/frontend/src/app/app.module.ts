@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -9,6 +9,7 @@ import { PortfolioModule } from './modules/portfolio/portfolio.module';
 import { StockModule } from './modules/stock/stock.module';
 import { AppRoutingModule } from './app-routing.module';
 import { LoginModule } from './modules/login/login.module';
+import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,7 +23,7 @@ import { LoginModule } from './modules/login/login.module';
     PortfolioModule,
     StockModule,
   ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
