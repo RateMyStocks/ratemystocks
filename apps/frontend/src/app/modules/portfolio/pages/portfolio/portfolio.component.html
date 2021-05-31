@@ -3,13 +3,9 @@
     <div class="row-left">
       <div class="portfolio-info-container">
         <h1 id="portfolio-title">
-          <strong>
-            <span class="active-breadcrumb">{{ portfolio.name }}</span>
-          </strong>
-          <!-- TODO: This icon should only show if the logged-in user owns the portfolio -->
-          <!-- i.e. *ngIf="isAuth && loggedInUserId === portfolio.userId" -->
+          <span class="active-breadcrumb page-header"><b>{{ portfolio.name }}</b></span>
           <mat-icon
-            *ngIf="isAuth"
+            *ngIf="isAuth && loggedInUserId === portfolio.userId"
             matTooltip="Edit portfolio name"
             class="edit-portfolio-icon"
             (click)="openEditPortfolioNameDialog()"
@@ -108,9 +104,8 @@
         <mat-card id="portfolio-description-card">
           <h2>
             <strong>Description</strong>
-            <!-- TODO: ONLY SHOW IF USER IS VIEWING THEIR OWN PORTFOLIO -->
             <mat-icon
-              *ngIf="isAuth"
+              *ngIf="isAuth && loggedInUserId === portfolio.userId"
               matTooltip="Edit portfolio description"
               class="edit-portfolio-icon"
               (click)="openEditPortfolioDescriptionDialog()"
@@ -210,8 +205,7 @@
     <mat-card>
       <h2>
         <strong>Holdings</strong>
-        <!-- TODO: ONLY SHOW IF USER IS VIEWING THEIR OWN PORTFOLIO -->
-        <mat-icon *ngIf="isAuth" matTooltip="Edit portfolio holdings" class="edit-portfolio-icon">mode_edit</mat-icon>
+        <mat-icon *ngIf="isAuth && loggedInUserId === portfolio.userId" matTooltip="Edit portfolio holdings" class="edit-portfolio-icon">mode_edit</mat-icon>
       </h2>
       <app-portfolio-holdings-table-readonly
         [portfolioStocks]="portfolioStocks"

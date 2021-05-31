@@ -38,6 +38,14 @@ export class AuthService {
   }
 
   /**
+   *
+   * @returns
+   */
+  getUserId() {
+    return this.userId;
+  }
+
+  /**
    * Returns an auth observable to listen for auth updates
    */
   getAuthStatusListener(): Observable<boolean> {

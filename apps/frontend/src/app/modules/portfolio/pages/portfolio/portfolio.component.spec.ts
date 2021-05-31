@@ -24,6 +24,10 @@ class MockAuthService {
   isAuthorized() {
     return true;
   }
+
+  getUserId(): string {
+    return '2498f310-cbc6-4af0-bab6-793e640aede4';
+  }
 }
 
 class MockPortfolioService {
