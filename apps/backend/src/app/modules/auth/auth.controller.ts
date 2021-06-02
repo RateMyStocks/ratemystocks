@@ -8,9 +8,8 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   /**
-   *
-   * @param signupDto
-   * @returns
+   * Attempts to sign-up a new user given some registration data.
+   * @param signupDto The DTO containing new user info (i.e. username, email, password, etc.)
    */
   @Post('/signup')
   signUp(@Body(ValidationPipe) signupDto: SignUpDto): Promise<void> {
@@ -18,16 +17,19 @@ export class AuthController {
   }
 
   /**
-   *
-   * @param authCredentialDto
-   * @returns
+   * Attempts to sign-in a user given their login credentials.
+   * @param authCredentialDto DTO containing username and password.
+   * @returns A response DTO containing relevant login information.
    */
   @Post('/signin')
   async signIn(@Body() authCredentialDto: AuthCredentialDto): Promise<SignInResponseDto> {
     const signInData: { accessToken: string; user: UserAccount } = await this.authService.signIn(authCredentialDto);
+
     const signInDto: SignInResponseDto = {
       accessToken: signInData.accessToken,
       userId: signInData.user.id,
+      username: signInData.user.username,
+      spiritAnimal: signInData.user.spiritAnimal,
       // TODO: set expires in as ENV variable or something
       expiresIn: 3600,
     };

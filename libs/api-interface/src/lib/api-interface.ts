@@ -8,7 +8,6 @@ import { IsNotEmpty, IsNumber, IsPositive, IsString, Max, MaxLength, Matches, Mi
 //////////////////////////////////////////
 
 /**
- * TODO: Rename to something like LoginDTO or SignInDto
  * Incoming DTO for a user signing in or signing up
  */
 export class AuthCredentialDto {
@@ -24,7 +23,6 @@ export class AuthCredentialDto {
   password: string;
 }
 
-// TODO: Rename to something like SignupDto
 export class SignUpDto extends AuthCredentialDto {
   @IsString()
   @Matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, { message: 'Email is not valid' })
@@ -35,12 +33,7 @@ export interface SignInResponseDto {
   accessToken: string;
   expiresIn: number;
   userId: string;
-}
-
-export interface SignedInUserDto {
-  id: string;
   username: string;
-  email: string;
   spiritAnimal: SpiritAnimal;
 }
 
@@ -377,6 +370,7 @@ export class ListPortfoliosDto {
     name: string;
     largest_holding: string;
     username: string;
+    spirit_animal: SpiritAnimal;
     num_likes: number;
     num_dislikes: number;
     last_updated: string;

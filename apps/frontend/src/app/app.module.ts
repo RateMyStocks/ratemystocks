@@ -10,6 +10,7 @@ import { StockModule } from './modules/stock/stock.module';
 import { AppRoutingModule } from './app-routing.module';
 import { LoginModule } from './modules/login/login.module';
 import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
+import { ResourcesModule } from './modules/resources/resources.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,6 +22,7 @@ import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
     HttpClientModule,
     LoginModule,
     PortfolioModule,
+    ResourcesModule,
     StockModule,
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],

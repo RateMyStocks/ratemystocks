@@ -5,7 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StatusCodes } from '../../shared/utilities/status-codes.enum';
-import { AuthCredentialDto, SignUpDto, SignInResponseDto } from '@ratemystocks/api-interface';
+import { AuthCredentialDto, SignUpDto, SignInResponseDto, SpiritAnimal } from '@ratemystocks/api-interface';
 import { LocalStorageService } from './local-storage.service';
 
 const BACKEND_URL: string = environment.apiUrl + '/auth';
@@ -17,10 +17,11 @@ export class AuthService {
   private isAuthenticated = false;
   private token: string;
   private tokenTimer: any;
+  // TODO: I think these should be behavior subjects, so that if a user logs out and switches to another account, the updates to these values will immediately be propagated
   private userId: string;
+  private username: string;
+  private spiritAnimal: string;
   private authStatusListener: Subject<boolean> = new Subject<boolean>();
-
-  public getLoggedInName = new Subject();
 
   constructor(
     private httpClient: HttpClient,
@@ -38,22 +39,39 @@ export class AuthService {
   }
 
   /**
-   *
-   * @returns
+   * Gets the UUID of the logged-in user.
+   * @returns The UUID of the logged-in user.
    */
-  getUserId() {
+  getUserId(): string {
     return this.userId;
   }
 
   /**
-   * Returns an auth observable to listen for auth updates
+   * Gets the username of the logged-in user.
+   * @returns The username of the logged-in user.
+   */
+  getUsername(): string {
+    return this.username;
+  }
+
+  /**
+   * Gets the "Spirit Animal" enum representing the avatar of the logged-in user.
+   * @returns The string value of the SpiritAnimal enum.
+   */
+  getSpiritAnimal(): string {
+    return this.spiritAnimal;
+  }
+
+  /**
+   * Returns an auth observable to listen for auth updates (i.e. logging in and logging out).
+   * @return An observable that can be subscribed to know of changes in the user's auth status.
    */
   getAuthStatusListener(): Observable<boolean> {
     return this.authStatusListener.asObservable();
   }
 
   /**
-   * Checks if the user is authorized by checking rmsAuthExpirationDate from local storage
+   * Checks if the user is authorized or not.
    * @return True if the user is already authenticated, false otherwise.
    */
   isAuthorized(): boolean {
@@ -107,12 +125,14 @@ export class AuthService {
           this.setAuthTimer(expiresInDuration);
           this.isAuthenticated = true;
           this.userId = response.userId;
+          this.username = response.username;
+          this.spiritAnimal = response.spiritAnimal;
           this.authStatusListener.next(true);
 
           const now = new Date();
           const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
 
-          this.saveAuthData(token, expirationDate, this.userId);
+          this.saveAuthData(token, expirationDate, this.userId, this.username, this.spiritAnimal);
           this.router.navigate(['/']);
 
           this.snackBar.open(`You have successfully signed in.`, 'OK', {
@@ -139,7 +159,7 @@ export class AuthService {
   }
 
   /**
-   *
+   * Logs a user out by nulling the relevant properties and clearing local storage.
    */
   logOut(): void {
     this.token = null;
@@ -148,6 +168,8 @@ export class AuthService {
     clearTimeout(this.tokenTimer);
     this.clearAuthData();
     this.userId = null;
+    this.username = null;
+    this.spiritAnimal = null;
 
     this.snackBar.open(`You have logged out.`, 'OK', {
       duration: 3000,
@@ -174,43 +196,78 @@ export class AuthService {
       this.token = authInformation.token;
       this.isAuthenticated = true;
       this.userId = authInformation.userId;
+      this.username = authInformation.username;
+      this.spiritAnimal = authInformation.spiritAnimal;
       this.setAuthTimer(expiresIn / 1000);
       this.authStatusListener.next(true);
     }
   }
 
-  private setAuthTimer(duration: number) {
-    console.log('Setting timer: ' + duration);
+  /**
+   * Sets the time remaining on the JWT expiration.
+   * @param duration The time in seconds to set on the token timer.
+   */
+  private setAuthTimer(duration: number): void {
     this.tokenTimer = setTimeout(() => {
       this.logOut();
     }, duration * 1000);
   }
 
-  private saveAuthData(token: string, expirationDate: Date, userId: string) {
-    // TODO: Convert this to "this.localStorageService.setItem"
+  /**
+   * Saves some basic authentication & non-sensitive user data in local storage.
+   * @param token The access token (JWT) of a logged-in user.
+   * @param expirationDate The expiration date of the JWT
+   * @param userId The UUID of the logged-in user.
+   * @param username The username of the logged-in user.
+   * @param spiritAnimal The SpiritAnimal enum representing the avatar of the logged-in user.
+   */
+  private saveAuthData(
+    token: string,
+    expirationDate: Date,
+    userId: string,
+    username: string,
+    spiritAnimal: string
+  ): void {
+    // TODO: Convert this to "this.localStorageService.setItem" for Angular Universal purposes?
     localStorage.setItem('token', token);
     localStorage.setItem('expiration', expirationDate.toISOString());
     localStorage.setItem('userId', userId);
+    localStorage.setItem('username', username);
+    localStorage.setItem('spiritAnimal', spiritAnimal);
   }
 
-  private clearAuthData() {
+  /**
+   * Clears the authentication data from local storage. To be called on logout.
+   */
+  private clearAuthData(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('expiration');
     localStorage.removeItem('userId');
+    localStorage.removeItem('username');
+    localStorage.removeItem('spiritAnimal');
   }
 
+  /**
+   * Gets the authentication and user data from local storage if it exists.
+   * @returns An object containing the authentication and user data that was fetched from local storage.
+   */
   private getAuthData() {
     const token = localStorage.getItem('token');
     const expirationDate = localStorage.getItem('expiration');
     const userId = localStorage.getItem('userId');
+    const username = localStorage.getItem('username');
+    const spiritAnimal = localStorage.getItem('spiritAnimal');
 
     if (!token || !expirationDate) {
       return;
     }
+
     return {
       token: token,
       expirationDate: new Date(expirationDate),
       userId: userId,
+      username: username,
+      spiritAnimal: spiritAnimal,
     };
   }
 }

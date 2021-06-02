@@ -15,7 +15,7 @@ import {
 import { AuthService } from '../../../../core/services/auth.service';
 import { IexCloudService } from '../../../../core/services/iex-cloud.service';
 import { PortfolioService } from '../../../../core/services/portfolio.service';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 
 import { PortfolioComponent } from './portfolio.component';
 import { PortfolioModule } from '../../portfolio.module';
@@ -27,6 +27,10 @@ class MockAuthService {
 
   getUserId(): string {
     return '2498f310-cbc6-4af0-bab6-793e640aede4';
+  }
+
+  getAuthStatusListener(): Observable<boolean> {
+    return new Subject<boolean>();
   }
 }
 

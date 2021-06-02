@@ -11,18 +11,17 @@ export class AuthService {
   constructor(@InjectRepository(UserRepository) private userRepo: UserRepository, private jwtService: JwtService) {}
 
   /**
-   *
-   * @param signUpDto
-   * @returns
+   * Calls the user repository to create a new user in the database.
+   * @param signUpDto DTO containing registration data like username, email, & password.
    */
   async signUp(signUpDto: SignUpDto): Promise<void> {
     return this.userRepo.signup(signUpDto);
   }
 
   /**
-   *
-   * @param authCredentialsDto
-   * @returns
+   * Attempts to sign-in a user if their credentials are valid.
+   * @param authCredentialsDto DTO containing login information such as username & password.
+   * @returns An object containing the signed access token as well as the user retrieved from the database.
    */
   async signIn(authCredentialsDto: AuthCredentialDto): Promise<{ accessToken: string; user: UserAccount }> {
     const user = await this.userRepo.validateUserPassword(authCredentialsDto);
