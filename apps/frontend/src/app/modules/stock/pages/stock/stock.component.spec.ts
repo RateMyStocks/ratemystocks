@@ -1,4 +1,6 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { StockComponent } from './stock.component';
 
@@ -8,9 +10,9 @@ describe('StockComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StockComponent ]
-    })
-    .compileComponents();
+      declarations: [StockComponent],
+      imports: [HttpClientTestingModule, RouterTestingModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {

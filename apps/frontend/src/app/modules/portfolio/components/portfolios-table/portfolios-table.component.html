@@ -39,7 +39,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Creator</th>
         <td mat-cell *matCellDef="let row">
           <div class="centered-content">
-            <img src="../../../../../assets/images/avatars/antelope.png" class="profile-picture" />
+            <img src="../../../../../assets/images/avatars/{{row.spirit_animal}}.png" class="profile-picture" />
             <a routerLink="/">{{ row.username }}</a>
           </div>
         </td>
@@ -59,15 +59,22 @@
 
       <!-- Number of Holdings -->
       <ng-container matColumnDef="num_holdings">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Holdings</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header># of Holdings</th>
         <td mat-cell *matCellDef="let row">{{ row.num_holdings }}</td>
       </ng-container>
 
-      <!-- Largest Column -->
+      <!-- Largest Holding Column -->
       <ng-container matColumnDef="largest_holding">
         <th mat-header-cell *matHeaderCellDef>Largest Holding</th>
         <td mat-cell *matCellDef="let row">
-          <a routerLink="/stocks/{{ row.largest_holding }}">{{ row.largest_holding }}</a>
+          <div class="centered-content">
+            <img
+              *ngIf="row.largest_holding"
+              class="stock-logo"
+              src="https://storage.googleapis.com/iex/api/logos/{{ row.largest_holding }}.png"
+            />
+            <a routerLink="/stocks/{{ row.largest_holding }}">{{ row.largest_holding }}</a>
+          </div>
         </td>
       </ng-container>
 

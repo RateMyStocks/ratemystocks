@@ -19,6 +19,7 @@ import { IexCloudService } from '../../../../core/services/iex-cloud.service';
 import { MarketCapThresholds } from '../../../../shared/models/enums/market-cap-thresholds';
 import { MarketCap } from '../../../../shared/models/enums/market-cap';
 import { AuthService } from '../../../../core/services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-portfolio',
@@ -41,6 +42,7 @@ export class PortfolioComponent implements OnInit {
 
   isAuth: boolean;
   loggedInUserId: string;
+  authStatusSub: Subscription;
   numLikes = 0;
   numDislikes = 0;
 
@@ -66,6 +68,11 @@ export class PortfolioComponent implements OnInit {
 
   ngOnInit(): void {
     this.loggedInUserId = this.authService.getUserId();
+    this.authStatusSub = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
+      if (this.authService.isAuthorized()) {
+        this.loggedInUserId = this.authService.getUserId();
+      }
+    });
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       const portfolioId = paramMap.get('id');

@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ListPortfoliosDto } from '@ratemystocks/api-interface';
+import { ListPortfoliosDto, SpiritAnimal } from '@ratemystocks/api-interface';
 import { PortfolioService } from '../../../../core/services/portfolio.service';
 import { Observable, of } from 'rxjs';
 import { PortfoliosTableComponent } from './portfolios-table.component';
@@ -31,6 +31,7 @@ class MockPortfolioService {
           num_dislikes: 2,
           last_updated: '2021-01-09T06:49:31.108Z',
           num_holdings: 15,
+          spirit_animal: SpiritAnimal.ANTELOPE,
         },
       ],
     };

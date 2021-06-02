@@ -58,6 +58,12 @@ export class UserRepository extends Repository<UserAccount> {
     }
   }
 
+  /**
+   * Hashes a password using the bcrypt hashing function.
+   * @param password The plaintext password to hash.
+   * @param salt The salt that will be added to the hashing process
+   * @returns The hashed password.
+   */
   private async hashPassword(password: string, salt: string): Promise<string> {
     return bcrypt.hash(password, salt);
   }

@@ -48,7 +48,7 @@ export class PortfolioService {
     // TODO: USED PARAMETERIZED QUERIES ONLY
     const portfolios: any[] = await getManager().query(
       `
-      SELECT p.id, p.name, p.last_updated, largest_holding.ticker AS largest_holding, u.username, COUNT(DISTINCT(p_likes.id)) AS num_likes, COUNT(DISTINCT(p_dislikes.id)) AS num_dislikes, COUNT(DISTINCT(holdings.id)) as num_holdings
+      SELECT p.id, p.name, p.last_updated, largest_holding.ticker AS largest_holding, u.username, u.spirit_animal, COUNT(DISTINCT(p_likes.id)) AS num_likes, COUNT(DISTINCT(p_dislikes.id)) AS num_dislikes, COUNT(DISTINCT(holdings.id)) as num_holdings
       FROM portfolio p
       INNER JOIN user_account u ON (u.id = p.user_id)
       LEFT JOIN portfolio_rating p_likes ON (p.id = p_likes.portfolio_id AND p_likes.is_liked IS TRUE)

@@ -34,16 +34,15 @@
           </button>
         </li>
         <li>
-          <a mat-list-item routerLinkActive="list-item-active" routerLink="/auth/signin" (click)="closeSideNav()">
-            <button *ngIf="!isAuth" mat-stroked-button id="login-btn">Login</button>
+          <a *ngIf="!isAuth" mat-list-item routerLinkActive="list-item-active" routerLink="/auth/signin" id="login-btn" (click)="closeSideNav()">
+            <button mat-stroked-button >Login</button>
           </a>
           <div *ngIf="isAuth" id="profile-header" class="centered-content" [matMenuTriggerFor]="menu">
-            <img src=".../../../assets/images/avatars/antelope.png" class="profile-picture" />
+            <img *ngIf="avatar" src=".../../../assets/images/avatars/{{avatar}}.png" class="profile-picture" />
             <mat-icon>arrow_drop_down</mat-icon>
           </div>
           <mat-menu #menu="matMenu">
-            <div mat-menu-item class="centered-content">
-              <img src="../../../assets/images/avatars/antelope.png" class="profile-picture" />
+            <div mat-menu-item class="centered-content" id="header-username">
               <strong>{{ userName }}</strong>
             </div>
             <hr />
@@ -54,12 +53,12 @@
             <button mat-menu-item><mat-icon>favorite_outline</mat-icon>Favorites</button>
             <button mat-menu-item><mat-icon>settings</mat-icon>Settings</button>
             <hr />
-            <button mat-menu-item (click)="logOut()"><mat-icon>logout</mat-icon>Logout</button>
+            <button mat-menu-item (click)="logOut()" id="logout-btn"><mat-icon>logout</mat-icon>Logout</button>
           </mat-menu>
         </li>
         <li>
-          <a mat-list-item routerLinkActive="list-item-active" routerLink="/auth/register" (click)="closeSideNav()">
-            <button *ngIf="!isAuth" mat-flat-button color="primary">Sign Up</button>
+          <a *ngIf="!isAuth" mat-list-item routerLinkActive="list-item-active" routerLink="/auth/register" id="signup-btn" (click)="closeSideNav()">
+            <button  mat-flat-button color="primary">Sign Up</button>
           </a>
         </li>
       </ul>

@@ -4,22 +4,11 @@ import { AboutComponent } from './pages/about/about.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { HelpComponent } from './pages/help/help.component';
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
-import { TermsAndConditionsComponent } from './pages/terms-and-conditions/terms-and-conditions.component';
 import { TermsComponent } from './pages/terms/terms.component';
-
-
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
-  declarations: [
-    AboutComponent,
-    ContactComponent,
-    HelpComponent,
-    PrivacyPolicyComponent,
-    TermsAndConditionsComponent,
-    TermsComponent
-  ],
-  imports: [
-    CommonModule
-  ]
+  declarations: [AboutComponent, ContactComponent, HelpComponent, PrivacyPolicyComponent, TermsComponent],
+  imports: [CommonModule, MatCardModule],
 })
-export class ResourcesModule { }
+export class ResourcesModule {}
