@@ -10,8 +10,9 @@ For more info, visit our [wiki](https://github.com/RateMyStocks/ratemystocks/wik
 2. `npm install` - Install the dependencies in the local node_modules folder.
 3. `npm install -g nx` - This installs the Nx CLI globally on your machine.
 4. Create a `.env` file based off of `.env.example` but with real database connection info and API keys.
-5. Install PostgresSQL locally and create a database with database called `ratemystocks`.
+5. Install PostgresSQL locally and create a database with database called `ratemystocks`. The credentials much match the `DATABASE_URL` in `.env.example`.
 6. `npm run dev` - This will run NestJS (backend) & Angular (frontend) dev servers in parallel, both in watch mode.
+7. Go to `localhost:4200` in your browser. `IMPORTANT`: Makes sure you are not connected to any VPN - it might block your requests made to the 3rd party APIs we use.
 
 ## Generating TypeORM Migrations:
 
@@ -20,6 +21,11 @@ For more info, visit our [wiki](https://github.com/RateMyStocks/ratemystocks/wik
 3. Generate a Migration file under the src/migration directory using `npm run typeorm:migration:generate -- Some_Migration_Name` (replace Some_Migration_Name with something appropriate). This will automatically create a new migration file with SQL statements to update the schema and rollbacks to revert those changes.
 4. Import the new migration into the `migrations` array of `ormconfig.ts`.
 5. Since we have `migrationsRun: true` in `ormconfig.ts`, you just have to run the application to run the migrations. If you for some reason do need to run migrations manually, you can do `npm run typeorm:migration:run`.
+
+## Heroku
+
+1. heroku logs --tail -a <heroku-environment-name>
+2.
 
 # Nx
 
