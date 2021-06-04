@@ -21,7 +21,9 @@ export class SidenavComponent implements AfterViewInit, OnInit, OnDestroy {
 
   /**
    * Injects the SidenavService, allowing us to toggle the side navbar.
-   * @param sidenav The SidenavService
+   * @param router The Angular router used for redirecting to other pages.
+   * @param sidenavService SidenavService which is used to initialize the MatSidenav.
+   * @param windowService WindowService is used because the window object cannot be accessed when using Angular Universal
    */
   constructor(private router: Router, private sidenavService: SidenavService, private windowService: WindowService) {}
 
@@ -35,10 +37,11 @@ export class SidenavComponent implements AfterViewInit, OnInit, OnDestroy {
   ngAfterViewInit(): void {
     this.sidenavService.setSidenav(this.sidenav);
 
-    // TODO: With Angular Universal, this is logging "ERROR ReferenceError: window is not defined", though it still seems to work
-    if (window.innerWidth < 600) {
-      this.sidenav.close();
-    }
+    this.windowService.getInnerWidth().subscribe((innerWidth: number) => {
+      if (innerWidth < 600) {
+        this.sidenav.close();
+      }
+    });
 
     this.resizeSubscription = this.windowService.onResize$.subscribe((eventTarget: any) => {
       if (eventTarget.innerWidth < 600) {

@@ -17,7 +17,6 @@ export class AuthService {
   private isAuthenticated = false;
   private token: string;
   private tokenTimer: any;
-  // TODO: I think these should be behavior subjects, so that if a user logs out and switches to another account, the updates to these values will immediately be propagated
   private userId: string;
   private username: string;
   private spiritAnimal: string;
@@ -228,23 +227,23 @@ export class AuthService {
     username: string,
     spiritAnimal: string
   ): void {
-    // TODO: Convert this to "this.localStorageService.setItem" for Angular Universal purposes?
-    localStorage.setItem('token', token);
-    localStorage.setItem('expiration', expirationDate.toISOString());
-    localStorage.setItem('userId', userId);
-    localStorage.setItem('username', username);
-    localStorage.setItem('spiritAnimal', spiritAnimal);
+    // Note: LocalStorageService is used instead of regular localStorage for Angular Universal purposes
+    this.localStorageService.setItem('token', token);
+    this.localStorageService.setItem('expiration', expirationDate.toISOString());
+    this.localStorageService.setItem('userId', userId);
+    this.localStorageService.setItem('username', username);
+    this.localStorageService.setItem('spiritAnimal', spiritAnimal);
   }
 
   /**
    * Clears the authentication data from local storage. To be called on logout.
    */
   private clearAuthData(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('expiration');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('username');
-    localStorage.removeItem('spiritAnimal');
+    this.localStorageService.removeItem('token');
+    this.localStorageService.removeItem('expiration');
+    this.localStorageService.removeItem('userId');
+    this.localStorageService.removeItem('username');
+    this.localStorageService.removeItem('spiritAnimal');
   }
 
   /**
@@ -252,11 +251,11 @@ export class AuthService {
    * @returns An object containing the authentication and user data that was fetched from local storage.
    */
   private getAuthData() {
-    const token = localStorage.getItem('token');
-    const expirationDate = localStorage.getItem('expiration');
-    const userId = localStorage.getItem('userId');
-    const username = localStorage.getItem('username');
-    const spiritAnimal = localStorage.getItem('spiritAnimal');
+    const token = this.localStorageService.getItem('token');
+    const expirationDate = this.localStorageService.getItem('expiration');
+    const userId = this.localStorageService.getItem('userId');
+    const username = this.localStorageService.getItem('username');
+    const spiritAnimal = this.localStorageService.getItem('spiritAnimal');
 
     if (!token || !expirationDate) {
       return;
