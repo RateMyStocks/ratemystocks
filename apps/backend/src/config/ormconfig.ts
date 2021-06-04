@@ -13,7 +13,7 @@ const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
   // Database connection string containing the database name, port, username, & password.
   // Note: Heroku prefers this format.
-  url: process.env.DATABASE_URL,
+  url: process.env.MODE !== 'DEV' ? process.env.DATABASE_URL + '?sslmode=require' : process.env.DATABASE_URL,
   // Unfortunately Nx will use webpack to generate a single main.js, so glob patterns won't work right when you deploy the dist.
   // Therefore, you must manually import & add new entities to this array.
   entities: [Portfolio, PortfolioRating, PortfolioStock, StockRating, UserAccount],
