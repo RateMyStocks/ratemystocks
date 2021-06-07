@@ -3,7 +3,7 @@ import { Portfolio } from './portfolio.entity';
 import { PortfolioRating } from './portfolioRating.entity';
 import * as bcrypt from 'bcryptjs';
 import { StockRating } from './stockRating.entity';
-import { SpiritAnimal } from '@ratemystocks/api-interface';
+import { SpiritAnimal, UserRole } from '@ratemystocks/api-interface';
 
 @Entity({ name: 'user_account' })
 @Unique('uq_user_account_username', ['username'])
@@ -32,6 +32,13 @@ export class UserAccount extends BaseEntity {
 
   @OneToMany((type) => StockRating, (stockRating) => stockRating.userAccount, { eager: false, cascade: true })
   stockRatings: StockRating[];
+
+  // @Column({
+  //   type: 'enum',
+  //   enum: UserRole,
+  //   default: UserRole.REGULAR,
+  // })
+  // role: UserRole;
 
   @Column({
     name: 'spirit_animal',

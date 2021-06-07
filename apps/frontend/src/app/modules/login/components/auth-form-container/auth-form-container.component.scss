@@ -1,13 +1,10 @@
-@use '../../../../variables' as variables;
+@use '../../../../../variables' as variables;
 
 .login-header {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  margin-top: 30px;
-  margin-bottom: 30px;
 
   img {
     width: 350px;
@@ -22,30 +19,8 @@
   }
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
 mat-card {
   width: 450px;
-  mat-form-field,
-  button {
-    width: 90%;
-  }
-}
-
-.forgotRegister {
-  margin-top: 10px;
-  display: flex;
-  width: 90%;
-  justify-content: space-between;
-  text-decoration-line: none;
-  a {
-    text-decoration-line: none;
-  }
 }
 
 .authContainer {

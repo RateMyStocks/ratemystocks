@@ -25,11 +25,12 @@ export class AuthService {
    */
   async signIn(authCredentialsDto: AuthCredentialDto): Promise<{ accessToken: string; user: UserAccount }> {
     const user = await this.userRepo.validateUserPassword(authCredentialsDto);
-    const username = user.username;
 
     if (!user) {
       throw new UnauthorizedException('Invalid Credentials');
     }
+
+    const username = user.username;
     const payload: JwtPayload = { username };
     const accessToken = await this.jwtService.sign(payload);
     return { accessToken, user };

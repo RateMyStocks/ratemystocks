@@ -140,16 +140,20 @@
         <td mat-footer-cell *matFooterCellDef colspan="10">
           <div class="porfolio-holdings-aggregate-data">
             <span id="top-ten-total-weighting" class="portfolio-table-summary-data"
-              >Total Top 10 Weighting: <strong>{{ topTenTotalWeighting.toFixed(2) }}%</strong></span
-            >
-            <span id="weighted-avg-dividend-yield" class="portfolio-table-summary-data" *ngIf="iexStockDataMap"
-              >Weighted Avg. Dividend Yield:
-              <strong>{{ (calculateWeightedAvg('dividendYield') * 100).toFixed(2) }}%</strong></span
-            >
-            <span id="weighted-avg-market-cap" class="portfolio-table-summary-data" *ngIf="iexStockDataMap"
-              >Weighted Avg. Market Cap:
-              <strong>${{ MoneyFormatter.formatCash(calculateWeightedAvg('marketcap')) }}</strong></span
-            >
+              ><small>Total Top 10 Weighting: <strong>{{ topTenTotalWeighting.toFixed(2) }}%</strong></small>
+            </span>
+            <span id="weighted-avg-dividend-yield" class="portfolio-table-summary-data" *ngIf="iexStockDataMap">
+              <small>
+                Weighted Avg. Dividend Yield:
+                <strong>{{ (calculateWeightedAvg('dividendYield') * 100).toFixed(2) }}%</strong>
+              </small>
+            </span>
+            <span id="weighted-avg-market-cap" class="portfolio-table-summary-data" *ngIf="iexStockDataMap">
+              <small>
+                Weighted Avg. Market Cap:
+                <strong>${{ MoneyFormatter.formatCash(calculateWeightedAvg('marketcap')) }}</strong>
+              </small>
+            </span>
           </div>
         </td>
       </ng-container>

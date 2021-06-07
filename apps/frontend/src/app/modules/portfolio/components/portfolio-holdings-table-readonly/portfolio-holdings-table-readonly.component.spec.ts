@@ -150,10 +150,10 @@ describe('PortfolioHoldingsTableReadonlyComponent', () => {
       expect(topTenTotalWeighting.nativeElement.textContent).toEqual('Total Top 10 Weighting: 100.00%');
 
       const weightedAvgDividendYield: DebugElement = fixture.debugElement.query(By.css('#weighted-avg-dividend-yield'));
-      expect(weightedAvgDividendYield.nativeElement.textContent).toEqual('Weighted Avg. Dividend Yield: 0.47%');
+      expect(weightedAvgDividendYield.nativeElement.textContent).toEqual(' Weighted Avg. Dividend Yield: 0.47%');
 
       const weightedAvgMarketCap: DebugElement = fixture.debugElement.query(By.css('#weighted-avg-market-cap'));
-      expect(weightedAvgMarketCap.nativeElement.textContent).toEqual('Weighted Avg. Market Cap: $1.5T');
+      expect(weightedAvgMarketCap.nativeElement.textContent).toEqual(' Weighted Avg. Market Cap: $1.5T');
     });
   }));
 
