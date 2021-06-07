@@ -1,6 +1,7 @@
 <mat-sidenav-container>
   <mat-sidenav #sidenav mode="side" [opened]="!currentRoute.includes('auth')">
     <mat-nav-list>
+      <!-- MAIN -->
       <h2 matSubheader id="sidenav-main-subheader">Main</h2>
 
       <a mat-list-item routerLinkActive="list-item-active" routerLink="/stocks">
@@ -12,6 +13,7 @@
         <span class="sidenav-item-text">Portfolios</span>
       </a>
 
+      <!-- PROFILE -->
       <mat-divider></mat-divider>
       <h2 matSubheader id="sidenav-profile-subheader">Profile</h2>
 
@@ -30,6 +32,7 @@
         <span class="sidenav-item-text">Settings</span>
       </a>
 
+      <!-- RESOURCES -->
       <mat-divider></mat-divider>
       <h2 matSubheader id="sidenav-resources-subheader">Resources</h2>
 
@@ -47,17 +50,33 @@
         <mat-icon class="material-icons-outlined">contact_page</mat-icon>
         <span class="sidenav-item-text">Contact Us</span>
       </a>
-      <a mat-list-item routerLinkActive="list-item-active" routerLink="/privacy-policy">
-        <mat-icon class="material-icons-outlined">privacy_tip</mat-icon>
-        <span class="sidenav-item-text">Privacy Policy</span>
-      </a>
-      <a mat-list-item routerLinkActive="list-item-active" routerLink="/terms">
-        <mat-icon class="material-icons-outlined">edit_note</mat-icon>
-        <span class="sidenav-item-text">Terms</span>
-      </a>
 
-      <mat-divider></mat-divider>
-      <footer id="rms-footer">&copy; 2021 ratemystocks.com</footer>
+      <!-- SHOP -->
+      <!-- <mat-divider></mat-divider>
+      <h2 matSubheader id="sidenav-shop-subheader">Shop</h2>
+
+      <a mat-list-item href="https://www.shop.ratemystocks.com">
+        <mat-icon class="material-icons-outlined">shopping_cart</mat-icon>
+        <span class="sidenav-item-text">Merch</span>
+      </a> -->
+
+      <!-- ADMIN -->
+      <!-- <mat-divider></mat-divider>
+      <h2 matSubheader id="sidenav-admin-subheader">Admin</h2>
+
+      <a mat-list-item routerLinkActive="list-item-active" routerLink="/user-management">
+        <mat-icon class="material-icons-outlined">supervised_user_circle</mat-icon>
+        <span class="sidenav-item-text">User Management</span>
+      </a> -->
+
+      <footer id="rms-footer">
+        <div>
+          <a routerLink="/privacy-policy">Privacy Policy</a>
+          <span>&nbsp;|&nbsp;</span>
+          <a routerLink="/terms">Terms</a>
+        </div>
+        <div>&copy; 2021 ratemystocks.com</div>
+      </footer>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

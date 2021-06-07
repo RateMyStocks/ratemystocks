@@ -1,8 +1,5 @@
 {
-  "implicitDependencies": {
-    "package.json": { "dependencies": "*", "devDependencies": "*" },
-    ".eslintrc.json": "*"
-  },
+  "implicitDependencies": { "package.json": { "dependencies": "*", "devDependencies": "*" }, ".eslintrc.json": "*" },
   "affected": { "defaultBase": "main" },
   "npmScope": "ratemystocks",
   "tasksRunnerOptions": {
@@ -15,6 +12,7 @@
     "frontend": { "tags": [] },
     "frontend-e2e": { "tags": [], "implicitDependencies": ["frontend"] },
     "backend": { "tags": [] },
-    "api-interface": { "tags": [] }
+    "api-interface": { "tags": [] },
+    "regex-patterns": { "tags": [] }
   }
 }

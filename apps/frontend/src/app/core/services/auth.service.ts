@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Component, Inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable, Subject } from 'rxjs';
 import { Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { StatusCodes } from '../../shared/utilities/status-codes.enum';
 import { AuthCredentialDto, SignUpDto, SignInResponseDto, SpiritAnimal } from '@ratemystocks/api-interface';
 import { LocalStorageService } from './local-storage.service';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 const BACKEND_URL: string = environment.apiUrl + '/auth';
 
@@ -26,6 +27,7 @@ export class AuthService {
     private httpClient: HttpClient,
     private router: Router,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     private localStorageService: LocalStorageService
   ) {}
 
@@ -84,26 +86,27 @@ export class AuthService {
   signUp(signUpDto: SignUpDto): void {
     this.httpClient.post<{ message: string }>(`${BACKEND_URL}/signup`, signUpDto).subscribe(
       () => {
-        this.snackBar.open(`Your account has been created!`, 'OK', {
-          duration: 3000,
-          panelClass: 'success-snackbar',
-        });
-
-        // TODO: Sign-in the user upon creation
-        this.router.navigate(['/auth/signin']);
+        const authCredentialDto: AuthCredentialDto = {
+          username: signUpDto.username,
+          password: signUpDto.password,
+        };
+        this.signin(authCredentialDto, true);
       },
       (error: any) => {
         this.authStatusListener.next(false);
 
         if (error.status && error.status === StatusCodes.BAD_REQUEST) {
-          // TODO: Need to loop over the response to notify users on the format of their credentials
           this.snackBar.open(
             'Please make sure you register your credentials with the proper format.',
             'Registration Error',
             {
-              duration: 3000,
+              duration: 8000,
             }
           );
+        } else if (error.status && error.status === StatusCodes.CONFLICT) {
+          this.snackBar.open('Username or email has already been taken.', 'Registration Error', {
+            duration: 8000,
+          });
         }
       }
     );
@@ -111,9 +114,10 @@ export class AuthService {
 
   /**
    * Signs in using a username + password
-   * @param DTO containing attempted login info i.e. username and password.
+   * @param authCredentials DTO containing attempted login info i.e. username and password.
+   * @param isNewUser True if the user signing in has just signed up, false if they are an existing user (defaults to false).
    */
-  signin(authCredentials: AuthCredentialDto): void {
+  signin(authCredentials: AuthCredentialDto, isNewUser: boolean = false): void {
     this.httpClient.post(`${BACKEND_URL}/signin`, authCredentials, { withCredentials: true }).subscribe(
       (response: SignInResponseDto) => {
         const token = response.accessToken;
@@ -134,17 +138,25 @@ export class AuthService {
           this.saveAuthData(token, expirationDate, this.userId, this.username, this.spiritAnimal);
           this.router.navigate(['/']);
 
-          this.snackBar.open(`You have successfully signed in.`, 'OK', {
-            duration: 3000,
-            panelClass: 'success-snackbar',
-          });
+          if (isNewUser) {
+            this.dialog.open(WelcomeDialogComponent, {
+              data: {
+                user: response,
+              },
+            });
+          } else {
+            this.snackBar.open(`You have successfully signed in.`, 'OK', {
+              duration: 3000,
+              panelClass: 'success-snackbar',
+            });
+          }
         }
       },
       (error: any) => {
         this.authStatusListener.next(false);
         if (error.status && error.status === StatusCodes.UNAUTHORIZED) {
           this.snackBar.open(
-            `User could not be found. Please try again with other credentials.`,
+            `Login failed. Please ensure your username & password are correct.`,
             'Authorization Error',
             {
               duration: 3000,
@@ -269,4 +281,23 @@ export class AuthService {
       spiritAnimal: spiritAnimal,
     };
   }
+}
+
+export interface DialogData {
+  user: SignInResponseDto;
+}
+@Component({
+  selector: 'app-welcome-dialog',
+  template: `
+    <div id="welcome-dialog-container">
+      <h1>
+        Welcome <b>{{ data.user.username }}!</b>
+      </h1>
+      <p></p>
+    </div>
+  `,
+  styles: ['#welcome-dialog-container { width: 300px }'],
+})
+export class WelcomeDialogComponent {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 }

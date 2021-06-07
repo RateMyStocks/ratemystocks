@@ -1,4 +1,12 @@
 import { IsNotEmpty, IsNumber, IsPositive, IsString, Max, MaxLength, Matches, Min, MinLength } from 'class-validator';
+import {
+  USERNAME_REGEX,
+  USERNAME_VALIDATION_MESSAGE,
+  EMAIL_REGEX,
+  EMAIL_VALIDATION_MESSAGE,
+  PASSWORD_REGEX,
+  PASSWORD_VALIDATION_MESSAGE,
+} from '@ratemystocks/regex-patterns';
 
 // TODO: Standarize using interfaces rather than classes
 // TODO: Split each API interface into its own library
@@ -12,20 +20,20 @@ import { IsNotEmpty, IsNumber, IsPositive, IsString, Max, MaxLength, Matches, Mi
  */
 export class AuthCredentialDto {
   @IsString()
-  @MinLength(4)
-  @MaxLength(20)
+  @MinLength(1)
+  @MaxLength(30)
+  @Matches(USERNAME_REGEX, { message: USERNAME_VALIDATION_MESSAGE })
   username: string;
 
   @IsString()
   @MinLength(8)
-  @MaxLength(20)
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'Password too weak' }) // TODO: Fix this Regex
+  @Matches(PASSWORD_REGEX, { message: PASSWORD_VALIDATION_MESSAGE })
   password: string;
 }
 
 export class SignUpDto extends AuthCredentialDto {
   @IsString()
-  @Matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, { message: 'Email is not valid' })
+  @Matches(EMAIL_REGEX, { message: EMAIL_VALIDATION_MESSAGE })
   email: string;
 }
 
@@ -35,6 +43,11 @@ export interface SignInResponseDto {
   userId: string;
   username: string;
   spiritAnimal: SpiritAnimal;
+}
+
+export enum UserRole {
+  ADMIN,
+  REGULAR,
 }
 
 /** Preset Spirit Animals that map to User Avatar images of the same name */

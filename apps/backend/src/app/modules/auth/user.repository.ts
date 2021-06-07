@@ -24,7 +24,7 @@ export class UserRepository extends Repository<UserAccount> {
       await user.save();
     } catch (error) {
       switch (error.code) {
-        case '23505': //duplicate username
+        case '23505': //duplicate username or email
           throw new ConflictException('Username already exists');
         default:
           throw new InternalServerErrorException();

@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@ratemystocks/api-interface": ["libs/api-interface/src/index.ts"]
+      "@ratemystocks/api-interface": ["libs/api-interface/src/index.ts"],
+      "@ratemystocks/regex-patterns": ["libs/regex-patterns/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
