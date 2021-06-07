@@ -96,8 +96,8 @@
             "production": {
               "browserTarget": "frontend:build:production"
             },
-            "dev": {
-              "browserTarget": "frontend:build:dev"
+            "staging": {
+              "browserTarget": "frontend:build:staging"
             }
           }
         },
@@ -241,11 +241,14 @@
                 }
               ]
             },
-            "dev": {
+            "staging": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
               "fileReplacements": [
                 {
                   "replace": "apps/backend/src/environments/environment.ts",
-                  "with": "apps/backend/src/environments/environment.dev.ts"
+                  "with": "apps/backend/src/environments/environment.staging.ts"
                 }
               ]
             }
