@@ -4,10 +4,10 @@
 
 echo "Building Angular app for $NODE_ENV"
 
-build_dev='ng build --dev && ng run frontend:server:dev'
-if [ $NODE_ENV = "development" ]; then
- echo "running $build_dev ..."
- eval "$build_dev"
+build_dev='ng build --configuration staging && ng run frontend:server:staging'
+if [ $NODE_ENV = "staging" ]; then
+ echo "running $build_staging ..."
+ eval "$build_staging"
 fi
 
 build_prod='ng build --prod && ng run frontend:server:production'
