@@ -186,16 +186,19 @@
 
       <mat-card fxFlex="50%;" fxFlex.xs="80%">
         <h2><strong>Breakdowns</strong></h2>
-        <mat-form-field appearance="outline">
-          <mat-label>Category</mat-label>
-          <mat-select [(value)]="selectedBreakdownCategory" (selectionChange)="setPieChartItems($event)">
-            <mat-option value="company">Company</mat-option>
-            <mat-option value="country">Country</mat-option>
-            <mat-option value="marketCap">Market Cap</mat-option>
-            <mat-option value="sector">Sector</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <app-ngx-pie-chart [pieChartItems]="pieChartItems"></app-ngx-pie-chart>
+        <div *ngIf="stocksLoaded && portfolioStocks.length; else noHoldings">
+          <mat-form-field appearance="outline">
+            <mat-label>Category</mat-label>
+            <mat-select [(value)]="selectedBreakdownCategory" (selectionChange)="setPieChartItems($event)">
+              <mat-option value="company">Company</mat-option>
+              <mat-option value="country">Country</mat-option>
+              <mat-option value="marketCap">Market Cap</mat-option>
+              <mat-option value="sector">Sector</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <app-ngx-pie-chart [pieChartItems]="pieChartItems"></app-ngx-pie-chart>
+        </div>
+        <ng-template #noHoldings><h3>This portfolio has no holdings</h3></ng-template>
       </mat-card>
     </div>
 
