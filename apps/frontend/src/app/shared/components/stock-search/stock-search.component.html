@@ -23,6 +23,13 @@
         <!-- Display actual stock search results -->
         <mat-option *ngFor="let stock of filteredStocks" [value]="stock">
           <mat-icon *ngIf="!redirect">add_box</mat-icon>
+          <mat-icon>
+            <img
+              class="stock-logo"
+              src="https://storage.googleapis.com/iex/api/logos/{{ stock.symbol }}.png"
+              onerror="this.onerror=null; this.src='assets/images/question-mark-placeholder.png'"
+            />
+          </mat-icon>
           <small><strong [innerHTML]="highlightMatchingSearchText(stockCtrl.value, stock.symbol)"></strong></small> |
           <small [innerHTML]="highlightMatchingSearchText(stockCtrl.value, stock.securityName)"></small> |
           <small>{{ stock.exchange }}</small>

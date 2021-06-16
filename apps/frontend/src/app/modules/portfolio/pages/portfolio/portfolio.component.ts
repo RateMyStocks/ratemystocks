@@ -175,13 +175,14 @@ export class PortfolioComponent implements OnInit {
       }
     });
 
-    return Array.from(valueWeightingMap, ([name, value]: [string, number]) => ({
-      name,
-      value,
-    })).reduce((prev: { name: string; value: number }, current: { name: string; value: number }) =>
-      // TODO: need to handle null values - TypeError: Reduce of empty array with no initial value
-      prev.value > current.value ? prev : current
-    ).name;
+    return valueWeightingMap.size
+      ? Array.from(valueWeightingMap, ([name, value]: [string, number]) => ({
+          name,
+          value,
+        })).reduce((prev: { name: string; value: number }, current: { name: string; value: number }) =>
+          prev.value > current.value ? prev : current
+        ).name
+      : '';
   }
 
   /**
@@ -189,9 +190,11 @@ export class PortfolioComponent implements OnInit {
    * @return Ticker symbol of the stock with the highest weighting in the portfolio
    */
   getLargestHolding(): string {
-    return this.portfolioStocks.sort((a: PortfolioStockDto, b: PortfolioStockDto) =>
-      b.weighting > a.weighting ? 1 : -1
-    )[0].ticker;
+    return this.portfolioStocks.length
+      ? this.portfolioStocks.sort((a: PortfolioStockDto, b: PortfolioStockDto) =>
+          b.weighting > a.weighting ? 1 : -1
+        )[0].ticker
+      : '';
   }
 
   /**
