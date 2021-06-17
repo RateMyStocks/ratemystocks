@@ -384,9 +384,13 @@ describe('PortfolioComponent', () => {
     expect(copySpy).toHaveBeenCalledTimes(1);
   });
 
+  // Edge & Corner cases: call component methods directly
+
   // TODO: Test for no holdings
 
   // TODO: empty string when getHighestWeightedIexCloudValue is called but the valueWeightingMap is empty
 
   // TODO: Check if isAuth and user owns the portfolio - if so, "edit" buttons/icons should show
+
+  // TODO: Test if "getLargestHolding" when all holdings are the same (should default to something)
 });

@@ -356,6 +356,7 @@ export interface PortfolioDto {
     id: string;
     username: string;
     email: string;
+    // TODO: Add spirit animal
   };
 }
 
