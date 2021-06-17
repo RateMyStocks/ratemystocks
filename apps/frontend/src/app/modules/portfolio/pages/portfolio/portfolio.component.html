@@ -14,6 +14,7 @@
         </h1>
         <p id="portfolio-creator">
           <!-- TODO: SHOW CREATOR'S PROFILE PICTURE -->
+          <!-- <img src="../../../../../assets/images/avatars/{{row.spirit_animal}}.png" class="profile-picture" /> -->
           <strong>Creator: </strong> <a routerLink="/">{{ portfolio.user.username }}</a>
         </p>
         <div id="portfolio-created-date">
@@ -126,55 +127,69 @@
             <div fxFlex="33%;" fxFlex.xs="80%">
               <p><strong>Overview</strong></p>
               <p class="portfolio-stat">
-                # of Holdings: <strong>{{ portfolioStocks.length }}</strong>
+                <small># of Holdings: <strong>{{ portfolioStocks.length }}</strong></small>
               </p>
               <p class="portfolio-stat">
-                Top 10 Weighting:
-                <span *ngIf="iexStockDataMap">
-                  <strong>{{ calculateTopTenTotalWeighting().toFixed(2) }}%</strong>
-                </span>
+                <small>
+                  Top 10 Weighting:
+                  <span *ngIf="iexStockDataMap">
+                    <strong>{{ calculateTopTenTotalWeighting().toFixed(2) }}%</strong>
+                  </span>
+                </small>
               </p>
               <p class="portfolio-stat">
-                Top Holding: <a routerLink="/stocks/{{ getLargestHolding() }}">{{ getLargestHolding() }}</a>
+                <small>Top Holding: <a routerLink="/stocks/{{ getLargestHolding() }}">{{ getLargestHolding() }}</a></small>
               </p>
               <p class="portfolio-stat">
-                Top Country:
-                <span *ngIf="iexStockDataMap">
-                  <strong>{{ getHighestWeightedIexCloudValue('country') }}</strong>
-                </span>
+                <small>
+                  Top Country:
+                  <span *ngIf="iexStockDataMap">
+                    <strong>{{ getHighestWeightedIexCloudValue('country') }}</strong>
+                  </span>
+                </small>
               </p>
               <p class="portfolio-stat">
-                Top Sector:
-                <span *ngIf="iexStockDataMap">
-                  <strong>{{ getHighestWeightedIexCloudValue('sector') }}</strong>
-                </span>
+                <small>
+                  Top Sector:
+                  <span *ngIf="iexStockDataMap">
+                    <strong>{{ getHighestWeightedIexCloudValue('sector') }}</strong>
+                  </span>
+                </small>
               </p>
             </div>
             <div fxFlex="33%;" fxFlex.xs="80%">
               <p><strong>Weighted Averages</strong></p>
               <p class="portfolio-stat">
-                Dividend Yield:
-                <span *ngIf="iexStockDataMap">
-                  <strong>{{ (calculateWeightedAvg('dividendYield') * 100).toFixed(2) }}%</strong>
-                </span>
+                <small>
+                  Dividend Yield:
+                  <span *ngIf="iexStockDataMap">
+                    <strong>{{ (calculateWeightedAvg('dividendYield') * 100).toFixed(2) }}%</strong>
+                  </span>
+                </small>
               </p>
               <p class="portfolio-stat">
-                Market Cap:
-                <span *ngIf="iexStockDataMap">
-                  <strong>${{ MoneyFormatter.formatCash(calculateWeightedAvg('marketcap')) }}</strong>
-                </span>
+                <small>
+                  Market Cap:
+                  <span *ngIf="iexStockDataMap">
+                    <strong>${{ MoneyFormatter.formatCash(calculateWeightedAvg('marketcap')) }}</strong>
+                  </span>
+                </small>
               </p>
               <p class="portfolio-stat">
-                P/E Ratio:
-                <span *ngIf="iexStockDataMap">
-                  <strong>{{ calculateWeightedAvg('peRatio').toFixed(2) }}</strong>
-                </span>
+                <small>
+                  P/E Ratio:
+                  <span *ngIf="iexStockDataMap">
+                    <strong>{{ calculateWeightedAvg('peRatio').toFixed(2) }}</strong>
+                  </span>
+                </small>
               </p>
               <p class="portfolio-stat">
-                Beta:
-                <span *ngIf="iexStockDataMap">
-                  <strong>{{ calculateWeightedAvg('beta').toFixed(2) }}</strong>
-                </span>
+                <small>
+                  Beta:
+                  <span *ngIf="iexStockDataMap">
+                    <strong>{{ calculateWeightedAvg('beta').toFixed(2) }}</strong>
+                  </span>
+                </small>
               </p>
             </div>
             <div fxFlex="33%;" fxFlex.xs="80%">

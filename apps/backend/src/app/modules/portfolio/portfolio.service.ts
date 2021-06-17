@@ -2,14 +2,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PortfolioRepository } from './portfolio.repository';
 import { PortfolioStockRepository } from './portfolio-stock.repository';
-import { getManager, Raw } from 'typeorm';
+import { Raw } from 'typeorm';
 import { PortfolioRatingRepository } from './portfolio-rating.repository';
-import {
-  CreatePortfolioDto,
-  CreatePortfolioRatingDto,
-  ListPortfoliosDto,
-  PortfolioRatingCountsDto,
-} from '@ratemystocks/api-interface';
+import { CreatePortfolioDto, CreatePortfolioRatingDto, PortfolioRatingCountsDto } from '@ratemystocks/api-interface';
 import { Portfolio } from '../../../models/portfolio.entity';
 import { PortfolioStock } from '../../../models/portfolioStock.entity';
 import { UserAccount } from '../../../models/userAccount.entity';
@@ -27,6 +22,8 @@ export class PortfolioService {
   ) {}
 
   /**
+   * TODO: Create a DTO for the return type
+   *
    * Gets a list of portfolios from the database, optionally filtering by name, getting a subset of the
    * resutls with pagination, or sorting the results by column.
    * @param pageSize The number of portfolios to return.
@@ -42,32 +39,45 @@ export class PortfolioService {
     orderBy?: string,
     sortDirection?: 'ASC' | 'DESC',
     filter?: string
-  ): Promise<ListPortfoliosDto> {
+  ): Promise<{ items: any; totalCount: number }> {
     const orderByStatement = orderBy || 'num_likes, portfolio.name';
 
-    // TODO: USED PARAMETERIZED QUERIES ONLY
-    const portfolios: any[] = await getManager().query(
-      `
-      SELECT p.id, p.name, p.last_updated, largest_holding.ticker AS largest_holding, u.username, u.spirit_animal, COUNT(DISTINCT(p_likes.id)) AS num_likes, COUNT(DISTINCT(p_dislikes.id)) AS num_dislikes, COUNT(DISTINCT(holdings.id)) as num_holdings
-      FROM portfolio p
-      INNER JOIN user_account u ON (u.id = p.user_id)
-      LEFT JOIN portfolio_rating p_likes ON (p.id = p_likes.portfolio_id AND p_likes.is_liked IS TRUE)
-      LEFT JOIN portfolio_rating p_dislikes ON (p.id = p_dislikes.portfolio_id AND p_dislikes.is_liked IS FALSE)
-      LEFT JOIN portfolio_stock largest_holding ON largest_holding.id = (
-        SELECT ps.id FROM portfolio_stock ps
-        WHERE ps.portfolio_id = p.id
-        ORDER BY ps.weighting DESC
-        LIMIT 1
+    // NOTE: Please use parameterized queries to prevent SQL injection
+    const portfolios: any[] = await this.portfolioRepository
+      .createQueryBuilder('portfolio')
+      .select(
+        `
+          portfolio.id,
+          portfolio.name,
+          user.username AS username,
+          user.spirit_animal,
+          COUNT(distinct portfolioLikes.id) AS num_likes,
+          COUNT(distinct portfolioDislikes.id) AS num_dislikes,
+          largest_holding.ticker AS largest_holding,
+          portfolio.lastUpdated AS last_updated,
+          COUNT(distinct holdings.id) AS num_holdings
+        `
       )
-      LEFT JOIN portfolio_stock holdings ON (holdings.portfolio_id = p.id)
-      WHERE ${!filter} IS TRUE OR (LOWER(p.name) like LOWER('%${filter}%')) OR (LOWER(u.username) like LOWER('%${filter}%'))
-      GROUP BY p.id, u.id, largest_holding.id
-      ORDER BY ${orderByStatement} ${sortDirection}
-      LIMIT $1
-      OFFSET $2
-      `,
-      [pageSize, skip]
-    );
+      .innerJoin('portfolio.user', 'user')
+      .leftJoin('portfolio.ratings', 'portfolioLikes', 'portfolioLikes.isLiked IS TRUE')
+      .leftJoin('portfolio.ratings', 'portfolioDislikes', 'portfolioDislikes.isLiked IS FALSE')
+      .leftJoin('portfolio.stocks', 'holdings')
+      .leftJoin(
+        'portfolio_stock',
+        'largest_holding',
+        'largest_holding.id = (SELECT ps.id FROM portfolio_stock ps WHERE ps.portfolio_id = portfolio.id ORDER BY ps.weighting DESC LIMIT 1)'
+      )
+      .where(
+        ':filterText = NULL OR (LOWER(portfolio.name) like LOWER(:filterText)) OR (LOWER(user.username) like LOWER(:filterText))',
+        {
+          filterText: `%${filter}%`,
+        }
+      )
+      .groupBy('portfolio.id, user.username, user.spirit_animal, largest_holding.ticker')
+      .limit(pageSize)
+      .offset(skip)
+      .orderBy(orderByStatement, sortDirection)
+      .getRawMany();
 
     const totalPortfoliosCount: number = await this.portfolioRepository.count({
       where: {
