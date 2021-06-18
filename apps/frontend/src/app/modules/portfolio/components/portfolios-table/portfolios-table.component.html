@@ -81,7 +81,7 @@
       <!-- Last Updated Column-->
       <ng-container matColumnDef="last_updated">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Updated</th>
-        <td mat-cell *matCellDef="let row">{{ moment(row.last_updated).format('MM/DD/YYYY') }}</td>
+        <td mat-cell *matCellDef="let row"><small>{{ moment(row.last_updated).fromNow() }}</small></td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
