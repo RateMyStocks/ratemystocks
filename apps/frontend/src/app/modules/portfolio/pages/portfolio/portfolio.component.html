@@ -21,7 +21,7 @@
           <small>Created on {{ moment(portfolio.dateCreated).format('MMMM D, YYYY') }} </small>
         </div>
         <div id="portfolio-last-updated-date">
-          <small>Last Updated on {{ moment(portfolio.lastUpdated).format('MMMM D, YYYY') }}</small>
+          <small>Last Updated {{ moment(portfolio.lastUpdated).fromNow() }}</small>
         </div>
       </div>
     </div>

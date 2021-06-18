@@ -216,7 +216,7 @@ describe('PortfolioComponent', () => {
       expect(portfolioCreatedDate.nativeElement.textContent.trim()).toEqual('Created on January 8, 2021');
 
       const portfolioLastUpdatedDate: DebugElement = fixture.debugElement.query(By.css('#portfolio-last-updated-date'));
-      expect(portfolioLastUpdatedDate.nativeElement.textContent.trim()).toEqual('Last Updated on January 9, 2021');
+      expect(portfolioLastUpdatedDate.nativeElement.textContent.trim()).toEqual('Last Updated 5 months ago');
 
       const portfolioLikes: DebugElement = fixture.debugElement.query(By.css('#portfolio-likes-value'));
       expect(portfolioLikes.nativeElement.textContent.trim()).toEqual('78');
