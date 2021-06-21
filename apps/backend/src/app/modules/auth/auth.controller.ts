@@ -1,7 +1,9 @@
-import { Controller, Post, Body, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body, ValidationPipe, Get, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthCredentialDto, SignUpDto, SignInResponseDto } from '@ratemystocks/api-interface';
 import { UserAccount } from '../../../models/userAccount.entity';
+import { GetUser } from './get-user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -34,5 +36,11 @@ export class AuthController {
       expiresIn: 3600,
     };
     return signInDto;
+  }
+
+  @Get('/settings')
+  @UseGuards(AuthGuard())
+  getSettings(@GetUser() user: UserAccount) {
+    console.log(user);
   }
 }
