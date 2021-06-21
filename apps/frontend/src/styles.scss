@@ -74,6 +74,12 @@ th {
   margin-bottom: 100px;
 }
 
+.centered-container {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+}
+
 .primary-rms-btn {
   background-color: variables.$rms-green;
   color: white;
