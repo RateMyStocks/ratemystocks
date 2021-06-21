@@ -15,7 +15,7 @@
         <p id="portfolio-creator">
           <!-- TODO: SHOW CREATOR'S PROFILE PICTURE -->
           <!-- <img src="../../../../../assets/images/avatars/{{row.spirit_animal}}.png" class="profile-picture" /> -->
-          <strong>Creator: </strong> <a routerLink="/">{{ portfolio.user.username }}</a>
+          <strong>Creator: </strong> <a routerLink="/users/{{portfolio.user.username}}">{{ portfolio.user.username }}</a>
         </p>
         <div id="portfolio-created-date">
           <small>Created on {{ moment(portfolio.dateCreated).format('MMMM D, YYYY') }} </small>

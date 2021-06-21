@@ -13,6 +13,7 @@ import { ResourcesModule } from './modules/resources/resources.module';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { ErrorInterceptor } from './core/interceptors/error-interceptor';
 import { GlobalErrorHandler } from './core/error-handlers/global-error-handler';
+import { ProfileModule } from './modules/profile/profile.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,6 +25,7 @@ import { GlobalErrorHandler } from './core/error-handlers/global-error-handler';
     HttpClientModule,
     LoginModule,
     PortfolioModule,
+    ProfileModule,
     ResourcesModule,
     StockModule,
   ],

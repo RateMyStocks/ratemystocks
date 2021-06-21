@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { STOCKS_ROUTES } from './modules/stock/stock.routes';
 import { PORTFOLIO_ROUTES } from './modules/portfolio/portfolio.routes';
 import { RESOURCES_ROUTES } from './modules/resources/resources.routes';
+import { PROFILE_ROUTES } from './modules/profile/profile.routes';
 import { LOGIN_ROUTES } from './modules/login/login.routes';
 
 const routes: Routes = [
@@ -22,6 +23,10 @@ const routes: Routes = [
   {
     path: 'auth',
     children: LOGIN_ROUTES,
+  },
+  {
+    path: 'users',
+    children: PROFILE_ROUTES,
   },
   {
     path: '',
