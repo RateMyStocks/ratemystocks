@@ -5,4 +5,6 @@ import { Component } from '@angular/core';
   templateUrl: './help.component.html',
   styleUrls: ['./help.component.scss'],
 })
-export class HelpComponent {}
+export class HelpComponent {
+  panelOpenState = false;
+}
