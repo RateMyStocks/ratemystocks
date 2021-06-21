@@ -13,6 +13,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { StockModule } from './modules/stock/stock.module';
 import { PortfolioModule } from './modules/portfolio/portfolio.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { PortfolioModule } from './modules/portfolio/portfolio.module';
     PortfolioModule,
     StockModule,
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
