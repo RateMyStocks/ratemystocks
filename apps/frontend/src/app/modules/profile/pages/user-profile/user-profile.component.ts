@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { UserProfileDto } from '@ratemystocks/api-interface';
-import { AuthService } from 'apps/frontend/src/app/core/services/auth.service';
-import { UserService } from 'apps/frontend/src/app/core/services/user.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { UserService } from '../../../../core/services/user.service';
 
 @Component({
   selector: 'app-user-profile',

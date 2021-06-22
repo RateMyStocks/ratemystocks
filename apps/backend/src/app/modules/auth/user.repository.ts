@@ -23,11 +23,11 @@ export class UserRepository extends Repository<UserAccount> {
     try {
       await user.save();
     } catch (error) {
-      switch (error.code) {
-        case '23505': //duplicate username or email
-          throw new ConflictException('Username already exists');
-        default:
-          throw new InternalServerErrorException();
+      if (error.code === '23505') {
+        // duplicate username
+        throw new ConflictException('Username already exists');
+      } else {
+        throw new InternalServerErrorException();
       }
     }
   }
