@@ -1,3 +1,16 @@
 <div class="page-container" *ngIf="user">
-  <h1><span class="page-header"><b>{{ user.username }}</b></span></h1>
+  <app-user-profile-header [user]="user"></app-user-profile-header>
+  <br />
+  <mat-tab-group animationDuration="0ms" mat-stretch-tabs class="example-stretched-tabs mat-elevation-z4">
+    <mat-tab label="Portfolios"><app-user-portfolios-table [user]="user"></app-user-portfolios-table></mat-tab>
+    <!-- <mat-tab label="Stock Ratings"><app-user-portfolios-table [user]="user"></app-user-portfolios-table></mat-tab> -->
+    <!-- <mat-tab label="Stock Lists"><app-user-portfolios-table [user]="user"></app-user-portfolios-table></mat-tab> -->
+  </mat-tab-group>
+  <br>
+  <!-- <mat-card>
+    <mat-card-header>
+      <mat-icon class="nav-item-portfolio-icon material-icons-outlined" mat-card-avatar>pie_chart</mat-icon>
+      <mat-card-title>Activity</mat-card-title>
+    </mat-card-header>
+  </mat-card> -->
 </div>

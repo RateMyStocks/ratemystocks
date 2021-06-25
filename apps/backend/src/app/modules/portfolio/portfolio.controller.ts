@@ -5,6 +5,7 @@ import {
   CreatePortfolioRatingDto,
   ListPortfoliosDto,
   PortfolioStockDto,
+  UserPortfolioDto,
 } from '@ratemystocks/api-interface';
 import { Portfolio } from '../../../models/portfolio.entity';
 import { PortfolioRating } from '../../../models/portfolioRating.entity';
@@ -26,6 +27,16 @@ export class PortfolioController {
     @Query('filter') filter?: string
   ): Promise<ListPortfoliosDto> {
     return this.portfolioService.getPortfolios(pageSize, skip, orderBy, sortDirection, filter);
+  }
+
+  /**
+   * Gets a list of portfolios by user ID.
+   * @param userId The UUID of the user whose portfolios will be fetched.
+   * @return A list of DTOs representing the portfolios a user has created.
+   */
+  @Get('/list/:userId')
+  getPortfoliosByUserId(@Param('userId') userId: string): Promise<UserPortfolioDto[]> {
+    return this.portfolioService.getPortfoliosByUserId(userId);
   }
 
   // TODO: Don't return the entity and delete sensitive info - map the entity to a dto

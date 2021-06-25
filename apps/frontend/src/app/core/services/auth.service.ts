@@ -281,6 +281,14 @@ export class AuthService {
       spiritAnimal: spiritAnimal,
     };
   }
+
+  /**
+   * Fetches the users settings
+   * (currently just a place holder for testing authentication functionality)
+   */
+  getSettings(): void {
+    this.httpClient.get(`${BACKEND_URL}/settings`, { withCredentials: true }).subscribe();
+  }
 }
 
 export interface DialogData {

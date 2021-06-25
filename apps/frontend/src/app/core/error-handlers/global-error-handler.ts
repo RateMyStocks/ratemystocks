@@ -9,6 +9,7 @@ export class GlobalErrorHandler implements ErrorHandler {
   constructor(private injector: Injector, private ngZone: NgZone) {}
 
   handleError(error: Error | HttpErrorResponse) {
+    console.log(error)
     const snackBar = this.injector.get(MatSnackBar);
     let errorType: string;
     if (error instanceof HttpErrorResponse) {
