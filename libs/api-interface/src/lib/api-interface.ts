@@ -404,6 +404,16 @@ export class ListPortfoliosDto {
   totalCount: number;
 }
 
+export class UserPortfolioDto {
+  id: string;
+  name: string;
+  num_likes: number;
+  num_dislikes: number;
+  largest_holding: string;
+  last_updated: string;
+  num_holdings: number;
+}
+
 export class PortfolioRatingCountsDto {
   likes: number;
   dislikes: number;

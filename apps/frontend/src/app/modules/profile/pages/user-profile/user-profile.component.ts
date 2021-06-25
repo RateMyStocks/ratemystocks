@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { UserProfileDto } from '@ratemystocks/api-interface';
+import * as moment from 'moment';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../core/services/auth.service';
 import { UserService } from '../../../../core/services/user.service';
 
@@ -9,10 +11,14 @@ import { UserService } from '../../../../core/services/user.service';
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss'],
 })
-export class UserProfileComponent implements OnInit {
+export class UserProfileComponent implements OnInit, OnDestroy {
   isAuth: boolean;
+  authStatusSub: Subscription;
   userLoaded: boolean;
   user: UserProfileDto;
+  belongsToLoggedInUser: boolean;
+
+  moment = moment;
 
   constructor(private authService: AuthService, private userService: UserService, private route: ActivatedRoute) {
     this.isAuth = this.authService.isAuthorized();
@@ -28,5 +34,13 @@ export class UserProfileComponent implements OnInit {
         this.userLoaded = true;
       });
     });
+
+    this.authStatusSub = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
+      this.isAuth = authStatus;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.authStatusSub.unsubscribe();
   }
 }

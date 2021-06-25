@@ -40,6 +40,16 @@ export class UserAccount extends BaseEntity {
   // })
   // role: UserRole;
 
+  // TODO: Add Date Created column
+
+  // TODO: Add Last Login column
+
+  // TODO: add an about column
+
+  // TODO: add an active column
+
+  // TODO: Add verified column
+
   @Column({
     name: 'spirit_animal',
     type: 'enum',

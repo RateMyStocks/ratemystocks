@@ -113,9 +113,9 @@
               >mode_edit</mat-icon
             >
           </h2>
-          <p *ngIf="portfolio.description" id="portfolio-description">
+          <small *ngIf="portfolio.description" id="portfolio-description">
             {{ portfolio.description }}
-          </p>
+          </small>
           <p *ngIf="!portfolio.description" id="portfolio-description"><i>No description</i></p>
         </mat-card>
 

@@ -1,0 +1,25 @@
+<mat-card class="example-card" style="max-width: 400px">
+  <mat-card-header>
+    <!-- <div mat-card-avatar class="example-header-image"></div> -->
+    <img id="user-profile-thumbnail" mat-card-avatar src="../../../../../assets/images/avatars/{{ user.spiritAnimal }}.png" />
+    <mat-card-title id="user-profile-username">{{ user.username }}</mat-card-title>
+    <mat-card-subtitle
+      ><small>Last Login: {{ moment().fromNow() }}</small></mat-card-subtitle
+    >
+  </mat-card-header>
+  <!-- <img mat-card-image src="../../../../../assets/images/avatars/{{user.spiritAnimal}}.png" alt=""> -->
+  <mat-card-content>
+    <!-- <h3><b>About</b></h3> -->
+
+    <!-- <div style="margin-bottom: 10px;">
+      <small><b>183</b> Followers</small>&nbsp;&nbsp;&nbsp;
+    </div> -->
+    <small> Hi I'm Gabe and I like biscuits. </small>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-flat-button color="primary">Follow</button>
+    <!-- <button mat-flat-button color="primary">Unfollow<mat-icon>plus</mat-icon></button> -->
+    &nbsp;
+    <!-- <button mat-flat-button color="accent">Message</button> -->
+  </mat-card-actions>
+</mat-card>

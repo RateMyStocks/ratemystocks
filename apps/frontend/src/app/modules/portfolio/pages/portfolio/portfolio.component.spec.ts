@@ -16,9 +16,10 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { IexCloudService } from '../../../../core/services/iex-cloud.service';
 import { PortfolioService } from '../../../../core/services/portfolio.service';
 import { Observable, of, Subject } from 'rxjs';
-
 import { PortfolioComponent } from './portfolio.component';
 import { PortfolioModule } from '../../portfolio.module';
+
+Date.now = jest.fn(() => new Date(Date.UTC(2021, 5, 28)).valueOf()); // 6/28/2021
 
 class MockAuthService {
   isAuthorized() {
@@ -216,7 +217,7 @@ describe('PortfolioComponent', () => {
       expect(portfolioCreatedDate.nativeElement.textContent.trim()).toEqual('Created on January 8, 2021');
 
       const portfolioLastUpdatedDate: DebugElement = fixture.debugElement.query(By.css('#portfolio-last-updated-date'));
-      expect(portfolioLastUpdatedDate.nativeElement.textContent.trim()).toEqual('Last Updated 5 months ago');
+      expect(portfolioLastUpdatedDate.nativeElement.textContent.trim()).toEqual('Last Updated 6 months ago');
 
       const portfolioLikes: DebugElement = fixture.debugElement.query(By.css('#portfolio-likes-value'));
       expect(portfolioLikes.nativeElement.textContent.trim()).toEqual('78');

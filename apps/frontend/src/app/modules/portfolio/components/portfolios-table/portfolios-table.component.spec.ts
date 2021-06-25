@@ -12,6 +12,8 @@ import { PortfoliosTableComponent } from './portfolios-table.component';
 import { PortfolioModule } from '../../portfolio.module';
 import { RouterTestingModule } from '@angular/router/testing';
 
+Date.now = jest.fn(() => new Date(Date.UTC(2021, 5, 28)).valueOf()); // 6/28/2021
+
 class MockPortfolioService {
   getPortfolios(
     pageSize?: number,
@@ -102,7 +104,7 @@ describe('PortfoliosTableComponent', () => {
       expect(tableRows[0].query(By.css('.mat-column-num_likes')).nativeElement.textContent).toEqual('32');
       expect(tableRows[0].query(By.css('.mat-column-num_dislikes')).nativeElement.textContent).toEqual('2');
       expect(tableRows[0].query(By.css('.mat-column-num_holdings')).nativeElement.textContent).toEqual('15');
-      expect(tableRows[0].query(By.css('.mat-column-last_updated')).nativeElement.textContent).toEqual('5 months ago');
+      expect(tableRows[0].query(By.css('.mat-column-last_updated')).nativeElement.textContent).toEqual('6 months ago');
     });
   }));
 });

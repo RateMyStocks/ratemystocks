@@ -2,9 +2,32 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 import { BrowserModule } from '@angular/platform-browser';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
+import { SettingsComponent } from './pages/settings/settings.component';
+import { UserPortfoliosTableComponent } from './components/user-portfolios-table/user-portfolios-table.component';
+import { UserProfileHeaderComponent } from './components/user-profile-header/user-profile-header.component';
+import { RouterModule } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
-  declarations: [UserProfileComponent],
-  imports: [BrowserModule, CommonModule],
+  declarations: [UserProfileComponent, SettingsComponent, UserPortfoliosTableComponent, UserProfileHeaderComponent],
+  imports: [
+    BrowserAnimationsModule,
+    BrowserModule,
+    CommonModule,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTabsModule,
+    MatTableModule,
+    MatTooltipModule,
+    RouterModule,
+  ],
 })
 export class ProfileModule {}

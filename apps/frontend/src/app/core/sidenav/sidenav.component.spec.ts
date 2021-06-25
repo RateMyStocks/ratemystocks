@@ -5,6 +5,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SidenavService } from './sidenav.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CoreModule } from '../core.module';
 
 describe('SidenavComponent', () => {
   let component: SidenavComponent;
@@ -12,7 +13,7 @@ describe('SidenavComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
+      imports: [RouterTestingModule, HttpClientTestingModule, CoreModule],
       declarations: [SidenavComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [SidenavService],

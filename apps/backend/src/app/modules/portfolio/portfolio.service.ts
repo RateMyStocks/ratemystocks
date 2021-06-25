@@ -4,7 +4,12 @@ import { PortfolioRepository } from './portfolio.repository';
 import { PortfolioStockRepository } from './portfolio-stock.repository';
 import { Raw } from 'typeorm';
 import { PortfolioRatingRepository } from './portfolio-rating.repository';
-import { CreatePortfolioDto, CreatePortfolioRatingDto, PortfolioRatingCountsDto } from '@ratemystocks/api-interface';
+import {
+  CreatePortfolioDto,
+  CreatePortfolioRatingDto,
+  PortfolioRatingCountsDto,
+  UserPortfolioDto,
+} from '@ratemystocks/api-interface';
 import { Portfolio } from '../../../models/portfolio.entity';
 import { PortfolioStock } from '../../../models/portfolioStock.entity';
 import { UserAccount } from '../../../models/userAccount.entity';
@@ -87,6 +92,42 @@ export class PortfolioService {
     });
 
     return { items: portfolios, totalCount: totalPortfoliosCount };
+  }
+
+  /**
+   * Gets a list of portfolios by user ID.
+   * @param userId The UUID of the user whose portfolios will be fetched.
+   * @return A list of DTOs representing the portfolios a user has created.
+   */
+  async getPortfoliosByUserId(userId: string): Promise<UserPortfolioDto[]> {
+    // NOTE: Please use parameterized queries to prevent SQL injection
+    const portfolios: any[] = await this.portfolioRepository
+      .createQueryBuilder('portfolio')
+      .select(
+        `
+          portfolio.id,
+          portfolio.name,
+          COUNT(distinct portfolioLikes.id) AS num_likes,
+          COUNT(distinct portfolioDislikes.id) AS num_dislikes,
+          largest_holding.ticker AS largest_holding,
+          portfolio.lastUpdated AS last_updated,
+          COUNT(distinct holdings.id) AS num_holdings
+        `
+      )
+      .innerJoin('portfolio.user', 'user')
+      .leftJoin('portfolio.ratings', 'portfolioLikes', 'portfolioLikes.isLiked IS TRUE')
+      .leftJoin('portfolio.ratings', 'portfolioDislikes', 'portfolioDislikes.isLiked IS FALSE')
+      .leftJoin('portfolio.stocks', 'holdings')
+      .leftJoin(
+        'portfolio_stock',
+        'largest_holding',
+        'largest_holding.id = (SELECT ps.id FROM portfolio_stock ps WHERE ps.portfolio_id = portfolio.id ORDER BY ps.weighting DESC LIMIT 1)'
+      )
+      .where('user.id = :userId', { userId: userId })
+      .groupBy('portfolio.id, largest_holding.ticker')
+      .getRawMany();
+
+    return portfolios;
   }
 
   // TODO: Don't return the entity and delete sensitive info - instead map the entity to a dto

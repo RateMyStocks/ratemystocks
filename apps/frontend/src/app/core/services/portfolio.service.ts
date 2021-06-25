@@ -9,6 +9,7 @@ import {
   PortfolioDto,
   PortfolioRatingDto,
   PortfolioStockDto,
+  UserPortfolioDto,
 } from '@ratemystocks/api-interface';
 import { SortDirection } from '../../shared/models/enums/sort-direction';
 
@@ -37,6 +38,16 @@ export class PortfolioService {
   ): Observable<ListPortfoliosDto> {
     const endpoint = `${environment.apiUrl}/portfolio/list?pageSize=${pageSize}&skip=${skip}&orderBy=${orderBy}&sortDirection=${sortDirection}&filter=${filter}`;
     return this.http.get<ListPortfoliosDto>(endpoint);
+  }
+
+  /**
+   * Gets a list of portfolios by user ID.
+   * @param userId The UUID of the user whose portfolios will be fetched.
+   * @return A list of DTOs representing the portfolios a user has created.
+   */
+  getPortfoliosByUserId(userId: string): Observable<UserPortfolioDto[]> {
+    const endpoint = `${environment.apiUrl}/portfolio/list/${userId}`;
+    return this.http.get<any>(endpoint);
   }
 
   /**

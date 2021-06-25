@@ -1,6 +1,9 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { SpiritAnimal } from '@ratemystocks/api-interface';
+import { Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ProfileModule } from '../../profile.module';
 
@@ -13,6 +16,10 @@ class MockAuthService {
 
   getUserId(): string {
     return '2498f310-cbc6-4af0-bab6-793e640aede4';
+  }
+
+  getAuthStatusListener(): Observable<boolean> {
+    return new Subject<boolean>();
   }
 }
 
@@ -39,6 +46,14 @@ describe('UserProfileComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(UserProfileComponent);
     component = fixture.componentInstance;
+
+    component.user = {
+      id: 'ddb2a4a0-262e-4cd7-8d13-8eae5e4019c8',
+      username: 'TestUser',
+      email: 'test@gmail.com',
+      spiritAnimal: SpiritAnimal.ANTELOPE,
+    };
+
     fixture.detectChanges();
   });
 

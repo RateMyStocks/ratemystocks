@@ -25,7 +25,7 @@ const routes: Routes = [
     children: LOGIN_ROUTES,
   },
   {
-    path: 'users',
+    path: '',
     children: PROFILE_ROUTES,
   },
   {
