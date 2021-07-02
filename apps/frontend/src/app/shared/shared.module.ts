@@ -20,9 +20,10 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatCardModule } from '@angular/material/card';
 import { NgxPieChartComponent } from './components/ngx-pie-chart/ngx-pie-chart.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
-  declarations: [StockSearchComponent, NgxPieChartComponent],
+  declarations: [StockSearchComponent, NgxPieChartComponent, ConfirmDialogComponent],
   imports: [
     BrowserAnimationsModule,
     CommonModule,
@@ -45,5 +46,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatProgressBarModule,
   ],
   exports: [StockSearchComponent, NgxPieChartComponent],
+  entryComponents: [ConfirmDialogComponent],
 })
 export class SharedModule {}

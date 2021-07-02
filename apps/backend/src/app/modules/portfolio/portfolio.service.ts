@@ -274,6 +274,18 @@ export class PortfolioService {
   }
 
   /**
+   * Deletes a Portfolio by it's unique id.
+   * @param portfolioId The UUID of the portfolio to delete.
+   */
+  async deletePortfolioById(portfolioId: string): Promise<void> {
+    const result = await this.portfolioRepository.delete({ id: portfolioId });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Portfolio with ID "${portfolioId} not found`);
+    }
+  }
+
+  /**
    * Deletes a PortfolioRating by id.
    * @param portfolioRatingId The UUID of the PortfolioRating to delete.
    */
