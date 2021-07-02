@@ -117,6 +117,20 @@ export class PortfolioController {
     return this.portfolioService.updatePortfolioDescription(userAccount, portfolioId, portfolioDescription);
   }
 
+  /**
+   * Deletes a Portfolio by it's unique id.
+   * @param portfolioId The UUID of the portfolio to delete.
+   */
+  @Delete('/:id')
+  @UseGuards(AuthGuard())
+  deletePortfolioById(@Param('id') id): Promise<void> {
+    return this.portfolioService.deletePortfolioById(id);
+  }
+
+  /**
+   * Deletes the logged-in users rating for a given portfolio
+   * @param portfolioRatingId The UUID of the portfolio to delete the rating from
+   */
   @Delete('/:portfolioRatingId/ratings/user')
   @UseGuards(AuthGuard())
   deletePortfolioRating(@Param('portfolioRatingId') portfolioRatingId: string): Promise<void> {

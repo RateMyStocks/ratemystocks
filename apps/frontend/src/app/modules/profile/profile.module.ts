@@ -14,6 +14,8 @@ import { RouterModule } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { SharedModule } from '../../shared/shared.module';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [UserProfileComponent, SettingsComponent, UserPortfoliosTableComponent, UserProfileHeaderComponent],
@@ -22,12 +24,14 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     BrowserModule,
     CommonModule,
     MatCardModule,
+    MatDialogModule,
     MatIconModule,
     MatButtonModule,
     MatTabsModule,
     MatTableModule,
     MatTooltipModule,
     RouterModule,
+    SharedModule,
   ],
 })
 export class ProfileModule {}

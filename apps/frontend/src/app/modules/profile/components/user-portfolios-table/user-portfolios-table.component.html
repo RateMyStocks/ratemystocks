@@ -51,10 +51,10 @@
       <button mat-icon-button class="" matTooltip="View this portfolio" routerLink="/portfolios/{{ element.id }}">
         <mat-icon>preview</mat-icon>
       </button>
-      <button mat-icon-button class="" matTooltip="Edit this portfolio" *ngIf="isAuth && user.id === loggedInUserId">
+      <!-- <button mat-icon-button class="" matTooltip="Edit this portfolio" *ngIf="isAuth && user.id === loggedInUserId">
         <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button class="" matTooltip="Delete this portfolio" *ngIf="isAuth && user.id === loggedInUserId">
+      </button> -->
+      <button mat-icon-button class="" matTooltip="Delete this portfolio" *ngIf="isAuth && user.id === loggedInUserId" (click)="onClickDeletePortfolioButton(element.id)">
         <mat-icon>delete</mat-icon>
       </button>
     </td>

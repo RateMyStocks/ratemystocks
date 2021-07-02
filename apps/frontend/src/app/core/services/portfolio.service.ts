@@ -143,6 +143,15 @@ export class PortfolioService {
   }
 
   /**
+   * Makes a DELETE request to delete a user's portfolio by ID.
+   * @param portfolioId The portfolio's UUID as a string.
+   */
+  deletePortfolioById(portfolioId: string): Observable<void> {
+    const endpoint = `${environment.apiUrl}/portfolio/${portfolioId}`;
+    return this.http.delete<void>(endpoint, { withCredentials: true });
+  }
+
+  /**
    * Makes a DELETE request to delete a user's portfolio rating by ID.
    * @param portfolioRatingId The portfolio rating UUID as a string.
    */
