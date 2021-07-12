@@ -16,11 +16,10 @@ import { UserAccount } from '../../../models/userAccount.entity';
 export class StockService {
   constructor(@InjectRepository(StockRatingRepository) private stockRatingRepo: StockRatingRepository) {}
 
-  // TODO: fix this jsdoc
-
   /**
    * Counts the number of buy, sell and hold counts for a stock
-   * @param ticker
+   * @param ticker The ticker symbol of the stock
+   * @return A DTO containing the buy, sell, and hold rating counts of the stock.
    */
   async getStockRatingCount(ticker: string): Promise<StockRatingCountDto> {
     const buy_count: number = await this.stockRatingRepo.count({
@@ -56,8 +55,9 @@ export class StockService {
 
   /**
    * Gets the user's rating for a particular stock
-   * @param ticker
-   * @param userAccount
+   * @param ticker The ticker symbol of the stock
+   * @param userAccount The logged-in user whose ratings are being loaded.
+   * @return A DTO representing the user's rating for a given stock.
    */
   async getStockUserRating(ticker: string, userAccount: UserAccount): Promise<StockRatingDto> {
     const userStockRating: StockRating = await this.stockRatingRepo.findOne({
@@ -72,9 +72,9 @@ export class StockService {
 
   /**
    * Updates or creates a new stock rating
-   * @param ticker
-   * @param userAccount
-   * @param rating
+   * @param ticker The ticker symbol of the stock
+   * @param userAccount The logged-in user who is submitting a rating.
+   * @param rating The incoming stock rating, either a Buy, Hold, or Sell
    */
   async addUserRating(ticker: string, userAccount: UserAccount, rating: StockRatingEnum): Promise<void> {
     const activeRating: StockRating = await this.stockRatingRepo.findOne({

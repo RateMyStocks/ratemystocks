@@ -27,6 +27,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatDialogModule,
     MatIconModule,
     MatButtonModule,
+    MatSnackBarModule,
     MatTabsModule,
     MatTableModule,
     MatTooltipModule,

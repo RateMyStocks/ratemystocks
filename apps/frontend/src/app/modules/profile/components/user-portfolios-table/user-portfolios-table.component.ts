@@ -10,6 +10,7 @@ import {
   ConfirmDialogComponent,
   ConfirmDialogModel,
 } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 /**
  * @title Basic use of `<table mat-table>`
@@ -45,6 +46,7 @@ export class UserPortfoliosTableComponent implements OnInit, OnDestroy {
     private portfolioService: PortfolioService,
     private authService: AuthService,
     public dialog: MatDialog,
+    private snackbar: MatSnackBar,
     private changeDetectorRefs: ChangeDetectorRef
   ) {}
 
@@ -88,6 +90,11 @@ export class UserPortfoliosTableComponent implements OnInit, OnDestroy {
         if (isConfirmed) {
           this.portfolioService.deletePortfolioById(portfolioId).subscribe(() => {
             this.refreshPortfoliosTable();
+          });
+
+          this.snackbar.open(`Portfolio deleted!`, 'OK', {
+            duration: 2000,
+            panelClass: 'success-snackbar',
           });
         }
       });

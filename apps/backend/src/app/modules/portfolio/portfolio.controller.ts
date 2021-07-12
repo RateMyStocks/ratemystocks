@@ -56,6 +56,7 @@ export class PortfolioController {
     @GetUser() userAccount: UserAccount,
     @Body(CreatePortfolioValidationPipe) portfolio: CreatePortfolioDto
   ): Promise<Portfolio> {
+    // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
     return this.portfolioService.createPortfolio(portfolio, userAccount);
   }
 
@@ -97,6 +98,7 @@ export class PortfolioController {
     @Param('portfolioId') portfolioId,
     @Body() portfolioName: { name: string }
   ): Promise<Portfolio> {
+    // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
     return this.portfolioService.updatePortfolioName(userAccount, portfolioId, portfolioName);
   }
 
@@ -114,7 +116,26 @@ export class PortfolioController {
     @Param('portfolioId') portfolioId,
     @Body() portfolioDescription: { description: string }
   ): Promise<Portfolio> {
+    // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
     return this.portfolioService.updatePortfolioDescription(userAccount, portfolioId, portfolioDescription);
+  }
+
+  /**
+   * Updates the holdings of a portfolio.
+   * @param userAccount The logged-in user who owns the portfolio.
+   * @param portfolioId The unique UUID of the portfolio.
+   * @param portfolioHoldings DTo representing the updated holdings of the portfolio.
+   * @returns The portfolio with the updated holdings.
+   */
+  @Patch('/holdings/:portfolioId')
+  @UseGuards(AuthGuard())
+  updatePortfolioHoldings(
+    @GetUser() userAccount: UserAccount,
+    @Param('portfolioId') portfolioId,
+    @Body() portfolioHoldings: { holdings: PortfolioStockDto[] }
+  ): Promise<Portfolio> {
+    // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
+    return this.portfolioService.updatePortfolioHoldings(userAccount, portfolioId, portfolioHoldings);
   }
 
   /**
