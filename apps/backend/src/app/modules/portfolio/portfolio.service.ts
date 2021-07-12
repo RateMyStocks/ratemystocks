@@ -8,6 +8,7 @@ import {
   CreatePortfolioDto,
   CreatePortfolioRatingDto,
   PortfolioRatingCountsDto,
+  PortfolioStockDto,
   UserPortfolioDto,
 } from '@ratemystocks/api-interface';
 import { Portfolio } from '../../../models/portfolio.entity';
@@ -171,6 +172,7 @@ export class PortfolioService {
    * @param userAccount The account of the logged-in user.
    */
   async createPortfolio(portfolioDto: CreatePortfolioDto, userAccount: UserAccount): Promise<Portfolio> {
+    // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
     return this.portfolioRepository.createPortfolio(portfolioDto, userAccount);
   }
 
@@ -210,6 +212,7 @@ export class PortfolioService {
     portfolioId: string,
     portfolioName: { name: string }
   ): Promise<Portfolio> {
+    // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
     const portfolio = await this.portfolioRepository.findOne({ where: { id: portfolioId, userId: userAccount.id } });
 
     // Throw 403 in the unlikely case that a user is attempting to update another user's portfolio or the portfolio is not found.
@@ -240,6 +243,7 @@ export class PortfolioService {
     portfolioId: string,
     portfolioDescription: { description: string }
   ): Promise<Portfolio> {
+    // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
     const portfolio = await this.portfolioRepository.findOne({ where: { id: portfolioId, userId: userAccount.id } });
 
     // Throw 403 in the unlikely case that a user is attempting to update another user's portfolio or the portfolio is not found.
@@ -248,6 +252,49 @@ export class PortfolioService {
     }
 
     portfolio.description = portfolioDescription.description;
+    await portfolio.save();
+
+    // After portfolio is saved, remove the sensitive User info from it so we don't send back it back to the client
+    delete portfolio.user.password;
+    delete portfolio.user.salt;
+    delete portfolio.user.email;
+
+    return portfolio;
+  }
+
+  /**
+   * Updates the holdings of a portfolio.
+   * @param userAccount The logged-in user who owns the portfolio.
+   * @param portfolioId The unique UUID of the portfolio.
+   * @param portfolioHoldings DTo representing the updated holdings of the portfolio.
+   * @returns The portfolio with the updated holdings.
+   */
+  async updatePortfolioHoldings(
+    userAccount: UserAccount,
+    portfolioId: string,
+    portfolioHoldings: { holdings: PortfolioStockDto[] }
+  ): Promise<Portfolio> {
+    // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
+    const portfolio = await this.portfolioRepository.findOne({ where: { id: portfolioId, userId: userAccount.id } });
+
+    // Throw 403 in the unlikely case that a user is attempting to update another user's portfolio or the portfolio is not found.
+    if (!portfolio) {
+      throw new ForbiddenException('You do not own this portfolio.');
+    }
+
+    const updatedStocks: PortfolioStock[] = null;
+
+    portfolioHoldings.holdings.forEach((stockDto: PortfolioStockDto) => {
+      const stockEntity: PortfolioStock = new PortfolioStock();
+      stockEntity.ticker = stockDto.ticker;
+      stockEntity.weighting = stockDto.weighting;
+      stockEntity.portfolio = portfolio;
+
+      updatedStocks.push(stockEntity);
+    });
+
+    portfolio.stocks = updatedStocks;
+    portfolio.lastUpdated = new Date();
     await portfolio.save();
 
     // After portfolio is saved, remove the sensitive User info from it so we don't send back it back to the client

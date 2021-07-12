@@ -29,7 +29,6 @@ export class PortfolioHoldingsTableComponent implements OnInit, OnDestroy {
 
   /** Gets the total cost of all transactions. */
   getTotalWeighting(): number {
-    // TODO: The math is weird when you have .01 or something
     const total = this.dataSource.data.reduce((sum: number, v: PortfolioStock) => (sum += Number(v.weighting)), 0);
     return total;
   }
