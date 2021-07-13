@@ -7,6 +7,7 @@ import { PortfolioRatingRepository } from './portfolio-rating.repository';
 import {
   CreatePortfolioDto,
   CreatePortfolioRatingDto,
+  CreatePortfolioStockDto,
   PortfolioRatingCountsDto,
   PortfolioStockDto,
   UserPortfolioDto,
@@ -272,37 +273,42 @@ export class PortfolioService {
   async updatePortfolioHoldings(
     userAccount: UserAccount,
     portfolioId: string,
-    portfolioHoldings: { holdings: PortfolioStockDto[] }
+    portfolioHoldings: { holdings: CreatePortfolioStockDto[] }
   ): Promise<Portfolio> {
     // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
-    const portfolio = await this.portfolioRepository.findOne({ where: { id: portfolioId, userId: userAccount.id } });
+    const portfolioEntity = await this.portfolioRepository.findOne({
+      where: { id: portfolioId, userId: userAccount.id },
+    });
 
     // Throw 403 in the unlikely case that a user is attempting to update another user's portfolio or the portfolio is not found.
-    if (!portfolio) {
+    if (!portfolioEntity) {
       throw new ForbiddenException('You do not own this portfolio.');
     }
 
-    const updatedStocks: PortfolioStock[] = null;
+    const updatedStocks: PortfolioStock[] = [];
 
-    portfolioHoldings.holdings.forEach((stockDto: PortfolioStockDto) => {
+    portfolioHoldings.holdings.forEach((stockDto: CreatePortfolioStockDto) => {
       const stockEntity: PortfolioStock = new PortfolioStock();
+
+      // For a create to happen, id has to be undefined (null won't work)
+      stockEntity.id = stockDto.id ? stockDto.id : undefined;
       stockEntity.ticker = stockDto.ticker;
       stockEntity.weighting = stockDto.weighting;
-      stockEntity.portfolio = portfolio;
+      stockEntity.portfolioId = portfolioEntity.id;
 
       updatedStocks.push(stockEntity);
     });
 
-    portfolio.stocks = updatedStocks;
-    portfolio.lastUpdated = new Date();
-    await portfolio.save();
+    portfolioEntity.stocks = updatedStocks;
+    portfolioEntity.lastUpdated = new Date();
+    await portfolioEntity.save();
 
     // After portfolio is saved, remove the sensitive User info from it so we don't send back it back to the client
-    delete portfolio.user.password;
-    delete portfolio.user.salt;
-    delete portfolio.user.email;
+    delete portfolioEntity.user.password;
+    delete portfolioEntity.user.salt;
+    delete portfolioEntity.user.email;
 
-    return portfolio;
+    return portfolioEntity;
   }
 
   /**

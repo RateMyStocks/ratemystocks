@@ -3,6 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import {
   CreatePortfolioDto,
   CreatePortfolioRatingDto,
+  CreatePortfolioStockDto,
   ListPortfoliosDto,
   PortfolioStockDto,
   UserPortfolioDto,
@@ -13,6 +14,7 @@ import { UserAccount } from '../../../models/userAccount.entity';
 import { GetUser } from '../auth/get-user.decorator';
 import { CreatePortfolioValidationPipe } from './pipes/create-portfolio-validation.pipe';
 import { PortfolioService } from './portfolio.service';
+import { PortfolioHoldingsValidationPipe } from './pipes/portfolio-holdings-validation.pipe';
 
 @Controller('portfolio')
 export class PortfolioController {
@@ -132,8 +134,9 @@ export class PortfolioController {
   updatePortfolioHoldings(
     @GetUser() userAccount: UserAccount,
     @Param('portfolioId') portfolioId,
-    @Body() portfolioHoldings: { holdings: PortfolioStockDto[] }
+    @Body(PortfolioHoldingsValidationPipe) portfolioHoldings: { holdings: CreatePortfolioStockDto[] }
   ): Promise<Portfolio> {
+    // TODO: This should return a DTO
     // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
     return this.portfolioService.updatePortfolioHoldings(userAccount, portfolioId, portfolioHoldings);
   }

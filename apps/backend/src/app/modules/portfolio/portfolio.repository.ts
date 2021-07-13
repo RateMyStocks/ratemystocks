@@ -1,7 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { ConflictException, InternalServerErrorException } from '@nestjs/common';
 import { PortfolioStock } from '../../../models/portfolioStock.entity';
-import { CreatePortfolioDto, PortfolioStockDto } from '@ratemystocks/api-interface';
+import { CreatePortfolioDto, CreatePortfolioStockDto } from '@ratemystocks/api-interface';
 import { Portfolio } from '../../../models/portfolio.entity';
 import { UserAccount } from '../../../models/userAccount.entity';
 
@@ -21,7 +21,7 @@ export class PortfolioRepository extends Repository<Portfolio> {
     portfolioEntity.lastUpdated = new Date();
 
     const holdings: PortfolioStock[] = [];
-    portfolioDto.holdings.forEach((portfolioStockDto: PortfolioStockDto, index: number) => {
+    portfolioDto.holdings.forEach((portfolioStockDto: CreatePortfolioStockDto, index: number) => {
       const portfolioStockEntity = new PortfolioStock();
       portfolioStockEntity.ticker = portfolioStockDto.ticker;
       portfolioStockEntity.weighting = portfolioStockDto.weighting;
