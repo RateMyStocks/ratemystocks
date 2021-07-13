@@ -1,5 +1,5 @@
 import { BadRequestException, PipeTransform } from '@nestjs/common';
-import { CreatePortfolioDto, PortfolioStockDto } from '@ratemystocks/api-interface';
+import { CreatePortfolioDto, CreatePortfolioStockDto } from '@ratemystocks/api-interface';
 
 const MAX_STOCKS = 30;
 
@@ -29,8 +29,8 @@ export class CreatePortfolioValidationPipe implements PipeTransform {
    * @param dto The CreatePortfolioDto whose stock holdings will be validated.
    * @return True if the sum of all stock weightings in a portfolio add up to 100%, false otherwise.
    */
-  private isWeightingValid(holdings: PortfolioStockDto[]): boolean {
-    const weightingTotal = holdings.reduce((accumulator: number, portfolioStock: PortfolioStockDto) => {
+  private isWeightingValid(holdings: CreatePortfolioStockDto[]): boolean {
+    const weightingTotal = holdings.reduce((accumulator: number, portfolioStock: CreatePortfolioStockDto) => {
       return accumulator + portfolioStock.weighting;
     }, 0);
 

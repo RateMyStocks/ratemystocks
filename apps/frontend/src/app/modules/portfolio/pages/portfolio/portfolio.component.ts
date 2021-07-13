@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -20,6 +20,7 @@ import { MarketCapThresholds } from '../../../../shared/models/enums/market-cap-
 import { MarketCap } from '../../../../shared/models/enums/market-cap';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Subscription } from 'rxjs';
+import { UpdatePortfolioHoldingsDialogComponent } from '../../components/update-portfolio-holdings-dialog/update-portfolio-holdings-dialog.component';
 
 @Component({
   selector: 'app-portfolio',
@@ -91,10 +92,7 @@ export class PortfolioComponent implements OnInit {
         this.stocksLoaded = true;
 
         if (stocks.length > 0) {
-          const tickerSymbols: string[] = this.portfolioStocks.map((stock: PortfolioStockDto) => stock.ticker);
-          this.iexCloudService.batchGetStocks(tickerSymbols, ['stats', 'company', 'price']).subscribe((result: any) => {
-            this.iexStockDataMap = result;
-          });
+          this.updateIexStockDataMap();
         }
 
         this.setStockPieChartBreakdown();
@@ -163,7 +161,7 @@ export class PortfolioComponent implements OnInit {
     // Iterate through the portfolio's stocks to push data into the valueWeightingMap
     this.portfolioStocks.forEach((stock: PortfolioStockDto): void => {
       const iexStockMapping = this.iexStockDataMap[stock.ticker];
-      const iexCloudValue = iexStockMapping.company[iexCompanyField];
+      const iexCloudValue = iexStockMapping ? iexStockMapping.company[iexCompanyField] : null;
 
       if (iexCloudValue) {
         valueWeightingMap.set(
@@ -437,5 +435,39 @@ export class PortfolioComponent implements OnInit {
         }
       });
     }
+  }
+
+  /** Opens the MatDialog for updating portfolio holdings */
+  onClickEditPortfolioHoldings(): void {
+    if (this.authService.isAuthorized()) {
+      const dialogRef = this.dialog.open(UpdatePortfolioHoldingsDialogComponent, {
+        data: {
+          portfolio: this.portfolio,
+          portfolioStocks: this.portfolioStocks,
+        },
+      });
+      dialogRef.afterClosed().subscribe((result: PortfolioDto) => {
+        if (result) {
+          this.portfolio = result;
+
+          this.portfolioStocks = result.stocks;
+          this.setStockPieChartBreakdown();
+
+          if (this.portfolioStocks.length > 0) {
+            this.updateIexStockDataMap();
+          }
+        }
+      });
+    }
+  }
+
+  /**
+   * Calls IEX Cloud API and updates the iexStockDataMap variable that maps ticker symbols to stock data
+   */
+  updateIexStockDataMap(): void {
+    const tickerSymbols: string[] = this.portfolioStocks.map((stock: PortfolioStockDto) => stock.ticker);
+    this.iexCloudService.batchGetStocks(tickerSymbols, ['stats', 'company', 'price']).subscribe((result: any) => {
+      this.iexStockDataMap = result;
+    });
   }
 }

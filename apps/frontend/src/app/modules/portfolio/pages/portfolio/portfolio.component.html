@@ -3,7 +3,9 @@
     <div class="row-left">
       <div class="portfolio-info-container">
         <h1 id="portfolio-title">
-          <span class="active-breadcrumb page-header"><b>{{ portfolio.name }}</b></span>
+          <span class="active-breadcrumb page-header"
+            ><b>{{ portfolio.name }}</b></span
+          >
           <mat-icon
             *ngIf="isAuth && loggedInUserId === portfolio.userId"
             matTooltip="Edit portfolio name"
@@ -15,7 +17,8 @@
         <p id="portfolio-creator">
           <!-- TODO: SHOW CREATOR'S PROFILE PICTURE -->
           <!-- <img src="../../../../../assets/images/avatars/{{row.spirit_animal}}.png" class="profile-picture" /> -->
-          <strong>Creator: </strong> <a routerLink="/users/{{portfolio.user.username}}">{{ portfolio.user.username }}</a>
+          <strong>Creator: </strong>
+          <a routerLink="/users/{{ portfolio.user.username }}">{{ portfolio.user.username }}</a>
         </p>
         <div id="portfolio-created-date">
           <small>Created on {{ moment(portfolio.dateCreated).format('MMMM D, YYYY') }} </small>
@@ -127,7 +130,9 @@
             <div fxFlex="33%;" fxFlex.xs="80%">
               <p><strong>Overview</strong></p>
               <p class="portfolio-stat">
-                <small># of Holdings: <strong>{{ portfolioStocks.length }}</strong></small>
+                <small
+                  ># of Holdings: <strong>{{ portfolioStocks.length }}</strong></small
+                >
               </p>
               <p class="portfolio-stat">
                 <small>
@@ -138,7 +143,9 @@
                 </small>
               </p>
               <p class="portfolio-stat">
-                <small>Top Holding: <a routerLink="/stocks/{{ getLargestHolding() }}">{{ getLargestHolding() }}</a></small>
+                <small
+                  >Top Holding: <a routerLink="/stocks/{{ getLargestHolding() }}">{{ getLargestHolding() }}</a></small
+                >
               </p>
               <p class="portfolio-stat">
                 <small>
@@ -223,7 +230,13 @@
     <mat-card>
       <h2>
         <strong>Holdings</strong>
-        <mat-icon *ngIf="isAuth && loggedInUserId === portfolio.userId" matTooltip="Edit portfolio holdings" class="edit-portfolio-icon">mode_edit</mat-icon>
+        <mat-icon
+          *ngIf="isAuth && loggedInUserId === portfolio.userId"
+          (click)="onClickEditPortfolioHoldings()"
+          matTooltip="Edit portfolio holdings"
+          class="edit-portfolio-icon"
+          >mode_edit</mat-icon
+        >
       </h2>
       <app-portfolio-holdings-table-readonly
         [portfolioStocks]="portfolioStocks"

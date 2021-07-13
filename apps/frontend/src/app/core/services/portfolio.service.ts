@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import {
   CreatePortfolioDto,
   CreatePortfolioRatingDto,
+  CreatePortfolioStockDto,
   ListPortfoliosDto,
   PortfolioDto,
   PortfolioRatingDto,
@@ -106,6 +107,21 @@ export class PortfolioService {
     const endpoint = `${environment.apiUrl}/portfolio/description/${portfolioId}`;
 
     return this.http.patch<PortfolioDto>(endpoint, portfolioDescription, { withCredentials: true });
+  }
+
+  /**
+   * Updates the holdings of an existing portfolio
+   * @param portfolioId The UUID that uniquely identifies the portfolio in the database that will be updated.
+   * @param portfolioHoldings An object containing the holdings to set on the portfolio.
+   * @return The updated portfolio object with the updated holdings.
+   */
+  updatePortfolioHoldings(
+    portfolioId: string,
+    portfolioHoldings: { holdings: CreatePortfolioStockDto[] }
+  ): Observable<PortfolioDto> {
+    const endpoint = `${environment.apiUrl}/portfolio/holdings/${portfolioId}`;
+
+    return this.http.patch<PortfolioDto>(endpoint, portfolioHoldings, { withCredentials: true });
   }
 
   /**

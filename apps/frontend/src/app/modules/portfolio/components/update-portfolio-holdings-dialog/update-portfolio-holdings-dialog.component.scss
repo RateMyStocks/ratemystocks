@@ -1,0 +1,15 @@
+.update-portfolio-holdings-dialog-container {
+  mat-dialog-content {
+    width: 600px;
+    height: 700px;
+  }
+
+  .mat-stepper-horizontal {
+    margin-top: 8px;
+  }
+
+  .mat-form-field {
+    margin-top: 16px;
+    width: 100%;
+  }
+}

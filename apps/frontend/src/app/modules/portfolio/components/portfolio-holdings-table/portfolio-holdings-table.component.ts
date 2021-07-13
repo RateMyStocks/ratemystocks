@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { StockSearchService } from '../../../../core/services/stock-search.service';
-import { IexCloudSearchDto } from '@ratemystocks/api-interface';
+import { IexCloudSearchDto, PortfolioStockDto } from '@ratemystocks/api-interface';
 
 export interface PortfolioStock {
   ticker: string;
@@ -15,11 +15,12 @@ export interface PortfolioStock {
   styleUrls: ['./portfolio-holdings-table.component.scss'],
 })
 export class PortfolioHoldingsTableComponent implements OnInit, OnDestroy {
-  dataSource: MatTableDataSource<PortfolioStock>;
+  dataSource: MatTableDataSource<PortfolioStockDto>;
 
   displayedColumns = ['ticker', 'weighting', 'remove'];
 
-  portfolioStocks: PortfolioStock[] = [];
+  @Input()
+  portfolioStocks: PortfolioStockDto[] = [];
 
   stockSearchSubscription: Subscription;
 
@@ -29,7 +30,7 @@ export class PortfolioHoldingsTableComponent implements OnInit, OnDestroy {
 
   /** Gets the total cost of all transactions. */
   getTotalWeighting(): number {
-    const total = this.dataSource.data.reduce((sum: number, v: PortfolioStock) => (sum += Number(v.weighting)), 0);
+    const total = this.dataSource.data.reduce((sum: number, v: PortfolioStockDto) => (sum += Number(v.weighting)), 0);
     return total;
   }
 
@@ -42,11 +43,13 @@ export class PortfolioHoldingsTableComponent implements OnInit, OnDestroy {
         if (stockToAdd) {
           // Prevent adding duplicate stocks to portfolio
           const stockAlreadyAdded: boolean = this.dataSource.data
-            .map((stock: PortfolioStock) => stock.ticker)
+            .map((stock: PortfolioStockDto) => stock.ticker)
             .includes(stockToAdd.symbol.toUpperCase());
 
           if (!stockAlreadyAdded) {
             this.dataSource.data.unshift({
+              id: null,
+              portfolioId: null,
               ticker: stockToAdd.symbol.toUpperCase(),
               weighting: 0,
             });
@@ -64,12 +67,12 @@ export class PortfolioHoldingsTableComponent implements OnInit, OnDestroy {
    * Deletes a stock from the portfolio and removes the row from the table.
    * @param stock The PortfolioStock in the table to delete.
    */
-  remove(stock: PortfolioStock) {
+  remove(stock: PortfolioStockDto) {
     this.dataSource.data.splice(this.dataSource.data.indexOf(stock), 1);
     this.table.renderRows();
   }
 
-  getHoldings(): PortfolioStock[] {
+  getHoldings(): PortfolioStockDto[] {
     return this.dataSource.data;
   }
 }

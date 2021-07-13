@@ -48,14 +48,15 @@ class MockPortfolioService {
         username: 'johnsmith23',
         email: 'jsmith23@gmail.com',
       },
+      stocks: null,
     };
     return of(portfolio);
   }
 
   getPortfolioStocks(id: string) {
     const portfolioStocks: PortfolioStockDto[] = [
-      { ticker: 'MSFT', weighting: 40 },
-      { ticker: 'AMZN', weighting: 60 },
+      { id: '', ticker: 'MSFT', weighting: 40, portfolioId: '' },
+      { id: '', ticker: 'AMZN', weighting: 60, portfolioId: '' },
     ];
 
     return of(portfolioStocks);

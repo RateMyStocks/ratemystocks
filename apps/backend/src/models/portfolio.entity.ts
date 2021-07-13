@@ -21,28 +21,19 @@ export class Portfolio extends BaseEntity {
   @Column({ name: 'last_updated', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', nullable: false })
   lastUpdated: Date;
 
-  @ManyToOne(
-    type => UserAccount,
-    user => user.portfolios,
-    { nullable: false, onDelete: 'CASCADE', eager: true }
-  )
+  @ManyToOne((type) => UserAccount, (user) => user.portfolios, { nullable: false, onDelete: 'CASCADE', eager: true })
   @JoinColumn({ name: 'user_id' })
   user: UserAccount;
 
   @Column({ name: 'user_id', type: 'uuid' })
   userId: string;
 
-  @OneToMany(
-    type => PortfolioRating,
-    portfolioRating => portfolioRating.portfolio,
-    { eager: false }
-  )
+  @OneToMany((type) => PortfolioRating, (portfolioRating) => portfolioRating.portfolio, { eager: false })
   ratings: PortfolioRating[];
 
-  @OneToMany(
-    type => PortfolioStock,
-    portfolioStock => portfolioStock.portfolio,
-    { eager: false, cascade: true }
-  )
+  @OneToMany((type) => PortfolioStock, (portfolioStock) => portfolioStock.portfolio, {
+    eager: false,
+    cascade: ['insert', 'update'],
+  })
   stocks: PortfolioStock[];
 }

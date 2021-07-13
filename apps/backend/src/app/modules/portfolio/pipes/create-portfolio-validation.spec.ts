@@ -26,10 +26,12 @@ describe('CreatePortfolioValidationPipe', () => {
           description: null,
           holdings: [
             {
+              id: undefined,
               ticker: 'MSFT',
               weighting: 50,
             },
             {
+              id: undefined,
               ticker: 'GOOG',
               weighting: 50,
             },
@@ -51,16 +53,19 @@ describe('CreatePortfolioValidationPipe', () => {
           description: null,
           holdings: [
             {
+              id: undefined,
               ticker: 'MSFT',
               weighting: 50.1,
             },
             {
+              id: undefined,
               ticker: 'GOOG',
               weighting: 50,
             },
           ],
         };
 
+        // TODO: These tests are passing regardless of whether or not an exception is being thrown
         try {
           target.transform(portfolio);
         } catch (err) {
@@ -78,16 +83,19 @@ describe('CreatePortfolioValidationPipe', () => {
           description: null,
           holdings: [
             {
+              id: undefined,
               ticker: 'MSFT',
               weighting: 49.1,
             },
             {
+              id: undefined,
               ticker: 'GOOG',
               weighting: 50,
             },
           ],
         };
 
+        // TODO: These tests are passing regardless of whether or not an exception is being thrown
         try {
           target.transform(portfolio);
         } catch (err) {
@@ -104,41 +112,42 @@ describe('CreatePortfolioValidationPipe', () => {
           name: 'Fake Portfolio',
           description: null,
           holdings: [
-            { ticker: 'MSFT', weighting: 69 },
-            { ticker: 'A', weighting: 1 },
-            { ticker: 'B', weighting: 1 },
-            { ticker: 'C', weighting: 1 },
-            { ticker: 'D', weighting: 1 },
-            { ticker: 'E', weighting: 1 },
-            { ticker: 'F', weighting: 1 },
-            { ticker: 'G', weighting: 1 },
-            { ticker: 'H', weighting: 1 },
-            { ticker: 'I', weighting: 1 },
-            { ticker: 'J', weighting: 1 },
-            { ticker: 'K', weighting: 1 },
-            { ticker: 'L', weighting: 1 },
-            { ticker: 'M', weighting: 1 },
-            { ticker: 'N', weighting: 1 },
-            { ticker: 'O', weighting: 1 },
-            { ticker: 'P', weighting: 1 },
-            { ticker: 'Q', weighting: 1 },
-            { ticker: 'R', weighting: 1 },
-            { ticker: 'S', weighting: 1 },
-            { ticker: 'T', weighting: 1 },
-            { ticker: 'U', weighting: 1 },
-            { ticker: 'V', weighting: 1 },
-            { ticker: 'W', weighting: 1 },
-            { ticker: 'X', weighting: 1 },
-            { ticker: 'Y', weighting: 1 },
-            { ticker: 'Z', weighting: 1 },
-            { ticker: 'AB', weighting: 1 },
-            { ticker: 'ABC', weighting: 1 },
-            { ticker: 'ABCD', weighting: 1 },
-            { ticker: 'ABCDE', weighting: 1 },
-            { ticker: 'DEF', weighting: 1 },
+            { id: undefined, ticker: 'MSFT', weighting: 69 },
+            { id: undefined, ticker: 'A', weighting: 1 },
+            { id: undefined, ticker: 'B', weighting: 1 },
+            { id: undefined, ticker: 'C', weighting: 1 },
+            { id: undefined, ticker: 'D', weighting: 1 },
+            { id: undefined, ticker: 'E', weighting: 1 },
+            { id: undefined, ticker: 'F', weighting: 1 },
+            { id: undefined, ticker: 'G', weighting: 1 },
+            { id: undefined, ticker: 'H', weighting: 1 },
+            { id: undefined, ticker: 'I', weighting: 1 },
+            { id: undefined, ticker: 'J', weighting: 1 },
+            { id: undefined, ticker: 'K', weighting: 1 },
+            { id: undefined, ticker: 'L', weighting: 1 },
+            { id: undefined, ticker: 'M', weighting: 1 },
+            { id: undefined, ticker: 'N', weighting: 1 },
+            { id: undefined, ticker: 'O', weighting: 1 },
+            { id: undefined, ticker: 'P', weighting: 1 },
+            { id: undefined, ticker: 'Q', weighting: 1 },
+            { id: undefined, ticker: 'R', weighting: 1 },
+            { id: undefined, ticker: 'S', weighting: 1 },
+            { id: undefined, ticker: 'T', weighting: 1 },
+            { id: undefined, ticker: 'U', weighting: 1 },
+            { id: undefined, ticker: 'V', weighting: 1 },
+            { id: undefined, ticker: 'W', weighting: 1 },
+            { id: undefined, ticker: 'X', weighting: 1 },
+            { id: undefined, ticker: 'Y', weighting: 1 },
+            { id: undefined, ticker: 'Z', weighting: 1 },
+            { id: undefined, ticker: 'AB', weighting: 1 },
+            { id: undefined, ticker: 'ABC', weighting: 1 },
+            { id: undefined, ticker: 'ABCD', weighting: 1 },
+            { id: undefined, ticker: 'ABCDE', weighting: 1 },
+            { id: undefined, ticker: 'DEF', weighting: 1 },
           ],
         };
 
+        // TODO: These tests are passing regardless of whether or not an exception is being thrown
         try {
           target.transform(portfolio);
         } catch (err) {

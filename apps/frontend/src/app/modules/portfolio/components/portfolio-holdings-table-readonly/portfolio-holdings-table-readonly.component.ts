@@ -130,6 +130,9 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
         this.sectorList.add(this.iexStockDataMap[stock.ticker]?.company?.sector);
       });
     }
+
+    // Refresh table when datasource changes
+    this.dataSource.data = this.portfolioStocks;
   }
 
   /**

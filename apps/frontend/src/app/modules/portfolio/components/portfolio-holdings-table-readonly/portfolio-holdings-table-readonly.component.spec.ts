@@ -7,7 +7,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PortfolioStockDto } from '@ratemystocks/api-interface';
 import { PortfolioModule } from '../../portfolio.module';
-
 import { PortfolioHoldingsTableReadonlyComponent } from './portfolio-holdings-table-readonly.component';
 
 describe('PortfolioHoldingsTableReadonlyComponent', () => {
@@ -41,10 +40,30 @@ describe('PortfolioHoldingsTableReadonlyComponent', () => {
     component = fixture.componentInstance;
 
     component.portfolioStocks = [
-      { ticker: 'MSFT', weighting: 35.15 },
-      { ticker: 'GOOG', weighting: 30.0 },
-      { ticker: 'BABA', weighting: 15.0 },
-      { ticker: 'FB', weighting: 19.85 },
+      {
+        id: '8ad52d25-6afb-4c74-bf68-6afcc1db27db',
+        ticker: 'MSFT',
+        weighting: 35.15,
+        portfolioId: '8ad52d25-6afb-4c74-bf68-6afcc1db27db',
+      },
+      {
+        id: '519f9bcb-6018-454a-94ed-44d4dc714b8b',
+        ticker: 'GOOG',
+        weighting: 30.0,
+        portfolioId: '8ad52d25-6afb-4c74-bf68-6afcc1db27db',
+      },
+      {
+        id: '91f53836-6a2a-4de3-8ce4-0a26b35e4c71',
+        ticker: 'BABA',
+        weighting: 15.0,
+        portfolioId: '8ad52d25-6afb-4c74-bf68-6afcc1db27db',
+      },
+      {
+        id: '91f53836-6a2a-4de3-8ce4-0a26b35e4c71',
+        ticker: 'FB',
+        weighting: 19.85,
+        portfolioId: '8ad52d25-6afb-4c74-bf68-6afcc1db27db',
+      },
     ];
 
     component.iexStockDataMap = {
@@ -225,8 +244,10 @@ describe('PortfolioHoldingsTableReadonlyComponent', () => {
   it('should return true if a stock from the table matches multiple filter criterias, false otherwise', () => {
     // MSFT has country: 'US', sector: 'Information Technology', & is a 'Mega Cap' stock in the iexStockDataMap
     const testStock: PortfolioStockDto = {
+      id: '8ad52d25-6afb-4c74-bf68-6afcc1db27db',
       ticker: 'MSFT',
       weighting: 100.0,
+      portfolioId: '8ad52d25-6afb-4c74-bf68-6afcc1db27db',
     };
 
     let result = false;
@@ -278,8 +299,10 @@ describe('PortfolioHoldingsTableReadonlyComponent', () => {
   it('should return true in the customFilterPredicate if the stock matches the text search input', () => {
     // MSFT: country = 'US', sector = 'Information Technology', & market cap = 'Mega Cap' in iexStockDataMap
     const testStock: PortfolioStockDto = {
+      id: '8ad52d25-6afb-4c74-bf68-6afcc1db27db',
       ticker: 'MSFT',
       weighting: 100.0,
+      portfolioId: '8ad52d25-6afb-4c74-bf68-6afcc1db27db',
     };
 
     let result = false;

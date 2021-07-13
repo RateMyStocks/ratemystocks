@@ -33,11 +33,11 @@ export class PortfolioStock extends BaseEntity {
   })
   weighting: number;
 
-  @ManyToOne(
-    type => Portfolio,
-    portfolio => portfolio.stocks,
-    { nullable: false, onDelete: 'CASCADE' }
-  )
+  @ManyToOne((type) => Portfolio, (portfolio) => portfolio.stocks, {
+    nullable: false,
+    onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
+  })
   @JoinColumn({ name: 'portfolio_id' })
   portfolio: Portfolio;
 
