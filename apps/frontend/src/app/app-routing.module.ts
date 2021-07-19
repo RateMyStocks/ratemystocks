@@ -5,6 +5,7 @@ import { PORTFOLIO_ROUTES } from './modules/portfolio/portfolio.routes';
 import { RESOURCES_ROUTES } from './modules/resources/resources.routes';
 import { PROFILE_ROUTES } from './modules/profile/profile.routes';
 import { LOGIN_ROUTES } from './modules/login/login.routes';
+import { NotFoundComponent } from './modules/error/not-found/not-found.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,10 @@ const routes: Routes = [
   {
     path: '',
     children: RESOURCES_ROUTES,
+  },
+  {
+    path: '**',
+    component: NotFoundComponent,
   },
 ];
 
