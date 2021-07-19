@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -62,6 +62,7 @@ export class PortfolioComponent implements OnInit {
     private iexCloudService: IexCloudService,
     private snackbar: MatSnackBar,
     private route: ActivatedRoute,
+    private router: Router,
     public dialog: MatDialog
   ) {
     this.isAuth = this.authService.isAuthorized();
@@ -79,11 +80,16 @@ export class PortfolioComponent implements OnInit {
       const portfolioId = paramMap.get('id');
 
       // Get the Portfolio
-      this.portfolioService.getPortfolio(portfolioId).subscribe((portfolio: PortfolioDto) => {
-        this.portfolio = portfolio;
+      this.portfolioService.getPortfolio(portfolioId).subscribe(
+        (portfolio: PortfolioDto) => {
+          this.portfolio = portfolio;
 
-        this.portfolioLoaded = true;
-      });
+          this.portfolioLoaded = true;
+        },
+        (error: any) => {
+          this.router.navigate(['not-found']);
+        }
+      );
 
       // Get the Portfolio's stocks
       this.portfolioService.getPortfolioStocks(portfolioId).subscribe((stocks: PortfolioStockDto[]) => {

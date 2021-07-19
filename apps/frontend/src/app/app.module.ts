@@ -14,6 +14,7 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { ErrorInterceptor } from './core/interceptors/error-interceptor';
 import { GlobalErrorHandler } from './core/error-handlers/global-error-handler';
 import { ProfileModule } from './modules/profile/profile.module';
+import { ErrorModule } from './modules/error/error.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,6 +23,7 @@ import { ProfileModule } from './modules/profile/profile.module';
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     BrowserAnimationsModule,
     CoreModule,
+    ErrorModule,
     HttpClientModule,
     LoginModule,
     PortfolioModule,
