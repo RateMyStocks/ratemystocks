@@ -46,6 +46,7 @@ export class SidenavComponent implements AfterViewInit, OnInit, OnDestroy {
     });
 
     this.isAuth = this.authService.isAuthorized();
+    this.loggedInUsername = this.authService.getUsername();
 
     this.authStatusSub = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
       this.isAuth = authStatus;
