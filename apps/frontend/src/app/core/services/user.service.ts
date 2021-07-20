@@ -1,7 +1,7 @@
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UserProfileDto } from '@ratemystocks/api-interface';
+import { PortfolioDto, UserProfileDto } from '@ratemystocks/api-interface';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -18,5 +18,32 @@ export class UserService {
   getUserByUsername(username: string): Observable<UserProfileDto> {
     const endpoint = `${environment.apiUrl}/users/${username}`;
     return this.http.get<UserProfileDto>(endpoint);
+  }
+
+  /**
+   * Saves/bookmarks a portfolio to a user account.
+   * @param portfolioId The id of the portfolio to save to the user account.
+   */
+  savePortfolioToUserAccount(portfolioId: string): Observable<unknown> {
+    const endpoint = `${environment.apiUrl}/users/save-portfolio/${portfolioId}`;
+    return this.http.patch(endpoint, { withCredentials: true });
+  }
+
+  /**
+   * "Unsaves" portfolio from the logged-in user's account.
+   * @param portfolioId The id of the portfolio to unsave from the user account.
+   */
+  unsavePortfolioFromUserAccount(portfolioId: string): Observable<unknown> {
+    const endpoint = `${environment.apiUrl}/users/unsave-portfolio/${portfolioId}`;
+    return this.http.patch(endpoint, { withCredentials: true });
+  }
+
+  /**
+   * Gets an array of the portfolios saved to the logged-in user's account.
+   * @return An array of the logged-in user's saved portfolios.
+   */
+  getSavedPortfoliosForUser(): Observable<PortfolioDto[]> {
+    const endpoint = `${environment.apiUrl}/users/saved/portfolios`;
+    return this.http.get<PortfolioDto[]>(endpoint, { withCredentials: true });
   }
 }

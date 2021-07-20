@@ -1,4 +1,14 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
 import { PortfolioRating } from './portfolioRating.entity';
 import { PortfolioStock } from './portfolioStock.entity';
 import { UserAccount } from './userAccount.entity';
@@ -36,4 +46,7 @@ export class Portfolio extends BaseEntity {
     cascade: ['insert', 'update'],
   })
   stocks: PortfolioStock[];
+
+  @ManyToMany(() => UserAccount, (user) => user.savedPortfolios)
+  usersSaved: UserAccount[];
 }

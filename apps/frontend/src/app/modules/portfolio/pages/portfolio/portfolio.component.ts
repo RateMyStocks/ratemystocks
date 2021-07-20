@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -19,15 +19,17 @@ import { IexCloudService } from '../../../../core/services/iex-cloud.service';
 import { MarketCapThresholds } from '../../../../shared/models/enums/market-cap-thresholds';
 import { MarketCap } from '../../../../shared/models/enums/market-cap';
 import { AuthService } from '../../../../core/services/auth.service';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { UpdatePortfolioHoldingsDialogComponent } from '../../components/update-portfolio-holdings-dialog/update-portfolio-holdings-dialog.component';
+import { UserService } from '../../../../core/services/user.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-portfolio',
   templateUrl: './portfolio.component.html',
   styleUrls: ['./portfolio.component.scss'],
 })
-export class PortfolioComponent implements OnInit {
+export class PortfolioComponent implements OnInit, OnDestroy {
   MoneyFormatter = MoneyFormatter;
 
   moment = moment;
@@ -43,7 +45,6 @@ export class PortfolioComponent implements OnInit {
 
   isAuth: boolean;
   loggedInUserId: string;
-  authStatusSub: Subscription;
   numLikes = 0;
   numDislikes = 0;
 
@@ -54,12 +55,17 @@ export class PortfolioComponent implements OnInit {
   portfolioLoaded: boolean;
   stocksLoaded: boolean;
 
+  portfolioLiked: boolean;
+
   copiedPortfolioLink: string = window.location.href;
+
+  private ngUnsubscribe = new Subject();
 
   constructor(
     private authService: AuthService,
     private portfolioService: PortfolioService,
     private iexCloudService: IexCloudService,
+    private userService: UserService,
     private snackbar: MatSnackBar,
     private route: ActivatedRoute,
     private router: Router,
@@ -70,43 +76,66 @@ export class PortfolioComponent implements OnInit {
 
   ngOnInit(): void {
     this.loggedInUserId = this.authService.getUserId();
-    this.authStatusSub = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
-      if (this.authService.isAuthorized()) {
-        this.loggedInUserId = this.authService.getUserId();
-      }
-    });
+    this.authService
+      .getAuthStatusListener()
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((authStatus: boolean) => {
+        if (this.authService.isAuthorized()) {
+          this.loggedInUserId = this.authService.getUserId();
+        }
+      });
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       const portfolioId = paramMap.get('id');
 
       // Get the Portfolio
-      this.portfolioService.getPortfolio(portfolioId).subscribe(
-        (portfolio: PortfolioDto) => {
-          this.portfolio = portfolio;
+      this.portfolioService
+        .getPortfolio(portfolioId)
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe(
+          (portfolio: PortfolioDto) => {
+            this.portfolio = portfolio;
 
-          this.portfolioLoaded = true;
-        },
-        (error: any) => {
-          this.router.navigate(['not-found']);
-        }
-      );
+            this.portfolioLoaded = true;
+
+            // Check if the portfolio is already saved by the logged-in user
+            if (this.isAuth) {
+              this.userService
+                .getSavedPortfoliosForUser()
+                .pipe(takeUntil(this.ngUnsubscribe))
+                .subscribe((savedPortfolios: PortfolioDto[]) => {
+                  this.portfolioLiked =
+                    savedPortfolios.filter(function (savedPortfolio: PortfolioDto) {
+                      return savedPortfolio.id === portfolio.id;
+                    }).length > 0;
+                });
+            }
+          },
+          (error: any) => {
+            this.router.navigate(['not-found']);
+          }
+        );
 
       // Get the Portfolio's stocks
-      this.portfolioService.getPortfolioStocks(portfolioId).subscribe((stocks: PortfolioStockDto[]) => {
-        this.portfolioStocks = stocks;
+      this.portfolioService
+        .getPortfolioStocks(portfolioId)
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe((stocks: PortfolioStockDto[]) => {
+          this.portfolioStocks = stocks;
 
-        this.stocksLoaded = true;
+          this.stocksLoaded = true;
 
-        if (stocks.length > 0) {
-          this.updateIexStockDataMap();
-        }
+          if (stocks.length > 0) {
+            this.updateIexStockDataMap();
+          }
 
-        this.setStockPieChartBreakdown();
-      });
+          this.setStockPieChartBreakdown();
+        });
 
       // Get the Portfolio's ratings
       this.portfolioService
         .getPortfolioRatingCounts(portfolioId)
+        .pipe(takeUntil(this.ngUnsubscribe))
         .subscribe((ratings: { likes: number; dislikes: number }) => {
           this.numLikes = ratings.likes;
           this.numDislikes = ratings.dislikes;
@@ -114,11 +143,19 @@ export class PortfolioComponent implements OnInit {
 
       // Set the user's portfolio rating if they are logged-in.
       if (this.isAuth) {
-        this.portfolioService.getPortfolioUserRating(portfolioId).subscribe((rating: PortfolioRatingDto) => {
-          this.portfolioRating = rating;
-        });
+        this.portfolioService
+          .getPortfolioUserRating(portfolioId)
+          .pipe(takeUntil(this.ngUnsubscribe))
+          .subscribe((rating: PortfolioRatingDto) => {
+            this.portfolioRating = rating;
+          });
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   /**
@@ -338,42 +375,51 @@ export class PortfolioComponent implements OnInit {
         // Existing rating is a like
         if (this.portfolioRating.isLiked) {
           // DELETE Like Rating
-          this.portfolioService.deletePortfolioRating(this.portfolioRating.id).subscribe((result: void) => {
-            this.numLikes--;
-            this.portfolioRating = null;
+          this.portfolioService
+            .deletePortfolioRating(this.portfolioRating.id)
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe((result: void) => {
+              this.numLikes--;
+              this.portfolioRating = null;
 
-            // User clicked dislike
-            if (!isLiked) {
-              // CREATE Dislike Rating
-              this.portfolioService
-                .createOrUpdatePortfolioRating(this.portfolio.id, portfolioRatingDto)
-                .subscribe((rating: PortfolioRatingDto) => {
-                  this.numDislikes++;
-                  this.portfolioRating = rating;
-                });
-            }
-          });
+              // User clicked dislike
+              if (!isLiked) {
+                // CREATE Dislike Rating
+                this.portfolioService
+                  .createOrUpdatePortfolioRating(this.portfolio.id, portfolioRatingDto)
+                  .pipe(takeUntil(this.ngUnsubscribe))
+                  .subscribe((rating: PortfolioRatingDto) => {
+                    this.numDislikes++;
+                    this.portfolioRating = rating;
+                  });
+              }
+            });
         } else {
           // DELETE Dislike Rating
-          this.portfolioService.deletePortfolioRating(this.portfolioRating.id).subscribe((result: void) => {
-            this.numDislikes--;
-            this.portfolioRating = null;
+          this.portfolioService
+            .deletePortfolioRating(this.portfolioRating.id)
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe((result: void) => {
+              this.numDislikes--;
+              this.portfolioRating = null;
 
-            // User clicked like
-            if (isLiked) {
-              // CREATE Like Rating
-              this.portfolioService
-                .createOrUpdatePortfolioRating(this.portfolio.id, portfolioRatingDto)
-                .subscribe((rating: PortfolioRatingDto) => {
-                  this.numLikes++;
-                  this.portfolioRating = rating;
-                });
-            }
-          });
+              // User clicked like
+              if (isLiked) {
+                // CREATE Like Rating
+                this.portfolioService
+                  .createOrUpdatePortfolioRating(this.portfolio.id, portfolioRatingDto)
+                  .pipe(takeUntil(this.ngUnsubscribe))
+                  .subscribe((rating: PortfolioRatingDto) => {
+                    this.numLikes++;
+                    this.portfolioRating = rating;
+                  });
+              }
+            });
         }
       } else {
         this.portfolioService
           .createOrUpdatePortfolioRating(this.portfolio.id, portfolioRatingDto)
+          .pipe(takeUntil(this.ngUnsubscribe))
           .subscribe((rating: PortfolioRatingDto) => {
             if (isLiked) {
               this.numLikes++;
@@ -467,13 +513,44 @@ export class PortfolioComponent implements OnInit {
     }
   }
 
+  /** Event handler for clicking the "Save" button. Makes a request to saves the portfolio for a logged-in user. */
+  onClickSavePortfolio(): void {
+    if (this.isAuth) {
+      if (!this.portfolioLiked) {
+        this.userService
+          .savePortfolioToUserAccount(this.portfolio.id)
+          .pipe(takeUntil(this.ngUnsubscribe))
+          .subscribe(() => {
+            this.portfolioLiked = true;
+          });
+      } else {
+        this.userService
+          .unsavePortfolioFromUserAccount(this.portfolio.id)
+          .pipe(takeUntil(this.ngUnsubscribe))
+          .subscribe(() => {
+            this.portfolioLiked = false;
+          });
+      }
+    } else {
+      this.snackbar.open('You must login to save portfolios.', 'OK', {
+        duration: 3000,
+        panelClass: 'warn-snackbar',
+        verticalPosition: 'top',
+        horizontalPosition: 'right',
+      });
+    }
+  }
+
   /**
    * Calls IEX Cloud API and updates the iexStockDataMap variable that maps ticker symbols to stock data
    */
   updateIexStockDataMap(): void {
     const tickerSymbols: string[] = this.portfolioStocks.map((stock: PortfolioStockDto) => stock.ticker);
-    this.iexCloudService.batchGetStocks(tickerSymbols, ['stats', 'company', 'price']).subscribe((result: any) => {
-      this.iexStockDataMap = result;
-    });
+    this.iexCloudService
+      .batchGetStocks(tickerSymbols, ['stats', 'company', 'price'])
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((result: any) => {
+        this.iexStockDataMap = result;
+      });
   }
 }

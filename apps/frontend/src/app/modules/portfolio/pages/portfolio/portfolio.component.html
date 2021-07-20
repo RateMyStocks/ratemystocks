@@ -29,13 +29,17 @@
       </div>
     </div>
     <div class="row-right">
-      <div>
-        <mat-icon *ngIf="true" class="portfolio-save-btn" matTooltip="Add portfolio to favorites"
-          >favorite_outline</mat-icon
-        >
-        <mat-icon *ngIf="false" class="portfolio-save-btn" matTooltip="Remove portfolio from favorites"
-          >favorite</mat-icon
-        >
+      <div (click)="onClickSavePortfolio()">
+        <mat-icon *ngIf="!portfolioLiked" class="portfolio-save-btn" matTooltip="Add portfolio to favorites"
+          >favorite_outline
+        </mat-icon>
+        <mat-icon
+          *ngIf="portfolioLiked"
+          class="portfolio-save-btn"
+          matTooltip="Remove portfolio from favorites"
+          [ngStyle]="{ color: '#ff1c1c' }"
+          >favorite
+        </mat-icon>
       </div>
 
       <div class="social-media-icons-container">
@@ -105,6 +109,7 @@
   <div *ngIf="stocksLoaded">
     <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="20px">
       <div fxFlex="50%;" fxFlex.xs="80%">
+        <!-- TODO: Move into its own component -->
         <mat-card id="portfolio-description-card">
           <h2>
             <strong>Description</strong>
@@ -124,6 +129,7 @@
 
         <br />
 
+        <!-- TODO: Move into its own component -->
         <mat-card id="portfolio-stats-card">
           <h2><strong>Stats</strong></h2>
           <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="20px">
@@ -206,6 +212,7 @@
         </mat-card>
       </div>
 
+      <!-- TODO: Move into its own component -->
       <mat-card fxFlex="50%;" fxFlex.xs="80%">
         <h2><strong>Breakdowns</strong></h2>
         <div *ngIf="stocksLoaded && portfolioStocks.length; else noHoldings">
@@ -227,6 +234,7 @@
     <br />
 
     <!-- HOLDINGS TABLE -->
+    <!-- TODO: Move the mat-card markup into the PortfolioHoldingsTableReadonly component template -->
     <mat-card>
       <h2>
         <strong>Holdings</strong>

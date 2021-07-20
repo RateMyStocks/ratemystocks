@@ -25,11 +25,14 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private route: ActivatedRoute,
     private router: Router
-  ) {
-    this.isAuth = this.authService.isAuthorized();
-  }
+  ) {}
 
   ngOnInit(): void {
+    this.isAuth = this.authService.isAuthorized();
+    this.authStatusSub = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
+      this.isAuth = authStatus;
+    });
+
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       const username = paramMap.get('username');
 
@@ -45,9 +48,11 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       );
     });
 
-    this.authStatusSub = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
-      this.isAuth = authStatus;
-    });
+    // if (this.isAuth) {
+    //   this.userService.getSavedPortfoliosForUser().subscribe((savedPortfolios: any) => {
+    //     console.log(savedPortfolios);
+    //   });
+    // }
   }
 
   ngOnDestroy(): void {

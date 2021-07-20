@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique, ManyToMany, JoinTable } from 'typeorm';
 import { Portfolio } from './portfolio.entity';
 import { PortfolioRating } from './portfolioRating.entity';
 import * as bcrypt from 'bcryptjs';
@@ -40,23 +40,26 @@ export class UserAccount extends BaseEntity {
   // })
   // role: UserRole;
 
-  // TODO: Add Date Joined column
   // @Column({ name: 'date_joined', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', nullable: false })
   // dateJoined: Date;
 
-  // TODO: Add Last Login column
   // @Column({ name: 'last_login', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', nullable: false })
   // lastLogin: Date;
 
-  // TODO: add an about column
+  // @Column({ type: 'varchar', length: 200, nullable: true })
+  // bio: string;
 
-  // TODO: add an active column
   // @Column({ type: 'boolean', nullable: false, default: true })
   // isActive: boolean;
 
-  // TODO: Add verified column
   // @Column({ type: 'boolean', nullable: false, default: false })
   // emailVerified: boolean;
+
+  @ManyToMany(() => Portfolio, (portfolio) => portfolio.usersSaved, {
+    cascade: true,
+  })
+  @JoinTable()
+  savedPortfolios: Portfolio[];
 
   @Column({
     name: 'spirit_animal',

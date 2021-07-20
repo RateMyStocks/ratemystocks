@@ -1,10 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-// import { SpiritAnimal } from '@ratemystocks/api-interface';
-// import { UserAccount } from 'apps/backend/src/models/userAccount.entity';
+import { PortfolioRepository } from '../portfolio/portfolio.repository';
 import { UserRepository } from './user.repository';
 import { UserService } from './user.service';
 
 const mockUserRepository = () => ({
+  findOne: jest.fn(),
+});
+
+const mockPortfolioRepository = () => ({
   findOne: jest.fn(),
 });
 
@@ -14,7 +17,11 @@ describe('UserService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UserService, { provide: UserRepository, useFactory: mockUserRepository }],
+      providers: [
+        UserService,
+        { provide: UserRepository, useFactory: mockUserRepository },
+        { provide: PortfolioRepository, useFactory: mockUserRepository },
+      ],
     }).compile();
 
     service = module.get<UserService>(UserService);
