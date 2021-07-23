@@ -1,5 +1,38 @@
-<h1>
-  <span class="page-header"><b>{{ ticker }}</b></span>
-</h1>
+<div *ngIf="stock">
+  <app-stock-page-header [stock]="stock" [ticker]="ticker" (ratingUpdated)="onRatingUpdated()"></app-stock-page-header>
 
-<h2>Coming Soon!</h2>
+  <br />
+  <!-- <br /> -->
+
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="20px">
+    <mat-card fxFlex="50">
+      <h3 style="text-align: center"><strong>User Ratings</strong></h3>
+      <app-horizontal-bar-chart [barChartItems]="stockRatingBarChartItems"></app-horizontal-bar-chart>
+    </mat-card>
+
+    <mat-card fxFlex="50">
+      <app-stock-key-stats [stock]="stock"></app-stock-key-stats>
+    </mat-card>
+  </div>
+
+  <br />
+
+  <mat-tab-group animationDuration="0ms" mat-stretch-tabs class="example-stretched-tabs mat-elevation-z4">
+    <!-- <mat-tab label="News">
+      <app-stock-news-feed [stock]="stock"></app-stock-news-feed>
+    </mat-tab> -->
+    <mat-tab label="Performance">
+      <ng-template matTabContent>
+        <app-stock-performance-chart [ticker]="ticker"></app-stock-performance-chart>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="About"><app-stock-company-info [stock]="stock"></app-stock-company-info></mat-tab>
+  </mat-tab-group>
+
+  <br />
+  <br />
+</div>
+
+<div class="vertically-and-horizontally-centered" *ngIf="!stock">
+  <mat-spinner [diameter]="200"></mat-spinner>
+</div>

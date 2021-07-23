@@ -1,0 +1,49 @@
+.ratingContainer {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.buy-stock-rating-btn {
+  background-color: #3ac961;
+  color: white;
+}
+
+.buy-stock-rating-btn:hover {
+  background-color: #32a12f;
+  color: white;
+}
+
+.hold-stock-rating-btn {
+  background-color: #c98b3a;
+  color: white;
+}
+
+.hold-stock-rating-btn {
+  background-color: #bf6f06;
+  color: white;
+}
+
+.sell-stock-rating-btn {
+  background-color: red;
+  color: white;
+}
+
+.sell-stock-rating-btn {
+  background-color: #c94d4d;
+  color: white;
+}
+
+.activeBuy {
+  color: lightgray;
+  background-color: #32a12f;
+}
+
+.activeHold {
+  color: lightgray;
+  background-color: #bf6f06;
+}
+
+.activeSell {
+  color: lightgray;
+  background-color: #c94d4d;
+}

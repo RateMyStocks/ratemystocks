@@ -1,0 +1,17 @@
+<mat-list>
+  <mat-list-item *ngFor="let newsElement of stock.data.news">
+    <img class="newsThumbnail" src="{{ newsElement.image }}" alt="" />
+    <a href="{{ newsElement.url }}">
+      <div mat-line class="newsSource">{{ newsElement.source }}</div>
+      <div mat-line class="newsHeadline">{{ newsElement.headline }}</div>
+      <div mat-line class="news-summary">
+        <small>
+          {{ newsElement.summary }}
+        </small>
+      </div>
+      <div mat-line class="news-date">
+        <small>{{ moment(newsElement.datetime).fromNow() }}</small>
+      </div>
+    </a>
+  </mat-list-item>
+</mat-list>
