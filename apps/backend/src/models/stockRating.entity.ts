@@ -21,6 +21,12 @@ export class StockRating extends BaseEntity {
   @Column({ nullable: false })
   ticker: string;
 
+  // TODO:
+  // @Column({
+  //   name: 'stock_rating',
+  //   type: 'enum',
+  //   enum: StockRatingEnum
+  // })
   @Column({ name: 'stock_rating', nullable: false })
   stockRating: StockRatingEnum;
 

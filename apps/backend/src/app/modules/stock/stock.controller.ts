@@ -26,12 +26,12 @@ export class StockController {
   @Get('/:ticker')
   async getStockData(
     @Param('ticker') ticker: string
-  ): Promise<{ rating: StockRatingCountDto; info: IexCloudStockDataDto }> {
+  ): Promise<{ rating: StockRatingCountDto; data: IexCloudStockDataDto }> {
     const rating: StockRatingCountDto = await this.stockService.getStockRatingCount(ticker);
-    const info: IexCloudStockDataDto = await this.iexCloudService.getStockInfo(ticker);
+    const data: IexCloudStockDataDto = await this.iexCloudService.getStockData(ticker);
 
     return {
-      info,
+      data,
       rating,
     };
   }

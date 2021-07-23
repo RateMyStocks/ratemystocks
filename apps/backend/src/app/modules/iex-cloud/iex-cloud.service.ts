@@ -34,11 +34,12 @@ export class IexCloudService {
    * @param ticker The ticker symbol to make a batch request to multiple endpoints for.
    * @returns The IexCloudStockInfoDataDto object containing the stats, company, and news data fro a stock.
    */
-  async getStockInfo(ticker: string): Promise<IexCloudStockDataDto> {
+  async getStockData(ticker: string): Promise<IexCloudStockDataDto> {
     const stockInfo: IexCloudStockInfoDto = await this.httpService
-      .get(`/stock/${ticker}/batch?types=stats,company,news`)
+      .get(`/stock/${ticker}/batch?types=stats,company,quote`)
       .toPromise();
-    return stockInfo.data;
+    const stockData: IexCloudStockDataDto = stockInfo.data;
+    return stockData;
   }
 
   /**

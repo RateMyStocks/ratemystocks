@@ -1,0 +1,45 @@
+<mat-button-toggle-group [(ngModel)]="range" (click)="updateChart()">
+  <mat-button-toggle value="1d">1D</mat-button-toggle>
+  <mat-button-toggle value="5d">5D</mat-button-toggle>
+  <mat-button-toggle value="1m">1M</mat-button-toggle>
+  <mat-button-toggle value="3m">3M</mat-button-toggle>
+  <mat-button-toggle value="1y">1Y</mat-button-toggle>
+  <mat-button-toggle value="5y">5Y</mat-button-toggle>
+</mat-button-toggle-group>
+<div id="stock-performance-chart">
+  <ngx-charts-line-chart
+    [scheme]="scheme"
+    [view]=""
+    [legend]="false"
+    [xAxisTicks]="selectedTimeLabels"
+    [trimYAxisTicks]="true"
+    [autoScale]="true"
+    [animations]="true"
+    [xAxis]="true"
+    [yAxis]="true"
+    [results]="chartData"
+    [rotateXAxisTicks]="true"
+    *ngIf="chartData && chartData.length > 0"
+  >
+    <ng-template #tooltipTemplate let-model="model">
+      <div class="toolTipPoint">
+        <li>Price: {{ model.value }}</li>
+        <li>Volume: {{ model.volume }}</li>
+        <li *ngIf="model.numberOfTrades">Number of Trades: {{ model.numberOfTrades }}</li>
+        <li>Time: {{ model.time }}</li>
+        <li *ngIf="model.change">Change: {{ model.change.toFixed(2) }}</li>
+        <li *ngIf="model.changePercent">% Change: {{ (model.changePercent * 100).toFixed(2) }}</li>
+      </div>
+    </ng-template>
+    <ng-template #seriesTooltipTemplate let-model="model">
+      <div class="toolTipPoint">
+        <li>Price: {{ model[0].value }}</li>
+        <li>Volume: {{ model[0].volume }}</li>
+        <li *ngIf="model[0].numberOfTrades">Number of Trades: {{ model[0].numberOfTrades.toFixed(2) }}</li>
+        <li>Time: {{ model[0].time }}</li>
+        <li *ngIf="model[0].change">Change: {{ model[0].change.toFixed(2) }}</li>
+        <li *ngIf="model[0].changePercent">% Change: {{ (model[0].changePercent * 100).toFixed(2) }}</li>
+      </div>
+    </ng-template>
+  </ngx-charts-line-chart>
+</div>

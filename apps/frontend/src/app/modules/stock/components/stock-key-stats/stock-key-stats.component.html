@@ -1,0 +1,101 @@
+<div class="stats">
+  <h3 style="text-align: center;"><strong>Key Stats</strong></h3>
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="20px">
+    <div fxFlex="33%;" fxFlex.xs="80%">
+      <p>
+        <small style="font-size: 12px"
+          >Open: <strong> ${{ stock.data.quote.open?.toFixed(2) }}</strong></small
+        >
+      </p>
+      <p>
+        <small style="font-size: 12px"
+          >Close: <strong> ${{ stock.data.quote.close?.toFixed(2) }}</strong></small
+        >
+      </p>
+      <p>
+        <small style="font-size: 12px">
+          Today's High: <strong>${{ stock.data.quote.high }}</strong>
+        </small>
+      </p>
+      <p>
+        <small style="font-size: 12px">
+          Today's Low: <strong>${{ stock.data.quote.low }}</strong>
+        </small>
+      </p>
+      <p>
+        <small style="font-size: 12px">
+          52 Week Low: <strong>${{ stock.data.stats.week52low }}</strong>
+        </small>
+      </p>
+      <p>
+        <small style="font-size: 12px">
+          52 Week High: <strong>${{ stock.data.stats.week52high }}</strong>
+        </small>
+      </p>
+    </div>
+    <div fxFlex="33%;" fxFlex.xs="80%">
+      <p>
+        <small style="font-size: 12px"
+          >Volume: <strong> {{ stock.data.quote.volume?.toLocaleString() }}</strong></small
+        >
+      </p>
+      <p>
+        <small style="font-size: 12px"
+          >Avg. Total Volume: <strong> {{ stock.data.quote.avgTotalVolume?.toLocaleString() }}</strong></small
+        >
+      </p>
+      <p>
+        <small style="font-size: 12px"
+          >Market Cap: <strong>{{ MoneyFormatter.formatCash(stock.data.stats.marketcap) }}</strong></small
+        >
+      </p>
+      <p>
+        <small style="font-size: 12px">
+          P/E Ratio: <strong>{{ stock.data.stats.peRatio.toFixed(2) }}</strong>
+        </small>
+      </p>
+      <p>
+        <small style="font-size: 12px">
+          Beta: <strong>{{ stock.data.stats.beta.toFixed(2) }}</strong>
+        </small>
+      </p>
+      <p>
+        <small style="font-size: 12px"
+          >Dividend Yield: <strong>{{ (stock.data.stats.dividendYield * 100).toFixed(2) }}</strong></small
+        >
+      </p>
+    </div>
+    <div fxFlex="33%;" fxFlex.xs="80%">
+      <p>
+        <small style="font-size: 12px"
+          >YTD Change %: <strong>{{ (stock.data.stats.ytdChangePercent * 100).toFixed(2) }}%</strong></small
+        >
+      </p>
+      <p>
+        <small style="font-size: 12px"
+          >1-month Change %: <strong>{{ (stock.data.stats.month1ChangePercent * 100).toFixed(2) }}%</strong></small
+        >
+      </p>
+      <p>
+        <small style="font-size: 12px"
+          >3-month Change %: <strong>{{ (stock.data.stats.month3ChangePercent * 100).toFixed(2) }}%</strong></small
+        >
+      </p>
+      <p>
+        <small style="font-size: 12px"
+          >6-month Change %: <strong>{{ (stock.data.stats.month6ChangePercent * 100).toFixed(2) }}%</strong></small
+        >
+      </p>
+      <p>
+        <small style="font-size: 12px"
+          >1-Year Change %: <strong>{{ (stock.data.stats.year1ChangePercent * 100).toFixed(2) }}%</strong></small
+        >
+      </p>
+      <p>
+        <small style="font-size: 12px"
+          >5-Year Change %: <strong>{{ (stock.data.stats.year5ChangePercent * 100).toFixed(2) }}%</strong></small
+        >
+      </p>
+    </div>
+  </div>
+</div>
