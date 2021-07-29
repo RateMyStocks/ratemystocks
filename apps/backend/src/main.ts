@@ -16,19 +16,32 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   // TODO: Only allow requests from frontend (or use a whitelist https://stackoverflow.com/questions/50949231/nestjs-enable-cors-in-production)
-  // if (process.env.NODE_ENV === 'development') {
-  // if (process.env.MODE === 'DEV') {
-  //   app.enableCors();
-  // } else {
-  //   app.enableCors({ origin: 'https://ratemystocks.com' });
-  //   logger.log(`Accepting requests from origin https://ratemystocks.com`);
-  // }
-  app.enableCors({
-    credentials: true,
-    origin: true,
-    allowedHeaders: ['Origin, X-Requested-With, Content-Type, Accept, Authorization'],
-    methods: ['GET, POST, PATCH, DELETE, PUT, OPTIONS'],
-  });
+  if (process.env.NODE_ENV === 'development') {
+    app.enableCors({
+      credentials: true,
+      origin: true,
+      allowedHeaders: ['Origin, X-Requested-With, Content-Type, Accept, Authorization'],
+      methods: ['GET, POST, PATCH, DELETE, PUT, OPTIONS'],
+    });
+  } else {
+    const whitelist = ['https://ratemystocks.com', 'https://ratemystocks-staging.herokuapp.com'];
+    app.enableCors({
+      credentials: true,
+      origin: (origin, callback) => {
+        if (whitelist.indexOf(origin) !== -1) {
+          logger.log('Allowed CORS for:', origin);
+          callback(null, true);
+        } else {
+          logger.log('Blocked CORS for:', origin);
+          callback(new Error('Not allowed by CORS'));
+        }
+      },
+      allowedHeaders: ['Origin, X-Requested-With, Content-Type, Accept, Authorization'],
+      methods: ['GET, POST, PATCH, DELETE, PUT, OPTIONS'],
+    });
+
+    logger.log(`Accepting requests from origin https://ratemystocks.com`);
+  }
 
   await app.listen(process.env.PORT || 4000);
 }
