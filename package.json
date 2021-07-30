@@ -35,7 +35,7 @@
     "prerender": "ng run frontend:prerender",
     "prebuild:ssr": "ngcc",
     "dev:ssr": "ng run frontend:serve-ssr",
-    "build:ssr": "./heroku-build.sh",
+    "build:ssr": "bash ./heroku-build.sh",
     "serve:ssr": "node dist/frontend/server/main.js",
     "heroku-postbuild": "npm run build:ssr",
     "start:heroku": "npm run serve:ssr"
