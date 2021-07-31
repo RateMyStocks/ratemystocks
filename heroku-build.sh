@@ -15,4 +15,3 @@ if [[ $NODE_ENV = "production" ]]; then
  echo "running $build_prod ..."
  eval "$build_prod"
 fi
-read -n1 -p "Press any key to exit."
