@@ -1,4 +1,4 @@
 export const environment = {
-  production: true,
+  production: false,
   apiUrl: 'https://ratemystocks-staging.herokuapp.com/api',
 };
