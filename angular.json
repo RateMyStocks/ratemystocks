@@ -81,33 +81,6 @@
                   "maximumError": "10kb"
                 }
               ]
-            },
-            "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/frontend/src/environments/environment.ts",
-                  "with": "apps/frontend/src/environments/environment.staging.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
             }
           }
         },
@@ -171,17 +144,6 @@
               ],
               "sourceMap": false,
               "optimization": false
-            },
-            "staging": {
-              "outputHashing": "media",
-              "fileReplacements": [
-                {
-                  "replace": "apps/frontend/src/environments/environment.ts",
-                  "with": "apps/frontend/src/environments/environment.staging.ts"
-                }
-              ],
-              "sourceMap": false,
-              "optimization": false
             }
           }
         },
@@ -195,31 +157,18 @@
             "production": {
               "browserTarget": "frontend:build:production",
               "serverTarget": "frontend:server:production"
-            },
-            "staging": {
-              "browserTarget": "frontend:build:staging",
-              "serverTarget": "frontend:server:staging"
             }
           }
         },
         "prerender": {
           "builder": "@nguniversal/builders:prerender",
           "options": {
-            "browserTarget": "frontend:build",
-            "serverTarget": "frontend:server",
+            "browserTarget": "frontend:build:production",
+            "serverTarget": "frontend:server:production",
             "routes": ["/"]
           },
           "configurations": {
-            "production": {
-              "browserTarget": "frontend:build:production",
-              "serverTarget": "frontend:server:production",
-              "routes": ["/"]
-            },
-            "staging": {
-              "browserTarget": "frontend:build:staging",
-              "serverTarget": "frontend:server:staging",
-              "routes": ["/"]
-            }
+            "production": {}
           }
         }
       }
@@ -239,9 +188,6 @@
           "configurations": {
             "production": {
               "devServerTarget": "frontend:serve:production"
-            },
-            "staging": {
-              "devServerTarget": "frontend:serve:staging"
             }
           }
         },
