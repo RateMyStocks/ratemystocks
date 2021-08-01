@@ -21,7 +21,7 @@ const typeOrmConfig: TypeOrmModuleOptions = {
   // We are using migrations, so synchronize should be set to false.
   synchronize: false,
   logging: true,
-  ssl: process.env.NODE_ENV !== 'development' ? { rejectUnauthorized: false } : false,
+  ssl: process.env.MODE !== 'DEV' ? { rejectUnauthorized: false } : false,
   // Unfortunately Nx will use webpack to generate a single main.js, so glob patterns won't work right when you deploy the dist.
   // Therefore, you must manually import & add new migrations to this array.
   migrations: [InitialSchema1622094105302, UserSavedPortfoliosJoinTable1627260435599],
