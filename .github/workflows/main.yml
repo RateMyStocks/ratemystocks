@@ -74,5 +74,5 @@ jobs:
         env:
           CI: true
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/ratemystocks_ci_test
-          NODE_ENV: development
+          NODE_ENV: local
           JWT_SECRET: FAKE-SECRET-KEY

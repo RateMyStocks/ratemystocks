@@ -15,7 +15,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'local') {
     app.enableCors({
       credentials: true,
       origin: true,
