@@ -25,12 +25,12 @@ For more info, visit our [wiki](https://github.com/RateMyStocks/ratemystocks/wik
 ## Common Nx commands
 
 - Generate NestJS module `ng g @nrwl/nest:module app/modules/<MODULE-NAME> --project=backend`
-- Generate Angular module `ng g c modules/<MODULE-NAME>` (NOTE: you may still need to add this to your app.module.ts, the command might not do it)
+- Generate Angular module `ng g c modules/<MODULE-NAME>` (NOTE: you may still need to add this to your app.module.ts, the command might not do it. The Angular CLI is a bit weird with Nx)
 
 ## Heroku
 
-1. heroku logs --tail -a <heroku-environment-name>
-2.
+1. Tail Heroku Logs in Real-Time: `heroku logs --tail -a <heroku-environment-name>`
+2. Remotely connect to Heroku Postgres database: `heroku pg:psql -a <heroku-environment-name>`
 
 # Nx
 
