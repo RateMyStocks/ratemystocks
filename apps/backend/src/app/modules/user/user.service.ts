@@ -80,7 +80,7 @@ export class UserService {
         description: portfolio.description,
         lastUpdated: portfolio.lastUpdated.toDateString(),
         name: portfolio.name,
-        user: null, // not currently needed for this endpoint
+        user: null, // TODO: Figure out how to load the user in one db call
         stocks: null, // not currently needed for this endpoint
       };
 
