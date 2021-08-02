@@ -15,7 +15,8 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  if (process.env.NODE_ENV === 'local') {
+  // You must specify NODE_ENV due to a weird NestJS/Nx issue: https://stackoverflow.com/questions/58090082/process-env-node-env-always-development-when-building-nestjs-app-with-nrwl-nx
+  if (process.env['NODE' + '_ENV'] === 'local') {
     app.enableCors({
       credentials: true,
       origin: true,
@@ -27,9 +28,11 @@ async function bootstrap() {
     app.enableCors({
       credentials: true,
       origin: (origin, callback) => {
+        console.log('ORIGN: ', origin);
         if (whitelist.indexOf(origin) !== -1) {
           logger.log('Allowed CORS for:', origin);
           callback(null, true);
+          logger.log(`Accepting requests from origin ${origin}`);
         } else {
           logger.log('Blocked CORS for:', origin);
           callback(new Error('Not allowed by CORS'));
@@ -38,8 +41,6 @@ async function bootstrap() {
       allowedHeaders: ['Origin, X-Requested-With, Content-Type, Accept, Authorization'],
       methods: ['GET, POST, PATCH, DELETE, PUT, OPTIONS'],
     });
-
-    logger.log(`Accepting requests from origin https://ratemystocks.com`);
   }
 
   await app.listen(process.env.PORT || 4000);
