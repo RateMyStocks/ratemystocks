@@ -1,0 +1,4 @@
+server:
+  origin: https://ratemystocks-staging.herokuapp.com/
+db:
+  synchronize: false
