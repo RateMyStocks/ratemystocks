@@ -16,9 +16,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SharedModule } from '../../shared/shared.module';
 import { MatDialogModule } from '@angular/material/dialog';
+import { FavoritesComponent } from './pages/favorites/favorites.component';
+import { SavedPortfoliosTableComponent } from './components/saved-portfolios-table/saved-portfolios-table.component';
 
 @NgModule({
-  declarations: [UserProfileComponent, SettingsComponent, UserPortfoliosTableComponent, UserProfileHeaderComponent],
+  declarations: [
+    UserProfileComponent,
+    SettingsComponent,
+    UserPortfoliosTableComponent,
+    UserProfileHeaderComponent,
+    FavoritesComponent,
+    SavedPortfoliosTableComponent,
+  ],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
