@@ -31,6 +31,7 @@ For more info, visit our [wiki](https://github.com/RateMyStocks/ratemystocks/wik
 
 1. Tail Heroku Logs in Real-Time: `heroku logs --tail -a <heroku-environment-name>`
 2. Remotely connect to Heroku Postgres database: `heroku pg:psql -a <heroku-environment-name>`
+3. See Heroku config vars: `heroku config -a <heroku-environment-name>`
 
 # Nx
 
