@@ -10,6 +10,9 @@ import { UserAccount } from '../models/userAccount.entity';
 require('dotenv').config();
 
 console.log(process.env.NODE_ENV);
+console.log(process.env.DATABASE_URL);
+console.log(process.env.IEX_API_TOKEN);
+console.log(process.env.JWT_EXPIRATION_SECONDS);
 console.log('SSL: ', process.env.NODE_ENV !== 'development' ? { rejectUnauthorized: false } : false);
 
 /** This TypeORM config is referenced in a package.json script to generate TypeOrm migration files. */
