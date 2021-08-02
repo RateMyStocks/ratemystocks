@@ -9,12 +9,6 @@ import { UserAccount } from '../models/userAccount.entity';
 
 require('dotenv').config();
 
-console.log(process.env.NODE_ENV);
-console.log(process.env.DATABASE_URL);
-console.log(process.env.IEX_API_TOKEN);
-console.log(process.env.JWT_EXPIRATION_SECONDS);
-console.log('SSL: ', process.env.NODE_ENV !== 'local' ? { rejectUnauthorized: false } : false);
-
 /** This TypeORM config is referenced in a package.json script to generate TypeOrm migration files. */
 const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
@@ -27,7 +21,8 @@ const typeOrmConfig: TypeOrmModuleOptions = {
   // We are using migrations, so synchronize should be set to false.
   synchronize: false,
   logging: true,
-  ssl: process.env.NODE_ENV !== 'local' ? { rejectUnauthorized: false } : false,
+  // You must specify NODE_ENV due to a weird NestJS/Nx issue: https://stackoverflow.com/questions/58090082/process-env-node-env-always-development-when-building-nestjs-app-with-nrwl-nx
+  ssl: process.env['NODE' + '_ENV'] !== 'local' ? { rejectUnauthorized: false } : false,
   // Unfortunately Nx will use webpack to generate a single main.js, so glob patterns won't work right when you deploy the dist.
   // Therefore, you must manually import & add new migrations to this array.
   migrations: [InitialSchema1622094105302, UserSavedPortfoliosJoinTable1627260435599],
