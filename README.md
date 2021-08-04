@@ -4,15 +4,32 @@ ratemystocks.com is a community-driven stock market research platform and invest
 
 For more info, visit our [wiki](https://github.com/RateMyStocks/ratemystocks/wiki)
 
-# Getting Started - Running the app
+# Prequisites
 
 1. Install Node.js & npm: [Node.js Download](https://nodejs.org/en/download/)
-2. `npm install` - Install the dependencies in the local node_modules folder.
-3. `npm install -g nx` - This installs the Nx CLI globally on your machine.
-4. Create a `.env` file based off of `.env.example` but with real database connection info and API keys.
-5. Install PostgresSQL locally and create a database with database called `ratemystocks`. The credentials much match the `DATABASE_URL` in `.env.example`.
-6. `npm run dev` - This will run NestJS (backend) & Angular (frontend) dev servers in parallel, both in watch mode.
-7. Go to `localhost:4200` in your browser. `IMPORTANT`: Makes sure you are not connected to any VPN - it might block your requests made to the 3rd party APIs we use.
+2. `npm install -g nx` - This installs the Nx CLI globally on your machine.
+3. `npm install -g @angular/cli` - Installs Angular CLI globally on your machine.
+4. Install `Docker` and `Docker Compose`
+5. Coordinate with Gabe Lorenzo to obtain the necessary API keys. Alternatively, make an account on [iex.cloud.io](https://iexcloud.io/) and retrieve a token using the free plan.
+
+# Getting Started - Running the app
+
+1. `git clone https://github.com/RateMyStocks/ratemystocks.git`
+2. `cd` into the cloned repo on your machine and run `npm install`
+3. Install PostgresSQL locally and create a database with database called `ratemystocks`. The credentials much match the `DATABASE_URL` in `.local.env`.
+4. Update the various place holder values for the API_TOKEN environment variables in `.local.env`
+5. `npm run dev` - This will use `concurrently` to run both the frontend and backend dev servers in parallel, both in watch mode.
+6. Go to `localhost:4200` in your browser. `IMPORTANT`: Makes sure you are not connected to any VPN - it might block your requests made to the 3rd party APIs we use.
+
+# Workspace Setup
+
+1. (Recommended) Install Visual Studio Code
+2. (Recommended) Install the following VS Code Extensions: ESLint, Prettier, Angular Snippets, Angular Essentials, es6-string-html, Nx Console, SCSS Intellisense, Jest Runner, GitLens, Docker.
+3. In VS Code, enable "Format on Save: `File -> Preferences -> Settings -> Click "User" tab and click "Text Editor" -> Click "Formatting" and check off "Format on Save"`
+
+File -> Preferences -> Extensons and search for TSLint and Prettier and install both.
+
+Other recommended VSCode plugins: --Angular Snippets
 
 ## Generating TypeORM Migrations:
 
