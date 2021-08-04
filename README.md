@@ -22,6 +22,10 @@ For more info, visit our [wiki](https://github.com/RateMyStocks/ratemystocks/wik
 4. Import the new migration into the `migrations` array of `ormconfig.ts`.
 5. Since we have `migrationsRun: true` in `ormconfig.ts`, you just have to run the application to run the migrations. If you for some reason do need to run migrations manually, you can do `npm run typeorm:migration:run`.
 
+## Running Storybook
+
+1. `nx run frontend:storybook`
+
 ## Common Nx commands
 
 - Generate NestJS module `ng g @nrwl/nest:module app/modules/<MODULE-NAME> --project=backend`
