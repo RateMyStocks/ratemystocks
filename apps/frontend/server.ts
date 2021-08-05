@@ -1,4 +1,4 @@
-import 'zone.js/dist/zone-node';
+import 'zone.js/node';
 
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import './../backend/src/main';
