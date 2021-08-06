@@ -14,6 +14,7 @@ import { AppService } from './app.service';
 import { StockModule } from './modules/stock/stock.module';
 import { PortfolioModule } from './modules/portfolio/portfolio.module';
 import { UserModule } from './modules/user/user.module';
+import { GraphQLModule } from '@nestjs/graphql';
 
 @Module({
   imports: [
@@ -21,11 +22,14 @@ import { UserModule } from './modules/user/user.module';
       bootstrap: AppServerModule,
       viewsPath: join(process.cwd(), 'dist/frontend/browser'),
     }),
+    GraphQLModule.forRoot({
+      autoSchemaFile: 'schema.gql',
+    }),
+    TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     AuthModule,
     IexCloudModule,
     PortfolioModule,
     StockModule,
-    TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     UserModule,
   ],
   controllers: [AppController],

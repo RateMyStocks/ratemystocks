@@ -1,5 +1,6 @@
 // import { StockRatingEnum } from '@ratemystocks/api-interface';
 import { BaseEntity, Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { ObjectType, Field } from '@nestjs/graphql';
 import { UserAccount } from './userAccount.entity';
 
 export const enum StockRatingEnum {
@@ -8,9 +9,11 @@ export const enum StockRatingEnum {
   SELL = 'sell',
 }
 
+@ObjectType()
 @Entity({ name: 'stock_rating' })
 @Index(['ticker', 'userAccount'], { unique: true, where: '"active" = true' })
 export class StockRating extends BaseEntity {
+  @Field()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
