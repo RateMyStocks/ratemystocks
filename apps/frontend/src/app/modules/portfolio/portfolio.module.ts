@@ -35,7 +35,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { UpdatePortfolioDescriptionDialogComponent } from './components/update-portfolio-description-dialog/update-portfolio-description-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UpdatePortfolioHoldingsDialogComponent } from './components/update-portfolio-holdings-dialog/update-portfolio-holdings-dialog.component';
-
+import { APOLLO_OPTIONS } from 'apollo-angular';
+import { InMemoryCache } from '@apollo/client/core';
+import { HttpLink } from 'apollo-angular-link-http';
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     PortfoliosComponent,
@@ -49,6 +52,7 @@ import { UpdatePortfolioHoldingsDialogComponent } from './components/update-port
     UpdatePortfolioHoldingsDialogComponent,
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
     BrowserAnimationsModule,
     ClipboardModule,
@@ -77,6 +81,20 @@ import { UpdatePortfolioHoldingsDialogComponent } from './components/update-port
     NgxChartsModule,
     RouterModule,
     SharedModule,
+  ],
+  providers: [
+    {
+      provide: APOLLO_OPTIONS,
+      useFactory(httpLink: HttpLink) {
+        return {
+          cache: new InMemoryCache(),
+          link: httpLink.create({
+            uri: 'http://localhost:4000',
+          }),
+        };
+      },
+      deps: [HttpLink],
+    },
   ],
 })
 export class PortfolioModule {}

@@ -19,7 +19,7 @@ export class UserAccount extends BaseEntity {
   @Column({ type: 'varchar', length: 100, nullable: false })
   username: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'citext', nullable: false })
   email: string;
 

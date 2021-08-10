@@ -38,7 +38,7 @@ export class Portfolio extends BaseEntity {
   @Column({ name: 'last_updated', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', nullable: false })
   lastUpdated: Date;
 
-  @Field((type) => [UserAccount], { nullable: true })
+  @Field((type) => UserAccount, { nullable: true })
   @ManyToOne((type) => UserAccount, (user) => user.portfolios, { nullable: false, onDelete: 'CASCADE', eager: true })
   @JoinColumn({ name: 'user_id' })
   user: UserAccount;
@@ -47,7 +47,6 @@ export class Portfolio extends BaseEntity {
   @Column({ name: 'user_id', type: 'uuid' })
   userId: string;
 
-  @Field((type) => [PortfolioRating], { nullable: true })
   @OneToMany((type) => PortfolioRating, (portfolioRating) => portfolioRating.portfolio, { eager: false })
   ratings: PortfolioRating[];
 

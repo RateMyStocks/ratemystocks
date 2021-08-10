@@ -9,7 +9,7 @@ type StockRating {
 type UserAccount {
   id: String!
   username: String!
-  email: String!
+  email: String
   salt: String!
   portfolios: [Portfolio!]
   portfolioRatings: [PortfolioRating!]
@@ -35,11 +35,11 @@ type Portfolio {
   description: String!
   dateCreated: DateTime!
   lastUpdated: DateTime!
-  user: [UserAccount!]
+  user: UserAccount
   userId: String!
-  ratings: [PortfolioRating!]
   stocks: [PortfolioStock!]
   usersSaved: [UserAccount!]
+  ratingCounts: PortfolioRatingCounts!
 }
 
 """
@@ -47,6 +47,20 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type PortfolioRatingCounts {
+  likes: Float!
+  dislikes: Float!
+}
+
 type Query {
+  portfolio(id: String!): Portfolio!
   user(username: String!): UserAccount!
+}
+
+type Mutation {
+  updatePortfolio(portfolio: UpdatePortfolioDto!, id: String!): Portfolio!
+}
+
+input UpdatePortfolioDto {
+  description: String!
 }

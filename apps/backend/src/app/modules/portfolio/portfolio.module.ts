@@ -8,14 +8,22 @@ import { PortfolioStockRepository } from './portfolio-stock.repository';
 import { PortfolioController } from './portfolio.controller';
 import { PortfolioRepository } from './portfolio.repository';
 import { PortfolioService } from './portfolio.service';
+import { PortfolioResolver } from './portfolio.resolver';
+import { UserService } from '../user/user.service';
+import { UserRepository } from '../auth/user.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([PortfolioRepository, PortfolioRatingRepository, PortfolioStockRepository]),
+    TypeOrmModule.forFeature([
+      PortfolioRepository,
+      PortfolioRatingRepository,
+      PortfolioStockRepository,
+      UserRepository,
+    ]),
     IexCloudModule,
     AuthModule,
   ],
   controllers: [PortfolioController],
-  providers: [PortfolioService, IexCloudService],
+  providers: [PortfolioResolver, PortfolioService, UserService, IexCloudService],
 })
 export class PortfolioModule {}

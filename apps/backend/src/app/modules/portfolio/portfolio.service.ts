@@ -233,37 +233,6 @@ export class PortfolioService {
   }
 
   /**
-   * Updates the description of the portfolio.
-   * @param userAccount The logged-in user who owns the portfolio.
-   * @param portfolioId The unique UUID of the portfolio.
-   * @param portfolioName The object containing the description to set on the portfolio.
-   * @returns The portfolio with the updated description.
-   */
-  async updatePortfolioDescription(
-    userAccount: UserAccount,
-    portfolioId: string,
-    portfolioDescription: { description: string }
-  ): Promise<Portfolio> {
-    // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
-    const portfolio = await this.portfolioRepository.findOne({ where: { id: portfolioId, userId: userAccount.id } });
-
-    // Throw 403 in the unlikely case that a user is attempting to update another user's portfolio or the portfolio is not found.
-    if (!portfolio) {
-      throw new ForbiddenException('You do not own this portfolio.');
-    }
-
-    portfolio.description = portfolioDescription.description;
-    await portfolio.save();
-
-    // After portfolio is saved, remove the sensitive User info from it so we don't send back it back to the client
-    delete portfolio.user.password;
-    delete portfolio.user.salt;
-    delete portfolio.user.email;
-
-    return portfolio;
-  }
-
-  /**
    * Updates the holdings of a portfolio.
    * @param userAccount The logged-in user who owns the portfolio.
    * @param portfolioId The unique UUID of the portfolio.
@@ -307,6 +276,55 @@ export class PortfolioService {
     delete portfolioEntity.user.password;
     delete portfolioEntity.user.salt;
     delete portfolioEntity.user.email;
+
+    return portfolioEntity;
+  }
+
+  /**
+   * Partially updated a portfolio - Intended to be used with GraphQL Resolver
+   * @param portfolioId
+   * @param userAccount
+   * @param portfolioDto
+   */
+  async partialUpdatePortfolio(portfolioId: string, userAccount: UserAccount, portfolioDto: any): Promise<any> {
+    const portfolioEntity = await this.portfolioRepository.findOne({
+      where: { id: portfolioId, userId: userAccount.id },
+    });
+
+    // Throw 403 in the unlikely case that a user is attempting to update another user's portfolio or the portfolio is not found.
+    if (!portfolioEntity) {
+      throw new ForbiddenException('You do not own this portfolio.');
+    }
+
+    if (portfolioDto.name) {
+      portfolioEntity.name = portfolioDto.name;
+    }
+
+    if (portfolioDto.description) {
+      portfolioEntity.description = portfolioDto.description;
+    }
+
+    if (portfolioDto.holdings) {
+      const updatedStocks: PortfolioStock[] = [];
+
+      portfolioDto.holdings.forEach((stockDto: CreatePortfolioStockDto) => {
+        const stockEntity: PortfolioStock = new PortfolioStock();
+
+        // For a create to happen, id has to be undefined (null won't work)
+        stockEntity.id = stockDto.id ? stockDto.id : undefined;
+        stockEntity.ticker = stockDto.ticker;
+        stockEntity.weighting = stockDto.weighting;
+        stockEntity.portfolioId = portfolioEntity.id;
+
+        updatedStocks.push(stockEntity);
+      });
+
+      portfolioEntity.stocks = updatedStocks;
+    }
+
+    portfolioEntity.lastUpdated = new Date();
+
+    await portfolioEntity.save();
 
     return portfolioEntity;
   }

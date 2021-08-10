@@ -23,7 +23,8 @@ import { GraphQLModule } from '@nestjs/graphql';
       viewsPath: join(process.cwd(), 'dist/frontend/browser'),
     }),
     GraphQLModule.forRoot({
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'schema.gql', // TODO: Put this in the backend project folder
+      context: ({ req }) => ({ req }),
     }),
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     AuthModule,

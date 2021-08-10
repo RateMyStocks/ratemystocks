@@ -175,58 +175,6 @@ describe('PortfolioService', () => {
     });
   });
 
-  describe('updatePortfolioDescription', () => {
-    it('calls portfolioRepository.save() and returns the updated portfolio', async () => {
-      const mockPortfolio: Portfolio = new Portfolio();
-      mockPortfolio.id = '73d8e169-2cb1-4a62-8bd9-e759f3f06cee';
-      mockPortfolio.name = 'Fake Portfolio';
-      mockPortfolio.description = null;
-      mockPortfolio.user = mockUserAccount;
-
-      jest.spyOn(repository, 'findOne').mockResolvedValue(mockPortfolio);
-
-      // Mock the Task entity's "save" method to return anything. It doesn't matter for this test since we are not returning the result of save
-      const saveSpy = jest.spyOn(mockPortfolio, 'save').mockResolvedValue(new Portfolio());
-
-      const result = await service.updatePortfolioDescription(mockUserAccount, mockPortfolio.id, {
-        description: 'Updated Portfolio Description',
-      });
-
-      expect(repository.findOne).toHaveBeenCalledWith({ where: { id: mockPortfolio.id, userId: mockUserAccount.id } });
-      expect(saveSpy).toHaveBeenCalledTimes(1);
-      expect(result.id).toEqual(mockPortfolio.id);
-      expect(result.name).toEqual(mockPortfolio.name);
-      expect(result.user.id).toEqual(mockPortfolio.user.id);
-      expect(result.description).toEqual('Updated Portfolio Description');
-
-      // Excludes sensitive & unnecessary user info from the returned portfolio entity
-      expect(result.user.password).toBeFalsy();
-      expect(result.user.email).toBeFalsy();
-      expect(result.user.salt).toBeFalsy();
-    });
-
-    it('returns 403 if a user attempts to update a portfolio they do not own (portfolio cant be found with userId & portfolioId)', async () => {
-      const mockPortfolio: Portfolio = new Portfolio();
-      mockPortfolio.id = '73d8e169-2cb1-4a62-8bd9-e759f3f06cee';
-      mockPortfolio.name = 'Fake Portfolio';
-      mockPortfolio.user = mockUserAccount;
-
-      jest.spyOn(repository, 'findOne').mockResolvedValue(null);
-
-      try {
-        await service.updatePortfolioDescription(mockUserAccount, '0319fa3a-19b9-4892-a54d-03d4d74e3cc4', {
-          description: 'Updated Portfolio Description',
-        });
-      } catch (err) {
-        expect(err).toEqual(new ForbiddenException('You do not own this portfolio.'));
-      }
-
-      expect(repository.findOne).toHaveBeenCalledWith({
-        where: { id: '0319fa3a-19b9-4892-a54d-03d4d74e3cc4', userId: mockUserAccount.id },
-      });
-    });
-  });
-
   describe('getPortfolioRatingCounts', () => {
     it('calls portfolioRatingRepository.getPortfolioRatingCounts() and returns the correct number of likes/dislikes', async () => {
       const portfolioId = '73d8e169-2cb1-4a62-8bd9-e759f3f06cee';

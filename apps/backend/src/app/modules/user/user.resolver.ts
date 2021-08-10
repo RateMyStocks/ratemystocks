@@ -14,25 +14,9 @@ export class UserResolver {
   async user(@Args('username') username: string): Promise<UserAccount> {
     return await this.userService.getUserByUsername(username);
   }
-  // @ResolveField((returns) => [UserPortfolioDto])
   @ResolveField((returns) => [Portfolio])
   async portfolios(@Parent() user) {
     const { id } = user;
     return this.portfolioService.getPortfoliosByUserId(id);
   }
-
-  // @Query(returns => CustomerModel)
-  // async customer(@Args('id') id: string): Promise<CustomerModel> {
-  //   return await this.customerService.findOne(id);
-  // }
-  // @ResolveField(returns => [InvoiceModel])
-  // async invoices(@Parent() customer) {
-  //   const { id } = customer;
-  //   console.log(customer);
-  //   return this.invoiceService.findByCustomer(id);
-  // }
-  // @Query(returns => [CustomerModel])
-  // async customers(): Promise<CustomerModel[]> {
-  //   return await this.customerService.findAll();
-  // }
 }
