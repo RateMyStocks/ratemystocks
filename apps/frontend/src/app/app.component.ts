@@ -10,11 +10,9 @@ import { environment } from '../environments/environment';
 export class AppComponent implements OnInit {
   title = 'ratemystocks';
 
-  isProduction: boolean;
+  isProduction: boolean = environment.production;
 
-  constructor(private authService: AuthService) {
-    this.isProduction = environment.production;
-  }
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
     this.authService.setUpAuthStatus();
