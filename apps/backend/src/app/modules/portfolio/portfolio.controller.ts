@@ -41,17 +41,6 @@ export class PortfolioController {
     return this.portfolioService.getPortfoliosByUserId(userId);
   }
 
-  // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
-  @Get('/:id')
-  getPortfolioById(@Param('id') id: string): Promise<Portfolio> {
-    return this.portfolioService.getPortfolioById(id);
-  }
-
-  @Get('/:id/stocks')
-  getPortfolioStocks(@Param('id') id: string): Promise<PortfolioStockDto[]> {
-    return this.portfolioService.getPortfolioStocks(id);
-  }
-
   @Post()
   @UseGuards(AuthGuard())
   createPortfolio(
@@ -60,11 +49,6 @@ export class PortfolioController {
   ): Promise<Portfolio> {
     // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
     return this.portfolioService.createPortfolio(portfolio, userAccount);
-  }
-
-  @Get('/:portfolioId/ratings')
-  getPortfolioRatingCounts(@Param('portfolioId') portfolioId: string): Promise<{ likes: number; dislikes: number }> {
-    return this.portfolioService.getPortfolioRatingCounts(portfolioId);
   }
 
   @Get('/:portfolioId/ratings/user')
@@ -87,6 +71,8 @@ export class PortfolioController {
   }
 
   /**
+   * @deprecated This method should not be used. The GraphQL Resolver should be used instead of these patch methods.
+   *
    * Updates the name the portfolio.
    * @param userAccount The logged-in user who owns the portfolio.
    * @param portfolioId The unique UUID of the portfolio.
@@ -102,24 +88,6 @@ export class PortfolioController {
   ): Promise<Portfolio> {
     // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
     return this.portfolioService.updatePortfolioName(userAccount, portfolioId, portfolioName);
-  }
-
-  /**
-   * Updates the description the portfolio.
-   * @param userAccount The logged-in user who owns the portfolio.
-   * @param portfolioId The unique UUID of the portfolio.
-   * @param portfolioDescription The request body which contains the description to set on the portfolio.
-   * @returns The portfolio with the updated name.
-   */
-  @Patch('/description/:portfolioId')
-  @UseGuards(AuthGuard())
-  updatePortfolioDescription(
-    @GetUser() userAccount: UserAccount,
-    @Param('portfolioId') portfolioId,
-    @Body() portfolioDescription: { description: string }
-  ): Promise<Portfolio> {
-    // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
-    return this.portfolioService.updatePortfolioDescription(userAccount, portfolioId, portfolioDescription);
   }
 
   /**

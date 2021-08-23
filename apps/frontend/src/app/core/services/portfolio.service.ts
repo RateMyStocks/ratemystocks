@@ -52,26 +52,6 @@ export class PortfolioService {
   }
 
   /**
-   * Fetches a portfolio from the database by UUID.
-   * @param id The UUID of the portfolio to fetch.
-   * @return An object representing the PortfolioEntity from the database.
-   */
-  getPortfolio(id: string): Observable<PortfolioDto> {
-    const endpoint = `${environment.apiUrl}/portfolio/${id}`;
-    return this.http.get<PortfolioDto>(endpoint);
-  }
-
-  /**
-   * Fetches an array of stocks/holdings for a given Portfolio.
-   * @param id The UUID of the portfolio to retrieve stocks/holdings for.
-   * @return An array representing the list of stocks/holdings for a given portfolio.
-   */
-  getPortfolioStocks(id: string): Observable<PortfolioStockDto[]> {
-    const endpoint = `${environment.apiUrl}/portfolio/${id}/stocks`;
-    return this.http.get<PortfolioStockDto[]>(endpoint);
-  }
-
-  /**
    * Calls the API to create a Portfolio in the database.
    * @param portfolio The DTO containing minimal data to create a Portfolio in the database.
    * @return The PortfolioEntity that was created in the database.
@@ -95,21 +75,6 @@ export class PortfolioService {
   }
 
   /**
-   * Updates the description of an existing portfolio
-   * @param portfolioId The UUID that uniquely identifies the portfolio in the database that will be updated.
-   * @param portfolioName An object containing the description to set on the portfolio.
-   * @return The updated portfolio object with the new description.
-   */
-  updatePortfolioDescription(
-    portfolioId: string,
-    portfolioDescription: { description: string }
-  ): Observable<PortfolioDto> {
-    const endpoint = `${environment.apiUrl}/portfolio/description/${portfolioId}`;
-
-    return this.http.patch<PortfolioDto>(endpoint, portfolioDescription, { withCredentials: true });
-  }
-
-  /**
    * Updates the holdings of an existing portfolio
    * @param portfolioId The UUID that uniquely identifies the portfolio in the database that will be updated.
    * @param portfolioHoldings An object containing the holdings to set on the portfolio.
@@ -122,16 +87,6 @@ export class PortfolioService {
     const endpoint = `${environment.apiUrl}/portfolio/holdings/${portfolioId}`;
 
     return this.http.patch<PortfolioDto>(endpoint, portfolioHoldings, { withCredentials: true });
-  }
-
-  /**
-   * Performs a GET request to retrieve the portfolio rating counts (number of likes & dislikes) for a given portfolio.
-   * @param portfolioId The UUID string of the portfolio to retrieve rating counts fors.
-   * @return An object containing the likes & dislikes counts as integer values.
-   */
-  getPortfolioRatingCounts(portfolioId: string): Observable<{ likes: number; dislikes: number }> {
-    const endpoint = `${environment.apiUrl}/portfolio/${portfolioId}/ratings`;
-    return this.http.get<{ likes: number; dislikes: number }>(endpoint);
   }
 
   /**

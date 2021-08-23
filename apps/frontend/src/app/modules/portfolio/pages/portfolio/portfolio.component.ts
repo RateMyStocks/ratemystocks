@@ -23,6 +23,35 @@ import { Subject } from 'rxjs';
 import { UpdatePortfolioHoldingsDialogComponent } from '../../components/update-portfolio-holdings-dialog/update-portfolio-holdings-dialog.component';
 import { UserService } from '../../../../core/services/user.service';
 import { takeUntil } from 'rxjs/operators';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+
+const GET_PORTFOLIO_QUERY = gql`
+  query GetPortfolio($id: String!) {
+    portfolio(id: $id) {
+      id
+      name
+      description
+      dateCreated
+      lastUpdated
+      userId
+      user {
+        username
+        email
+      }
+      stocks {
+        id
+        ticker
+        weighting
+        portfolioId
+      }
+      ratingCounts {
+        likes
+        dislikes
+      }
+    }
+  }
+`;
 
 @Component({
   selector: 'app-portfolio',
@@ -69,7 +98,8 @@ export class PortfolioComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private route: ActivatedRoute,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private apollo: Apollo
   ) {
     this.isAuth = this.authService.isAuthorized();
   }
@@ -88,13 +118,17 @@ export class PortfolioComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       const portfolioId = paramMap.get('id');
 
-      // Get the Portfolio
-      this.portfolioService
-        .getPortfolio(portfolioId)
+      this.apollo
+        .query<any>({
+          query: GET_PORTFOLIO_QUERY,
+          variables: {
+            id: portfolioId,
+          },
+        })
         .pipe(takeUntil(this.ngUnsubscribe))
         .subscribe(
-          (portfolio: PortfolioDto) => {
-            this.portfolio = portfolio;
+          ({ data, loading }) => {
+            this.portfolio = data.portfolio;
 
             this.portfolioLoaded = true;
 
@@ -106,40 +140,27 @@ export class PortfolioComponent implements OnInit, OnDestroy {
                 .subscribe((savedPortfolios: PortfolioDto[]) => {
                   this.portfolioLiked =
                     savedPortfolios.filter(function (savedPortfolio: PortfolioDto) {
-                      return savedPortfolio.id === portfolio.id;
+                      return savedPortfolio.id === data.portfolio.id;
                     }).length > 0;
                 });
             }
+
+            this.portfolioStocks = data.portfolio.stocks;
+
+            if (data.portfolio.stocks.length > 0) {
+              this.stocksLoaded = true;
+              this.updateIexStockDataMap();
+            }
+
+            this.setStockPieChartBreakdown();
+
+            this.numLikes = data.portfolio.ratingCounts.likes;
+            this.numDislikes = data.portfolio.ratingCounts.dislikes;
           },
           (error: any) => {
             this.router.navigate(['not-found']);
           }
         );
-
-      // Get the Portfolio's stocks
-      this.portfolioService
-        .getPortfolioStocks(portfolioId)
-        .pipe(takeUntil(this.ngUnsubscribe))
-        .subscribe((stocks: PortfolioStockDto[]) => {
-          this.portfolioStocks = stocks;
-
-          this.stocksLoaded = true;
-
-          if (stocks.length > 0) {
-            this.updateIexStockDataMap();
-          }
-
-          this.setStockPieChartBreakdown();
-        });
-
-      // Get the Portfolio's ratings
-      this.portfolioService
-        .getPortfolioRatingCounts(portfolioId)
-        .pipe(takeUntil(this.ngUnsubscribe))
-        .subscribe((ratings: { likes: number; dislikes: number }) => {
-          this.numLikes = ratings.likes;
-          this.numDislikes = ratings.dislikes;
-        });
 
       // Set the user's portfolio rating if they are logged-in.
       if (this.isAuth) {
@@ -231,10 +252,10 @@ export class PortfolioComponent implements OnInit, OnDestroy {
    * @return Ticker symbol of the stock with the highest weighting in the portfolio
    */
   getLargestHolding(): string {
-    return this.portfolioStocks.length
-      ? this.portfolioStocks.sort((a: PortfolioStockDto, b: PortfolioStockDto) =>
-          b.weighting > a.weighting ? 1 : -1
-        )[0].ticker
+    const stockArrayCopy = [...this.portfolioStocks];
+    return stockArrayCopy.length
+      ? stockArrayCopy.sort((a: PortfolioStockDto, b: PortfolioStockDto) => (b.weighting > a.weighting ? 1 : -1))[0]
+          .ticker
       : '';
   }
 
@@ -481,9 +502,13 @@ export class PortfolioComponent implements OnInit, OnDestroy {
           portfolio: this.portfolio,
         },
       });
-      dialogRef.afterClosed().subscribe((result: PortfolioDto) => {
+      dialogRef.afterClosed().subscribe((result: string) => {
         if (result) {
-          this.portfolio = result;
+          // this.portfolio = result;
+          // this.portfolio.description = result;
+          const portfolioCopy = _.cloneDeep(this.portfolio);
+          portfolioCopy.description = result;
+          this.portfolio = portfolioCopy;
         }
       });
     }

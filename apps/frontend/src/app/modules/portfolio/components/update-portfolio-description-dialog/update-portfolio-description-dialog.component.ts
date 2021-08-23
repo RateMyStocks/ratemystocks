@@ -7,6 +7,8 @@ import { PortfolioService } from '../../../../core/services/portfolio.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { Apollo, gql } from 'apollo-angular';
+
 @Component({
   selector: 'app-update-portfolio-description-dialog',
   templateUrl: './update-portfolio-description-dialog.component.html',
@@ -22,7 +24,8 @@ export class UpdatePortfolioDescriptionDialogComponent implements OnInit {
     private fb: FormBuilder,
     private portfolioService: PortfolioService,
     private snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private apollo: Apollo
   ) {}
 
   ngOnInit(): void {
@@ -35,13 +38,27 @@ export class UpdatePortfolioDescriptionDialogComponent implements OnInit {
 
   /** Submits the form to update a portfolio in the database. */
   onSubmit() {
-    this.portfolioService
-      .updatePortfolioDescription(this.data.portfolio.id, this.portfolioDescriptionForm.value)
-      .pipe(takeUntil(this.ngUnsubscribe.asObservable()))
+    const mutation = gql`
+      mutation UpdatePortfolioDescription($id: String!, $description: String!) {
+        updatePortfolio(id: $id, portfolio: { description: $description }) {
+          id
+          description
+        }
+      }
+    `;
+
+    this.apollo
+      .mutate({
+        mutation: mutation,
+        variables: {
+          id: this.data.portfolio.id,
+          description: this.portfolioDescriptionForm.value.description,
+        },
+      })
       .subscribe(
-        (portfolio: PortfolioDto) => {
-          // This will return the updated portfolio to the parent of this dialog when the dialog is closed
-          this.dialogRef.close(portfolio);
+        (result: any) => {
+          // This will return the updated portfolio description to the parent of this dialog when the dialog is closed
+          this.dialogRef.close(result.data.updatePortfolio.description);
 
           this.snackBar.open(`Portfolio successfully updated!`, 'OK', {
             duration: 2000,

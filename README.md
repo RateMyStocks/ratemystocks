@@ -33,6 +33,10 @@ For more info, visit our [wiki](https://github.com/RateMyStocks/ratemystocks/wik
 2. Remotely connect to Heroku Postgres database: `heroku pg:psql -a <heroku-environment-name>`
 3. See Heroku config vars: `heroku config -a <heroku-environment-name>`
 
+## GraphQL Playground
+
+1. Access the GraphQL Playground at `http://127.0.0.1:4000/graphql`.
+
 # Nx
 
 This project was generated using [Nx](https://nx.dev).

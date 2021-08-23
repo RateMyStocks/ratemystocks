@@ -1,35 +1,44 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique, ManyToMany, JoinTable } from 'typeorm';
+import { ObjectType, Field } from '@nestjs/graphql';
 import { Portfolio } from './portfolio.entity';
 import { PortfolioRating } from './portfolioRating.entity';
 import * as bcrypt from 'bcryptjs';
 import { StockRating } from './stockRating.entity';
 import { SpiritAnimal, UserRole } from '@ratemystocks/api-interface';
 
+@ObjectType()
 @Entity({ name: 'user_account' })
 @Unique('uq_user_account_username', ['username'])
 @Unique('uq_user_account_email', ['email'])
 export class UserAccount extends BaseEntity {
+  @Field()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Field()
   @Column({ type: 'varchar', length: 100, nullable: false })
   username: string;
 
+  @Field({ nullable: true })
   @Column({ type: 'citext', nullable: false })
   email: string;
 
   @Column({ type: 'varchar', nullable: false })
   password: string;
 
+  @Field()
   @Column()
   salt: string;
 
+  @Field((type) => [Portfolio], { nullable: true })
   @OneToMany((type) => Portfolio, (portfolio) => portfolio.user, { eager: false, cascade: true })
   portfolios: Portfolio[];
 
+  @Field((type) => [PortfolioRating], { nullable: true })
   @OneToMany((type) => PortfolioRating, (portfolioRating) => portfolioRating.user, { eager: false, cascade: true })
   portfolioRatings: PortfolioRating[];
 
+  @Field((type) => [StockRating], { nullable: true })
   @OneToMany((type) => StockRating, (stockRating) => stockRating.userAccount, { eager: false, cascade: true })
   stockRatings: StockRating[];
 
@@ -55,12 +64,14 @@ export class UserAccount extends BaseEntity {
   // @Column({ type: 'boolean', nullable: false, default: false })
   // emailVerified: boolean;
 
+  @Field((type) => [Portfolio], { nullable: true })
   @ManyToMany(() => Portfolio, (portfolio) => portfolio.usersSaved, {
     cascade: true,
   })
   @JoinTable()
   savedPortfolios: Portfolio[];
 
+  // @Field((type) => SpiritAnimal)
   @Column({
     name: 'spirit_animal',
     type: 'enum',

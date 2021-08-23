@@ -16,6 +16,11 @@ import { GlobalErrorHandler } from './core/error-handlers/global-error-handler';
 import { ProfileModule } from './modules/profile/profile.module';
 import { ErrorModule } from './modules/error/error.module';
 
+// GraphQL
+import { APOLLO_OPTIONS } from 'apollo-angular';
+import { HttpLink } from 'apollo-angular/http';
+import { InMemoryCache } from '@apollo/client/core';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -35,6 +40,18 @@ import { ErrorModule } from './modules/error/error.module';
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    {
+      provide: APOLLO_OPTIONS,
+      useFactory(httpLink: HttpLink) {
+        return {
+          cache: new InMemoryCache(),
+          link: httpLink.create({
+            uri: 'http://localhost:4000/graphql',
+          }),
+        };
+      },
+      deps: [HttpLink],
+    },
   ],
   bootstrap: [AppComponent],
 })
