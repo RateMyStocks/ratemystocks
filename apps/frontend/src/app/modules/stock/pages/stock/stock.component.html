@@ -1,4 +1,4 @@
-<div *ngIf="stock">
+<div *ngIf="stockLoaded">
   <app-stock-page-header [stock]="stock" [ticker]="ticker" (ratingUpdated)="onRatingUpdated()"></app-stock-page-header>
 
   <br />
@@ -33,6 +33,6 @@
   <br />
 </div>
 
-<div class="vertically-and-horizontally-centered" *ngIf="!stock">
+<div class="vertically-and-horizontally-centered" *ngIf="!stockLoaded">
   <mat-spinner [diameter]="200"></mat-spinner>
 </div>
