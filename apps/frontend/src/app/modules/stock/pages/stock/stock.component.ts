@@ -25,6 +25,8 @@ export class StockComponent implements OnInit, OnDestroy {
 
   stockRatingBarChartItems: { name: string; value: number }[];
 
+  stockLoaded = false;
+
   constructor(private route: ActivatedRoute, private stockService: StockService, private authService: AuthService) {}
 
   ngOnInit(): void {
@@ -37,6 +39,8 @@ export class StockComponent implements OnInit, OnDestroy {
       this.ticker = paramMap.get('ticker');
       this.stockService.getStock(this.ticker).subscribe((response: any) => {
         this.stock = response;
+
+        this.stockLoaded = true;
 
         this.updateStockRatingsBarChartItems();
       });
