@@ -1,15 +1,17 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { StockService } from '../../../../core/services/stock.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { IexCloudService } from '../../../../core/services/iex-cloud.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-stock-performance-chart',
   templateUrl: './stock-performance-chart.component.html',
   styleUrls: ['./stock-performance-chart.component.scss'],
 })
-export class StockPerformanceChartComponent implements OnInit, OnChanges {
+export class StockPerformanceChartComponent implements OnInit, OnDestroy {
   chartData: any[];
   selectedTimeLabels: string[] = [];
   scheme = {
@@ -19,6 +21,8 @@ export class StockPerformanceChartComponent implements OnInit, OnChanges {
 
   @Input()
   ticker: string;
+
+  private ngUnsubscribe: Subject<void> = new Subject();
 
   constructor(
     private route: ActivatedRoute,
@@ -31,32 +35,36 @@ export class StockPerformanceChartComponent implements OnInit, OnChanges {
     this.updateChart();
   }
 
-  ngOnChanges(): void {
-    this.updateChart();
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.unsubscribe();
   }
 
   /**
    * Updates ngx-charts based on what date option is selected
    */
   updateChart(): void {
-    this.iexCloudService.getStockCharts(this.ticker, this.range).subscribe((response: any[]) => {
-      let series: any[] = [];
-      this.selectedTimeLabels = [];
-      if (this.range === '1d') {
-        series = this.generateInterDaySeries(response);
-      } else {
-        series = this.generateHistoricalSeries(response);
-      }
-      this.chartData = [
-        ...[
-          {
-            name: this.ticker,
-            series,
-          },
-        ],
-      ];
-      this.selectedTimeLabels = [...this.selectedTimeLabels];
-    });
+    this.iexCloudService
+      .getStockCharts(this.ticker, this.range)
+      .pipe(takeUntil(this.ngUnsubscribe.asObservable()))
+      .subscribe((response: any[]) => {
+        let series: any[] = [];
+        this.selectedTimeLabels = [];
+        if (this.range === '1d') {
+          series = this.generateInterDaySeries(response);
+        } else {
+          series = this.generateHistoricalSeries(response);
+        }
+        this.chartData = [
+          ...[
+            {
+              name: this.ticker,
+              series,
+            },
+          ],
+        ];
+        this.selectedTimeLabels = [...this.selectedTimeLabels];
+      });
   }
 
   /**
