@@ -1,4 +1,6 @@
-import { Component, Input, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { ChartOptions, ChartType, ChartDataset } from 'chart.js';
+// import { Label } from 'ng2-charts';
 
 /**
  * Reusable component utilizing NGX Charts Horizontal Bar Chart
@@ -9,43 +11,25 @@ import { Component, Input, ChangeDetectorRef, AfterViewInit } from '@angular/cor
   templateUrl: './horizontal-bar-chart.component.html',
   styleUrls: ['./horizontal-bar-chart.component.scss'],
 })
-export class HorizontalBarChartComponent implements AfterViewInit {
+export class HorizontalBarChartComponent implements OnInit {
   @Input()
-  barChartItems: { name: string; value: number }[];
+  stock: any;
 
-  // options
-  showXAxis = false;
-  showYAxis = true;
-  gradient = false;
-  showLegend = false;
-  showXAxisLabel = true;
-  yAxisLabel = '';
-  showYAxisLabel = true;
-  xAxisLabel = '';
-  xScaleMin = 1;
-  showDataLabel = true;
-  showAnimations = true;
-  showRoundEdges = false;
-
-  colorScheme = {
-    domain: ['#34eb5e', '#f5b01b', '#f51b1b', '#AAAAAA'],
+  public barChartOptions: ChartOptions = {
+    responsive: true,
   };
+  public barChartLabels: string[] = ['Buy', 'Hold', 'Sell'];
+  public barChartType: ChartType = 'bar';
+  public barChartLegend = false;
+  public barChartPlugins = [];
+  public chartColors: any[] = [
+    {
+      backgroundColor: ['green', 'orange', 'red'],
+    },
+  ];
+  public barChartData: ChartDataset[];
 
-  constructor(private cdRef: ChangeDetectorRef) {}
-
-  ngAfterViewInit(): void {
-    this.cdRef.detectChanges();
-  }
-
-  onSelect(data): void {
-    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
-  }
-
-  onActivate(data): void {
-    console.log('Activate', JSON.parse(JSON.stringify(data)));
-  }
-
-  onDeactivate(data): void {
-    console.log('Deactivate', JSON.parse(JSON.stringify(data)));
+  ngOnInit(): void {
+    this.barChartData = [{ data: [this.stock.rating.buy, this.stock.rating.hold, this.stock.rating.sell, 0] }];
   }
 }

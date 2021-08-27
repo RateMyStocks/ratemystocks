@@ -22,6 +22,7 @@ import { StockKeyStatsComponent } from './components/stock-key-stats/stock-key-s
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatSnackBarModule,
     MatTabsModule,
     MatTooltipModule,
+    NgChartsModule,
     NgxChartsModule,
     SharedModule,
   ],

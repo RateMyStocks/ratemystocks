@@ -15,6 +15,7 @@ import { ErrorInterceptor } from './core/interceptors/error-interceptor';
 import { GlobalErrorHandler } from './core/error-handlers/global-error-handler';
 import { ProfileModule } from './modules/profile/profile.module';
 import { ErrorModule } from './modules/error/error.module';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,6 +31,7 @@ import { ErrorModule } from './modules/error/error.module';
     ProfileModule,
     ResourcesModule,
     StockModule,
+    NgChartsModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
