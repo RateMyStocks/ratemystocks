@@ -22,6 +22,8 @@ import { StockKeyStatsComponent } from './components/stock-key-stats/stock-key-s
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
+import { HighchartsChartModule } from 'highcharts-angular';
+import { StockRatingsBarChartComponent } from './components/stock-ratings-bar-chart/stock-ratings-bar-chart.component';
 
 @NgModule({
   declarations: [
@@ -32,10 +34,12 @@ import { MatDialogModule } from '@angular/material/dialog';
     StockNewsFeedComponent,
     StockCompanyInfoComponent,
     StockKeyStatsComponent,
+    StockRatingsBarChartComponent,
   ],
   imports: [
     CommonModule,
     FlexLayoutModule,
+    HighchartsChartModule,
     FormsModule,
     MatBadgeModule,
     MatButtonModule,

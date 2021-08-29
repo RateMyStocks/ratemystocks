@@ -5,6 +5,7 @@
       id="user-profile-thumbnail"
       mat-card-avatar
       src="https://storage.googleapis.com/iex/api/logos/{{ ticker }}.png"
+      onerror="this.onerror=null; this.src='assets/images/question-mark-placeholder.png'"
     />
     <mat-card-title>
       {{ ticker }}

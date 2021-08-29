@@ -1,122 +1,112 @@
 import { Component, OnInit, Input, OnChanges, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { StockService } from '../../../../core/services/stock.service';
-import { AuthService } from '../../../../core/services/auth.service';
 import { IexCloudService } from '../../../../core/services/iex-cloud.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import * as Highcharts from 'highcharts/highstock';
+import { IexCloudHistoricalPriceDto } from '@ratemystocks/api-interface';
 
+/**
+ * Component utilizing the Stock Chart from Highcharts that will show historical data for a given stock
+ * populating with data from IEX Cloud API.
+ * {@link https://stackblitz.com/edit/highcharts-angular-stock?file=src%2Fapp%2Fapp.component.ts}
+ * {@link https://www.highcharts.com/demo/stock/basic-line}
+ */
 @Component({
   selector: 'app-stock-performance-chart',
   templateUrl: './stock-performance-chart.component.html',
   styleUrls: ['./stock-performance-chart.component.scss'],
 })
-export class StockPerformanceChartComponent implements OnInit, OnDestroy {
-  chartData: any[];
-  selectedTimeLabels: string[] = [];
-  scheme = {
-    domain: ['#5AA454'],
-  };
-  range = '1d';
+export class StockPerformanceChartComponent implements OnInit, OnChanges {
+  isHighcharts = typeof Highcharts === 'object';
+  Highcharts: typeof Highcharts = Highcharts;
+
+  chartOptions: Highcharts.Options;
 
   @Input()
   ticker: string;
 
   private ngUnsubscribe: Subject<void> = new Subject();
 
-  constructor(
-    private route: ActivatedRoute,
-    private stockService: StockService,
-    private authService: AuthService,
-    private iexCloudService: IexCloudService
-  ) {}
+  initialized = false;
 
-  ngOnInit(): void {
-    this.updateChart();
-  }
+  constructor(private iexCloudService: IexCloudService) {}
 
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.unsubscribe();
-  }
-
-  /**
-   * Updates ngx-charts based on what date option is selected
-   */
-  updateChart(): void {
+  initialize(): void {
     this.iexCloudService
-      .getStockCharts(this.ticker, this.range)
+      .getStockCharts(this.ticker, '5y')
       .pipe(takeUntil(this.ngUnsubscribe.asObservable()))
-      .subscribe((response: any[]) => {
-        let series: any[] = [];
-        this.selectedTimeLabels = [];
-        if (this.range === '1d') {
-          series = this.generateInterDaySeries(response);
-        } else {
-          series = this.generateHistoricalSeries(response);
-        }
-        this.chartData = [
-          ...[
+      .subscribe((response: IexCloudHistoricalPriceDto[]) => {
+        const highChartsData = this.mapIexCloudHistoricalPricesToHighchartsFormat(response);
+
+        this.chartOptions = {
+          rangeSelector: {
+            allButtonsEnabled: true,
+            buttons: [
+              {
+                type: 'month',
+                count: 1,
+                text: '1m',
+              },
+              {
+                type: 'month',
+                count: 3,
+                text: '3m',
+              },
+              {
+                type: 'month',
+                count: 6,
+                text: '6m',
+              },
+              {
+                type: 'ytd',
+                text: 'YTD',
+              },
+              {
+                type: 'year',
+                count: 1,
+                text: '1y',
+              },
+              {
+                type: 'year',
+                count: 5,
+                text: '5y',
+              },
+            ],
+          },
+          series: [
             {
-              name: this.ticker,
-              series,
+              type: 'line',
+              pointInterval: 24 * 3600 * 1000,
+              data: highChartsData,
             },
           ],
-        ];
-        this.selectedTimeLabels = [...this.selectedTimeLabels];
+        };
       });
   }
 
-  /**
-   * Takes in the interday response and generates a series of values to be displayed on the chart
-   * @param response response from the interday request
-   */
-  generateInterDaySeries(response: any[]): any[] {
-    return response.map((element: any) => {
-      const name: string = element['label'];
-      // Include labels for all times in 30 min increments
-      if (name.includes('30') || !name.includes(':')) {
-        this.selectedTimeLabels.push(name);
-      }
-
-      const value = element['average'] === null ? 0 : element['average'];
-      return {
-        name,
-        value,
-        volume: element['volume'],
-        numberOfTrades: element['numberOfTrades'],
-        time: element['minute'],
-      };
-    });
+  ngOnInit(): void {
+    this.initialize();
+    this.initialized = true;
   }
 
-  /**
-   * Takes in the historical series response and generates a series of values to be displayed on the chart
-   * @param response response from the historical series request
-   */
-  generateHistoricalSeries(response: any[]): any[] {
-    const interval = Math.ceil(response.length / 9);
-    const series = [];
-    for (let i = 0; i < response.length; i++) {
-      const element = response[i];
-      const name: string = element['date'];
-
-      // Makes sure there are at least 10 labels on the x-axis and the last element also has a label
-      if (response.length < 9 || i % interval === 0 || i === response.length - 1) {
-        this.selectedTimeLabels.push(name);
-      }
-      const value = element['fClose'] === null ? 0 : element['fClose'];
-      const change = element['change'];
-      const changePercent = element['changePercent'];
-      series.push({
-        name,
-        value,
-        change,
-        changePercent,
-        volume: element['fVolume'],
-        time: element['date'],
-      });
+  ngOnChanges(): void {
+    // If the input ticker symbol changes due to a new stock page being loaded by the Angular router,
+    // we need to re-initialize this component and load the new data. This won't get called if loading the stock page component for the first time
+    if (this.initialized) {
+      this.initialize();
     }
-    return series;
+  }
+
+  /**
+   * Maps data returned IEX Cloud API to the data format that the Highcharts Stock Chart expects
+   * @param iexCloudHistoricalPrices An array of objects/dtos from IEX Cloud where each object represents a historical stock price from a single day.
+   * @return An 2D array, where each child array contains the format [<DATETIME-IN-MILLISECONDS>, <STOCK-PRICE>]
+   */
+  mapIexCloudHistoricalPricesToHighchartsFormat(iexCloudHistoricalPrices: IexCloudHistoricalPriceDto[]): number[][] {
+    const highchartsStockChartData = iexCloudHistoricalPrices.map((x: IexCloudHistoricalPriceDto) => {
+      return [Date.parse(x.date), x.fClose];
+    });
+
+    return highchartsStockChartData;
   }
 }

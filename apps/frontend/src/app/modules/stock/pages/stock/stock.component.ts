@@ -6,6 +6,8 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { MoneyFormatter } from '../../../../shared/utilities/money-formatter';
 import { StockService } from '../../../../core/services/stock.service';
 import * as moment from 'moment';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-stock',
@@ -23,9 +25,15 @@ export class StockComponent implements OnInit, OnDestroy {
   stock: { rating: StockRatingCountDto; data: IexCloudStockDataDto } = null;
   auth$: Subscription;
 
-  stockRatingBarChartItems: { name: string; value: number }[];
+  stockRatingBarChartItems: {
+    buyRating: { name: string; value: number };
+    holdRating: { name: string; value: number };
+    sellRating: { name: string; value: number };
+  };
 
   stockLoaded = false;
+
+  private ngUnsubscribe = new Subject();
 
   constructor(private route: ActivatedRoute, private stockService: StockService, private authService: AuthService) {}
 
@@ -37,18 +45,24 @@ export class StockComponent implements OnInit, OnDestroy {
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.ticker = paramMap.get('ticker');
-      this.stockService.getStock(this.ticker).subscribe((response: any) => {
-        this.stock = response;
+      this.stockService
+        .getStock(this.ticker)
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe((response: any) => {
+          this.stock = response;
 
-        this.stockLoaded = true;
+          this.stockLoaded = true;
 
-        this.updateStockRatingsBarChartItems();
-      });
+          this.updateStockRatingsBarChartItems();
+        });
     });
   }
 
   ngOnDestroy(): void {
     this.auth$.unsubscribe();
+
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   /** Event handler for the Stock Page Header emitting an event when the user clicks a rating button */
@@ -58,10 +72,10 @@ export class StockComponent implements OnInit, OnDestroy {
 
   /** Sets an array of objects representing a stock rating counts that will be passed to the Ngx Bar Chart */
   updateStockRatingsBarChartItems(): void {
-    this.stockRatingBarChartItems = [
-      { name: 'Buy', value: this.stock.rating.buy },
-      { name: 'Hold', value: this.stock.rating.hold },
-      { name: 'Sell', value: this.stock.rating.sell },
-    ];
+    this.stockRatingBarChartItems = {
+      buyRating: { name: 'Buy', value: this.stock.rating.buy },
+      holdRating: { name: 'Hold', value: this.stock.rating.hold },
+      sellRating: { name: 'Sell', value: this.stock.rating.sell },
+    };
   }
 }
