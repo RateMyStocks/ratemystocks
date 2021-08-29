@@ -1,0 +1,19 @@
+<h3 style="text-align: center; font-size: 18px"><strong>User Ratings</strong></h3>
+<div
+  *ngIf="
+    barChartItems &&
+      (barChartItems.buyRating.value > 0 || barChartItems.holdRating.value > 0 || barChartItems.sellRating.value > 0);
+    else noRatings
+  "
+>
+  <highcharts-chart
+    *ngIf="isHighcharts"
+    [Highcharts]="Highcharts"
+    [constructorType]="chartConstructor"
+    [options]="chartOptions"
+    style="width: auto; height: 250px; display: block"
+  ></highcharts-chart>
+</div>
+<ng-template #noRatings>
+  <h4 style="text-align: center; color: gray">This stock has not been rated yet</h4>
+</ng-template>

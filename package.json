@@ -69,6 +69,8 @@
     "class-validator": "^0.12.2",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
+    "highcharts": "^9.2.2",
+    "highcharts-angular": "^2.10.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "passport": "^0.4.1",

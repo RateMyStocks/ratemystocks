@@ -15,6 +15,7 @@ import { ErrorInterceptor } from './core/interceptors/error-interceptor';
 import { GlobalErrorHandler } from './core/error-handlers/global-error-handler';
 import { ProfileModule } from './modules/profile/profile.module';
 import { ErrorModule } from './modules/error/error.module';
+import { HighchartsChartModule } from 'highcharts-angular';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,6 +25,7 @@ import { ErrorModule } from './modules/error/error.module';
     BrowserAnimationsModule,
     CoreModule,
     ErrorModule,
+    HighchartsChartModule,
     HttpClientModule,
     LoginModule,
     PortfolioModule,

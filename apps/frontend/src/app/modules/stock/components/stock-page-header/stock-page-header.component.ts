@@ -1,16 +1,18 @@
-import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../core/services/auth.service';
 import { StockService } from '../../../../core/services/stock.service';
 import { StockRatingCountDto, IexCloudStockDataDto } from '@ratemystocks/api-interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-stock-page-header',
   templateUrl: './stock-page-header.component.html',
   styleUrls: ['./stock-page-header.component.scss'],
 })
-export class StockPageHeaderComponent implements OnInit, OnDestroy {
+export class StockPageHeaderComponent implements OnInit, OnDestroy, OnChanges {
   @Input()
   stock: { rating: StockRatingCountDto; data: IexCloudStockDataDto } = null;
 
@@ -23,6 +25,7 @@ export class StockPageHeaderComponent implements OnInit, OnDestroy {
   isAuth: boolean;
   userRating: string;
   auth$: Subscription;
+  private ngUnsubscribe = new Subject();
 
   constructor(private authService: AuthService, private stockService: StockService, private snackBar: MatSnackBar) {}
 
@@ -42,8 +45,19 @@ export class StockPageHeaderComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngOnChanges(): void {
+    this.isAuth = this.authService.isAuthorized();
+    if (this.isAuth) {
+      this.fetchUserRating();
+    } else {
+      this.userRating = null;
+    }
+  }
+
   ngOnDestroy(): void {
     this.auth$.unsubscribe();
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   /**
@@ -56,7 +70,10 @@ export class StockPageHeaderComponent implements OnInit, OnDestroy {
         this.stock.rating[this.userRating] = this.stock.rating[this.userRating] - 1;
         this.userRating = value;
         this.stock.rating[this.userRating] = this.stock.rating[this.userRating] + 1;
-        this.stockService.updateUserRating(this.ticker, this.userRating).subscribe();
+        this.stockService
+          .updateUserRating(this.ticker, this.userRating)
+          .pipe(takeUntil(this.ngUnsubscribe))
+          .subscribe();
 
         this.ratingUpdated.emit();
       }
@@ -70,8 +87,11 @@ export class StockPageHeaderComponent implements OnInit, OnDestroy {
 
   /** Calls the backend to get the user's active rating for a given stock, if it exists. */
   fetchUserRating(): void {
-    this.stockService.getUserRating(this.ticker).subscribe((res: { stockRating: string }) => {
-      this.userRating = res.stockRating;
-    });
+    this.stockService
+      .getUserRating(this.ticker)
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((res: { stockRating: string }) => {
+        this.userRating = res.stockRating;
+      });
   }
 }

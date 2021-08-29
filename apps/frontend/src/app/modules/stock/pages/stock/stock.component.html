@@ -2,12 +2,10 @@
   <app-stock-page-header [stock]="stock" [ticker]="ticker" (ratingUpdated)="onRatingUpdated()"></app-stock-page-header>
 
   <br />
-  <!-- <br /> -->
 
   <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="20px">
     <mat-card fxFlex="50">
-      <h3 style="text-align: center"><strong>User Ratings</strong></h3>
-      <app-horizontal-bar-chart [barChartItems]="stockRatingBarChartItems"></app-horizontal-bar-chart>
+      <app-stock-ratings-bar-chart [barChartItems]="stockRatingBarChartItems"></app-stock-ratings-bar-chart>
     </mat-card>
 
     <mat-card fxFlex="50">
