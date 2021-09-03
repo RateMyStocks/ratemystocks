@@ -132,34 +132,32 @@ describe('PortfolioHoldingsTableReadonlyComponent', () => {
       expect(tableRows.length).toEqual(4);
 
       // Row 1
-      expect(tableRows[0].query(By.css('.mat-column-ticker')).nativeElement.textContent).toEqual('MSFT');
-      expect(tableRows[0].query(By.css('.mat-column-companyName span')).nativeElement.textContent).toEqual(
-        'Microsoft Corp.'
-      );
+      expect(tableRows[0].query(By.css('.mat-column-ticker')).nativeElement.textContent).toContain('MSFT');
+      expect(tableRows[0].query(By.css('.mat-column-ticker')).nativeElement.textContent).toContain('Microsoft Corp.');
       expect(tableRows[0].query(By.css('.mat-column-weighting')).nativeElement.textContent).toEqual('35.15%');
       expect(tableRows[0].query(By.css('.mat-column-country')).nativeElement.textContent).toEqual('US');
       expect(tableRows[0].query(By.css('.mat-column-dividendYield')).nativeElement.textContent).toEqual('1.05%');
       expect(tableRows[0].query(By.css('.mat-column-marketCap')).nativeElement.textContent).toEqual('$1.7T');
 
       // Row 2
-      expect(tableRows[1].query(By.css('.mat-column-ticker')).nativeElement.textContent).toEqual('GOOG');
-      expect(tableRows[1].query(By.css('.mat-column-companyName span')).nativeElement.textContent).toEqual('Google');
+      expect(tableRows[1].query(By.css('.mat-column-ticker')).nativeElement.textContent).toContain('GOOG');
+      expect(tableRows[1].query(By.css('.mat-column-ticker')).nativeElement.textContent).toContain('Google');
       expect(tableRows[1].query(By.css('.mat-column-weighting')).nativeElement.textContent).toEqual('30.00%');
       expect(tableRows[1].query(By.css('.mat-column-country')).nativeElement.textContent).toEqual('US');
       expect(tableRows[1].query(By.css('.mat-column-dividendYield')).nativeElement.textContent).toEqual('0.00%');
       expect(tableRows[1].query(By.css('.mat-column-marketCap')).nativeElement.textContent).toEqual('$1.2T');
 
       // Row 3
-      expect(tableRows[2].query(By.css('.mat-column-ticker')).nativeElement.textContent).toEqual('FB');
-      expect(tableRows[2].query(By.css('.mat-column-companyName span')).nativeElement.textContent).toEqual('Facebook');
+      expect(tableRows[2].query(By.css('.mat-column-ticker')).nativeElement.textContent).toContain('FB');
+      expect(tableRows[2].query(By.css('.mat-column-ticker')).nativeElement.textContent).toContain('Facebook');
       expect(tableRows[2].query(By.css('.mat-column-weighting')).nativeElement.textContent).toEqual('19.85%');
       expect(tableRows[2].query(By.css('.mat-column-country')).nativeElement.textContent).toEqual('US');
       expect(tableRows[2].query(By.css('.mat-column-dividendYield')).nativeElement.textContent).toEqual('0.00%');
       expect(tableRows[2].query(By.css('.mat-column-marketCap')).nativeElement.textContent).toEqual('$796.4B');
 
       // Row 4
-      expect(tableRows[3].query(By.css('.mat-column-ticker')).nativeElement.textContent).toEqual('BABA');
-      expect(tableRows[3].query(By.css('.mat-column-companyName span')).nativeElement.textContent).toEqual('Alibaba');
+      expect(tableRows[3].query(By.css('.mat-column-ticker')).nativeElement.textContent).toContain('BABA');
+      expect(tableRows[3].query(By.css('.mat-column-ticker')).nativeElement.textContent).toContain('Alibaba');
       expect(tableRows[3].query(By.css('.mat-column-weighting')).nativeElement.textContent).toEqual('15.00%');
       expect(tableRows[3].query(By.css('.mat-column-country')).nativeElement.textContent).toEqual('CN');
       expect(tableRows[3].query(By.css('.mat-column-dividendYield')).nativeElement.textContent).toEqual('0.67%');
@@ -203,10 +201,10 @@ describe('PortfolioHoldingsTableReadonlyComponent', () => {
       expect(tableRows.length).toEqual(4);
 
       // Rows pre-filtering
-      expect(tableRows[0].query(By.css('.mat-column-ticker')).nativeElement.textContent).toEqual('MSFT');
-      expect(tableRows[1].query(By.css('.mat-column-ticker')).nativeElement.textContent).toEqual('GOOG');
-      expect(tableRows[2].query(By.css('.mat-column-ticker')).nativeElement.textContent).toEqual('FB');
-      expect(tableRows[3].query(By.css('.mat-column-ticker')).nativeElement.textContent).toEqual('BABA');
+      expect(tableRows[0].query(By.css('.mat-column-ticker')).nativeElement.textContent).toContain('MSFT');
+      expect(tableRows[1].query(By.css('.mat-column-ticker')).nativeElement.textContent).toContain('GOOG');
+      expect(tableRows[2].query(By.css('.mat-column-ticker')).nativeElement.textContent).toContain('FB');
+      expect(tableRows[3].query(By.css('.mat-column-ticker')).nativeElement.textContent).toContain('BABA');
 
       const countryOptions: MatOption[] = component.countryFilterDropdown.options.toArray();
       expect(countryOptions.length).toEqual(2);

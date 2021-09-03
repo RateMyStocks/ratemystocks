@@ -18,6 +18,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FavoritesComponent } from './pages/favorites/favorites.component';
 import { SavedPortfoliosTableComponent } from './components/saved-portfolios-table/saved-portfolios-table.component';
+import { UserStockRatingsTableComponent } from './components/user-stock-ratings-table/user-stock-ratings-table.component';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,7 @@ import { SavedPortfoliosTableComponent } from './components/saved-portfolios-tab
     UserProfileHeaderComponent,
     FavoritesComponent,
     SavedPortfoliosTableComponent,
+    UserStockRatingsTableComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -37,6 +40,7 @@ import { SavedPortfoliosTableComponent } from './components/saved-portfolios-tab
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,
+    MatSortModule,
     MatTabsModule,
     MatTableModule,
     MatTooltipModule,

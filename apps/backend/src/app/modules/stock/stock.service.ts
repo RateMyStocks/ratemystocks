@@ -71,6 +71,20 @@ export class StockService {
   }
 
   /**
+   * Gets a list of stock ratings for a given user.
+   * @param userId The UUID of the user to fetch stock ratings for.
+   * @param showInactive True to return a full history of stock ratings, false to only show active ratings.
+   * @return The list of stocks and their ratings from a given user.
+   */
+  async getUserStockRatings(userId: string, showInactive: boolean): Promise<StockRating[]> {
+    const stockRatings: StockRating[] = await this.stockRatingRepo.find({
+      where: showInactive === false ? { userId } : { userId, active: true },
+    });
+
+    return stockRatings;
+  }
+
+  /**
    * Updates or creates a new stock rating
    * @param ticker The ticker symbol of the stock
    * @param userAccount The logged-in user who is submitting a rating.

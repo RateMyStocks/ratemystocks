@@ -62,7 +62,7 @@ export class UserService {
   }
 
   /**
-   *Gets a list of portfolios that are saved to the logged-in user's account.
+   * Gets a list of portfolios that are saved to the logged-in user's account.
    * @param userAccount The userAccount to get saved portfolios for.
    * @return The array of saved portfolios.
    */

@@ -42,6 +42,20 @@ export class StockController {
     return this.stockService.getStockUserRating(ticker, userAccount);
   }
 
+  /**
+   * Gets a list of stock ratings for a given user.
+   * @param userId The UUID of the user to fetch stock ratings for.
+   * @param showInactive True to return a full history of stock ratings, false to only show active ratings.
+   * @return The list of stocks and their ratings from a given user.
+   */
+  @Get('/ratings/user/:userId')
+  getStockRatingsForUser(
+    @Param('userId') userId: string,
+    @Query('showInactive') showInactive: boolean // technically all query params come in as strings in NestJS, but this should still work
+  ): Promise<StockRating[]> {
+    return this.stockService.getUserStockRatings(userId, showInactive);
+  }
+
   @Post('/rating/user/:ticker')
   @UseGuards(AuthGuard())
   updateRating(

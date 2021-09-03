@@ -47,3 +47,9 @@
   color: lightgray;
   background-color: #c94d4d;
 }
+
+/** Override styling from Angular Material */
+::ng-deep .mat-card-avatar {
+  /** Angular Material makes the avatar circular with border-radius: 50% */
+  border-radius: 0% !important;
+}
