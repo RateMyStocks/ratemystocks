@@ -57,7 +57,7 @@
     >
       <ng-container matColumnDef="logo">
         <th mat-header-cell *matHeaderCellDef>
-          <mat-icon style="color: lightgray;">pie_chart_outline</mat-icon>
+          <mat-icon style="color: lightgray">pie_chart_outline</mat-icon>
         </th>
         <td mat-cell *matCellDef="let row">
           <!-- TODO: Find a way to do set a default without onerror -->
@@ -73,14 +73,11 @@
       <ng-container matColumnDef="ticker">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Ticker</th>
         <td mat-cell *matCellDef="let row">
-          <a routerLink="/stocks/{{ row.ticker }}">{{ row.ticker }}</a>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="companyName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Company</th>
-        <td mat-cell *matCellDef="let row">
-          <span *ngIf="iexStockDataMap">{{ iexStockDataMap[row.ticker]?.stats?.companyName }}</span>
-          <mat-progress-bar *ngIf="!iexStockDataMap" mode="buffer"></mat-progress-bar>
+          <a routerLink="/stocks/{{ row.ticker }}">
+            <b>{{ row.ticker }}</b>
+            <br />
+            <small *ngIf="iexStockDataMap">{{ iexStockDataMap[row.ticker]?.stats?.companyName }}</small>
+          </a>
         </td>
       </ng-container>
       <ng-container matColumnDef="weighting">
@@ -140,7 +137,9 @@
         <td mat-footer-cell *matFooterCellDef colspan="10">
           <div class="porfolio-holdings-aggregate-data">
             <span id="top-ten-total-weighting" class="portfolio-table-summary-data"
-              ><small>Total Top 10 Weighting: <strong>{{ topTenTotalWeighting.toFixed(2) }}%</strong></small>
+              ><small
+                >Total Top 10 Weighting: <strong>{{ topTenTotalWeighting.toFixed(2) }}%</strong></small
+              >
             </span>
             <span id="weighted-avg-dividend-yield" class="portfolio-table-summary-data" *ngIf="iexStockDataMap">
               <small>

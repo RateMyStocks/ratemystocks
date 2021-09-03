@@ -18,6 +18,9 @@ export class StockRating extends BaseEntity {
   @JoinColumn({ name: 'user_account_id' })
   userAccount: UserAccount;
 
+  @Column({ name: 'user_account_id', type: 'uuid' })
+  userId: string;
+
   @Column({ nullable: false })
   ticker: string;
 

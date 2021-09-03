@@ -36,6 +36,17 @@ export class StockService {
   }
 
   /**
+   * Gets a list of stock ratings for a given user.
+   * @param userId The UUID of the user to fetch stock ratings for.
+   * @param showInactive True to return a full history of stock ratings, false to only show active ratings.
+   * @return The list of stocks and their ratings from a given user.
+   */
+  getStockRatingsForUser(userId: string, showInactive: boolean): Observable<any> {
+    const endpoint = `${this.baseApiUrl}/ratings/user/${userId}?showInactive=` + showInactive;
+    return this.httpClient.get<any[]>(endpoint);
+  }
+
+  /**
    * Calls the backend to create a new active user rating for a given stock, and
    * marks the existing rating for that stock as inactive.
    * @param ticker The ticker symbol of the stock to add a rating for.

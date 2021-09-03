@@ -21,10 +21,9 @@ import { MatCardModule } from '@angular/material/card';
 import { NgxPieChartComponent } from './components/ngx-pie-chart/ngx-pie-chart.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
-import { HorizontalBarChartComponent } from './components/horizontal-bar-chart/horizontal-bar-chart.component';
 
 @NgModule({
-  declarations: [StockSearchComponent, NgxPieChartComponent, ConfirmDialogComponent, HorizontalBarChartComponent],
+  declarations: [StockSearchComponent, NgxPieChartComponent, ConfirmDialogComponent],
   imports: [
     BrowserAnimationsModule,
     CommonModule,
@@ -46,7 +45,7 @@ import { HorizontalBarChartComponent } from './components/horizontal-bar-chart/h
     FlexLayoutModule,
     MatProgressBarModule,
   ],
-  exports: [StockSearchComponent, NgxPieChartComponent, HorizontalBarChartComponent],
+  exports: [StockSearchComponent, NgxPieChartComponent],
   entryComponents: [ConfirmDialogComponent],
 })
 export class SharedModule {}

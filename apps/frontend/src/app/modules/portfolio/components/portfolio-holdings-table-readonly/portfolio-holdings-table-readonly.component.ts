@@ -31,7 +31,6 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
   displayedColumns: string[] = [
     'logo',
     'ticker',
-    'companyName',
     'weighting',
     'price',
     'country',
