@@ -47,12 +47,6 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         }
       );
     });
-
-    // if (this.isAuth) {
-    //   this.userService.getSavedPortfoliosForUser().subscribe((savedPortfolios: any) => {
-    //     console.log(savedPortfolios);
-    //   });
-    // }
   }
 
   ngOnDestroy(): void {

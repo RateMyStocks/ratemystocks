@@ -13,6 +13,7 @@ import {
   PortfolioDto,
   PortfolioRatingDto,
   PortfolioStockDto,
+  IexCloudSecurityType,
 } from '@ratemystocks/api-interface';
 import { PortfolioService } from '../../../../core/services/portfolio.service';
 import { IexCloudService } from '../../../../core/services/iex-cloud.service';
@@ -259,6 +260,9 @@ export class PortfolioComponent implements OnInit, OnDestroy {
       case 'sector':
         this.setPieChartBreakdownByIexField('sector');
         break;
+      case 'securityType':
+        this.setPieChartBreakdownByIexField('issueType');
+        break;
     }
   }
 
@@ -299,11 +303,10 @@ export class PortfolioComponent implements OnInit, OnDestroy {
       const iexCloudValue = iexStockMapping.company[iexCloudField];
 
       if (iexCloudValue) {
+        const value = iexCloudField === 'issueType' ? IexCloudSecurityType[iexCloudValue] : iexCloudValue;
         categoryWeightingMap.set(
-          iexCloudValue,
-          categoryWeightingMap.has(iexCloudValue)
-            ? categoryWeightingMap.get(iexCloudValue) + stock.weighting
-            : stock.weighting
+          value,
+          categoryWeightingMap.has(value) ? categoryWeightingMap.get(value) + stock.weighting : stock.weighting
         );
       } else {
         categoryWeightingMap.set(

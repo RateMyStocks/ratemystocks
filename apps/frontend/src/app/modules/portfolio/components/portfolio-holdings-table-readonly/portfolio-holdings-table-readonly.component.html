@@ -91,6 +91,15 @@
           <mat-progress-bar *ngIf="!iexStockDataMap" mode="buffer"></mat-progress-bar>
         </td>
       </ng-container>
+      <ng-container matColumnDef="securityType">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Security Type</th>
+        <td mat-cell *matCellDef="let row" [style.color]="row.color">
+          <span *ngIf="iexStockDataMap">{{
+            IexCloudSecurityType[iexStockDataMap[row.ticker]?.company?.issueType]
+          }}</span>
+          <mat-progress-bar *ngIf="!iexStockDataMap" mode="buffer"></mat-progress-bar>
+        </td>
+      </ng-container>
       <ng-container matColumnDef="country">
         <th mat-header-cell *matHeaderCellDef>Country</th>
         <td mat-cell *matCellDef="let row">

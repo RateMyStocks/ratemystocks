@@ -270,17 +270,17 @@ export class IexCloudSearchDto {
 }
 
 export enum IexCloudSecurityType {
-  ad, // ADR
-  cs, // Common Stock
-  cef, // Closed End Fund
-  et, // ETF
-  oef, // Open Ended Fund
-  ps, // Preferred Stock
-  rt, // Right
-  struct, // Structured Product
-  ut, // Unit
-  wi, // When Issued
-  wt, // Warrant
+  ad = 'ADR', // ADR
+  cs = 'Stock', // Common Stock
+  cef = 'Closed End Fund', // Closed End Fund
+  et = 'ETF', // ETF
+  oef = 'Open Ended Fund', // Open Ended Fund
+  ps = 'Preferred Stock', // Preferred Stock
+  rt = 'Right', // Right
+  struct = 'Structured Product', // Structured Product
+  ut = 'Unit', // Unit
+  wi = 'When Issued', // When Issued
+  wt = 'Warrant', // Warrant
 }
 
 /**

@@ -9,7 +9,7 @@ import { MarketCap } from '../../../../shared/models/enums/market-cap';
 import { MarketCapThresholds } from '../../../../shared/models/enums/market-cap-thresholds';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
-import { PortfolioStockDto } from '@ratemystocks/api-interface';
+import { PortfolioStockDto, IexCloudSecurityType } from '@ratemystocks/api-interface';
 
 enum FilterType {
   Search,
@@ -26,6 +26,7 @@ enum FilterType {
 export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, AfterContentInit, OnChanges {
   // MoneyFormatter & FilterType are needed in the HTML template, so they must be initialized like this
   MoneyFormatter = MoneyFormatter;
+  IexCloudSecurityType = IexCloudSecurityType;
   FilterType = FilterType;
 
   displayedColumns: string[] = [
@@ -33,6 +34,7 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
     'ticker',
     'weighting',
     'price',
+    'securityType',
     'country',
     'sector',
     'dividendYield',
