@@ -1,0 +1,24 @@
+td,
+th {
+  .stock-logo {
+    width: 40px !important;
+    height: auto;
+    margin: 10px;
+  }
+}
+
+.stocks-list-type-dropdowns {
+  mat-form-field {
+    margin-right: 10px;
+  }
+}
+
+.stocks-table-filter {
+  ::ng-deep .mat-form-field-outline {
+    background-color: white;
+  }
+
+  mat-form-field {
+    margin-right: 10px;
+  }
+}

@@ -43,12 +43,12 @@ small {
 
 table {
   width: 100%;
-  border: 0.5px solid rgba(0, 0, 0, 0.12);
+  border: 0.5px solid rgba(0, 0, 0, 0.12) !important;
 }
 
 td,
 th {
-  color: black;
+  color: black !important;
 
   a {
     color: #0060b6;
@@ -139,4 +139,9 @@ mat-paginator {
   border-left: 0.5px solid rgba(0, 0, 0, 0.12);
   border-right: 0.5px solid rgba(0, 0, 0, 0.12);
   border-bottom: 0.5px solid rgba(0, 0, 0, 0.12);
+}
+
+.mat-progress-spinner circle,
+.mat-spinner circle {
+  stroke: #3fb53f;
 }

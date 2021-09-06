@@ -72,13 +72,8 @@ export class StockController {
     return this.stockService.getUserRatingHistory(ticker, userAccount);
   }
 
-  @Get('/rating/aggregation')
-  getStocks(
-    @Query('pageSize') pageSize?,
-    @Query('page') page?,
-    @Query('orderBy') orderBy?: StockRatingOrdering,
-    @Query('orderDirection') orderDirection?: StockRatingOrderingDirection
-  ): Promise<StockRatingListDto> {
-    return this.stockService.getStocks(pageSize, page, orderBy, orderDirection);
+  @Get('/ratings/list')
+  getStocks(@Query('lastNDays') lastNDays?: number): Promise<any[]> {
+    return this.stockService.getStocks(lastNDays);
   }
 }

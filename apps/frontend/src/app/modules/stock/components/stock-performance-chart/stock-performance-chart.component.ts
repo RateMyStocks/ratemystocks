@@ -46,6 +46,11 @@ export class StockPerformanceChartComponent implements OnInit, OnChanges {
                 type: 'month',
                 count: 1,
                 text: '1m',
+                // events: {
+                //     click: function() {
+                //         alert('Clicked button');
+                //     }
+                // }
               },
               {
                 type: 'month',
