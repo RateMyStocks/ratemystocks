@@ -15,7 +15,7 @@ const homeRoute: Route = environment.production
   ? { path: '', component: AppComponent }
   : {
       path: '',
-      redirectTo: '/portfolios',
+      redirectTo: '/stocks',
       pathMatch: 'full',
     };
 

@@ -15,7 +15,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { SharedModule } from '../../shared/shared.module';
 import { StockPerformanceChartComponent } from './components/stock-performance-chart/stock-performance-chart.component';
 import { StockPageHeaderComponent } from './components/stock-page-header/stock-page-header.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StockNewsFeedComponent } from './components/stock-news-feed/stock-news-feed.component';
 import { StockCompanyInfoComponent } from './components/stock-company-info/stock-company-info.component';
 import { StockKeyStatsComponent } from './components/stock-key-stats/stock-key-stats.component';
@@ -24,6 +24,15 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { StockRatingsBarChartComponent } from './components/stock-ratings-bar-chart/stock-ratings-bar-chart.component';
+import { StocksTableComponent } from './components/stocks-table/stocks-table.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { RouterModule } from '@angular/router';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -35,10 +44,12 @@ import { StockRatingsBarChartComponent } from './components/stock-ratings-bar-ch
     StockCompanyInfoComponent,
     StockKeyStatsComponent,
     StockRatingsBarChartComponent,
+    StocksTableComponent,
   ],
   imports: [
     CommonModule,
     FlexLayoutModule,
+    FormsModule,
     HighchartsChartModule,
     FormsModule,
     MatBadgeModule,
@@ -46,13 +57,22 @@ import { StockRatingsBarChartComponent } from './components/stock-ratings-bar-ch
     MatButtonToggleModule,
     MatCardModule,
     MatDialogModule,
+    MatFormFieldModule,
     MatIconModule,
+    MatInputModule,
     MatListModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
     MatSnackBarModule,
+    MatTableModule,
+    MatSortModule,
     MatTabsModule,
     MatTooltipModule,
     NgxChartsModule,
+    ReactiveFormsModule,
+    RouterModule,
     SharedModule,
   ],
 })

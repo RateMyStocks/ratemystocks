@@ -1,17 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StockRatingRepository } from './stock-rating.repository';
-import { getManager } from 'typeorm';
-import { StockRatingOrderingDirection } from './stock-rating-ordering-direction';
-import { StockRatingOrdering } from './stock-rating-ordering-enum';
-import {
-  StockRatingAggregation,
-  StockRatingCountDto,
-  StockRatingDto,
-  StockRatingListDto,
-} from '@ratemystocks/api-interface';
+import { StockRatingCountDto, StockRatingDto } from '@ratemystocks/api-interface';
 import { StockRating, StockRatingEnum } from '../../../models/stockRating.entity';
 import { UserAccount } from '../../../models/userAccount.entity';
+
 @Injectable()
 export class StockService {
   constructor(@InjectRepository(StockRatingRepository) private stockRatingRepo: StockRatingRepository) {}
@@ -123,49 +116,34 @@ export class StockService {
   }
 
   /**
-   * Gets all the stocks that have been rated and returned based on what pagination parameters are passed in
-   * @param pageSize size of the page, defaulted to 100
-   * @param page number the page is on, defaulted to 1
-   * @param orderBy which column we want to order by, defautled to ticker
-   * @param orderDirection what direction the selected column is ordered, defaulted to ascending
+   * @param lastNDays
    */
-  async getStocks(
-    pageSize = 100,
-    page = 1,
-    orderBy = StockRatingOrdering.TICKER,
-    orderDirection = StockRatingOrderingDirection.ASC
-  ): Promise<StockRatingListDto> {
-    if (isNaN(pageSize)) throw new BadRequestException('Invalid pageSize has to be a number');
-    if (isNaN(page)) throw new BadRequestException('Invalid page has to be a number');
-    if (!(orderDirection.toUpperCase() in StockRatingOrderingDirection))
-      throw new BadRequestException('Invalid orderDirection');
-    if (!(orderBy.toUpperCase() in StockRatingOrdering)) throw new BadRequestException('Invalid orderBy');
+  async getStocks(lastNDays?: number): Promise<any[]> {
+    if (lastNDays && (isNaN(lastNDays) || lastNDays > 30)) {
+      throw new BadRequestException('Invalid Number of Days');
+    }
 
-    // TODO: USE PARAMETERIZED QUERIES
-    const entityManager = getManager();
-    const offset = (page - 1) * pageSize;
-    const items: StockRatingAggregation[] = await entityManager.query(
-      `
-      SELECT sr.ticker AS ticker,
-        SUM(case when sr.stock_rating = 'buy' AND sr.active IS TRUE then 1 else 0 end) AS buy_count,
-        SUM(case when sr.stock_rating = 'hold' AND sr.active IS TRUE then 1 else 0 end) AS hold_count,
-        SUM(case when sr.stock_rating = 'sell' AND sr.active IS TRUE then 1 else 0 end) AS sell_count
-      FROM stock_rating sr
-      GROUP BY ticker
-      ORDER BY ${orderBy} ${orderDirection}
-      LIMIT $1
-      OFFSET $2;`,
-      [pageSize, offset]
-    );
+    const whereClause = lastNDays ? `sr.last_updated > NOW() - INTERVAL '${lastNDays} days'` : '';
 
-    const countQuery = await this.stockRatingRepo
-      .createQueryBuilder('stock_rating')
-      .select('COUNT(DISTINCT ticker)')
-      .getRawOne();
+    const stockRatings: any[] = await this.stockRatingRepo
+      .createQueryBuilder('sr')
+      .select(
+        `
+            sr.ticker AS ticker,
+            SUM(case when sr.stock_rating = 'buy' AND sr.active IS TRUE then 1 else 0 end) AS buy_count,
+            SUM(case when sr.stock_rating = 'hold' AND sr.active IS TRUE then 1 else 0 end) AS hold_count,
+            SUM(case when sr.stock_rating = 'sell' AND sr.active IS TRUE then 1 else 0 end) AS sell_count
+        `
+      )
+      .addSelect(
+        `ROW_NUMBER () OVER (ORDER BY SUM(case when sr.stock_rating = 'buy' AND sr.active IS TRUE then 1 else 0 end) DESC) as "rank"`
+      )
+      .where(whereClause)
+      .groupBy('sr.ticker')
+      .orderBy('buy_count', 'DESC')
+      .limit(100)
+      .getRawMany();
 
-    return {
-      items,
-      totalCount: countQuery.count,
-    };
+    return stockRatings;
   }
 }

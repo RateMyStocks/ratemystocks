@@ -25,6 +25,19 @@ export class StockService {
   }
 
   /**
+   *
+   * @param ticker
+   * @returns
+   */
+  getStocks(lastNDays?: number): Observable<any[]> {
+    let endpoint = `${this.baseApiUrl}/ratings/list`;
+    if (lastNDays) {
+      endpoint += `?lastNDays=${lastNDays}`;
+    }
+    return this.httpClient.get<any[]>(endpoint);
+  }
+
+  /**
    * Calls the backend to get a user's rating (e.g. Buy, Hold, or Sell) for a given stock.
    * @param ticker The ticker symbol of the stock to get the user rating for.
    * @return The user's stock rating.
