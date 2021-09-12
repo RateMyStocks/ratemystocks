@@ -527,11 +527,12 @@ export interface PortfolioRatingDto {
 //                STOCKS                 //
 /////////////////////////////////////////
 
-export class StockRatingAggregation {
+export class StockRatingListItem {
+  rank: number;
   ticker: string;
-  sell_count: number;
   buy_count: number;
   hold_count: number;
+  total_count?: number;
 }
 
 /**
@@ -541,11 +542,6 @@ export class StockRatingCountDto {
   buy: number;
   hold: number;
   sell: number;
-}
-
-export interface StockRatingListDto {
-  items: StockRatingAggregation[];
-  totalCount: number;
 }
 
 // export const enum StockRatingEnum {
