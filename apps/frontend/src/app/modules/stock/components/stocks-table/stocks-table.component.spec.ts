@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { StocksTableComponent } from './stocks-table.component';
+import { StockModule } from '../../stock.module';
 
 describe('StocksTableComponent', () => {
   let component: StocksTableComponent;
@@ -8,9 +9,9 @@ describe('StocksTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StocksTableComponent ]
-    })
-    .compileComponents();
+      declarations: [StocksTableComponent],
+      imports: [StockModule, HttpClientTestingModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {

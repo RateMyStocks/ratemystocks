@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { StockRatingCountDto, IexCloudStockDataDto } from '@ratemystocks/api-interface';
+import { StockRatingCountDto, IexCloudStockDataDto, StockRatingListItem } from '@ratemystocks/api-interface';
 
 @Injectable({
   providedIn: 'root',
@@ -25,16 +25,20 @@ export class StockService {
   }
 
   /**
-   *
-   * @param ticker
-   * @returns
+   * Gets a "Top 100" list of stocks that have been rated by users of a certain ategory
+   * @param listType The stock list type e.g. Most Popular, Most Liked, or Most Disliked stocks
+   * @param lastNDays The number of days from the current date to retrieve stock ratings for.
+   * @return The list of stocks with their rating counts.
    */
-  getStocks(lastNDays?: number): Observable<any[]> {
-    let endpoint = `${this.baseApiUrl}/ratings/list`;
+  getStocks(
+    listType: 'most-popular' | 'most-liked' | 'most-disliked',
+    lastNDays?: number
+  ): Observable<StockRatingListItem[]> {
+    let endpoint = `${this.baseApiUrl}/ratings/${listType}`;
     if (lastNDays) {
       endpoint += `?lastNDays=${lastNDays}`;
     }
-    return this.httpClient.get<any[]>(endpoint);
+    return this.httpClient.get<StockRatingListItem[]>(endpoint);
   }
 
   /**

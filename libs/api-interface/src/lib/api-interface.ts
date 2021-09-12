@@ -25,8 +25,7 @@ export {
   CreatePortfolioStockDto,
   PortfolioStockDto,
   PortfolioRatingDto,
-  StockRatingAggregation,
   StockRatingCountDto,
-  StockRatingListDto,
+  StockRatingListItem,
   StockRatingDto,
 } from './models';

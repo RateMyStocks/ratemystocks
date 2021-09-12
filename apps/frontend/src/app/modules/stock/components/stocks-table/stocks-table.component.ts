@@ -6,13 +6,14 @@ import { MatSort } from '@angular/material/sort';
 import { FormControl } from '@angular/forms';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
-import { StockService } from 'apps/frontend/src/app/core/services/stock.service';
-import { IexCloudService } from 'apps/frontend/src/app/core/services/iex-cloud.service';
+import { StockService } from '../../../../core/services/stock.service';
+import { IexCloudService } from '../../../../core/services/iex-cloud.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import * as _ from 'lodash';
 import { MarketCap } from '../../../../shared/models/enums/market-cap';
 import { MarketCapThresholds } from '../../../../shared/models/enums/market-cap-thresholds';
+import { StockRatingListItem } from '@ratemystocks/api-interface';
 
 enum FilterType {
   Search,
@@ -21,6 +22,7 @@ enum FilterType {
   MarketCap,
 }
 
+/** Component representing the Top 100 list of stocks rated on the site for certain categories. */
 @Component({
   selector: 'app-stocks-table',
   templateUrl: './stocks-table.component.html',
@@ -49,15 +51,17 @@ export class StocksTableComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  @ViewChild('stockListTypeDropdown') stockListTypeDropdown: MatSelect;
+  @ViewChild('timeFrameDropdown') timeFrameDropdown: MatSelect;
+
   @ViewChild('input') textFilter: ElementRef;
   @ViewChild('countryFilterDropdown') countryFilterDropdown: MatSelect;
   @ViewChild('marketCapFilterDropdown') marketCapFilterDropdown: MatSelect;
   @ViewChild('sectorFilterDropdown') sectorFilterDropdown: MatSelect;
 
-  // TODO: need type
-  stocks: any[];
-  // TODO: Need interface for this
-  iexStockDataMap: any;
+  stocks: StockRatingListItem[];
+  // iexStockDataMap: { [ticker: string]: { company: object; quote: object; stats: object } };
+  iexStockDataMap: unknown;
 
   countries = new FormControl();
   countryList: Set<string> = new Set();
@@ -79,17 +83,17 @@ export class StocksTableComponent implements OnInit, OnDestroy {
   marketCapFiltersBeingApplied: Set<string> = new Set();
   sectorFiltersBeingApplied: Set<string> = new Set();
 
-  defaultListType = 'top-100';
+  defaultListType = 'most-popular';
   listTypes = [
-    { value: 'top-100', viewValue: 'Most Popular' },
-    { value: 'pizza-1', viewValue: 'Most Liked' },
-    { value: 'tacos-2', viewValue: 'Most Disliked' },
+    { value: 'most-popular', viewValue: 'Most Popular' },
+    { value: 'most-liked', viewValue: 'Most Liked' },
+    { value: 'most-disliked', viewValue: 'Most Disliked' },
   ];
 
   defaultTimeframe = 'all-time';
   timeframes = [
     { value: 'all-time', viewValue: 'All-time' },
-    { value: 1, viewValue: 'Today' },
+    { value: 1, viewValue: 'Last 24 Hours' },
     { value: 7, viewValue: 'Last 7 Days' },
     { value: 30, viewValue: 'Last 30 Days' },
   ];
@@ -99,8 +103,9 @@ export class StocksTableComponent implements OnInit, OnDestroy {
   constructor(private stockService: StockService, private iexCloudService: IexCloudService) {}
 
   ngOnInit(): void {
-    this.stockService.getStocks().subscribe((stocks: any[]) => {
+    this.stockService.getStocks('most-popular').subscribe((stocks: StockRatingListItem[]) => {
       this.stocks = stocks;
+
       this.dataSource = new MatTableDataSource(this.stocks);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -152,8 +157,6 @@ export class StocksTableComponent implements OnInit, OnDestroy {
 
   applyFilterForDropdowns(event: any, filterType: FilterType) {
     const filterValues: string[] = event.value;
-
-    console.log('FILTERING:', filterValues);
 
     // Set the dropdown filter values to a member variable so the filterPredicate can work with multiple filters
     switch (filterType) {
@@ -251,6 +254,7 @@ export class StocksTableComponent implements OnInit, OnDestroy {
     return hasSearchMatch && hasCountry && hasMarketCap && hasSector;
   }
 
+  /** Resets all the dropdowns that are used to filter the stocks in the table */
   resetFilters(): void {
     this.textFilter.nativeElement.value = '';
     this.countryFilterDropdown.options.forEach((data: MatOption) => data.deselect());
@@ -261,15 +265,14 @@ export class StocksTableComponent implements OnInit, OnDestroy {
     this.dataSource.filter = '';
   }
 
+  /** Updates the map of ticker symbols to IEX Cloud API data */
   updateIexStockDataMap(): void {
     const tickerSymbols: string[] = this.stocks.map((stock: any) => stock.ticker);
     this.iexCloudService
-      .batchGetStocks(tickerSymbols, ['stats', 'company', 'price', 'quote'])
+      .batchGetStocks(tickerSymbols, ['stats', 'company', 'quote'])
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((result: any) => {
         this.iexStockDataMap = result;
-
-        console.log(this.iexStockDataMap);
 
         // Populate list to populate Country Filter dropdown
         this.stocks.forEach((stock: any) => {
@@ -280,27 +283,43 @@ export class StocksTableComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
-   * @param event
+   * Event handler for a select event on the List Type dropdown.
+   * @param event The MatSelectChange event that is triggered when a mat-select dropdown value is changed.
    */
-  onListTypeChanged(event): void {
-    console.log('LIST TYPE CHANGED');
+  onListTypeChanged(event: MatSelectChange): void {
+    const lastNDays: number = this.timeFrameDropdown.value !== 'all-time' ? this.timeFrameDropdown.value : null;
 
-    this.stocks = [];
+    this.stockService.getStocks(event.value, lastNDays).subscribe((stocks: any[]) => {
+      this.stocks = stocks;
 
-    // Refresh table when datasource changes
-    this.dataSource.data = this.stocks;
+      // This will update the country and sector filter dropdowns
+      this.countryList = new Set();
+      this.sectorList = new Set();
+
+      if (stocks.length > 0) {
+        this.updateIexStockDataMap();
+      }
+
+      // Predicate that will be checked against every item in the table when dataSource.filter is updated.
+      this.dataSource.filterPredicate = _.bind(this.customFilterPredicate, this);
+      // Refresh table when datasource changes
+      this.dataSource.data = this.stocks;
+    });
   }
 
   /**
-   *
-   * @param event
+   * Event handler for a select event on the Timeframe dropdown.
+   * @param event The MatSelectChange event that is triggered when a mat-select dropdown value is changed.
    */
   onTimeFrameChanged(event: MatSelectChange): void {
     const lastNDays: number = event.value !== 'all-time' ? event.value : null;
 
-    this.stockService.getStocks(lastNDays).subscribe((stocks: any[]) => {
+    this.stockService.getStocks(this.stockListTypeDropdown.value, lastNDays).subscribe((stocks: any[]) => {
       this.stocks = stocks;
+
+      // This will update the country and sector filter dropdowns
+      this.countryList = new Set();
+      this.sectorList = new Set();
 
       if (stocks.length > 0) {
         this.updateIexStockDataMap();

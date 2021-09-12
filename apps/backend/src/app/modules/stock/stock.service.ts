@@ -1,7 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StockRatingRepository } from './stock-rating.repository';
-import { StockRatingCountDto, StockRatingDto } from '@ratemystocks/api-interface';
+import { StockRatingCountDto, StockRatingDto, StockRatingListItem } from '@ratemystocks/api-interface';
 import { StockRating, StockRatingEnum } from '../../../models/stockRating.entity';
 import { UserAccount } from '../../../models/userAccount.entity';
 
@@ -116,24 +116,61 @@ export class StockService {
   }
 
   /**
-   * @param lastNDays
+   * Gets the Top 100 "Most Popular" stocks, e.g. stocks with the highest total # of ratings
+   * @param lastNDays The number of days from the current date to retrieve stock ratings for.
+   * @return The list of stocks with their rating counts.
    */
-  async getStocks(lastNDays?: number): Promise<any[]> {
+  async getMostPopularStocks(lastNDays?: number): Promise<StockRatingListItem[]> {
     if (lastNDays && (isNaN(lastNDays) || lastNDays > 30)) {
       throw new BadRequestException('Invalid Number of Days');
     }
 
     const whereClause = lastNDays ? `sr.last_updated > NOW() - INTERVAL '${lastNDays} days'` : '';
 
-    const stockRatings: any[] = await this.stockRatingRepo
+    const stockRatings: StockRatingListItem[] = await this.stockRatingRepo
       .createQueryBuilder('sr')
       .select(
         `
             sr.ticker AS ticker,
             SUM(case when sr.stock_rating = 'buy' AND sr.active IS TRUE then 1 else 0 end) AS buy_count,
             SUM(case when sr.stock_rating = 'hold' AND sr.active IS TRUE then 1 else 0 end) AS hold_count,
-            SUM(case when sr.stock_rating = 'sell' AND sr.active IS TRUE then 1 else 0 end) AS sell_count
+            SUM(case when sr.stock_rating = 'sell' AND sr.active IS TRUE then 1 else 0 end) AS sell_count,
+            SUM(case when sr.stock_rating = 'buy' AND sr.active IS TRUE then 1 else 0 end) + SUM(case when sr.stock_rating = 'hold' AND sr.active IS TRUE then 1 else 0 end) + SUM(case when sr.stock_rating = 'sell' AND sr.active IS TRUE then 1 else 0 end) AS total_count
         `
+      )
+      .addSelect(
+        `ROW_NUMBER () OVER (ORDER BY (SUM(case when sr.stock_rating = 'buy' AND sr.active IS TRUE then 1 else 0 end) + SUM(case when sr.stock_rating = 'hold' AND sr.active IS TRUE then 1 else 0 end) + SUM(case when sr.stock_rating = 'sell' AND sr.active IS TRUE then 1 else 0 end)) DESC) as "rank"`
+      )
+      .where(whereClause)
+      .groupBy('sr.ticker')
+      .orderBy('total_count', 'DESC')
+      .limit(100)
+      .getRawMany();
+
+    return stockRatings;
+  }
+
+  /**
+   * Gets the Top 100 "Most Liked" stocks, e.g. stocks with the highest # of Buy ratings
+   * @param lastNDays The number of days from the current date to retrieve stock ratings for.
+   * @return The list of stocks with their rating counts.
+   */
+  async getMostLikedStocks(lastNDays?: number): Promise<StockRatingListItem[]> {
+    if (lastNDays && (isNaN(lastNDays) || lastNDays > 30)) {
+      throw new BadRequestException('Invalid Number of Days');
+    }
+
+    const whereClause = lastNDays ? `sr.last_updated > NOW() - INTERVAL '${lastNDays} days'` : '';
+
+    const stockRatings: StockRatingListItem[] = await this.stockRatingRepo
+      .createQueryBuilder('sr')
+      .select(
+        `
+              sr.ticker AS ticker,
+              SUM(case when sr.stock_rating = 'buy' AND sr.active IS TRUE then 1 else 0 end) AS buy_count,
+              SUM(case when sr.stock_rating = 'hold' AND sr.active IS TRUE then 1 else 0 end) AS hold_count,
+              SUM(case when sr.stock_rating = 'sell' AND sr.active IS TRUE then 1 else 0 end) AS sell_count
+          `
       )
       .addSelect(
         `ROW_NUMBER () OVER (ORDER BY SUM(case when sr.stock_rating = 'buy' AND sr.active IS TRUE then 1 else 0 end) DESC) as "rank"`
@@ -141,6 +178,40 @@ export class StockService {
       .where(whereClause)
       .groupBy('sr.ticker')
       .orderBy('buy_count', 'DESC')
+      .limit(100)
+      .getRawMany();
+
+    return stockRatings;
+  }
+
+  /**
+   * Gets the Top 100 "Most Disliked" stocks, e.g. stocks with the highest # of Sell ratings
+   * @param lastNDays The number of days from the current date to retrieve stock ratings for.
+   * @return The list of stocks with their rating counts.
+   */
+  async getMostDislikedStocks(lastNDays?: number): Promise<StockRatingListItem[]> {
+    if (lastNDays && (isNaN(lastNDays) || lastNDays > 30)) {
+      throw new BadRequestException('Invalid Number of Days');
+    }
+
+    const whereClause = lastNDays ? `sr.last_updated > NOW() - INTERVAL '${lastNDays} days'` : '';
+
+    const stockRatings: StockRatingListItem[] = await this.stockRatingRepo
+      .createQueryBuilder('sr')
+      .select(
+        `
+                sr.ticker AS ticker,
+                SUM(case when sr.stock_rating = 'buy' AND sr.active IS TRUE then 1 else 0 end) AS buy_count,
+                SUM(case when sr.stock_rating = 'hold' AND sr.active IS TRUE then 1 else 0 end) AS hold_count,
+                SUM(case when sr.stock_rating = 'sell' AND sr.active IS TRUE then 1 else 0 end) AS sell_count
+            `
+      )
+      .addSelect(
+        `ROW_NUMBER () OVER (ORDER BY SUM(case when sr.stock_rating = 'sell' AND sr.active IS TRUE then 1 else 0 end) DESC) as "rank"`
+      )
+      .where(whereClause)
+      .groupBy('sr.ticker')
+      .orderBy('sell_count', 'DESC')
       .limit(100)
       .getRawMany();
 

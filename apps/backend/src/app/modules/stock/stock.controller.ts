@@ -4,14 +4,12 @@ import {
   IexCloudStockDataDto,
   StockRatingCountDto,
   StockRatingDto,
-  StockRatingListDto,
+  StockRatingListItem,
 } from '@ratemystocks/api-interface';
 import { StockRating } from '../../../models/stockRating.entity';
 import { UserAccount } from '../../../models/userAccount.entity';
 import { GetUser } from '../auth/get-user.decorator';
 import { IexCloudService } from '../iex-cloud/iex-cloud.service';
-import { StockRatingOrderingDirection } from './stock-rating-ordering-direction';
-import { StockRatingOrdering } from './stock-rating-ordering-enum';
 import { StockService } from './stock.service';
 
 @Controller('stock')
@@ -72,8 +70,33 @@ export class StockController {
     return this.stockService.getUserRatingHistory(ticker, userAccount);
   }
 
-  @Get('/ratings/list')
-  getStocks(@Query('lastNDays') lastNDays?: number): Promise<any[]> {
-    return this.stockService.getStocks(lastNDays);
+  /**
+   * Gets the "Most Popular" stocks, e.g. stocks with the highest total # of ratings
+   * @param lastNDays The number of days from the current date to retrieve stock ratings for.
+   * @return The list of stocks with their rating counts.
+   */
+  @Get('/ratings/most-popular')
+  getMostPopularStocks(@Query('lastNDays') lastNDays?: number): Promise<StockRatingListItem[]> {
+    return this.stockService.getMostPopularStocks(lastNDays);
+  }
+
+  /**
+   * Gets the "Most Liked" stocks, e.g. stocks with the highest # of Buy ratings
+   * @param lastNDays The number of days from the current date to retrieve stock ratings for.
+   * @return The list of stocks with their rating counts.
+   */
+  @Get('/ratings/most-liked')
+  getMostLikedStocks(@Query('lastNDays') lastNDays?: number): Promise<StockRatingListItem[]> {
+    return this.stockService.getMostLikedStocks(lastNDays);
+  }
+
+  /**
+   * Gets the "Most Disliked" stocks, e.g. stocks with the highest # of Sell ratings
+   * @param lastNDays The number of days from the current date to retrieve stock ratings for.
+   * @return The list of stocks with their rating counts.
+   */
+  @Get('/ratings/most-disliked')
+  getMostDislikedStocks(@Query('lastNDays') lastNDays?: number): Promise<StockRatingListItem[]> {
+    return this.stockService.getMostDislikedStocks(lastNDays);
   }
 }

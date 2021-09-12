@@ -1,7 +1,7 @@
 <div class="stocks-list-type-dropdowns">
   <mat-form-field appearance="fill">
-    <mat-label>List Type</mat-label>
-    <mat-select [(value)]="defaultListType" (selectionChange)="onListTypeChanged($event)">
+    <mat-label>Top 100</mat-label>
+    <mat-select [(value)]="defaultListType" (selectionChange)="onListTypeChanged($event)" #stockListTypeDropdown>
       <mat-option *ngFor="let listType of listTypes" [value]="listType.value">
         {{ listType.viewValue }}
       </mat-option>
@@ -9,7 +9,7 @@
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Timeframe</mat-label>
-    <mat-select [(value)]="defaultTimeframe" (selectionChange)="onTimeFrameChanged($event)">
+    <mat-select [(value)]="defaultTimeframe" (selectionChange)="onTimeFrameChanged($event)" #timeFrameDropdown>
       <mat-option *ngFor="let timeframe of timeframes" [value]="timeframe.value">
         {{ timeframe.viewValue }}
       </mat-option>
@@ -107,8 +107,6 @@
     <ng-container matColumnDef="price">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
       <td mat-cell *matCellDef="let row" [style.color]="row.color">
-        <!-- <span *ngIf="iexStockDataMap">${{ iexStockDataMap[row.ticker]?.price?.toFixed(2) }}</span>
-         -->
         <span
           [ngStyle]="{ color: iexStockDataMap[row.ticker]?.quote?.change >= 0 ? 'green' : 'red' }"
           *ngIf="iexStockDataMap"
@@ -128,14 +126,18 @@
     <ng-container matColumnDef="country">
       <th mat-header-cell *matHeaderCellDef>Country</th>
       <td mat-cell *matCellDef="let row">
-        <span *ngIf="iexStockDataMap">{{ iexStockDataMap[row.ticker]?.company?.country }}</span>
+        <small *ngIf="iexStockDataMap">{{
+          iexStockDataMap[row.ticker]?.company?.country === 'US'
+            ? 'United States'
+            : iexStockDataMap[row.ticker]?.company?.country
+        }}</small>
         <mat-progress-bar *ngIf="!iexStockDataMap" mode="buffer"></mat-progress-bar>
       </td>
     </ng-container>
     <ng-container matColumnDef="sector">
       <th mat-header-cell *matHeaderCellDef>Sector</th>
       <td mat-cell *matCellDef="let row">
-        <span *ngIf="iexStockDataMap">{{ iexStockDataMap[row.ticker]?.company?.sector }}</span>
+        <small *ngIf="iexStockDataMap">{{ iexStockDataMap[row.ticker]?.company?.sector }}</small>
         <mat-progress-bar *ngIf="!iexStockDataMap" mode="buffer"></mat-progress-bar>
       </td>
     </ng-container>
