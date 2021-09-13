@@ -1,5 +1,5 @@
 // import { StockRatingEnum } from '@ratemystocks/api-interface';
-import { BaseEntity, Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { BaseEntity, Check, Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserAccount } from './userAccount.entity';
 
 export const enum StockRatingEnum {
@@ -10,6 +10,7 @@ export const enum StockRatingEnum {
 
 @Entity({ name: 'stock_rating' })
 @Index(['ticker', 'userAccount'], { unique: true, where: '"active" = true' })
+@Check(`"stock_rating" <> 'buy' OR "stock_rating" <> 'hold' OR "stock_rating" <> 'sell'`)
 export class StockRating extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
