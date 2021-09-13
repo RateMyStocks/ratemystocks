@@ -40,20 +40,20 @@ export class UserAccount extends BaseEntity {
   // })
   // role: UserRole;
 
-  // @Column({ name: 'date_joined', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', nullable: false })
-  // dateJoined: Date;
+  @Column({ name: 'date_joined', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', nullable: false })
+  dateJoined: Date;
 
-  // @Column({ name: 'last_login', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', nullable: false })
-  // lastLogin: Date;
+  @Column({ name: 'last_login', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', nullable: false })
+  lastLogin: Date;
 
-  // @Column({ type: 'varchar', length: 200, nullable: true })
-  // bio: string;
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  bio: string;
 
-  // @Column({ type: 'boolean', nullable: false, default: true })
-  // isActive: boolean;
+  @Column({ type: 'boolean', nullable: false, default: true })
+  isActive: boolean;
 
-  // @Column({ type: 'boolean', nullable: false, default: false })
-  // emailVerified: boolean;
+  @Column({ type: 'boolean', nullable: false, default: false })
+  emailVerified: boolean;
 
   @ManyToMany(() => Portfolio, (portfolio) => portfolio.usersSaved, {
     cascade: true,

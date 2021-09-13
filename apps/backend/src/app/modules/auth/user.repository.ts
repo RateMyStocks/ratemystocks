@@ -18,6 +18,7 @@ export class UserRepository extends Repository<UserAccount> {
     user.salt = await bcrypt.genSalt();
     user.password = await this.hashPassword(password, user.salt);
     user.email = email;
+    user.dateJoined = new Date();
     user.spiritAnimal = this.selectRandomSpiritAnimal(SpiritAnimal);
 
     try {
