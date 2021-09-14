@@ -14,6 +14,7 @@ import sslRedirect from 'heroku-ssl-redirect';
 async function bootstrap() {
   const logger = new Logger('bootstrap');
   const app = await NestFactory.create(AppModule);
+  app.use(sslRedirect());
 
   app.setGlobalPrefix('api');
 
@@ -26,8 +27,6 @@ async function bootstrap() {
       methods: ['GET, POST, PATCH, DELETE, PUT, OPTIONS'],
     });
   } else {
-    app.use(sslRedirect());
-
     const whitelist = ['https://ratemystocks.com', 'https://ratemystocks-staging.herokuapp.com'];
     app.enableCors({
       credentials: true,
