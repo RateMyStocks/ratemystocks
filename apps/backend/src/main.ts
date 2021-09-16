@@ -9,12 +9,9 @@ import { Logger } from '@nestjs/common';
 
 require('dotenv').config();
 
-import sslRedirect from 'heroku-ssl-redirect';
-
 async function bootstrap() {
   const logger = new Logger('bootstrap');
   const app = await NestFactory.create(AppModule);
-  app.use(sslRedirect());
 
   app.setGlobalPrefix('api');
 
@@ -27,6 +24,18 @@ async function bootstrap() {
       methods: ['GET, POST, PATCH, DELETE, PUT, OPTIONS'],
     });
   } else {
+    app.use((req, res, next) => {
+      logger.log('X-FORWARDED-PROTO HEADER: ', req.header('x-forwarded-proto'));
+
+      // On Heroku, the X-Forwarded-Proto request header contains the actual protocol string
+      // which we can check against and redirect to https when it the header contains http.
+      if (req.header('x-forwarded-proto') !== 'https') {
+        res.redirect(`https://${req.header('host')}${req.url}`);
+      } else {
+        next();
+      }
+    });
+
     const whitelist = ['https://ratemystocks.com', 'https://ratemystocks-staging.herokuapp.com'];
     app.enableCors({
       credentials: true,

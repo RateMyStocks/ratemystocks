@@ -69,7 +69,6 @@
     "class-validator": "^0.12.2",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
-    "heroku-ssl-redirect": "^0.1.1",
     "highcharts": "^9.2.2",
     "highcharts-angular": "^2.10.0",
     "lodash": "^4.17.21",
