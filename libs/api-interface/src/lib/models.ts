@@ -59,6 +59,7 @@ export interface SignInResponseDto {
   expiresIn: number;
   userId: string;
   username: string;
+  email: string;
   spiritAnimal: SpiritAnimal;
 }
 

@@ -1,5 +1,5 @@
 <app-auth-form-container>
-  <mat-spinner *ngIf="isLoading; else notLoading" class="centered-content"></mat-spinner>
+  <mat-spinner *ngIf="isLoading; else notLoading" style="margin: 0 auto"></mat-spinner>
   <ng-template #notLoading>
     <form [formGroup]="form" (submit)="submitForm()">
       <mat-form-field appearance="outline">
@@ -15,7 +15,7 @@
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
-        <input formControlName="password" type="password" matInput placeholder="Password" (input)="onPasswordInput()"/>
+        <input formControlName="password" type="password" matInput placeholder="Password" (input)="onPasswordInput()" />
         <!-- <mat-hint></mat-hint> -->
         <mat-error *ngIf="!password.valid && password.touched">
           {{ getErrorPassword() }}

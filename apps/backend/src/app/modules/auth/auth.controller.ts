@@ -31,6 +31,7 @@ export class AuthController {
       accessToken: signInData.accessToken,
       userId: signInData.user.id,
       username: signInData.user.username,
+      email: signInData.user.email,
       spiritAnimal: signInData.user.spiritAnimal,
       // TODO: set expires in as ENV variable or something
       expiresIn: 3600,

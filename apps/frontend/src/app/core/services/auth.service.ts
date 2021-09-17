@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable, Subject } from 'rxjs';
 import { Router } from '@angular/router';
@@ -7,7 +7,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { StatusCodes } from '../../shared/utilities/status-codes.enum';
 import { AuthCredentialDto, SignUpDto, SignInResponseDto, SpiritAnimal } from '@ratemystocks/api-interface';
 import { LocalStorageService } from './local-storage.service';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog.component';
 
 const BACKEND_URL: string = environment.apiUrl + '/auth';
 
@@ -290,23 +291,4 @@ export class AuthService {
   getSettings(): void {
     this.httpClient.get(`${BACKEND_URL}/settings`, { withCredentials: true }).subscribe();
   }
-}
-
-export interface DialogData {
-  user: SignInResponseDto;
-}
-@Component({
-  selector: 'app-welcome-dialog',
-  template: `
-    <div id="welcome-dialog-container">
-      <h1>
-        Welcome <b>{{ data.user.username }}!</b>
-      </h1>
-      <p></p>
-    </div>
-  `,
-  styles: ['#welcome-dialog-container { width: 300px }'],
-})
-export class WelcomeDialogComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 }
