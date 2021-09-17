@@ -1,0 +1,16 @@
+<mat-dialog-content>
+  <div id="welcome-dialog-container">
+    <h1>
+      Welcome <b>{{ data.user.username }}</b
+      >!
+    </h1>
+    <p>
+      We have sent an email to <b>{{ data.user.email }}</b
+      >. Please verify your account by clicking the link in the email.
+    </p>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Dismiss</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial color="primary">Resend Verification Email</button>
+</mat-dialog-actions>

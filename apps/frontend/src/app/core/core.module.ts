@@ -19,9 +19,10 @@ import { SharedModule } from '../shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
+import { WelcomeDialogComponent } from './welcome-dialog/welcome-dialog.component';
 
 @NgModule({
-  declarations: [HeaderComponent, SidenavComponent],
+  declarations: [HeaderComponent, SidenavComponent, WelcomeDialogComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
