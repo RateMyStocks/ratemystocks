@@ -49,11 +49,13 @@ export class UserRepository extends Repository<UserAccount> {
    * @returns The UserAccount entity if the login credentials are valid, otherwise return null
    */
   async validateUserPassword(authCredentialDto: AuthCredentialDto): Promise<UserAccount> {
-    const { username, password } = authCredentialDto;
+    const { username, email, password } = authCredentialDto;
     // const user = await this.findOne({ username });
-    const userEntity: UserAccount = await this.createQueryBuilder('user')
-      .where('LOWER(user.username) = LOWER(:username)', { username })
-      .getOne();
+
+    // Lookup user by either username or email based on what is set in the DTO.
+    const userEntity: UserAccount = authCredentialDto.username
+      ? await this.createQueryBuilder('user').where('LOWER(user.username) = LOWER(:username)', { username }).getOne()
+      : await this.createQueryBuilder('user').where('LOWER(user.email) = LOWER(:email)', { email }).getOne();
 
     if (userEntity && (await userEntity.validatePassword(password))) {
       return userEntity;

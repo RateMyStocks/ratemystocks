@@ -88,6 +88,7 @@ export class AuthService {
       () => {
         const authCredentialDto: AuthCredentialDto = {
           username: signUpDto.username,
+          email: signUpDto.email,
           password: signUpDto.password,
         };
         this.signin(authCredentialDto, true);

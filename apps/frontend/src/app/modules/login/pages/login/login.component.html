@@ -1,19 +1,19 @@
 <app-auth-form-container>
   <form [formGroup]="form" (submit)="submitForm()">
     <mat-form-field appearance="outline">
-      <input formControlName="username" type="text" matInput placeholder="Username" />
-      <mat-error *ngIf="!form.controls['username'].valid && form.controls['username'].touched">
-        Please enter your username.
+      <input formControlName="usernameOrEmail" type="text" matInput placeholder="Username or Email" />
+      <mat-error *ngIf="!form.controls['usernameOrEmail'].valid && form.controls['usernameOrEmail'].touched">
+        Please enter your username or email.
       </mat-error>
     </mat-form-field>
-    <mat-form-field  appearance="outline">
+    <mat-form-field appearance="outline">
       <input formControlName="password" type="password" matInput placeholder="Password" />
       <mat-error *ngIf="!form.controls['password'].valid && form.controls['password'].touched">
         Please enter your password.
       </mat-error>
     </mat-form-field>
     <button mat-raised-button type="submit" color="primary" [disabled]="!form.valid">{{ buttonLabel }}</button>
-    <br>
+    <br />
     <div class="forgotRegister">
       <a routerLink="/auth/forgot-password">Forgot Password?</a>
       <a routerLink="/auth/register">Register</a>
