@@ -16,7 +16,7 @@ export class LoginComponent extends AuthFormComponent {
     this.buttonLabel = 'Login';
 
     this.form = new FormGroup({
-      username: new FormControl(null, {
+      usernameOrEmail: new FormControl(null, {
         validators: [Validators.required],
       }),
       password: new FormControl(null, {
@@ -26,8 +26,13 @@ export class LoginComponent extends AuthFormComponent {
   }
 
   submitForm(): void {
+    // If the input for the usernameOrEmail field has an @ symbol, they are attempting to login with email.
+    const username = this.form.value.usernameOrEmail.includes('@') ? null : this.form.value.usernameOrEmail;
+    const email = this.form.value.usernameOrEmail.includes('@') ? this.form.value.usernameOrEmail : null;
+
     const credentials: AuthCredentialDto = {
-      username: this.form.value.username,
+      username,
+      email,
       password: this.form.value.password,
     };
     this.isLoading = true;

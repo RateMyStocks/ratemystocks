@@ -30,11 +30,17 @@ import {
  * Incoming DTO for a user signing in or signing up
  */
 export class AuthCredentialDto {
+  @IsOptional()
   @IsString()
   @MinLength(1)
   @MaxLength(30)
   @Matches(USERNAME_REGEX, { message: USERNAME_VALIDATION_MESSAGE })
   username: string;
+
+  @IsOptional()
+  @IsString()
+  @Matches(EMAIL_REGEX, { message: EMAIL_VALIDATION_MESSAGE })
+  email: string;
 
   @IsString()
   @MinLength(8)
