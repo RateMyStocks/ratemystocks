@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../../core/services/auth.service';
 import { AuthFormComponent } from '../../components/auth-form/auth-form.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
@@ -9,8 +10,8 @@ import { AuthFormComponent } from '../../components/auth-form/auth-form.componen
   styleUrls: ['../../components/auth-form/auth-form.component.scss', './forgot-password.component.scss'],
 })
 export class ForgotPasswordComponent extends AuthFormComponent {
-  constructor(authService: AuthService) {
-    super(authService);
+  constructor(authService: AuthService, router: Router) {
+    super(authService, router);
 
     this.buttonLabel = 'Reset Password';
     this.form = new FormGroup({

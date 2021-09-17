@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthCredentialDto } from '@ratemystocks/api-interface';
 import { AuthService } from '../../../../core/services/auth.service';
 import { AuthFormComponent } from '../../components/auth-form/auth-form.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,8 +11,8 @@ import { AuthFormComponent } from '../../components/auth-form/auth-form.componen
   styleUrls: ['../../components/auth-form/auth-form.component.scss', './login.component.scss'],
 })
 export class LoginComponent extends AuthFormComponent {
-  constructor(authService: AuthService) {
-    super(authService);
+  constructor(authService: AuthService, router: Router) {
+    super(authService, router);
 
     this.buttonLabel = 'Login';
 
