@@ -49,9 +49,11 @@ export class UserAccount extends BaseEntity {
   @Column({ type: 'varchar', length: 200, nullable: true })
   bio: string;
 
+  // TODO: generate migration script to rename column using snakecase rather than camel case
   @Column({ type: 'boolean', nullable: false, default: true })
   isActive: boolean;
 
+  // TODO: generate migration script to rename column using snakecase rather than camel case
   @Column({ type: 'boolean', nullable: false, default: false })
   emailVerified: boolean;
 
