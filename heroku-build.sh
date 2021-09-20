@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# TODO: This isn't currently being used, but this bash script run the correct build based on the environment type in the heroku-postbuild hook
-
 echo "Building Angular app for $NODE_ENV"
 
 build_staging='ng build --configuration staging && ng run frontend:server:staging'
