@@ -5,10 +5,11 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
 import { AuthCredentialDto, SignUpDto } from '@ratemystocks/api-interface';
 import { UserAccount } from '../../../models/userAccount.entity';
-import { redis } from 'apps/backend/src/redis';
+import { redis } from '../../../redis';
 import { Response } from 'express';
-import { confirmEmailLink } from 'apps/backend/src/utils/confirmEmailLink';
-import { sendEmail } from 'apps/backend/src/utils/sendEmail';
+import { confirmEmailLink } from '../../../utils/confirmEmailLink';
+import { sendEmail } from '../../../utils/sendEmail';
+import { CONFIRM_EMAIL_REDIS_KEY_PREFIX } from '../../../constants';
 
 @Injectable()
 export class AuthService {
@@ -40,9 +41,9 @@ export class AuthService {
     return { accessToken, user };
   }
 
-  async sendVerificationEmail(userId: string, email: string): Promise<void> {
+  async sendVerificationEmail(userId: string, username: string, email: string): Promise<void> {
     const link = await confirmEmailLink(userId);
-    await sendEmail(email, link).catch(console.error);
+    await sendEmail(email, username, link).catch(console.error);
   }
 
   /**
@@ -51,7 +52,7 @@ export class AuthService {
    * @param res The response object
    */
   async verifyEmail(redisKey: string, res: Response): Promise<void> {
-    const userIdFromCache = await redis.get(redisKey);
+    const userIdFromCache = await redis.get(CONFIRM_EMAIL_REDIS_KEY_PREFIX + redisKey);
 
     // Either the id in redis has expired and been removed or the given id is invalid
     if (!userIdFromCache) {

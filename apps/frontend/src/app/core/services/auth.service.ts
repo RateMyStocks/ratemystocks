@@ -291,4 +291,16 @@ export class AuthService {
   getSettings(): void {
     this.httpClient.get(`${BACKEND_URL}/settings`, { withCredentials: true }).subscribe();
   }
+
+  /**
+   * Makes a request to send the email verification email to a given user.
+   * @param userId The UUID of the user to send the email to.
+   * @param username The username of the user to send the email to.
+   * @param email The email of the user to send the email to.
+   */
+  sendVerificationEmail(emailVerificationInfoDto: { userId: string; username: string; email: string }): void {
+    this.httpClient
+      .post(`${BACKEND_URL}/sendverificationemail`, emailVerificationInfoDto, { withCredentials: true })
+      .subscribe();
+  }
 }

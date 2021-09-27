@@ -1,9 +1,5 @@
-import { HttpModule } from '@nestjs/common';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
+import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './auth.module';
 import { AuthService } from './auth.service';
 import { UserRepository } from './user.repository';
 

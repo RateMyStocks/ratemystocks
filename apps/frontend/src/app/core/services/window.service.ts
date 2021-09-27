@@ -2,6 +2,10 @@ import { EventManager } from '@angular/platform-browser';
 import { Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 
+function getWindow(): any {
+  return window;
+}
+
 /**
  * Since Angular Universal renders the app server-side, browser-only global objects like window cannot be referenced.
  * Therefore, this service is an abstraction of the window object that can be injected into components that need to use it.
@@ -35,5 +39,9 @@ export class WindowService {
   private onOpen(event: Event): void {
     const window: Window = <Window>event.currentTarget;
     this.innerWidthSubject.next(window.innerWidth);
+  }
+
+  get nativeWindow(): Window {
+    return getWindow();
   }
 }

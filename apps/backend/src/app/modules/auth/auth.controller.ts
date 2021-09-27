@@ -54,9 +54,11 @@ export class AuthController {
    * @param userId The UUID of the user verifying their email.
    * @param email The email of the user to verify.
    */
-  @Get('/sendemail')
-  sendVerificationEmail(@Param('userId') userId: string, @Param('email') email: string): Promise<void> {
-    return this.authService.sendVerificationEmail(userId, email);
+  @Post('/sendverificationemail')
+  @UseGuards(AuthGuard())
+  sendVerificationEmail(@Body() userInfo: { userId: string; username: string; email: string }): Promise<void> {
+    const { userId, username, email } = userInfo;
+    return this.authService.sendVerificationEmail(userId, username, email);
   }
 
   /**
@@ -66,8 +68,12 @@ export class AuthController {
    */
   @Get('/verifyuser/:userId')
   @Redirect(process.env.FRONTEND_HOST, 200)
-  verifyEmail(@Param('userId') userId: string, @Response() res: ExpressResponse): void {
-    this.authService.verifyEmail(userId, res);
+  async verifyEmail(@Param('userId') userId: string, @Response() res: ExpressResponse): Promise<void> {
+    try {
+      await this.authService.verifyEmail(userId, res);
+    } catch (error) {
+      res.redirect(process.env.FRONTEND_HOST + '/not-found');
+    }
 
     // Redirect to the homepage of the frontend
     res.redirect(process.env.FRONTEND_HOST);

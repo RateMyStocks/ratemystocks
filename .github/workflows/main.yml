@@ -15,7 +15,7 @@ jobs:
     # Allow us to determine multiple versions of node to use for running the tests
     strategy:
       matrix:
-        node-version: [12.x, 14.x]
+        node-version: [14.x]
 
     # Service containers to run with `container-job`
     services:
