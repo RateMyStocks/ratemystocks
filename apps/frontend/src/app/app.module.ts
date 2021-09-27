@@ -16,6 +16,7 @@ import { GlobalErrorHandler } from './core/error-handlers/global-error-handler';
 import { ProfileModule } from './modules/profile/profile.module';
 import { ErrorModule } from './modules/error/error.module';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,6 +32,7 @@ import { HighchartsChartModule } from 'highcharts-angular';
     PortfolioModule,
     ProfileModule,
     ResourcesModule,
+    RouterModule,
     StockModule,
   ],
   providers: [

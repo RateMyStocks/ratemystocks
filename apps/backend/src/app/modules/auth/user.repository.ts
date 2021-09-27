@@ -3,8 +3,8 @@ import { ConflictException, InternalServerErrorException } from '@nestjs/common'
 import * as bcrypt from 'bcryptjs';
 import { AuthCredentialDto, SpiritAnimal, SignUpDto } from '@ratemystocks/api-interface';
 import { UserAccount } from '../../../models/userAccount.entity';
-import { sendEmail } from 'apps/backend/src/utils/sendEmail';
-import { confirmEmailLink } from 'apps/backend/src/utils/confirmEmailLink';
+import { sendEmail } from '../../../utils/sendEmail';
+import { confirmEmailLink } from '../../../utils/confirmEmailLink';
 
 @EntityRepository(UserAccount)
 export class UserRepository extends Repository<UserAccount> {
@@ -27,7 +27,7 @@ export class UserRepository extends Repository<UserAccount> {
       const newUser: UserAccount = await user.save();
 
       const link = await confirmEmailLink(newUser.id);
-      await sendEmail(email, link).catch(console.error);
+      await sendEmail(email, username, link).catch(console.error);
     } catch (error) {
       if (error.code === '23505') {
         // duplicate username
