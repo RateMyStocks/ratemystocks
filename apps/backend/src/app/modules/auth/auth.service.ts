@@ -1,15 +1,26 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
-import { AuthCredentialDto, SignUpDto } from '@ratemystocks/api-interface';
+import { AuthCredentialDto, ChangePasswordDto, ForgotPasswordDto, SignUpDto } from '@ratemystocks/api-interface';
 import { UserAccount } from '../../../models/userAccount.entity';
 import { redis } from '../../../redis';
 import { Response } from 'express';
 import { confirmEmailLink } from '../../../utils/confirmEmailLink';
-import { sendEmail } from '../../../utils/sendEmail';
+import { sendConfirmationEmail } from '../../../utils/sendConfirmationEmail';
 import { CONFIRM_EMAIL_REDIS_KEY_PREFIX } from '../../../constants';
+import { sendForgotPasswordEmail } from '../../../utils/sendForgotPasswordEmail';
+
+const jwt = require('jsonwebtoken');
+
+require('dotenv').config();
 
 @Injectable()
 export class AuthService {
@@ -43,7 +54,7 @@ export class AuthService {
 
   async sendVerificationEmail(userId: string, username: string, email: string): Promise<void> {
     const link = await confirmEmailLink(userId);
-    await sendEmail(email, username, link).catch(console.error);
+    await sendConfirmationEmail(email, username, link).catch(console.error);
   }
 
   /**
@@ -62,5 +73,82 @@ export class AuthService {
     this.userRepo.update({ id: userIdFromCache }, { emailVerified: true });
 
     // res.send('ok');
+  }
+
+  /**
+   * Sends an email to a user who has forgotten their password.
+   * @param forgotPasswordDto DTO containing the email address.
+   */
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto): Promise<void> {
+    const user = await this.userRepo.findOne({ where: { email: forgotPasswordDto.email } });
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    // Create JWT. The secret is the common JWT Secet + the user's password, so that the link we send (that includes the token in the URL) is only valid once
+    // So when the user'as password is changed to something new, the old links will not work
+    const secret = process.env.JWT_SECRET + user.password;
+    const payload = {
+      email: user.email,
+      id: user.id,
+    };
+    const token = jwt.sign(payload, secret, { expiresIn: '15m' });
+
+    // Create one-time link that is valid for 15 minutes
+    const oneTimeLink = `${process.env.FRONTEND_HOST}/auth/resetpassword/${user.id}/${token}`;
+    await sendForgotPasswordEmail(user.email, user.username, oneTimeLink);
+  }
+
+  /**
+   * Validates the userId and JWT from a reset password one-time link.
+   * @param userId The UUID of the user who was sent the one-time link to reset their password.
+   * @param token The JWT generated for the one-time link.
+   */
+  async validateUserResetPassword(userId: string, token: string): Promise<void> {
+    const user = await this.userRepo.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    const secret = process.env.JWT_SECRET + user.password;
+    try {
+      const payload = jwt.verify(token, secret);
+    } catch (error) {
+      throw new ForbiddenException();
+    }
+  }
+
+  /**
+   * Changes a user's password.
+   * @param userId The UUID of the user to update the password for.
+   * @param token The JWT token generated for the reset password link.
+   * @param changePasswordDto DTO containing the new password.
+   * @return true if the password was updated.
+   */
+  async resetPassword(userId: string, token: string, changePasswordDto: ChangePasswordDto): Promise<boolean> {
+    const user = await this.userRepo.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    if (changePasswordDto.password !== changePasswordDto.password2) {
+      throw new BadRequestException();
+    }
+
+    const secret = process.env.JWT_SECRET + user.password;
+    try {
+      const payload = jwt.verify(token, secret);
+    } catch (error) {
+      throw new ForbiddenException();
+    }
+
+    const password = await this.userRepo.hashPassword(changePasswordDto.password, user.salt);
+    user.password = password;
+    await user.save();
+
+    return true;
   }
 }
