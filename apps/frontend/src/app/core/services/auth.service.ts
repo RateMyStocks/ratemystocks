@@ -5,7 +5,13 @@ import { Observable, Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StatusCodes } from '../../shared/utilities/status-codes.enum';
-import { AuthCredentialDto, SignUpDto, SignInResponseDto, SpiritAnimal } from '@ratemystocks/api-interface';
+import {
+  AuthCredentialDto,
+  SignUpDto,
+  SignInResponseDto,
+  ForgotPasswordDto,
+  ChangePasswordDto,
+} from '@ratemystocks/api-interface';
 import { LocalStorageService } from './local-storage.service';
 import { MatDialog } from '@angular/material/dialog';
 import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog.component';
@@ -302,5 +308,31 @@ export class AuthService {
     this.httpClient
       .post(`${BACKEND_URL}/sendverificationemail`, emailVerificationInfoDto, { withCredentials: true })
       .subscribe();
+  }
+
+  /**
+   * Makes a request to send an email for a user to reset their password.
+   * @param email The email of the user to send the eamil to.
+   */
+  forgotPassword(email: string): Observable<unknown> {
+    const forgotPasswordDto: ForgotPasswordDto = { email };
+    return this.httpClient.post(`${BACKEND_URL}/forgotpassword`, forgotPasswordDto);
+  }
+
+  /**
+   * Makes a request to validate a userId and jwt for a one-time link to reset the user's password.
+   * @param userId The UUID of the user who has been sent the one-time link.
+   * @param token The JWT generated for the one-time link.
+   */
+  validateUserResetPassword(userId: string, token: string): Observable<unknown> {
+    return this.httpClient.get(`${BACKEND_URL}/resetpassword/validation/${userId}/${token}`);
+  }
+
+  /**
+   * Makes a request to reset and update a user's password.
+   * @param changePasswordDto The DTO containing the updated password.
+   */
+  resetPassword(userId: string, token: string, changePasswordDto: ChangePasswordDto): Observable<unknown> {
+    return this.httpClient.patch(`${BACKEND_URL}/resetpassword/${userId}/${token}`, changePasswordDto);
   }
 }

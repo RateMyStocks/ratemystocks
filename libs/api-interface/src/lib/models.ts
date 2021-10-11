@@ -68,6 +68,24 @@ export enum UserRole {
   REGULAR,
 }
 
+export class ForgotPasswordDto {
+  @IsString()
+  @Matches(EMAIL_REGEX, { message: EMAIL_VALIDATION_MESSAGE })
+  email: string;
+}
+
+export class ChangePasswordDto {
+  @IsString()
+  @MinLength(8)
+  @Matches(PASSWORD_REGEX, { message: PASSWORD_VALIDATION_MESSAGE })
+  readonly password: string;
+
+  @IsString()
+  @MinLength(8)
+  @Matches(PASSWORD_REGEX, { message: PASSWORD_VALIDATION_MESSAGE })
+  readonly password2: string;
+}
+
 /** Preset Spirit Animals that map to User Avatar images of the same name */
 export enum SpiritAnimal {
   ANTELOPE = 'antelope',

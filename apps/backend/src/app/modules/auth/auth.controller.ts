@@ -1,7 +1,25 @@
-import { Controller, Post, Body, ValidationPipe, Get, UseGuards, Put, Param, Redirect, Response } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  ValidationPipe,
+  Get,
+  UseGuards,
+  Put,
+  Param,
+  Redirect,
+  Response,
+  Patch,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-import { AuthCredentialDto, SignUpDto, SignInResponseDto } from '@ratemystocks/api-interface';
+import {
+  AuthCredentialDto,
+  ChangePasswordDto,
+  ForgotPasswordDto,
+  SignUpDto,
+  SignInResponseDto,
+} from '@ratemystocks/api-interface';
 import { UserAccount } from '../../../models/userAccount.entity';
 import { GetUser } from './get-user.decorator';
 import { Response as ExpressResponse } from 'express';
@@ -77,5 +95,39 @@ export class AuthController {
 
     // Redirect to the homepage of the frontend
     res.redirect(process.env.FRONTEND_HOST);
+  }
+
+  /**
+   * Sends an email to a user with a link to reset their password.
+   * @param forgotPasswordDto DTO containing the email of the user to reset the password for.
+   */
+  @Post('/forgotpassword')
+  async forgotPassword(@Body(ValidationPipe) forgotPasswordDto: ForgotPasswordDto): Promise<void> {
+    return this.authService.forgotPassword(forgotPasswordDto);
+  }
+
+  /**
+   * Validates the userId and JWT from a reset password one-time link.
+   * @param userId The UUID of the user who was sent the one-time link to reset their password.
+   * @param token The JWT generated for the one-time link.
+   */
+  @Get('/resetpassword/validation/:userid/:token')
+  async validateUserResetPassword(@Param('userid') userId: string, @Param('token') token: string): Promise<void> {
+    return this.authService.validateUserResetPassword(userId, token);
+  }
+
+  /**
+   * Resets a given user's password.
+   * @param changePasswordDto DTO containing the new password to set on the user.
+   * @param userId The UUID of the user to reset the password for.
+   * @param token The JWT token generated for the reset password link.
+   */
+  @Patch('/resetpassword/:userid/:token')
+  async resetPassword(
+    @Param('userid') userId: string,
+    @Param('token') token: string,
+    @Body() changePasswordDto: ChangePasswordDto
+  ): Promise<boolean> {
+    return this.authService.resetPassword(userId, token, changePasswordDto);
   }
 }

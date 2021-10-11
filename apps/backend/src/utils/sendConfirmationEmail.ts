@@ -1,7 +1,7 @@
 const sgMail = require('@sendgrid/mail');
 
 // async..await is not allowed in global scope, must use a wrapper
-export const sendEmail = async (email: string, username: string, link: string) => {
+export const sendConfirmationEmail = async (email: string, username: string, link: string) => {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
   const htmlTemplate = `

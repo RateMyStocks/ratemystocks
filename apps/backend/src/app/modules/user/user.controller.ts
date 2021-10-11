@@ -67,4 +67,15 @@ export class UserController {
   getSavedPortfoliosForUser(@GetUser() userAccount: UserAccount): Promise<PortfolioDto[]> {
     return this.userService.getSavedPortfoliosForUser(userAccount);
   }
+
+  /**
+   *
+   * @param userAccount
+   * @returns
+   */
+  @Patch('/update/profile')
+  @UseGuards(AuthGuard())
+  updateProfileDetails(@GetUser() userAccount: UserAccount): Promise<unknown> {
+    return null;
+  }
 }

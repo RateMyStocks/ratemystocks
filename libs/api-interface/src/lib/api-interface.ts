@@ -2,6 +2,8 @@ export {
   AuthCredentialDto,
   SignUpDto,
   SignInResponseDto,
+  ForgotPasswordDto,
+  ChangePasswordDto,
   UserRole,
   SpiritAnimal,
   UserProfileDto,

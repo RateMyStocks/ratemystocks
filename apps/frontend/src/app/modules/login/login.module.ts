@@ -9,6 +9,7 @@ import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password
 import { AuthFormComponent } from './components/auth-form/auth-form.component';
 import { LoginRoutingModule } from './login-routing.module';
 import { AngularMaterialModule } from '../../angular-material.module';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { AngularMaterialModule } from '../../angular-material.module';
     SignUpComponent,
     ForgotPasswordComponent,
     AuthFormComponent,
+    ResetPasswordComponent,
   ],
   imports: [AngularMaterialModule, CommonModule, FormsModule, LoginRoutingModule, ReactiveFormsModule, RouterModule],
 })

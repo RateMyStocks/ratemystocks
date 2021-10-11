@@ -3,7 +3,7 @@ import { ConflictException, InternalServerErrorException } from '@nestjs/common'
 import * as bcrypt from 'bcryptjs';
 import { AuthCredentialDto, SpiritAnimal, SignUpDto } from '@ratemystocks/api-interface';
 import { UserAccount } from '../../../models/userAccount.entity';
-import { sendEmail } from '../../../utils/sendEmail';
+import { sendConfirmationEmail } from '../../../utils/sendConfirmationEmail';
 import { confirmEmailLink } from '../../../utils/confirmEmailLink';
 
 @EntityRepository(UserAccount)
@@ -27,7 +27,7 @@ export class UserRepository extends Repository<UserAccount> {
       const newUser: UserAccount = await user.save();
 
       const link = await confirmEmailLink(newUser.id);
-      await sendEmail(email, username, link).catch(console.error);
+      await sendConfirmationEmail(email, username, link).catch(console.error);
     } catch (error) {
       if (error.code === '23505') {
         // duplicate username
@@ -75,7 +75,7 @@ export class UserRepository extends Repository<UserAccount> {
    * @param salt The salt that will be added to the hashing process
    * @returns The hashed password.
    */
-  private async hashPassword(password: string, salt: string): Promise<string> {
+  async hashPassword(password: string, salt: string): Promise<string> {
     return bcrypt.hash(password, salt);
   }
 }
