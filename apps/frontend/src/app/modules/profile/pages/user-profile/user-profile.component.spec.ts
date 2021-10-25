@@ -1,5 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SpiritAnimal } from '@ratemystocks/api-interface';
 import { Subject } from 'rxjs';
@@ -33,7 +34,7 @@ describe('UserProfileComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [UserProfileComponent],
-      imports: [ProfileModule, HttpClientTestingModule, RouterTestingModule],
+      imports: [ProfileModule, BrowserAnimationsModule, HttpClientTestingModule, RouterTestingModule],
       providers: [
         {
           provide: AuthService,

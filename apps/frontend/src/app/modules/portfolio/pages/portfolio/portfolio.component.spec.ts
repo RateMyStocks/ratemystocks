@@ -161,7 +161,13 @@ describe('PortfolioComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [PortfolioComponent, MatSort],
-      imports: [HttpClientTestingModule, PortfolioModule, BrowserAnimationsModule, RouterTestingModule],
+      imports: [
+        BrowserAnimationsModule,
+        HttpClientTestingModule,
+        PortfolioModule,
+        BrowserAnimationsModule,
+        RouterTestingModule,
+      ],
       providers: [
         {
           provide: ActivatedRoute,

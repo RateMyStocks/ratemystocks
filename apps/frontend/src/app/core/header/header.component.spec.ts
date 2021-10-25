@@ -11,6 +11,7 @@ import { By } from '@angular/platform-browser';
 import { SpiritAnimal } from '@ratemystocks/api-interface';
 import { Observable, Subject } from 'rxjs';
 import { RouterLinkWithHref } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 class MockAuthServiceLoggedOut {
   isAuthorized() {
@@ -88,7 +89,7 @@ describe('HeaderComponent', () => {
       mockAuthService = new MockAuthServiceLoggedOut();
 
       TestBed.configureTestingModule({
-        imports: [HttpClientTestingModule, RouterTestingModule, CoreModule],
+        imports: [BrowserAnimationsModule, HttpClientTestingModule, RouterTestingModule, CoreModule],
         schemas: [CUSTOM_ELEMENTS_SCHEMA],
         declarations: [HeaderComponent],
         providers: [
@@ -167,7 +168,7 @@ describe('HeaderComponent', () => {
       mockAuthService = new MockAuthServiceLoggedIn();
 
       TestBed.configureTestingModule({
-        imports: [HttpClientTestingModule, RouterTestingModule, CoreModule],
+        imports: [BrowserAnimationsModule, HttpClientTestingModule, RouterTestingModule, CoreModule],
         schemas: [CUSTOM_ELEMENTS_SCHEMA],
         declarations: [HeaderComponent],
         providers: [

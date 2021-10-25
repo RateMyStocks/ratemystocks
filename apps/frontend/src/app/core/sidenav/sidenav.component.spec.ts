@@ -6,6 +6,7 @@ import { SidenavService } from './sidenav.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CoreModule } from '../core.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SidenavComponent', () => {
   let component: SidenavComponent;
@@ -13,7 +14,7 @@ describe('SidenavComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule, CoreModule],
+      imports: [BrowserAnimationsModule, RouterTestingModule, HttpClientTestingModule, CoreModule],
       declarations: [SidenavComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [SidenavService],

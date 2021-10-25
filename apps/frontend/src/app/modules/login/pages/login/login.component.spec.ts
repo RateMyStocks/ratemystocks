@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { LoginModule } from '../../login.module';
 
 import { LoginComponent } from './login.component';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
@@ -12,7 +12,7 @@ describe('LoginComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [LoginComponent],
-      imports: [LoginModule, HttpClientTestingModule, RouterTestingModule],
+      imports: [BrowserAnimationsModule, LoginModule, HttpClientTestingModule, RouterTestingModule],
     }).compileComponents();
   });
 

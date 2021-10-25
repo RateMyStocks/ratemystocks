@@ -19,13 +19,11 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatCardModule } from '@angular/material/card';
 import { NgxPieChartComponent } from './components/ngx-pie-chart/ngx-pie-chart.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [StockSearchComponent, NgxPieChartComponent, ConfirmDialogComponent],
   imports: [
-    BrowserAnimationsModule,
     CommonModule,
     MatDividerModule,
     MatToolbarModule,
