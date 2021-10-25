@@ -1,10 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, Route } from '@angular/router';
-import { STOCKS_ROUTES } from './modules/stock/stock.routes';
-import { PORTFOLIO_ROUTES } from './modules/portfolio/portfolio.routes';
 import { RESOURCES_ROUTES } from './modules/resources/resources.routes';
-import { PROFILE_ROUTES } from './modules/profile/profile.routes';
-import { LOGIN_ROUTES } from './modules/login/login.routes';
 import { NotFoundComponent } from './modules/error/not-found/not-found.component';
 
 import { environment } from '../environments/environment';
@@ -23,19 +19,19 @@ const routes: Routes = [
   homeRoute,
   {
     path: 'stocks',
-    children: STOCKS_ROUTES,
+    loadChildren: () => import('./modules/stock/stock.module').then((m) => m.StockModule),
   },
   {
     path: 'portfolios',
-    children: PORTFOLIO_ROUTES,
+    loadChildren: () => import('./modules/portfolio/portfolio.module').then((m) => m.PortfolioModule),
   },
   {
     path: 'auth',
-    children: LOGIN_ROUTES,
+    loadChildren: () => import('./modules/login/login.module').then((m) => m.LoginModule),
   },
   {
     path: '',
-    children: PROFILE_ROUTES,
+    loadChildren: () => import('./modules/profile/profile.module').then((m) => m.ProfileModule),
   },
   {
     path: '',

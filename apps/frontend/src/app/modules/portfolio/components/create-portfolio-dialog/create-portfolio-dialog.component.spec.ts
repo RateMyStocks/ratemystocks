@@ -1,6 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PortfolioModule } from '../../portfolio.module';
 
@@ -13,7 +14,7 @@ describe('CreatePortfolioDialogComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [CreatePortfolioDialogComponent],
-      imports: [HttpClientTestingModule, PortfolioModule, RouterTestingModule],
+      imports: [BrowserAnimationsModule, HttpClientTestingModule, PortfolioModule, RouterTestingModule],
       providers: [{ provide: MatDialogRef, useValue: {} }],
     }).compileComponents();
   }));

@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from '../../shared.module';
 
 import { NgxPieChartComponent } from './ngx-pie-chart.component';
@@ -11,7 +12,7 @@ describe('NgxPieChartComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [NgxPieChartComponent],
-      imports: [SharedModule, FormsModule, ReactiveFormsModule],
+      imports: [BrowserAnimationsModule, SharedModule, FormsModule, ReactiveFormsModule],
     }).compileComponents();
   }));
 

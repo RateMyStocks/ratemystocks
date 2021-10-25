@@ -3,6 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UserStockRatingsTableComponent } from './user-stock-ratings-table.component';
 import { ProfileModule } from '../../profile.module';
 import { SpiritAnimal } from '@ratemystocks/api-interface';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('UserStockRatingsTableComponent', () => {
   let component: UserStockRatingsTableComponent;
@@ -11,7 +12,7 @@ describe('UserStockRatingsTableComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [UserStockRatingsTableComponent],
-      imports: [ProfileModule, HttpClientTestingModule],
+      imports: [ProfileModule, BrowserAnimationsModule, HttpClientTestingModule],
     }).compileComponents();
   });
 
