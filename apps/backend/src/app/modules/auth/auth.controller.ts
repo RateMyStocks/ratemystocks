@@ -5,7 +5,6 @@ import {
   ValidationPipe,
   Get,
   UseGuards,
-  Put,
   Param,
   Redirect,
   Response,
@@ -19,6 +18,7 @@ import {
   ForgotPasswordDto,
   SignUpDto,
   SignInResponseDto,
+  UserSettingsDto,
 } from '@ratemystocks/api-interface';
 import { UserAccount } from '../../../models/userAccount.entity';
 import { GetUser } from './get-user.decorator';
@@ -58,12 +58,6 @@ export class AuthController {
       expiresIn: 3600,
     };
     return signInDto;
-  }
-
-  @Get('/settings')
-  @UseGuards(AuthGuard())
-  getSettings(@GetUser() user: UserAccount) {
-    console.log(user);
   }
 
   /**
@@ -129,5 +123,40 @@ export class AuthController {
     @Body() changePasswordDto: ChangePasswordDto
   ): Promise<boolean> {
     return this.authService.resetPassword(userId, token, changePasswordDto);
+  }
+
+  /**
+   * Gets the settings associated with a logged-in User profile.
+   * @param user The logged-in user.
+   * @returns A DTO containing the fields & data for a User profile.
+   */
+  @Get('/profile/settings')
+  @UseGuards(AuthGuard())
+  getSettings(@GetUser() user: UserAccount): UserSettingsDto {
+    return this.authService.getSettings(user);
+  }
+
+  /**
+   * Update the settings associated with a logged-in User profile.
+   * @param user The logged-in user.
+   */
+  @Patch('/profile/settings')
+  @UseGuards(AuthGuard())
+  async updateSettings(@GetUser() userAccount: UserAccount, @Body() userSettings: UserSettingsDto): Promise<void> {
+    return this.authService.updateSettings(userAccount, userSettings);
+  }
+
+  /**
+   * Changes a logged-in a user's password.
+   * @param userAccount The logged-in user.
+   * @param changePasswordDto DTO containing the new password to set on the user.
+   */
+  @Patch('/changepassword')
+  @UseGuards(AuthGuard())
+  async changePassword(
+    @GetUser() userAccount: UserAccount,
+    @Body() changePasswordDto: ChangePasswordDto
+  ): Promise<boolean> {
+    return this.authService.changePassword(userAccount, changePasswordDto);
   }
 }

@@ -7,6 +7,7 @@ export {
   UserRole,
   SpiritAnimal,
   UserProfileDto,
+  UserSettingsDto,
   IexBatchResponseDto,
   IexCloudCompanyDto,
   IexCloudHistoricalPriceDto,

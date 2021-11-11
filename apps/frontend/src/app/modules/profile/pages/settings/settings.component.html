@@ -1,2 +1,18 @@
-<div *ngIf="isAuth">
+<!-- <div class="page-container" *ngIf="isAuth"> -->
+<div class="page-container">
+  <!-- TODO: Add bio -->
+  <div id="email-form-container">
+    <mat-card class="example-card">
+      <h1>
+        <span class="page-header"><b>Settings</b></span>
+      </h1>
+      <mat-card-subtitle>Account Information</mat-card-subtitle>
+      <mat-card-content>
+        <app-change-email-form></app-change-email-form>
+        <br>
+        <app-change-password-form></app-change-password-form>
+      </mat-card-content>
+      <mat-divider inset></mat-divider>
+    </mat-card>
+  </div>
 </div>

@@ -11,6 +11,9 @@ import { SavedPortfoliosTableComponent } from './components/saved-portfolios-tab
 import { UserStockRatingsTableComponent } from './components/user-stock-ratings-table/user-stock-ratings-table.component';
 import { ProfileRoutingModule } from './profile-routing.module';
 import { AngularMaterialModule } from '../../angular-material.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChangePasswordFormComponent } from './components/change-password-form/change-password-form.component';
+import { ChangeEmailFormComponent } from './components/change-email-form/change-email-form.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +24,17 @@ import { AngularMaterialModule } from '../../angular-material.module';
     FavoritesComponent,
     SavedPortfoliosTableComponent,
     UserStockRatingsTableComponent,
+    ChangePasswordFormComponent,
+    ChangeEmailFormComponent,
   ],
-  imports: [AngularMaterialModule, CommonModule, ProfileRoutingModule, RouterModule, SharedModule],
+  imports: [
+    AngularMaterialModule,
+    CommonModule,
+    FormsModule,
+    ProfileRoutingModule,
+    ReactiveFormsModule,
+    RouterModule,
+    SharedModule,
+  ],
 })
 export class ProfileModule {}

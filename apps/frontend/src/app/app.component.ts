@@ -1,7 +1,5 @@
 import { Component, PLATFORM_ID, OnInit, Inject } from '@angular/core';
 import { AuthService } from './core/services/auth.service';
-import { environment } from '../environments/environment';
-import { Router } from '@angular/router';
 import { LocalStorageService } from './core/services/local-storage.service';
 import { WindowService } from './core/services/window.service';
 import { isPlatformBrowser } from '@angular/common';
@@ -13,8 +11,6 @@ import { isPlatformBrowser } from '@angular/common';
 })
 export class AppComponent implements OnInit {
   title = 'ratemystocks';
-
-  isProduction: boolean = environment.production;
 
   constructor(
     private authService: AuthService,

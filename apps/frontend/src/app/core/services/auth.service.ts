@@ -11,6 +11,7 @@ import {
   SignInResponseDto,
   ForgotPasswordDto,
   ChangePasswordDto,
+  UserSettingsDto,
 } from '@ratemystocks/api-interface';
 import { LocalStorageService } from './local-storage.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -291,14 +292,6 @@ export class AuthService {
   }
 
   /**
-   * Fetches the users settings
-   * (currently just a place holder for testing authentication functionality)
-   */
-  getSettings(): void {
-    this.httpClient.get(`${BACKEND_URL}/settings`, { withCredentials: true }).subscribe();
-  }
-
-  /**
    * Makes a request to send the email verification email to a given user.
    * @param userId The UUID of the user to send the email to.
    * @param username The username of the user to send the email to.
@@ -334,5 +327,31 @@ export class AuthService {
    */
   resetPassword(userId: string, token: string, changePasswordDto: ChangePasswordDto): Observable<unknown> {
     return this.httpClient.patch(`${BACKEND_URL}/resetpassword/${userId}/${token}`, changePasswordDto);
+  }
+
+  /**
+   * Makes a request to reset and update a user's password.
+   * @param changePasswordDto The DTO containing the updated password.
+   */
+  changePassword(changePasswordDto: ChangePasswordDto): Observable<boolean> {
+    return this.httpClient.patch<boolean>(`${BACKEND_URL}/changepassword`, changePasswordDto);
+  }
+
+  /**
+   * Fetches the users settings.
+   * @return A DTO containing the settings for the User profile.
+   */
+  getSettings(): Observable<UserSettingsDto> {
+    return this.httpClient.get<UserSettingsDto>(`${BACKEND_URL}/profile/settings`, { withCredentials: true });
+  }
+
+  /**
+   * Updates the users settings
+   * @param DTO to send to the backend containing the updated User settings
+   */
+  updateSettings(userSettings: UserSettingsDto): Observable<unknown> {
+    return this.httpClient.patch(`${BACKEND_URL}/profile/settings`, userSettings, {
+      withCredentials: true,
+    });
   }
 }

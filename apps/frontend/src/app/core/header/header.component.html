@@ -58,7 +58,7 @@
             <button mat-menu-item routerLink="/users/{{ userName }}">
               <mat-icon class="material-icons-outlined">person</mat-icon>View Profile
             </button>
-            <button mat-menu-item><mat-icon>favorite_outline</mat-icon>Favorites</button>
+            <button mat-menu-item  routerLink="/favorites"><mat-icon>favorite_outline</mat-icon>Favorites</button>
             <button mat-menu-item routerLink="/settings"><mat-icon>settings</mat-icon>Settings</button>
             <hr />
             <button mat-menu-item (click)="logOut()" id="logout-btn"><mat-icon>logout</mat-icon>Logout</button>

@@ -149,6 +149,11 @@ export interface UserProfileDto {
   spiritAnimal: SpiritAnimal;
 }
 
+export interface UserSettingsDto {
+  email: string;
+  emailVerified: boolean;
+}
+
 ///////////////////////////////////////////
 //                IEX                    //
 //////////////////////////////////////////
