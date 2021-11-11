@@ -3,11 +3,12 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { AuthGuard } from '../../core/guards/auth.guard';
 
 export const PROFILE_ROUTES = [
   { path: 'users/:username', component: UserProfileComponent },
-  { path: 'settings', component: SettingsComponent },
-  { path: 'favorites', component: FavoritesComponent },
+  { path: 'settings', canActivate: [AuthGuard], component: SettingsComponent },
+  { path: 'favorites', canActivate: [AuthGuard], component: FavoritesComponent },
 ];
 
 @NgModule({

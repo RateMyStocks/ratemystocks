@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SignUpDto } from '@ratemystocks/api-interface';
 import {
   USERNAME_REGEX,
@@ -12,6 +12,7 @@ import {
 import { AuthService } from '../../../../core/services/auth.service';
 import { AuthFormComponent } from '../../components/auth-form/auth-form.component';
 import { Router } from '@angular/router';
+import { passwordMatchValidator } from '../../../../shared/utilities/form-password-match-validator';
 
 @Component({
   selector: 'app-sign-up',
@@ -154,13 +155,3 @@ export class SignUpComponent extends AuthFormComponent {
     this.authService.signUp(user);
   }
 }
-
-/**
- * Validator function that ensures 'password' form field has the same value as the 're-enter password' field.
- * @param formGroup The signup form containing the password fields.
- * @return The ValidationErrors object if the passwords don't match, otherwise return null.
- */
-export const passwordMatchValidator: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {
-  if (formGroup.get('password').value === formGroup.get('passwordReenter').value) return null;
-  else return { passwordMismatch: true };
-};

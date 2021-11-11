@@ -9,7 +9,13 @@ import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
-import { AuthCredentialDto, ChangePasswordDto, ForgotPasswordDto, SignUpDto } from '@ratemystocks/api-interface';
+import {
+  AuthCredentialDto,
+  ChangePasswordDto,
+  ForgotPasswordDto,
+  SignUpDto,
+  UserSettingsDto,
+} from '@ratemystocks/api-interface';
 import { UserAccount } from '../../../models/userAccount.entity';
 import { redis } from '../../../redis';
 import { Response } from 'express';
@@ -145,6 +151,46 @@ export class AuthService {
       throw new ForbiddenException();
     }
 
+    const password = await this.userRepo.hashPassword(changePasswordDto.password, user.salt);
+    user.password = password;
+    await user.save();
+
+    return true;
+  }
+
+  /**
+   * Gets the settings associated with a logged-in User profile.
+   * @param user The logged-in user.
+   * @returns A DTO containing the fields & data for a User profile.
+   */
+  getSettings(userAccount: UserAccount): UserSettingsDto {
+    const userSettings: UserSettingsDto = {
+      email: userAccount.email,
+      emailVerified: userAccount.emailVerified,
+    };
+
+    return userSettings;
+  }
+
+  /**
+   * Update the settings associated with a logged-in User profile.
+   * @param user The logged-in user.
+   */
+  async updateSettings(userAccount: UserAccount, userSettings: UserSettingsDto): Promise<void> {
+    const { email } = userSettings;
+    userAccount.email = email;
+    userAccount.emailVerified = false;
+
+    await userAccount.save();
+    await this.sendVerificationEmail(userAccount.id, userAccount.username, email);
+  }
+
+  /**
+   * Changes a logged-in a user's password.
+   * @param userAccount The logged-in user.
+   * @param changePasswordDto DTO containing the new password to set on the user.
+   */
+  async changePassword(user: UserAccount, changePasswordDto: ChangePasswordDto): Promise<boolean> {
     const password = await this.userRepo.hashPassword(changePasswordDto.password, user.salt);
     user.password = password;
     await user.save();

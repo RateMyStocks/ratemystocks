@@ -9,7 +9,6 @@ import {
   CreatePortfolioRatingDto,
   CreatePortfolioStockDto,
   PortfolioRatingCountsDto,
-  PortfolioStockDto,
   UserPortfolioDto,
 } from '@ratemystocks/api-interface';
 import { Portfolio } from '../../../models/portfolio.entity';

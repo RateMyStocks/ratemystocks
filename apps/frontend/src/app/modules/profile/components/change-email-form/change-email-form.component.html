@@ -1,0 +1,19 @@
+<div id="email-form-container">
+  <form [formGroup]="form" (submit)="submitForm()">
+    <mat-form-field appearance="outline">
+      <input formControlName="email" type="email" matInput placeholder="Email" />
+      <mat-error *ngIf="!email.valid && email.touched">
+        {{ getErrorEmail() }}
+      </mat-error>
+    </mat-form-field>
+    <mat-chip-list>
+      <mat-chip [style]="{ 'background-color': '#549e58' }" selected *ngIf="emailVerified">Verified &nbsp;<mat-icon aria-hidden="false" aria-label="Example home icon">done_outline</mat-icon></mat-chip>
+      <mat-chip [style]="{ 'background-color': '#eb3434' }" selected *ngIf="!emailVerified">Not Verified &nbsp;<mat-icon aria-hidden="false" aria-label="Example home icon">highlight_off</mat-icon></mat-chip>
+    </mat-chip-list>
+    <br>
+    <div class="settings-button-row">
+      <button mat-raised-button type="submit" color="primary" [disabled]="!form.valid">Update Email</button>
+      <button mat-raised-button color="primary" [disabled]="!form.valid" *ngIf="!emailVerified">Resend Verification Email</button>
+    </div>
+  </form>
+</div>
