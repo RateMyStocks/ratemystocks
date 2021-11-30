@@ -4,7 +4,7 @@ import { environment } from '../../../environments/environment';
 import { Observable, Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StatusCodes } from '../../shared/utilities/status-codes.enum';
+
 import {
   AuthCredentialDto,
   SignUpDto,
@@ -15,7 +15,8 @@ import {
 } from '@ratemystocks/api-interface';
 import { LocalStorageService } from './local-storage.service';
 import { MatDialog } from '@angular/material/dialog';
-import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog.component';
+import { StatusCodes } from '../../shared/utilities/status-codes.enum';
+// import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog.component';
 
 const BACKEND_URL: string = environment.apiUrl + '/auth';
 
@@ -148,11 +149,11 @@ export class AuthService {
           this.router.navigate(['/']);
 
           if (isNewUser) {
-            this.dialog.open(WelcomeDialogComponent, {
-              data: {
-                user: response,
-              },
-            });
+            // this.dialog.open(WelcomeDialogComponent, {
+            //   data: {
+            //     user: response,
+            //   },
+            // });
           } else {
             this.snackBar.open(`You have successfully signed in.`, 'OK', {
               duration: 3000,

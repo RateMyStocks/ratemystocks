@@ -1,42 +1,58 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { RESOURCES_ROUTES } from './modules/resources/resources.routes';
-import { NotFoundComponent } from './modules/error/not-found/not-found.component';
+import { RouterModule, Routes } from "@angular/router";
+import { NgModule } from "@angular/core";
+import { AppMainComponent } from "./app.main.component";
+import { AppNotfoundComponent } from "./pages/app.notfound.component";
+import { AppErrorComponent } from "./pages/app.error.component";
+import { AppAccessdeniedComponent } from "./pages/app.accessdenied.component";
+import { AppLoginComponent } from "./pages/app.login.component";
+import { AppHelpComponent } from "./pages/app.help.component";
 
 const routes: Routes = [
-  {
-    path: '',
-    redirectTo: '/stocks',
-    pathMatch: 'full',
-  },
-  {
-    path: 'stocks',
-    loadChildren: () => import('./modules/stock/stock.module').then((m) => m.StockModule),
-  },
-  {
-    path: 'portfolios',
-    loadChildren: () => import('./modules/portfolio/portfolio.module').then((m) => m.PortfolioModule),
-  },
-  {
-    path: 'auth',
-    loadChildren: () => import('./modules/login/login.module').then((m) => m.LoginModule),
-  },
-  {
-    path: '',
-    loadChildren: () => import('./modules/profile/profile.module').then((m) => m.ProfileModule),
-  },
-  {
-    path: '',
-    children: RESOURCES_ROUTES,
-  },
-  {
-    path: '**',
-    component: NotFoundComponent,
-  },
+    {
+        path: "",
+        component: AppMainComponent,
+        children: [
+            // { path: "", component: DashboardDemoComponent },
+            {
+                path: "",
+                redirectTo: "/stocks",
+                pathMatch: "full",
+            },
+            {
+                path: "stocks",
+                loadChildren: () =>
+                    import("./modules/stocks/stocks.module").then(
+                        (m) => m.StocksModule
+                    ),
+            },
+            {
+                path: "portfolios",
+                loadChildren: () =>
+                    import("./modules/portfolios/portfolios.module").then(
+                        (m) => m.PortfoliosModule
+                    ),
+            },
+            {
+                path: "profile",
+                loadChildren: () =>
+                    import("./modules/profile/profile.module").then(
+                        (m) => m.ProfileModule
+                    ),
+            },
+            { path: "pages/help", component: AppHelpComponent },
+        ],
+    },
+    { path: "error", component: AppErrorComponent },
+    { path: "access", component: AppAccessdeniedComponent },
+    { path: "notfound", component: AppNotfoundComponent },
+    { path: "login", component: AppLoginComponent },
+    { path: "**", redirectTo: "/notfound" },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+    imports: [
+        RouterModule.forRoot(routes, { scrollPositionRestoration: "enabled" }),
+    ],
+    exports: [RouterModule],
 })
 export class AppRoutingModule {}

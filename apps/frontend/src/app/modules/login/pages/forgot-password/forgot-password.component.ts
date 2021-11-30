@@ -4,7 +4,6 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { AuthFormComponent } from '../../components/auth-form/auth-form.component';
 import { Router } from '@angular/router';
 import { ForgotPasswordDto } from '@ratemystocks/api-interface';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { EMAIL_REGEX, EMAIL_VALIDATION_MESSAGE } from '@ratemystocks/regex-patterns';
 
 @Component({
@@ -15,7 +14,7 @@ import { EMAIL_REGEX, EMAIL_VALIDATION_MESSAGE } from '@ratemystocks/regex-patte
 export class ForgotPasswordComponent extends AuthFormComponent {
   emailSent = false;
 
-  constructor(authService: AuthService, router: Router, private matSnackBar: MatSnackBar) {
+  constructor(authService: AuthService, router: Router) {
     super(authService, router);
 
     this.buttonLabel = 'Reset Password';
@@ -35,18 +34,18 @@ export class ForgotPasswordComponent extends AuthFormComponent {
 
     this.authService.forgotPassword(email).subscribe(
       () => {
-        this.matSnackBar.open(`An email to reset your password was sent to ${email}!`, 'OK', {
-          duration: 2000,
-          panelClass: 'success-snackbar',
-        });
+        // this.matSnackBar.open(`An email to reset your password was sent to ${email}!`, 'OK', {
+        //   duration: 2000,
+        //   panelClass: 'success-snackbar',
+        // });
 
         this.emailSent = true;
       },
       (error) => {
-        this.matSnackBar.open(`There is no account associated with ${email}.`, 'OK', {
-          duration: 2000,
-          panelClass: 'success-snackbar',
-        });
+        // this.matSnackBar.open(`There is no account associated with ${email}.`, 'OK', {
+        //   duration: 2000,
+        //   panelClass: 'success-snackbar',
+        // });
       }
     );
   }

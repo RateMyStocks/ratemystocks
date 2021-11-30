@@ -4,16 +4,19 @@ ratemystocks.com is a community-driven stock market research platform and invest
 
 For more info, visit our [wiki](https://github.com/RateMyStocks/ratemystocks/wiki)
 
+# Prerequisites
+
 # Getting Started - Running the app
 
 1. Install Node.js & npm: [Node.js Download](https://nodejs.org/en/download/)
 2. `npm install` - Install the dependencies in the local node_modules folder.
 3. `npm install -g nx` - This installs the Nx CLI globally on your machine.
-4. Create a `.env` file based off of `.env.example` but with real database connection info and API keys.
-5. Install PostgresSQL locally and create a database with database called `ratemystocks`. The credentials much match the `DATABASE_URL` in `.env.example`.
-6. Install & run Redis (You can use docker i.e. `docker pull redis` followed by `docker run -p 6379:6379 --name redis -d redis`)
-7. `npm run dev` - This will run NestJS (backend) & Angular (frontend) dev servers in parallel, both in watch mode.
-8. Go to `localhost:4200` in your browser. `IMPORTANT`: Makes sure you are not connected to any VPN - it might block your requests made to the 3rd party APIs we use.
+4. `npm install -g sass` - Install Sass on the command line, so you can run the sass executable to compile .sass and .scss files to .css files.
+5. Create a `.env` file based off of `.env.example` but with real database connection info and API keys.
+6. Install PostgresSQL locally and create a database with database called `ratemystocks`. The credentials much match the `DATABASE_URL` in `.env.example`.
+7. Install & run Redis (You can use docker i.e. `docker pull redis` followed by `docker run -p 6379:6379 --name redis -d redis`)
+8. `npm run dev` - This will run NestJS (backend) & Angular (frontend) dev servers in parallel, both in watch mode.
+9. Go to `localhost:4200` in your browser. `IMPORTANT`: Makes sure you are not connected to any VPN - it might block your requests made to the 3rd party APIs we use.
 
 ## Generating TypeORM Migrations:
 

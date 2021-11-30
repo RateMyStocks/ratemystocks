@@ -1,0 +1,73 @@
+<div class="layout-rightpanel" (click)="app.onRightPanelClick()">
+    <div class="rightpanel-wrapper">
+        <div class="section-tasks today">
+            <h5>Your Tasks Today</h5>
+            <ul>
+                <li>
+                    <p-checkbox binary="true" [(ngModel)]="checked1"></p-checkbox>
+                    <div class="task" [ngClass]="{'done':checked1}">
+                        <h6>Sales reports</h6>
+                        <span>Today</span>
+                    </div>
+                </li>
+                <li>
+                    <p-checkbox binary="true" [(ngModel)]="checked2"></p-checkbox>
+                    <div class="task" [ngClass]="{'done':checked2}">
+                        <h6>Pay invoices</h6>
+                        <span>Today</span>
+                    </div>
+                </li>
+                <li>
+                    <p-checkbox binary="true" [(ngModel)]="checked3"></p-checkbox>
+                    <div class="task" [ngClass]="{'done':checked3}">
+                        <h6>Dinner with Tony</h6>
+                        <span>Today, 22:36</span>
+                    </div>
+                </li>
+                <li>
+                    <p-checkbox binary="true" [(ngModel)]="checked4"></p-checkbox>
+                    <div class="task" [ngClass]="{'done':checked4}">
+                        <h6>Client meeting</h6>
+                        <span>Today</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <hr/>
+
+        <div class="section-tasks upcoming">
+            <h5>Upcoming</h5>
+            <ul>
+                <li>
+                    <p-checkbox binary="true" [(ngModel)]="checked5"></p-checkbox>
+                    <div class="task" [ngClass]="{'done':checked5}">
+                        <h6>New representative meeting</h6>
+                        <span>27 May</span>
+                    </div>
+                </li>
+                <li>
+                    <p-checkbox binary="true" [(ngModel)]="checked6"></p-checkbox>
+                    <div class="task" [ngClass]="{'done':checked6}">
+                        <h6>Flight tickets</h6>
+                        <span>28 May</span>
+                    </div>
+                </li>
+                <li>
+                    <p-checkbox binary="true" [(ngModel)]="checked7"></p-checkbox>
+                    <div class="task" [ngClass]="{'done':checked7}">
+                        <h6>Generate charts</h6>
+                        <span>29 May</span>
+                    </div>
+                </li>
+                <li>
+                    <p-checkbox binary="true" [(ngModel)]="checked8"></p-checkbox>
+                    <div class="task" [ngClass]="{'done':checked8}">
+                        <h6>Delete old files</h6>
+                        <span>30 May</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

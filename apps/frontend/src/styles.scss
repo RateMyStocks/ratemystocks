@@ -1,162 +1,17 @@
-@use './variables' as variables;
-
-@import '@angular/material/theming';
-
 /* You can add global styles to this file, and also import other style files */
-// $gutter: 1rem; //for primeflex grid system
+$gutter: 1rem; //for primeflex grid system
 
 // @import "../node_modules/primeng/resources/primeng.min.css";
 // @import "../node_modules/primeflex/primeflex.scss";
 // @import "../node_modules/primeicons/primeicons.css";
+// @import "../node_modules/prismjs/themes/prism-coy.css";
+// @import "../node_modules/@fullcalendar/daygrid/main.min.css";
+// @import "../node_modules/@fullcalendar/timegrid/main.min.css";
+// @import "assets/demo/flags/flags.css";
+@import 'primeng/resources/primeng.min.css';
+@import 'primeflex/primeflex.scss';
+@import 'primeicons/primeicons.css';
 @import 'prismjs/themes/prism-coy.css';
 @import '@fullcalendar/daygrid/main.min.css';
 @import '@fullcalendar/timegrid/main.min.css';
-
-/* You can add global styles to this file, and also import other style files */
-html,
-body {
-  width: 100%;
-  height: 100%;
-  margin: 0px;
-  padding: 0px;
-}
-
-body {
-  margin: 0;
-  font-family: variables.$primary-font-family;
-}
-
-img:hover {
-  cursor: pointer;
-}
-
-a {
-  color: #0060b6;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-a:hover {
-  color: #00a0c6;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-mark {
-  background-color: white !important;
-  color: variables.$rms-green !important;
-}
-
-small {
-  color: variables.$primary-text-color;
-}
-
-table {
-  width: 100%;
-  border: 0.5px solid rgba(0, 0, 0, 0.12) !important;
-}
-
-td,
-th {
-  color: black !important;
-
-  a {
-    color: #0060b6;
-    font-weight: bold;
-    text-decoration: none;
-  }
-
-  a:hover {
-    color: #00a0c6;
-    text-decoration: none;
-    cursor: pointer;
-  }
-}
-
-/** Global Classes */
-.page-header {
-  display: inline-block;
-  border-bottom: 4px solid variables.$rms-green;
-  padding-bottom: 2px;
-}
-
-.page-container {
-  margin-bottom: 100px;
-}
-
-.centered-container {
-  margin: auto;
-  display: flex;
-  justify-content: center;
-}
-
-.primary-rms-btn {
-  background-color: variables.$rms-green;
-  color: white;
-}
-
-.success-snackbar {
-  .mat-simple-snackbar-action {
-    color: #24d660 !important;
-  }
-}
-
-.warn-snackbar {
-  .mat-simple-snackbar-action {
-    color: #fc7208 !important;
-  }
-}
-
-.error-snackbar {
-  .mat-simple-snackbar-action {
-    color: #eb0505 !important;
-  }
-}
-
-.inactive-breadcrumb {
-  color: variables.$primary-text-color;
-}
-
-.inactive-breadcrumb:hover {
-  cursor: pointer;
-  color: black;
-}
-
-.centered-content {
-  display: flex !important;
-  align-items: center !important;
-}
-
-.vertically-and-horizontally-centered {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
-
-.error-page {
-  position: absolute;
-  left: 50%;
-  top: 30%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-
-/** Angular Material Overrides */
-mat-paginator {
-  border-left: 0.5px solid rgba(0, 0, 0, 0.12);
-  border-right: 0.5px solid rgba(0, 0, 0, 0.12);
-  border-bottom: 0.5px solid rgba(0, 0, 0, 0.12);
-}
-
-.mat-progress-spinner circle,
-.mat-spinner circle {
-  stroke: #3fb53f;
-}
-
-.form-element {
-  padding: 5px 0px 25px 2px;
-  width: 100%;
-}
+@import 'assets/demo/flags/flags.css';

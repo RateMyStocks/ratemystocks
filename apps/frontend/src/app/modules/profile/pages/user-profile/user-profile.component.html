@@ -1,15 +1,508 @@
-<div class="page-container" *ngIf="user">
-  <app-user-profile-header [user]="user"></app-user-profile-header>
-  <br />
-  <mat-tab-group animationDuration="0ms" mat-stretch-tabs class="example-stretched-tabs mat-elevation-z4">
-    <mat-tab label="Stocks"><app-user-stock-ratings-table [user]="user"></app-user-stock-ratings-table></mat-tab>
-    <mat-tab label="Portfolios"><app-user-portfolios-table [user]="user"></app-user-portfolios-table></mat-tab>
-  </mat-tab-group>
-  <br />
-  <!-- <mat-card>
-    <mat-card-header>
-      <mat-icon class="nav-item-portfolio-icon material-icons-outlined" mat-card-avatar>pie_chart</mat-icon>
-      <mat-card-title>Activity</mat-card-title>
-    </mat-card-header>
-  </mat-card> -->
+<div class="layout-dashboard">
+    <div class="p-grid">
+        <div class="p-col-12 p-md-12 p-xl-9">
+            <div class="p-grid">
+                <div class="p-col-12 p-md-12 p-xl-4">
+                    <div class="card overview-box-1 blue">
+                        <div class="card-header">
+                            <h6>Revenue Status</h6>
+                            <div class="header-buttons">
+                                <a href="#"><i class="pi pi-arrow-up"></i></a>
+                            </div>
+                        </div>
+                        <div class="overview-content">
+                            <h3>87363</h3>
+                            <div class="overview-graph">
+                                <span style="height: 12px;"><span class="graph-tooltip">12</span></span>
+                                <span style="height: 40px;"><span class="graph-tooltip">40</span></span>
+                                <span style="height: 26px;"><span class="graph-tooltip">26</span></span>
+                                <span style="height: 17px;"><span class="graph-tooltip">17</span></span>
+                                <span style="height: 36px;"><span class="graph-tooltip">36</span></span>
+                                <span style="height: 51px;"><span class="graph-tooltip">51</span></span>
+                            </div>
+                        </div>
+                        <div class="overview-footer">
+                            <span><i class="pi pi-arrow-up"></i> <span>55%</span> increase in today sales</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-col-12 p-md-12 p-xl-4">
+                    <div class="card overview-box-1 teal">
+                        <div class="card-header">
+                            <h6>Page View</h6>
+                            <div class="header-buttons">
+                                <a href="#"><i class="pi pi-arrow-up"></i></a>
+                            </div>
+                        </div>
+                        <div class="overview-content">
+                            <h3>5592</h3>
+                            <div class="overview-graph">
+                                <span style="height: 30px;"><span class="graph-tooltip">30</span></span>
+                                <span style="height: 43px;"><span class="graph-tooltip">43</span></span>
+                                <span style="height: 48px;"><span class="graph-tooltip">48</span></span>
+                                <span style="height: 40px;"><span class="graph-tooltip">40</span></span>
+                                <span style="height: 52px;"><span class="graph-tooltip">52</span></span>
+                                <span style="height: 18px;"><span class="graph-tooltip">18</span></span>
+                            </div>
+                        </div>
+                        <div class="overview-footer down">
+                            <span><i class="pi pi-arrow-down"></i> <span>12%</span> decrease in today sales</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-col-12 p-md-12 p-xl-4">
+                    <div class="card  overview-box-1 orange">
+                        <div class="card-header">
+                            <h6>Bounce Rate</h6>
+                            <div class="header-buttons">
+                                <a href="#"><i class="pi pi-arrow-up"></i></a>
+                            </div>
+                        </div>
+                        <div class="overview-content">
+                            <h3>55.95%</h3>
+                            <div class="overview-graph">
+                                <span style="height: 20px;"><span class="graph-tooltip">20</span></span>
+                                <span style="height: 23px;"><span class="graph-tooltip">23</span></span>
+                                <span style="height: 52px;"><span class="graph-tooltip">52</span></span>
+                                <span style="height: 18px;"><span class="graph-tooltip">18</span></span>
+                                <span style="height: 28px;"><span class="graph-tooltip">28</span></span>
+                                <span style="height: 42px;"><span class="graph-tooltip">42</span></span>
+                            </div>
+                        </div>
+                        <div class="overview-footer">
+                            <span><i class="pi pi-arrow-up"></i> <span>6%</span> increase in today sales</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-col-12">
+                    <div class="card sale-graph">
+                        <div class="card-header">
+                            <h6>Top Products</h6>
+                        </div>
+                        <div id="order-tabs-container" class="order-tabs">
+                            <div class="order-tab" [ngClass]="{'order-tab-active':activeOrders===0}"
+                                 (click)="changeDataset($event); orders.refresh()"
+                                 data-label="New Sales" data-index="0" data-stroke="#00acac" >
+                                <h6>Current Week</h6>
+                                <h3>$455.55</h3>
+                            </div>
+                            <div class="order-tab" [ngClass]="{'order-tab-active':activeOrders===1}"
+                                 (click)="changeDataset($event); orders.refresh()"
+                                 data-label="Previous Sales" data-index="1" data-stroke="#2f8ee5">
+                                <h6>Previous Week</h6>
+                                <h3>$244.40</h3>
+                            </div>
+                        </div>
+                        <div class="overview-chart">
+                            <p-chart #orders type="line" [data]="ordersChart" [options]="ordersOptions" [responsive]="true"></p-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-col-12 p-md-12 p-xl-3">
+            <div class="p-grid">
+                <div class="p-col-12 p-md-6 p-xl-12">
+                    <div class="card traffic">
+                        <div class="card-header">
+                            <h6>Traffic</h6>
+                        </div>
+                        <span>26 May - 27 May</span>
+                        <div class="traffic-chart">
+                            <p-chart #traffic type="doughnut" [data]="trafficChart" [options]="trafficOptions" [responsive]="true" width="210px" height="210px"></p-chart>
+                        </div>
+                        <div id="traffic-tabs-container" class="traffic-tabs">
+                            <div class="traffic-tab" [ngClass]="{'traffic-tab-active':activeTraffic===0}"
+                                 (click)="changeTrafficset($event); traffic.refresh()"
+                                 data-label="New Sales" data-index="0"  >
+                                <h6>48%</h6>
+                                <i class="pi pi-facebook"></i>
+                                <span>Facebook</span>
+                            </div>
+                            <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===1}"
+                                 (click)="changeTrafficset($event); traffic.refresh()"
+                                 data-label="Previous Sales" data-index="1">
+                                <h6>26%</h6>
+                                <i class="pi pi-twitter"></i>
+                                <span>Twitter</span>
+                            </div>
+                            <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===2}"
+                                 (click)="changeTrafficset($event); traffic.refresh()"
+                                 data-label="Previous Sales" data-index="2">
+                                <h6>17%</h6>
+                                <i class="pi pi-github"></i>
+                                <span>Github</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-col-12 p-md-6 p-xl-12">
+                    <div class="card goals">
+                        <div class="card-header">
+                            <h6>Today's Goal</h6>
+                            <span><span>183</span> / 255</span>
+                        </div>
+                        <span>22 June, 2020</span>
+                        <div class="goal-graph">
+                            <p-chart #goal type="pie" [data]="goalChart" [options]="goalOptions" [responsive]="true" [style]="{'width': '50%'}"></p-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-col-12 p-md-6 p-xl-4">
+            <div class="card leaderboard">
+                <div class="card-header">
+                    <h6>Leaderboard</h6>
+                </div>
+                <ul>
+                    <li>
+                        <div class="person">
+                            <img src="assets/layout/images/dashboard/leader-1.png" alt="poseidon-layout" />
+                            <p>Peter Taylor</p>
+                        </div>
+                        <div class="person-numbers">
+                            <h6>$224.44</h6>
+                            <i class="pi pi-arrow-up"></i>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="person">
+                            <img src="assets/layout/images/dashboard/leader-2.png" alt="poseidon-layout" />
+                            <p>Nicolina Lindholm</p>
+                        </div>
+                        <div class="person-numbers">
+                            <h6>$86.05</h6>
+                            <i class="pi pi-arrow-up"></i>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="person">
+                            <img src="assets/layout/images/dashboard/leader-3.png" alt="poseidon-layout" />
+                            <p>Su Hua</p>
+                        </div>
+                        <div class="person-numbers">
+                            <h6>$59.44</h6>
+                            <i class="pi pi-arrow-up"></i>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="person">
+                            <img src="assets/layout/images/dashboard/leader-4.png" alt="poseidon-layout" />
+                            <p>Maria Illescas</p>
+                        </div>
+                        <div class="person-numbers">
+                            <h6>$12.32</h6>
+                            <i class="pi pi-arrow-up"></i>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="person">
+                            <img src="assets/layout/images/dashboard/avatar-dengra.png" alt="poseidon-layout" />
+                            <p>Ezequiel Dengra</p>
+                        </div>
+                        <div class="person-numbers">
+                            <h6>$12.32</h6>
+                            <i class="pi pi-arrow-up"></i>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="person">
+                            <img src="assets/layout/images/dashboard/avatar-conan.png" alt="poseidon-layout" />
+                            <p>Conan Matusov</p>
+                        </div>
+                        <div class="person-numbers">
+                            <h6>$12.32</h6>
+                            <i class="pi pi-arrow-up"></i>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="person">
+                            <img src="assets/layout/images/dashboard/seller-1.png" alt="poseidon-layout" />
+                            <p>Hector Mariano</p>
+                        </div>
+                        <div class="person-numbers">
+                            <h6>$12.32</h6>
+                            <i class="pi pi-arrow-up"></i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="p-col-12 p-md-6 p-xl-4">
+            <div class="card product-list">
+                <div class="card-header">
+                    <h6>Product List</h6>
+                </div>
+                <ul>
+                    <li>
+                        <div class="product">
+                            <img src="assets/layout/images/dashboard/image-product-1.png" alt="poseidon-layout" />
+                            <div class="product-info">
+                                <p>Nike Air X12</p>
+                                <span>Sold <span>250</span> times</span>
+                            </div>
+
+                        </div>
+                        <i class="pi pi-arrow-up"></i>
+                    </li>
+                    <li>
+                        <div class="product">
+                            <img src="assets/layout/images/dashboard/image-product-2.png" alt="poseidon-layout" />
+                            <div class="product-info">
+                                <p>Nike Sports Watch</p>
+                                <span>Sold <span>189</span> times</span>
+                            </div>
+
+                        </div>
+                        <i class="pi pi-arrow-up"></i>
+                    </li>
+                    <li>
+                        <div class="product">
+                            <img src="assets/layout/images/dashboard/image-product-3.png" alt="poseidon-layout" />
+                            <div class="product-info">
+                                <p>Heinz Yellow Mustard</p>
+                                <span>Sold <span>24</span> times</span>
+                            </div>
+
+                        </div>
+                        <i class="pi pi-arrow-up"></i>
+                    </li>
+                    <li>
+                        <div class="product">
+                            <img src="assets/layout/images/dashboard/image-product-4.png" alt="poseidon-layout" />
+                            <div class="product-info">
+                                <p>Beats Headphone</p>
+                                <span>Sold <span>24</span> times</span>
+                            </div>
+
+                        </div>
+                        <i class="pi pi-arrow-down down"></i>
+                    </li>
+                    <li>
+                        <div class="product">
+                            <img src="assets/layout/images/dashboard/image-product-5.png" alt="poseidon-layout" />
+                            <div class="product-info">
+                                <p>Black Racing Bike</p>
+                                <span>Sold <span>24</span> times</span>
+                            </div>
+
+                        </div>
+                        <i class="pi pi-arrow-up"></i>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="p-col-12 p-md-6 p-xl-4">
+            <div class="card sellers">
+                <div class="card-header">
+                    <h6>Seller List</h6>
+                </div>
+                <ul>
+                    <li>
+                        <div class="seller">
+                            <img src="assets/layout/images/dashboard/seller-1.png" alt="poseidon-layout" />
+                            <p>Hector Mariano</p>
+                        </div>
+                        <span>Tier 1</span>
+                        <p-rating [(ngModel)]="val2" readonly="true" stars="3"></p-rating>
+                        <p-menu #menu1 [popup]="true" [model]="items"></p-menu>
+                        <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-secondary p-button-outlined" (click)="menu1.toggle($event)"></button>
+                    </li>
+                    <li>
+                        <div class="seller">
+                            <img src="assets/layout/images/dashboard/seller-2.png" alt="poseidon-layout" />
+                            <p>Maria Illescas</p>
+                        </div>
+                        <span>Tier 2</span>
+                        <p-rating [(ngModel)]="val2" readonly="true" stars="3"></p-rating>
+                        <p-menu #menu2 [popup]="true" [model]="items"></p-menu>
+                        <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-secondary p-button-outlined" (click)="menu2.toggle($event)"></button>
+                    </li>
+                    <li>
+                        <div class="seller">
+                            <img src="assets/layout/images/dashboard/seller-3.png" alt="poseidon-layout" />
+                            <p>Ngô Hải Giang</p>
+                        </div>
+                        <span>Tier 3</span>
+                        <p-rating [(ngModel)]="val1" readonly="true" stars="3"></p-rating>
+                        <p-menu #menu3 [popup]="true" [model]="items"></p-menu>
+                        <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-secondary p-button-outlined" (click)="menu3.toggle($event)"></button>
+                    </li>
+                    <li>
+                        <div class="seller">
+                            <img src="assets/layout/images/dashboard/seller-4.png" alt="poseidon-layout" />
+                            <p>Tamas Bunce</p>
+                        </div>
+                        <span>Tier 4</span>
+                        <p-rating [(ngModel)]="val1" readonly="true" stars="3"></p-rating>
+                        <p-menu #menu4 [popup]="true" [model]="items"></p-menu>
+                        <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-secondary p-button-outlined" (click)="menu4.toggle($event)"></button>
+                    </li>
+                    <li>
+                        <div class="seller">
+                            <img src="assets/layout/images/dashboard/avatar-conan.png" alt="poseidon-layout" />
+                            <p>Conan Matusov</p>
+                        </div>
+                        <span>Tier 4</span>
+                        <p-rating [(ngModel)]="val1" readonly="true" stars="3"></p-rating>
+                        <p-menu #menu5 [popup]="true" [model]="items"></p-menu>
+                        <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-secondary p-button-outlined" (click)="menu5.toggle($event)"></button>
+                    </li>
+                    <li>
+                        <div class="seller">
+                            <img src="assets/layout/images/dashboard/leader-4.png" alt="poseidon-layout" />
+                            <p>Maria Illescas</p>
+                        </div>
+                        <span>Tier 4</span>
+                        <p-rating [(ngModel)]="val1" readonly="true" stars="3"></p-rating>
+                        <p-menu #menu6 [popup]="true" [model]="items"></p-menu>
+                        <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-secondary p-button-outlined" (click)="menu6.toggle($event)"></button>
+                    </li>
+                    <li>
+                        <div class="seller">
+                            <img src="assets/layout/images/dashboard/leader-3.png" alt="poseidon-layout" />
+                            <p>Su Hua</p>
+                        </div>
+                        <span>Tier 4</span>
+                        <p-rating [(ngModel)]="val1" readonly="true" stars="3"></p-rating>
+                        <p-menu #menu7 [popup]="true" [model]="items"></p-menu>
+                        <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-secondary p-button-outlined" (click)="menu7.toggle($event)"></button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="p-col-12 p-md-6 p-xl-4">
+            <div class="card tasks">
+                <div class="card-header">
+                    <h6>Tasks</h6>
+                </div>
+                <div>
+                    <div class="task task-1">
+                        <div class="task-info">
+                            <div class="task-name"><span>12</span> Orders to fulfill</div>
+                            <i class="pi pi-tag"></i>
+                        </div>
+                        <div class="task-progress">
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="task task-2">
+                        <div class="task-info">
+                            <div class="task-name"><span>40+</span> Payments to withdraw</div>
+                            <i class="pi pi-money-bill"></i>
+                        </div>
+                        <div class="task-progress">
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="task task-3">
+                        <div class="task-info">
+                            <div class="task-name"><span>4</span> Reports to revise</div>
+                            <i class="pi pi-file"></i>
+                        </div>
+                        <div class="task-progress">
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="task task-4">
+                        <div class="task-info">
+                            <div class="task-name"><span>6</span> Questions to respond</div>
+                            <i class="pi pi-comment"></i>
+                        </div>
+                        <div class="task-progress">
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="task task-5">
+                        <div class="task-info">
+                            <div class="task-name"><span>2</span> Chargebacks to review</div>
+                            <i class="pi pi-check-square"></i>
+                        </div>
+                        <div class="task-progress">
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="task task-1">
+                        <div class="task-info">
+                            <div class="task-name"><span>12</span> Orders to fulfill</div>
+                            <i class="pi pi-tag"></i>
+                        </div>
+                        <div class="task-progress">
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="task task-2">
+                        <div class="task-info">
+                            <div class="task-name"><span>40+</span> Payments to withdraw</div>
+                            <i class="pi pi-money-bill"></i>
+                        </div>
+                        <div class="task-progress">
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="p-col-12 p-xl-8">
+            <div class="card sales">
+                <div class="card-header">
+                    <h4>Recent Sales</h4>
+                    <p-dropdown [options]="orderWeek" [(ngModel)]="selectedOrderWeek" optionLabel="name" (onChange)="recentSales($event)"
+                                styleClass="dashbard-demo-dropdown" [ngStyle]="{'min-width': '8rem'}"></p-dropdown>
+                </div>
+
+                <p>Your sales activity over time.</p>
+
+
+                <p-table [value]="products" [paginator]="true" [rows]="5" styleClass="p-datatable-customers">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="id">ID
+                                <p-sortIcon field="id"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="category">Category
+                                <p-sortIcon field="category"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="price">Price
+                                <p-sortIcon field="price"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="inventoryStatus">Status
+                                <p-sortIcon field="inventoryStatus"></p-sortIcon>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-product>
+                        <tr>
+                            <td>
+                                <span class="p-column-title">Id</span>
+                                {{product.id}}</td>
+                            <td>
+                                <span class="p-column-title">Category</span>
+                                {{product.category}}</td>
+                            <td>
+                                <span class="p-column-title">Price</span>
+                                {{product.price | currency:'USD'}}</td>
+                            <td>
+                                <span class="p-column-title">Status</span>
+                                <span
+                                    [class]="'product-badge status-' + product.inventoryStatus.toLowerCase()">{{product.inventoryStatus}}</span>
+                            </td>
+                            <td style="text-align: center">
+                                <button pButton type="button" icon="pi pi-search"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
 </div>

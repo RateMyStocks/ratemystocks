@@ -5,7 +5,6 @@ import { PASSWORD_REGEX, PASSWORD_VALIDATION_MESSAGE } from '@ratemystocks/regex
 import { AuthService } from '../../../../core/services/auth.service';
 import { AuthFormComponent } from '../../components/auth-form/auth-form.component';
 import { ChangePasswordDto } from '@ratemystocks/api-interface';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { passwordMatchValidator } from '../../../../shared/utilities/form-password-match-validator';
 
 @Component({
@@ -19,8 +18,7 @@ export class ResetPasswordComponent extends AuthFormComponent {
     authService: AuthService,
     router: Router,
     private activatedRoute: ActivatedRoute,
-    private router2: Router,
-    private matSnackBar: MatSnackBar
+    private router2: Router
   ) {
     super(authService, router);
 
@@ -100,10 +98,10 @@ export class ResetPasswordComponent extends AuthFormComponent {
           () => {
             this.isLoading = false;
             this.router2.navigate(['/auth/signin']);
-            this.matSnackBar.open('Your password has been successfully reset!', 'OK', {
-              duration: 2000,
-              panelClass: 'success-snackbar',
-            });
+            // this.matSnackBar.open('Your password has been successfully reset!', 'OK', {
+            //   duration: 2000,
+            //   panelClass: 'success-snackbar',
+            // });
           },
           () => {
             this.isLoading = false;
