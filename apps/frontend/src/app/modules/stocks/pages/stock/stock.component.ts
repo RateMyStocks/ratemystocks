@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { ProductService } from '../../../../core/services/productservice';
 import { Product } from '../../../../shared/models/product';
 import { AppBreadcrumbService } from '../../../../app.breadcrumb.service';
 import { AppMainComponent } from '../../../../app.main.component';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   templateUrl: './stock.component.html',
@@ -45,7 +46,8 @@ export class StockComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private breadcrumbService: AppBreadcrumbService,
-    private appMain: AppMainComponent
+    private appMain: AppMainComponent,
+    @Inject(DOCUMENT) private document: Document
   ) {
     this.breadcrumbService.setItems([{ label: 'Home' }, { label: 'Portfolios', routerLink: ['/portfolios'] }]);
   }
@@ -168,8 +170,8 @@ export class StockComponent implements OnInit {
         {
           data: [48, 52],
           backgroundColor: [
-            getComputedStyle(document.body).getPropertyValue('--primary-dark-color') || '#2c84d8',
-            getComputedStyle(document.body).getPropertyValue('--content-alt-bg-color') || '#B1B9C9',
+            getComputedStyle(this.document.body).getPropertyValue('--primary-dark-color') || '#2c84d8',
+            getComputedStyle(this.document.body).getPropertyValue('--content-alt-bg-color') || '#B1B9C9',
           ],
           borderWidth: 0,
         },
