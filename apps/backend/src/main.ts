@@ -1,8 +1,3 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { Logger } from '@nestjs/common';
@@ -36,7 +31,13 @@ async function bootstrap() {
       }
     });
 
-    const whitelist = ['https://ratemystocks.com', 'https://ratemystocks-staging.herokuapp.com'];
+    const whitelist = [
+      'https://ratemystocks.com',
+      'https://www.ratemystocks.com',
+      'https://ratemystocks-staging.herokuapp.com',
+      'https://www.ratemystocks-staging.herokuapp.com'
+    ];
+
     app.enableCors({
       credentials: true,
       origin: (origin, callback) => {
