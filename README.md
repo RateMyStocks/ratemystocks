@@ -18,13 +18,14 @@ For more info on our development processes, visit our [wiki](https://github.com/
 2. Install Angular CLI: `npm install -g @angular/cli`.
 3. Install Nx CLI Globally: `npm install -g nx`.
 4. Install Docker: [Docker Download](https://docs.docker.com/get-docker/)
+5. (Optional) Install [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
 
 # Running the app locally
 
 1. `cd` into the root directory of the project from a command line.
 2. `npm install` - Install the dependencies in the local node_modules folder.
 3. Create a `.env` file based off of `.env.example`. You will need to update this file with your API keys for all the 3rd-party APIs we use - Contact us to get setup with API keys.
-4. `docker-compose up` - This will run the Postgres database & Redis cache as containers. NOTE: You don't need to run this command every time you run the app, only if the containers have stopped. As long as the containers are running, the app should be able to connect.
+4. `docker-compose up -d` - This will run the Postgres database & Redis cache as containers in the background. NOTE: You don't need to run this command every time you run the app, only if the containers have stopped (run `docker-compose down` to stop them). As long as the containers are running, the app should be able to connect.
 5. `npm run dev` - This will run NestJS (backend) & Angular (frontend) dev servers in parallel, both in watch mode.
 6. Go to `localhost:4200` in your browser. `IMPORTANT`: Makes sure you are not connected to any VPN - it might block your requests made to the 3rd party APIs we use.
 
@@ -45,9 +46,11 @@ For more info on our development processes, visit our [wiki](https://github.com/
 
 ## Heroku
 
-1. Tail Heroku Logs in Real-Time: `heroku logs --tail -a <heroku-environment-name>`
-2. Remotely connect to Heroku Postgres database: `heroku pg:psql -a <heroku-environment-name>`
-3. See Heroku config vars: `heroku config -a <heroku-environment-name>`
+1. Login to Heroku to use the CLI: `heroku login`
+2. Heroku Exec (SSH Tunneling) - Remotely connect to Heroku web dyno: `heroku ps:exec <heroku-environment-name>`
+3. Tail Heroku Logs in Real-Time: `heroku logs --tail -a <heroku-environment-name>`
+4. Remotely connect to Heroku Postgres database: `heroku pg:psql -a <heroku-environment-name>`
+5. See Heroku config vars: `heroku config -a <heroku-environment-name>`
 
 ## Accessing pgAdmin
 

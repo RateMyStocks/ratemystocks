@@ -8,6 +8,7 @@
     "ms-azuretools.vscode-docker",
     "dbaeumer.vscode-eslint",
     "ashinzekene.nestjs",
-    "xabikos.javascriptsnippets"
+    "xabikos.javascriptsnippets",
+    "coenraads.bracket-pair-colorizer-2"
   ]
 }
