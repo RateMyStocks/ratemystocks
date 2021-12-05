@@ -1,22 +1,40 @@
 # RateMyStocks
 
-ratemystocks.com is a community-driven stock market research platform and investor social network.
+[ratemystocks.com](https://ratemystocks.com) is a community-driven stock market research platform and investor social network.
+This is a Nx monorepo that contains a NestJS backend API that connects to a PostgreSQL database, and an Angular UI that consumes the API.
 
-For more info, visit our [wiki](https://github.com/RateMyStocks/ratemystocks/wiki)
+For more info on our development processes, visit our [wiki](https://github.com/RateMyStocks/ratemystocks/wiki)
+
+# Getting Started
+
+## Recommended Workspace Setup
+
+1. Install [Visual Studio Code](https://code.visualstudio.com/)
+2. Install the `Workspace Recommendations` which are plugins specified in the `.vscode/extensions.json` file. When you open the project in VS Code, a prompt at the bottom right saying "Do you want to install the recommended extensions for this repository?". When you see this,
 
 # Prerequisites
 
-# Getting Started - Running the app
-
 1. Install Node.js & npm: [Node.js Download](https://nodejs.org/en/download/)
+2. Install Angular CLI: `npm install -g @angular/cli`.
+3. Install Nx CLI Globally: `npm install -g nx`.
+4. Install Docker: [Docker Download](https://docs.docker.com/get-docker/)
+5. (Optional) Install [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
+
+# Running the app locally
+
+1. `cd` into the root directory of the project from a command line.
 2. `npm install` - Install the dependencies in the local node_modules folder.
-3. `npm install -g nx` - This installs the Nx CLI globally on your machine.
-4. `npm install -g sass` - Install Sass on the command line, so you can run the sass executable to compile .sass and .scss files to .css files.
-5. Create a `.env` file based off of `.env.example` but with real database connection info and API keys.
-6. Install PostgresSQL locally and create a database with database called `ratemystocks`. The credentials much match the `DATABASE_URL` in `.env.example`.
-7. Install & run Redis (You can use docker i.e. `docker pull redis` followed by `docker run -p 6379:6379 --name redis -d redis`)
-8. `npm run dev` - This will run NestJS (backend) & Angular (frontend) dev servers in parallel, both in watch mode.
-9. Go to `localhost:4200` in your browser. `IMPORTANT`: Makes sure you are not connected to any VPN - it might block your requests made to the 3rd party APIs we use.
+3. Create a `.env` file based off of `.env.example`. You will need to update this file with your API keys for all the 3rd-party APIs we use - Contact us to get setup with API keys.
+4. `docker-compose up -d` - This will run the Postgres database & Redis cache as containers in the background. NOTE: You don't need to run this command every time you run the app, only if the containers have stopped (run `docker-compose down` to stop them). As long as the containers are running, the app should be able to connect.
+5. `npm run dev` - This will run NestJS (backend) & Angular (frontend) dev servers in parallel, both in watch mode.
+6. Go to `localhost:4200` in your browser. `IMPORTANT`: Makes sure you are not connected to any VPN - it might block your requests made to the 3rd party APIs we use.
+
+# Common Tasks
+
+## Common Nx commands
+
+- Generate NestJS module `ng g @nrwl/nest:module app/modules/<MODULE-NAME> --project=backend`
+- Generate Angular component `ng g c modules/<MODULE-NAME>/<COMPONENT-NAME>`
 
 ## Generating TypeORM Migrations:
 
@@ -26,16 +44,17 @@ For more info, visit our [wiki](https://github.com/RateMyStocks/ratemystocks/wik
 4. Import the new migration into the `migrations` array of `ormconfig.ts`.
 5. Since we have `migrationsRun: true` in `ormconfig.ts`, you just have to run the application to run the migrations. If you for some reason do need to run migrations manually, you can do `npm run typeorm:migration:run`.
 
-## Common Nx commands
-
-- Generate NestJS module `ng g @nrwl/nest:module app/modules/<MODULE-NAME> --project=backend`
-- Generate Angular component `ng g c modules/<MODULE-NAME>/<COMPONENT-NAME>`
-
 ## Heroku
 
-1. Tail Heroku Logs in Real-Time: `heroku logs --tail -a <heroku-environment-name>`
-2. Remotely connect to Heroku Postgres database: `heroku pg:psql -a <heroku-environment-name>`
-3. See Heroku config vars: `heroku config -a <heroku-environment-name>`
+1. Login to Heroku to use the CLI: `heroku login`
+2. Heroku Exec (SSH Tunneling) - Remotely connect to Heroku web dyno: `heroku ps:exec <heroku-environment-name>`
+3. Tail Heroku Logs in Real-Time: `heroku logs --tail -a <heroku-environment-name>`
+4. Remotely connect to Heroku Postgres database: `heroku pg:psql -a <heroku-environment-name>`
+5. See Heroku config vars: `heroku config -a <heroku-environment-name>`
+
+## Accessing pgAdmin
+
+1. After you have run `docker-compose up`, navigate to `http://localhost:5050/` and login with the admin credentials specified in the docker-compose.yml (see the values for `PGADMIN_DEFAULT_EMAIL` & `PGADMIN_DEFAULT_PASSWORD`).
 
 # Nx
 

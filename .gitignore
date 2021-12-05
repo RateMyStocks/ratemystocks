@@ -38,7 +38,7 @@ testem.log
 .DS_Store
 Thumbs.db
 
-#
+# Environment
 .env
 
 
@@ -96,3 +96,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Docker Volume
+postgresql_database_data/

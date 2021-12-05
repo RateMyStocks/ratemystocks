@@ -3,6 +3,12 @@
     "angular.ng-template",
     "nrwl.angular-console",
     "esbenp.prettier-vscode",
-    "firsttris.vscode-jest-runner"
+    "firsttris.vscode-jest-runner",
+    "johnpapa.angular2",
+    "ms-azuretools.vscode-docker",
+    "dbaeumer.vscode-eslint",
+    "ashinzekene.nestjs",
+    "xabikos.javascriptsnippets",
+    "coenraads.bracket-pair-colorizer-2"
   ]
 }
