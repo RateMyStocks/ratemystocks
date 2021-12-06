@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
@@ -28,6 +28,7 @@ import { CoreModule } from './core/core.module';
 import { PrimeNGModule } from './primeng.module';
 import { AppTopBarComponent } from './app.topbar.component';
 import { SharedModule } from './shared/shared.module';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import { SharedModule } from './shared/shared.module';
     FormsModule,
     HttpClientModule,
     PrimeNGModule,
+    ReactiveFormsModule,
     SharedModule,
   ],
   declarations: [
@@ -59,8 +61,9 @@ import { SharedModule } from './shared/shared.module';
   ],
   providers: [
     // { provide: LocationStrategy, useClass: HashLocationStrategy },
-    MenuService,
     AppBreadcrumbService,
+    MenuService,
+    MessageService,
   ],
   bootstrap: [AppComponent],
 })

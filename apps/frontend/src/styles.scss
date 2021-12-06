@@ -8,6 +8,8 @@ $gutter: 1rem; //for primeflex grid system
 // @import "../node_modules/@fullcalendar/daygrid/main.min.css";
 // @import "../node_modules/@fullcalendar/timegrid/main.min.css";
 // @import "assets/demo/flags/flags.css";
+@use './assets/sass/variables/_variables' as variables;
+
 @import 'primeng/resources/primeng.min.css';
 @import 'primeflex/primeflex.scss';
 @import 'primeicons/primeicons.css';
@@ -15,3 +17,10 @@ $gutter: 1rem; //for primeflex grid system
 @import '@fullcalendar/daygrid/main.min.css';
 @import '@fullcalendar/timegrid/main.min.css';
 @import 'assets/demo/flags/flags.css';
+
+/** Global Classes */
+.page-header {
+  display: inline-block;
+  border-bottom: 4px solid variables.$rms-green;
+  padding-bottom: 2px;
+}
