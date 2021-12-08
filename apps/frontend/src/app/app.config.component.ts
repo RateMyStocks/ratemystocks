@@ -211,7 +211,7 @@ import { AppMainComponent } from './app.main.component';
   `,
 })
 export class AppConfigComponent implements OnInit {
-  themes: any[];
+  themes!: { name: string; color: string }[];
 
   theme = 'denim';
 
@@ -238,7 +238,7 @@ export class AppConfigComponent implements OnInit {
     ];
   }
 
-  onLayoutModeChange(event) {
+  onLayoutModeChange(event: Event) {
     this.app.menuTheme = this.app.layoutMode;
     this.app.topbarTheme = this.app.layoutMode;
 
@@ -247,14 +247,14 @@ export class AppConfigComponent implements OnInit {
     this.replaceLink(layoutLink, layoutHref);
 
     const themeLink = this.document.getElementById('theme-css');
-    const urlTokens = themeLink.getAttribute('href').split('/');
+    const urlTokens = themeLink!.getAttribute('href')!.split('/');
     urlTokens[urlTokens.length - 1] = 'theme-' + this.app.layoutMode + '.css';
     const newURL = urlTokens.join('/');
 
-    this.replaceLink(themeLink, newURL, this.appMain['refreshTrafficChart']);
+    this.replaceLink(<HTMLElement>themeLink, newURL, this.appMain['refreshTrafficChart']);
   }
 
-  changeTheme(theme) {
+  changeTheme(theme: string) {
     this.theme = theme;
 
     const themeLink: HTMLLinkElement = this.document.getElementById('theme-css') as HTMLLinkElement;
@@ -266,7 +266,7 @@ export class AppConfigComponent implements OnInit {
     return /(MSIE|Trident\/|Edge\/)/i.test(window.navigator.userAgent);
   }
 
-  replaceLink(linkElement, href, callback?) {
+  replaceLink(linkElement: HTMLElement, href: string, callback?: () => unknown) {
     if (this.isIE()) {
       linkElement.setAttribute('href', href);
       if (callback) {
@@ -274,16 +274,16 @@ export class AppConfigComponent implements OnInit {
       }
     } else {
       const id = linkElement.getAttribute('id');
-      const cloneLinkElement = linkElement.cloneNode(true);
+      const cloneLinkElement: Node = linkElement.cloneNode(true);
 
-      cloneLinkElement.setAttribute('href', href);
-      cloneLinkElement.setAttribute('id', id + '-clone');
+      (<Element>cloneLinkElement).setAttribute('href', href);
+      (<Element>cloneLinkElement).setAttribute('id', id + '-clone');
 
-      linkElement.parentNode.insertBefore(cloneLinkElement, linkElement.nextSibling);
+      linkElement!.parentNode!.insertBefore(cloneLinkElement, linkElement.nextSibling);
 
       cloneLinkElement.addEventListener('load', () => {
         linkElement.remove();
-        cloneLinkElement.setAttribute('id', id);
+        (<Element>cloneLinkElement).setAttribute('id', <string>id);
 
         if (callback) {
           callback();
@@ -292,7 +292,7 @@ export class AppConfigComponent implements OnInit {
     }
   }
 
-  onConfigButtonClick(event) {
+  onConfigButtonClick(event: Event) {
     this.appMain.configActive = !this.appMain.configActive;
     this.appMain.configClick = true;
     event.preventDefault();

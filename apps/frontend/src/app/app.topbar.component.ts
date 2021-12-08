@@ -1,32 +1,69 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthCredentialDto } from '@ratemystocks/api-interface';
 import { Subscription } from 'rxjs';
 import { AppComponent } from './app.component';
 import { AppMainComponent } from './app.main.component';
 import { AuthService } from './core/services/auth.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthCredentialDto, SignUpDto } from '@ratemystocks/api-interface';
+import { EMAIL_REGEX, PASSWORD_REGEX, PASSWORD_VALIDATION_MESSAGE, USERNAME_REGEX } from '@ratemystocks/regex-patterns';
+import { EmailFormFieldValidatorPipe } from './shared/pipes/email-form-field-validator.pipe';
+import { UsernameFormFieldValidatorPipe } from './shared/pipes/username-form-field-validator.pipe';
+import { passwordMatchValidator } from './shared/utilities/form-password-match-validator';
+
+enum AuthModeType {
+  LOGIN = 'Login',
+  SIGN_UP = 'Sign Up',
+  FORGOT_PASSWORD = 'Forgot Password',
+}
+class AuthMode {
+  constructor(public text: string, public type: AuthModeType) {}
+}
 
 @Component({
   selector: 'app-topbar',
   templateUrl: './app.topbar.component.html',
 })
 export class AppTopBarComponent implements OnInit {
-  userName: string;
-  avatar: string;
-  email: string;
-  authStatusSub: Subscription;
-  isAuth: boolean;
+  userName: string = '';
+  avatar: string = '';
+  email: string = '';
+  authStatusSub!: Subscription;
+  isAuth: boolean = false;
   displayLoginDialog: boolean = false;
 
-  // TODO: Move this into it's own component
-  loginForm: FormGroup = null;
   isLoading = false;
 
-  constructor(
-    public appMain: AppMainComponent,
-    public app: AppComponent,
-    private authService: AuthService // private messageService: MessageService
-  ) {}
+  authModeType = AuthModeType;
+  authMode: AuthMode = new AuthMode('Login', AuthModeType.LOGIN);
+
+  loginForm: FormGroup = new FormGroup({
+    usernameOrEmail: new FormControl(null, {
+      validators: [Validators.required],
+    }),
+    password: new FormControl(null, {
+      validators: [Validators.required],
+    }),
+  });
+
+  signupForm: FormGroup = new FormGroup(
+    {
+      username: new FormControl(null, {
+        validators: [Validators.required, Validators.pattern(USERNAME_REGEX)],
+      }),
+      email: new FormControl(null, {
+        validators: [Validators.required, Validators.pattern(EMAIL_REGEX)],
+      }),
+      password: new FormControl(null, {
+        validators: [Validators.required, Validators.pattern(PASSWORD_REGEX)],
+      }),
+      passwordReenter: new FormControl(null, {
+        validators: [Validators.required],
+      }),
+    },
+    { validators: passwordMatchValidator }
+  );
+
+  constructor(public appMain: AppMainComponent, public app: AppComponent, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.isAuth = this.authService.isAuthorized();
@@ -44,16 +81,6 @@ export class AppTopBarComponent implements OnInit {
         this.displayLoginDialog = false;
       }
     });
-
-    // TODO: Move this into it's own component
-    this.loginForm = new FormGroup({
-      usernameOrEmail: new FormControl(null, {
-        validators: [Validators.required],
-      }),
-      password: new FormControl(null, {
-        validators: [Validators.required],
-      }),
-    });
   }
 
   ngOnDestroy(): void {
@@ -64,11 +91,11 @@ export class AppTopBarComponent implements OnInit {
     this.authService.logOut();
   }
 
-  showLoginDialog() {
+  showLoginDialog(authModeType: AuthModeType) {
     this.displayLoginDialog = true;
+    this.authMode = new AuthMode(authModeType, authModeType);
   }
 
-  // TODO: Move this into it's own component
   onSubmitLoginForm(): void {
     // If the input for the usernameOrEmail field has an @ symbol, they are attempting to login with email.
     const username = this.loginForm.value.usernameOrEmail.includes('@') ? null : this.loginForm.value.usernameOrEmail;
@@ -79,10 +106,59 @@ export class AppTopBarComponent implements OnInit {
       email,
       password: this.loginForm.value.password,
     };
-    this.isLoading = true;
 
     this.authService.signin(credentials);
   }
 
-  showCaptchaResponse(event: unknown) {}
+  onSubmitSignupForm(): void {
+    const user: SignUpDto = {
+      username: this.signupForm.value.username,
+      password: this.signupForm.value.password,
+      email: this.signupForm.value.email,
+    };
+    this.authService.signUp(user);
+  }
+
+  setAuthMode(type: AuthModeType) {
+    this.authMode.type = type;
+
+    this.authMode = new AuthMode(type, type);
+  }
+
+  /*
+   * Sets errors on the passwordRenter field if the passwords don't match.
+   * Called on each input in either password field
+   */
+  onPasswordInput(): void {
+    if (this.signupForm.hasError('passwordMismatch')) {
+      this.signupForm.get('passwordReenter').setErrors([{ passwordMismatch: true }]);
+    } else {
+      this.signupForm.get('passwordReenter').setErrors(null);
+    }
+  }
+
+  /**
+   * Gets the appropriate error message for the 'password' form field.
+   * @return The error message based on the user input of the 'password' field.
+   */
+  getErrorPassword() {
+    return this.signupForm.get('password').hasError('required')
+      ? 'Password is required.'
+      : this.signupForm.get('password').hasError('pattern')
+      ? PASSWORD_VALIDATION_MESSAGE
+      : '';
+  }
+
+  /**
+   * Gets the appropriate error message for the 'passwordReenter' form field.
+   * @return The error message based on the user input of the 'passwordReenter' field.
+   */
+  getErrorPasswordReenter() {
+    return this.signupForm.get('passwordReenter').hasError('required')
+      ? 'Please confirm your password.'
+      : this.signupForm.get('passwordReenter').invalid
+      ? 'Password does not match.'
+      : '';
+  }
+  // showCaptchaResponse(event: unknown) {}
 }

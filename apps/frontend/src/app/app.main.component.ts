@@ -9,31 +9,31 @@ import { DOCUMENT } from '@angular/common';
   templateUrl: './app.main.component.html',
 })
 export class AppMainComponent implements AfterViewInit, OnDestroy {
-  rotateMenuButton: boolean;
+  rotateMenuButton!: boolean;
 
-  topbarMenuActive: boolean;
+  topbarMenuActive!: boolean;
 
-  overlayMenuActive: boolean;
+  overlayMenuActive!: boolean;
 
-  staticMenuDesktopInactive: boolean;
+  staticMenuDesktopInactive!: boolean;
 
-  staticMenuMobileActive: boolean;
+  staticMenuMobileActive!: boolean;
 
-  menuClick: boolean;
+  menuClick!: boolean;
 
-  topbarItemClick: boolean;
+  topbarItemClick!: boolean;
 
   activeTopbarItem: any;
 
-  documentClickListener: () => void;
+  documentClickListener!: () => void;
 
-  configActive: boolean;
+  configActive!: boolean;
 
-  configClick: boolean;
+  configClick!: boolean;
 
-  rightPanelActive: boolean;
+  rightPanelActive!: boolean;
 
-  rightPanelClick: boolean;
+  rightPanelClick!: boolean;
 
   menuHoverActive = false;
 
@@ -93,7 +93,7 @@ export class AppMainComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  onMenuButtonClick(event) {
+  onMenuButtonClick(event: Event) {
     this.rotateMenuButton = !this.rotateMenuButton;
     this.topbarMenuActive = false;
     this.menuClick = true;
@@ -116,11 +116,11 @@ export class AppMainComponent implements AfterViewInit, OnDestroy {
     event.preventDefault();
   }
 
-  onMenuClick($event) {
+  onMenuClick($event: Event) {
     this.menuClick = true;
   }
 
-  onTopbarItemClick(event, item) {
+  onTopbarItemClick(event: Event, item: Element) {
     this.topbarItemClick = true;
 
     if (this.activeTopbarItem === item) {
@@ -137,24 +137,24 @@ export class AppMainComponent implements AfterViewInit, OnDestroy {
     event.preventDefault();
   }
 
-  onTopbarSubItemClick(event) {
+  onTopbarSubItemClick(event: Event) {
     event.preventDefault();
   }
 
-  onRTLChange(event) {
-    this.app.isRTL = event.checked;
-  }
+  // onRTLChange(event: Event) {
+  //   this.app.isRTL = event.checked;
+  // }
 
-  onRippleChange(event) {
-    this.app.ripple = event.checked;
-    this.primengConfig.ripple = event.checked;
-  }
+  // onRippleChange(event) {
+  //   this.app.ripple = event.checked;
+  //   this.primengConfig.ripple = event.checked;
+  // }
 
-  onConfigClick(event) {
+  onConfigClick(event: Event) {
     this.configClick = true;
   }
 
-  onRightPanelButtonClick(event) {
+  onRightPanelButtonClick(event: Event) {
     this.rightPanelClick = true;
     this.rightPanelActive = !this.rightPanelActive;
     event.preventDefault();

@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
   inputStyle = 'outlined';
 
   // TODO: Remove
-  ripple: boolean;
+  ripple: boolean = false;
 
   constructor(
     private primengConfig: PrimeNGConfig,

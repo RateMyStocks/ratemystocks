@@ -21,12 +21,12 @@ const BACKEND_URL: string = environment.apiUrl + '/auth';
 })
 export class AuthService {
   private isAuthenticated = false;
-  private token: string;
+  private token: string = '';
   private tokenTimer: any;
-  private userId: string;
-  private username: string;
-  private email: string;
-  private spiritAnimal: string;
+  private userId = '';
+  private username = '';
+  private email = '';
+  private spiritAnimal = '';
   private authStatusListener: Subject<boolean> = new Subject<boolean>();
 
   constructor(

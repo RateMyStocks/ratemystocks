@@ -25,27 +25,27 @@ import { Product } from '../../../../shared/models/product';
   ],
 })
 export class StocksComponent implements OnInit {
-  customers1: Customer[];
+  customers1: Customer[] = [];
 
-  customers2: Customer[];
+  customers2: Customer[] = [];
 
-  customers3: Customer[];
+  customers3: Customer[] = [];
 
-  selectedCustomers1: Customer[];
+  selectedCustomers1: Customer[] = [];
 
   selectedCustomer: Customer;
 
-  representatives: Representative[];
+  representatives: Representative[] = [];
 
-  statuses: any[];
+  statuses: any[] = [];
 
-  products: Product[];
+  products: Product[] = [];
 
   rowGroupMetadata: any;
 
   activityValues: number[] = [0, 100];
 
-  @ViewChild('dt') table: Table;
+  @ViewChild('dt') table!: Table;
 
   constructor(
     private customerService: CustomerService,
