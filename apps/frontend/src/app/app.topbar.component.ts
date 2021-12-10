@@ -4,11 +4,12 @@ import { AppComponent } from './app.component';
 import { AppMainComponent } from './app.main.component';
 import { AuthService } from './core/services/auth.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthCredentialDto, SignUpDto } from '@ratemystocks/api-interface';
+import { AuthCredentialDto, ForgotPasswordDto, SignUpDto } from '@ratemystocks/api-interface';
 import { EMAIL_REGEX, PASSWORD_REGEX, PASSWORD_VALIDATION_MESSAGE, USERNAME_REGEX } from '@ratemystocks/regex-patterns';
 import { EmailFormFieldValidatorPipe } from './shared/pipes/email-form-field-validator.pipe';
 import { UsernameFormFieldValidatorPipe } from './shared/pipes/username-form-field-validator.pipe';
 import { passwordMatchValidator } from './shared/utilities/form-password-match-validator';
+import { Message, MessageService } from 'primeng/api';
 
 enum AuthModeType {
   LOGIN = 'Login',
@@ -24,14 +25,18 @@ class AuthMode {
   templateUrl: './app.topbar.component.html',
 })
 export class AppTopBarComponent implements OnInit {
-  userName: string = '';
-  avatar: string = '';
-  email: string = '';
+  userName = '';
+  avatar = '';
+  email = '';
   authStatusSub!: Subscription;
-  isAuth: boolean = false;
-  displayLoginDialog: boolean = false;
+  isAuth = false;
+  displayLoginDialog = false;
 
-  isLoading = false;
+  // isLoading = false;
+
+  // forgotPasswordEmailSent = false;
+
+  formErrorMessages: Message[] = [];
 
   authModeType = AuthModeType;
   authMode: AuthMode = new AuthMode('Login', AuthModeType.LOGIN);
@@ -63,7 +68,21 @@ export class AppTopBarComponent implements OnInit {
     { validators: passwordMatchValidator }
   );
 
-  constructor(public appMain: AppMainComponent, public app: AppComponent, private authService: AuthService) {}
+  forgotPasswordForm: FormGroup = new FormGroup({
+    email: new FormControl(null, {
+      validators: [Validators.required, Validators.pattern(EMAIL_REGEX)],
+    }),
+  });
+
+  filteredCountries: any[];
+  selectedCountryAdvanced: any[];
+
+  constructor(
+    public appMain: AppMainComponent,
+    public app: AppComponent,
+    private authService: AuthService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     this.isAuth = this.authService.isAuthorized();
@@ -79,6 +98,14 @@ export class AppTopBarComponent implements OnInit {
         this.email = this.authService.getEmail();
 
         this.displayLoginDialog = false;
+      } else {
+        this.formErrorMessages = [
+          {
+            severity: 'error',
+            summary: 'Login Failed',
+            detail: 'Please ensure your username & password are correct.',
+          },
+        ];
       }
     });
   }
@@ -87,15 +114,23 @@ export class AppTopBarComponent implements OnInit {
     this.authStatusSub.unsubscribe();
   }
 
+  /** */
   logOut(): void {
     this.authService.logOut();
   }
 
+  /**
+   *
+   * @param authModeType
+   */
   showLoginDialog(authModeType: AuthModeType) {
     this.displayLoginDialog = true;
     this.authMode = new AuthMode(authModeType, authModeType);
   }
 
+  /**
+   *
+   */
   onSubmitLoginForm(): void {
     // If the input for the usernameOrEmail field has an @ symbol, they are attempting to login with email.
     const username = this.loginForm.value.usernameOrEmail.includes('@') ? null : this.loginForm.value.usernameOrEmail;
@@ -110,6 +145,9 @@ export class AppTopBarComponent implements OnInit {
     this.authService.signin(credentials);
   }
 
+  /**
+   *
+   */
   onSubmitSignupForm(): void {
     const user: SignUpDto = {
       username: this.signupForm.value.username,
@@ -119,9 +157,39 @@ export class AppTopBarComponent implements OnInit {
     this.authService.signUp(user);
   }
 
+  /**
+   *
+   */
+  onSubmitForgotPassword(): void {
+    const email = this.forgotPasswordForm.value.email.includes('@') ? this.forgotPasswordForm.value.email : null;
+
+    this.authService.forgotPassword(email).subscribe(
+      () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success!',
+          detail: `An email to reset your password was sent to ${email}!`,
+        });
+        this.displayLoginDialog = false;
+      },
+      (error) => {
+        this.formErrorMessages = [
+          {
+            severity: 'error',
+            summary: 'Error!',
+            detail: `An error occurred resetting your password. Please try again or contact us if the issue persists.`,
+          },
+        ];
+      }
+    );
+  }
+
+  /**
+   *
+   * @param type
+   */
   setAuthMode(type: AuthModeType) {
     this.authMode.type = type;
-
     this.authMode = new AuthMode(type, type);
   }
 
@@ -161,4 +229,46 @@ export class AppTopBarComponent implements OnInit {
       : '';
   }
   // showCaptchaResponse(event: unknown) {}
+
+  // TODO: Remove this code
+  filterCountry(event) {
+    //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
+    // let filtered: any[] = [];
+    // let query = event.query;
+    // for (let i = 0; i < this.countries.length; i++) {
+    //   let country = this.countries[i];
+    //   if (country.symbol.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+    //     filtered.push(country);
+    //   }
+    // }
+
+    // TODO: Call Iex Cloud
+    const filtered = [
+      // { name: 'Afghanistan', code: 'AF' },
+      // { name: 'Åland Islands', code: 'AX' },
+      // { name: 'Albania', code: 'AL' },
+      // { name: 'Algeria', code: 'DZ' },
+      // { name: 'American Samoa', code: 'AS' },
+      // { name: 'Andorra', code: 'AD' },
+      {
+        symbol: 'MSFT',
+        // cik:
+        securityName: 'Microsoft',
+        securityType: 'Stock',
+        // region: string;
+        // exchange: string;
+        // sector: string;
+      },
+      {
+        symbol: 'AAPL',
+        // cik:
+        securityName: 'Apple',
+        securityType: 'Stock',
+        // region: string;
+        // exchange: string;
+        // sector: string;
+      },
+    ];
+    this.filteredCountries = filtered;
+  }
 }

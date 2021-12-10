@@ -20,6 +20,7 @@ import { AppNotfoundComponent } from './pages/app.notfound.component';
 import { AppErrorComponent } from './pages/app.error.component';
 import { AppAccessdeniedComponent } from './pages/app.accessdenied.component';
 import { AppLoginComponent } from './pages/app.login.component';
+import { AppResetPasswordComponent } from './pages/app.resetpassword.component';
 
 import { MenuService } from './app.menu.service';
 import { AppBreadcrumbService } from './app.breadcrumb.service';
@@ -29,6 +30,7 @@ import { PrimeNGModule } from './primeng.module';
 import { AppTopBarComponent } from './app.topbar.component';
 import { SharedModule } from './shared/shared.module';
 import { MessageService } from 'primeng/api';
+import { ResetPasswordLinkGuard } from './core/guards/reset-password-link.guard';
 
 @NgModule({
   imports: [
@@ -58,12 +60,14 @@ import { MessageService } from 'primeng/api';
     AppNotfoundComponent,
     AppErrorComponent,
     AppAccessdeniedComponent,
+    AppResetPasswordComponent,
   ],
   providers: [
     // { provide: LocationStrategy, useClass: HashLocationStrategy },
     AppBreadcrumbService,
     MenuService,
     MessageService,
+    ResetPasswordLinkGuard,
   ],
   bootstrap: [AppComponent],
 })

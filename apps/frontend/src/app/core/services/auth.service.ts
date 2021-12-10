@@ -27,6 +27,7 @@ export class AuthService {
   private username = '';
   private email = '';
   private spiritAnimal = '';
+  // TODO: Should this Subject emit the error too?
   private authStatusListener: Subject<boolean> = new Subject<boolean>();
 
   constructor(
@@ -152,15 +153,17 @@ export class AuthService {
           this.saveAuthData(token, expirationDate, this.userId, this.username, this.email, this.spiritAnimal);
 
           if (isNewUser) {
-            // this.dialog.open(WelcomeDialogComponent, {
-            //   data: {
-            //     user: response,
-            //   },
-            // });
+            this.messageService.add({
+              severity: 'success',
+              // summary: `Welcome ${authCredentials.username}!`,
+              summary: `Welcome to ratemystocks.com ${authCredentials.username ? authCredentials.username : ''}!`,
+              detail: `We have sent an email to {{ data.user.email }}. Please verify your account by clicking the link in the email`,
+            });
           } else {
             this.messageService.add({
               severity: 'success',
-              summary: `Welcome ${authCredentials.username}!`,
+              // summary: `Welcome ${authCredentials.username}!`,
+              summary: `Welcome ${authCredentials.username ? authCredentials.username : ''}!`,
               detail: 'You have logged in successfully.',
             });
           }
@@ -168,15 +171,15 @@ export class AuthService {
       },
       (error: any) => {
         this.authStatusListener.next(false);
-        if (error.status && error.status === StatusCodes.UNAUTHORIZED) {
-          this.messageService.add({
-            severity: 'error',
-            summary: `Authorization Error`,
-            detail: 'Login failed. Please ensure your username & password are correct.',
-          });
-        } else {
-          throw error;
-        }
+        // if (error.status && error.status === StatusCodes.UNAUTHORIZED) {
+        //   this.messageService.add({
+        //     severity: 'error',
+        //     summary: `Authorization Error`,
+        //     detail: 'Login failed. Please ensure your username & password are correct.',
+        //   });
+        // } else {
+        //   throw error;
+        // }
       }
     );
   }

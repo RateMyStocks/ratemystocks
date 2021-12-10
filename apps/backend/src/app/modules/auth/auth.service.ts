@@ -102,7 +102,7 @@ export class AuthService {
     const token = jwt.sign(payload, secret, { expiresIn: '15m' });
 
     // Create one-time link that is valid for 15 minutes
-    const oneTimeLink = `${process.env.FRONTEND_HOST}/auth/resetpassword/${user.id}/${token}`;
+    const oneTimeLink = `${process.env.FRONTEND_HOST}/resetpassword/${user.id}/${token}`;
     await sendForgotPasswordEmail(user.email, user.username, oneTimeLink);
   }
 

@@ -49,7 +49,7 @@ export class StockComponent implements OnInit {
     private appMain: AppMainComponent,
     @Inject(DOCUMENT) private document: Document
   ) {
-    this.breadcrumbService.setItems([{ label: 'Home' }, { label: 'Portfolios', routerLink: ['/portfolios'] }]);
+    this.breadcrumbService.setItems([{ label: 'Home' }, { label: 'Stocks', routerLink: ['/stocks'] }, { label: 'Ticker Symbol Here', routerLink: ['/portfolios'] }]);
   }
 
   ngOnInit() {
