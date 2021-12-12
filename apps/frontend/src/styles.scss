@@ -17,7 +17,21 @@ a:hover {
   cursor: pointer;
 }
 
+mark {
+  background-color: white !important;
+  color: variables.$rms-green !important;
+  // margin: 0px !important;
+}
+
 /** Global Classes */
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
 .page-header {
   display: inline-block;
   border-bottom: 4px solid variables.$rms-green;

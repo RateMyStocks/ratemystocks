@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppComponent } from './app.component';
 import { AppMainComponent } from './app.main.component';
 import { AuthService } from './core/services/auth.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthCredentialDto, ForgotPasswordDto, SignUpDto } from '@ratemystocks/api-interface';
+import { AuthCredentialDto, ForgotPasswordDto, IexCloudSearchDto, SignUpDto } from '@ratemystocks/api-interface';
 import { EMAIL_REGEX, PASSWORD_REGEX, PASSWORD_VALIDATION_MESSAGE, USERNAME_REGEX } from '@ratemystocks/regex-patterns';
 import { EmailFormFieldValidatorPipe } from './shared/pipes/email-form-field-validator.pipe';
 import { UsernameFormFieldValidatorPipe } from './shared/pipes/username-form-field-validator.pipe';
 import { passwordMatchValidator } from './shared/utilities/form-password-match-validator';
 import { Message, MessageService } from 'primeng/api';
+import { StockSearchService } from './core/services/stock-search.service';
+import { Router } from '@angular/router';
 
 enum AuthModeType {
   LOGIN = 'Login',
@@ -24,17 +26,13 @@ class AuthMode {
   selector: 'app-topbar',
   templateUrl: './app.topbar.component.html',
 })
-export class AppTopBarComponent implements OnInit {
+export class AppTopBarComponent implements OnInit, OnDestroy {
   userName = '';
   avatar = '';
   email = '';
   authStatusSub!: Subscription;
   isAuth = false;
   displayLoginDialog = false;
-
-  // isLoading = false;
-
-  // forgotPasswordEmailSent = false;
 
   formErrorMessages: Message[] = [];
 
@@ -74,14 +72,16 @@ export class AppTopBarComponent implements OnInit {
     }),
   });
 
-  filteredCountries: any[];
-  selectedCountryAdvanced: any[];
+  filteredStocks: IexCloudSearchDto[];
+  selectedStock: IexCloudSearchDto;
 
   constructor(
     public appMain: AppMainComponent,
     public app: AppComponent,
     private authService: AuthService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private stockSearchService: StockSearchService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -228,47 +228,37 @@ export class AppTopBarComponent implements OnInit {
       ? 'Password does not match.'
       : '';
   }
-  // showCaptchaResponse(event: unknown) {}
 
-  // TODO: Remove this code
-  filterCountry(event) {
-    //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
-    // let filtered: any[] = [];
-    // let query = event.query;
-    // for (let i = 0; i < this.countries.length; i++) {
-    //   let country = this.countries[i];
-    //   if (country.symbol.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-    //     filtered.push(country);
-    //   }
-    // }
-
-    // TODO: Call Iex Cloud
-    const filtered = [
-      // { name: 'Afghanistan', code: 'AF' },
-      // { name: 'Åland Islands', code: 'AX' },
-      // { name: 'Albania', code: 'AL' },
-      // { name: 'Algeria', code: 'DZ' },
-      // { name: 'American Samoa', code: 'AS' },
-      // { name: 'Andorra', code: 'AD' },
-      {
-        symbol: 'MSFT',
-        // cik:
-        securityName: 'Microsoft',
-        securityType: 'Stock',
-        // region: string;
-        // exchange: string;
-        // sector: string;
-      },
-      {
-        symbol: 'AAPL',
-        // cik:
-        securityName: 'Apple',
-        securityType: 'Stock',
-        // region: string;
-        // exchange: string;
-        // sector: string;
-      },
-    ];
-    this.filteredCountries = filtered;
+  /**
+   * 
+   * @param event 
+   */
+  searchStocks(event: { originalEvent: InputEvent, query: string}): void {
+    console.log(event);
+    this.stockSearchService.searchStocks(event.query).subscribe((result: IexCloudSearchDto[]) => {
+      this.filteredStocks= result;
+    });
   }
+
+  /**
+   * 
+   * @param selectStock 
+   */
+  onSelectStock(selectStock: IexCloudSearchDto): void {
+    const tickerSymbol: string = selectStock.symbol;
+
+    this.router.navigate(['/stocks', tickerSymbol]);
+  }
+
+  /**
+   * Wraps the matching search text with a <mark> element to highlight it.
+   * @param term The entered search term.
+   * @param result The result from the stock search.
+   * @return The updated string with the matched text highlighted.
+   */
+  highlightMatchingSearchText(term: string, result: string): string {
+    return result.replace(new RegExp(term, 'gi'), (match: string) => `<mark>${match}</mark>`);
+  }
+
+  // showCaptchaResponse(event: unknown) {}
 }

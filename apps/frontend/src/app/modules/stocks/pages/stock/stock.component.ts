@@ -5,6 +5,7 @@ import { Product } from '../../../../shared/models/product';
 import { AppBreadcrumbService } from '../../../../app.breadcrumb.service';
 import { AppMainComponent } from '../../../../app.main.component';
 import { DOCUMENT } from '@angular/common';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   templateUrl: './stock.component.html',
@@ -47,9 +48,24 @@ export class StockComponent implements OnInit {
     private productService: ProductService,
     private breadcrumbService: AppBreadcrumbService,
     private appMain: AppMainComponent,
+    private route: ActivatedRoute,
     @Inject(DOCUMENT) private document: Document
   ) {
-    this.breadcrumbService.setItems([{ label: 'Home' }, { label: 'Stocks', routerLink: ['/stocks'] }, { label: 'Ticker Symbol Here', routerLink: ['/portfolios'] }]);
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      // this.ticker = paramMap.get('ticker');
+      // this.stockService
+      //   .getStock(this.ticker)
+      //   .pipe(takeUntil(this.ngUnsubscribe))
+      //   .subscribe((response: any) => {
+      //     this.stock = response;
+
+      //     this.stockLoaded = true;
+
+      //     this.updateStockRatingsBarChartItems();
+      //   });
+      this.breadcrumbService.setItems([{ label: 'Home' }, { label: 'Stocks', routerLink: ['/stocks'] }, { label: paramMap.get('ticker') }]);
+    });
+    
   }
 
   ngOnInit() {

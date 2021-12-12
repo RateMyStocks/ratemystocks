@@ -157,7 +157,7 @@ export class AuthService {
               severity: 'success',
               // summary: `Welcome ${authCredentials.username}!`,
               summary: `Welcome to ratemystocks.com ${authCredentials.username ? authCredentials.username : ''}!`,
-              detail: `We have sent an email to {{ data.user.email }}. Please verify your account by clicking the link in the email`,
+              detail: `We have sent an email to ${authCredentials.email}. Please verify your account by clicking the link in the email`,
             });
           } else {
             this.messageService.add({
