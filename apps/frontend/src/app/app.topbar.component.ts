@@ -230,19 +230,18 @@ export class AppTopBarComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * 
-   * @param event 
+   *
+   * @param event
    */
-  searchStocks(event: { originalEvent: InputEvent, query: string}): void {
-    console.log(event);
+  searchStocks(event: { originalEvent: InputEvent; query: string }): void {
     this.stockSearchService.searchStocks(event.query).subscribe((result: IexCloudSearchDto[]) => {
-      this.filteredStocks= result;
+      this.filteredStocks = result;
     });
   }
 
   /**
-   * 
-   * @param selectStock 
+   *
+   * @param selectStock
    */
   onSelectStock(selectStock: IexCloudSearchDto): void {
     const tickerSymbol: string = selectStock.symbol;

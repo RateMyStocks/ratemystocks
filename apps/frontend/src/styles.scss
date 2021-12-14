@@ -32,6 +32,19 @@ mark {
   transform: translateY(-50%);
 }
 
+.vertically-and-horizontally-centered {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.centered-content {
+  display: flex !important;
+  align-items: center !important;
+}
+
 .page-header {
   display: inline-block;
   border-bottom: 4px solid variables.$rms-green;
@@ -42,7 +55,25 @@ mark {
 .p-invalid {
   color: red !important;
 }
-// p-input.ng-dirty.ng-invalid,
-// p-input.ng-touched.ng-invalid {
-//   border: 1px solid red !important;
-// }
+
+:host ::ng-deep .custom-spinner .p-progress-spinner-circle {
+  animation: custom-progress-spinner-dash 1.5s ease-in-out infinite,
+    custom-progress-spinner-color 6s ease-in-out infinite;
+}
+
+@keyframes p-progress-spinner-color {
+  100%,
+  0% {
+    stroke: variables.$rms-green;
+  }
+  40% {
+    stroke: variables.$rms-orange;
+  }
+  66% {
+    stroke: variables.$rms-blue;
+  }
+  80%,
+  90% {
+    stroke: variables.$rms-green;
+  }
+}

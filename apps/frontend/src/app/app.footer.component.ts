@@ -18,9 +18,9 @@ import { AppComponent } from './app.component';
         />
       </a>
       <div class="social-icons">
-        <a><i class="pi pi-github"></i></a>
-        <a><i class="pi pi-facebook"></i></a>
-        <a><i class="pi pi-twitter"></i></a>
+        <!-- <a><i class="pi pi-linkedin"></i></a> -->
+        <!-- <a><i class="pi pi-facebook"></i></a>
+        <a><i class="pi pi-twitter"></i></a> -->
       </div>
     </div>
   `,

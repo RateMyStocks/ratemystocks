@@ -1,9 +1,8 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { PortfolioModule } from '../../portfolio.module';
+import { PortfoliosModule } from '../../portfolios.module';
 
 import { UpdatePortfolioNameDialogComponent } from './update-portfolio-name-dialog.component';
 
@@ -14,11 +13,7 @@ describe('UpdatePortfolioNameDialogComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [UpdatePortfolioNameDialogComponent],
-      imports: [BrowserAnimationsModule, HttpClientTestingModule, PortfolioModule],
-      providers: [
-        { provide: MAT_DIALOG_DATA, useValue: { portfolio: { name: 'Some Portfolio Name' } } },
-        { provide: MatDialogRef, useValue: {} },
-      ],
+      imports: [BrowserAnimationsModule, HttpClientTestingModule, PortfoliosModule],
     }).compileComponents();
   }));
 

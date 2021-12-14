@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, Subject } from 'rxjs';
-import { timeout, catchError } from 'rxjs/operators';
+import { timeout, catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { IexCloudSearchDto } from '@ratemystocks/api-interface';
 
@@ -40,6 +40,7 @@ export class StockSearchService {
 
     return this.http.get<IexCloudSearchDto[]>(searchEndpoint).pipe(
       timeout(5000),
+      map((data: any[]) => data.filter((stock: IexCloudSearchDto) => stock.region.toLowerCase() === 'us')),
       catchError((e: any) => {
         return of(null);
       })

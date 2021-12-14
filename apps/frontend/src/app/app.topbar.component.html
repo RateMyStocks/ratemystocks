@@ -29,12 +29,10 @@
           <div class="search-input-wrapper">
             <span class="p-input-icon-left">
               <i class="pi pi-search"></i>
-              <!-- <input type="text" pInputText placeholder="Search..." /> -->
               <p-autoComplete [(ngModel)]="selectedStock" [suggestions]="filteredStocks"
                 (completeMethod)="searchStocks($event)" (onSelect)="onSelectStock($event)" field="name" placeholder="Search stocks">
                 <ng-template let-stock pTemplate="item">
-                  <div style="display: flex;
-                  align-items: center;">
+                  <div style="display: flex; align-items: center;">
                     <img
                       class="stock-logo p-mr-2"
                       src="https://storage.googleapis.com/iex/api/logos/{{ stock.symbol }}.png"
@@ -60,8 +58,29 @@
             <div class="search-input-wrapper p-fluid">
               <span class="p-input-icon-left">
                 <i class="pi pi-search"></i>
-                <!-- TODO: Update this to use the autocomplete stock search -->
-                <input type="text" pInputText placeholder="Search..." (click)="appMain.searchClick = true" />
+                <p-autoComplete [(ngModel)]="selectedStock" [suggestions]="filteredStocks" (click)="appMain.searchClick = true"
+                (completeMethod)="searchStocks($event)" (onSelect)="onSelectStock($event)" field="name" placeholder="Search stocks">
+                <ng-template let-stock pTemplate="item">
+                  <div style="display: flex;
+                  align-items: center;">
+                    <img
+                      class="stock-logo p-mr-2"
+                      src="https://storage.googleapis.com/iex/api/logos/{{ stock.symbol }}.png"
+                      onerror="this.onerror=null; this.src=''"
+                      style="width:24px;height: auto;"
+                    />
+                    <!-- <small [innerHTML]="highlightMatchingSearchText(selectedStock, stock.symbol)"> -->
+                    <small>
+                      <b>{{stock.symbol}}</b>
+                    </small>
+                    |
+                    <small>
+                    <!-- <small [innerHTML]="highlightMatchingSearchText(selectedStock, stock.securityName)"> -->
+                      {{ stock.securityName }}
+                    </small>
+                  </div>
+                </ng-template>
+              </p-autoComplete>
               </span>
             </div>
           </ul>
@@ -314,7 +333,6 @@
   </div>
 </div>
 
-<!-- <app-login-dialog [displayLoginDialog]="displayLoginDialog" [authMode]="authMode"></app-login-dialog> -->
 <!-- Login Dialog -->
 <p-dialog [header]="authMode.text" [(visible)]="displayLoginDialog" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '100vw'}"  [style]="{width: '22vw'}" [draggable]="false" [resizable]="false">
   <div [ngSwitch]="authMode.type">
@@ -341,12 +359,8 @@
                           </span>
                           <small *ngIf="!loginForm.controls['password'].valid && loginForm.controls['password'].touched" class="p-invalid">Please enter your password.</small>
                       </div>
-                      <p-button label="Login" type="submit" [disabled]="!loginForm.valid" styleClass="p-m-0"></p-button>
+                      <p-button label="Login" type="submit" [disabled]="!loginForm.valid" styleClass="p-mb-3"></p-button>
 
-                      <br>
-                      <br>
-
-                      <!-- <p>Don't have an account? <a href="#" (click)="setAuthMode(authModeType.SIGN_UP)"> Sign up</a></p> -->
                       <p>Don't have an account? <a (click)="setAuthMode(authModeType.SIGN_UP)"> Sign up</a></p>
                       <p><a (click)="setAuthMode(authModeType.FORGOT_PASSWORD)">Forgot Password?</a></p>
                   </div>
@@ -406,15 +420,11 @@
                         <!-- <small  class="p-invalid">{{ signupForm.controls['passwordReenter'] | passwordReenterFormFieldValidator }}</small> -->
                         <small *ngIf="!signupForm.controls['passwordReenter'].valid && signupForm.controls['passwordReenter'].touched" class="p-invalid">{{ getErrorPasswordReenter() }}</small>
                     </div>
-                      <p-button label="Sign Up" type="submit" [disabled]="!signupForm.valid" styleClass="p-m-0"></p-button>
+                      <p-button label="Sign Up" type="submit" [disabled]="!signupForm.valid" styleClass="p-mb-3"></p-button>
 
-                      <br />
-                      <br />
-                      <small
+                      <small class="p-mb-2"
                         >By registering, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy.</a></small
                       >
-                      <br />
-                      <br />
                       <p>Already have an account? <a (click)="setAuthMode(authModeType.LOGIN)">Login</a></p>
                   </div>
               </div>

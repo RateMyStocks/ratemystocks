@@ -1,10 +1,28 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { CustomerService } from '../../../../core/services/customerservice';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Table } from 'primeng/table';
-import { ProductService } from '../../../../core/services/productservice';
 import { AppBreadcrumbService } from '../../../../app.breadcrumb.service';
-import { Customer, Representative } from '../../../../shared/models/customer';
-import { Product } from '../../../../shared/models/product';
+import { MoneyFormatter } from '../../../../shared/utilities/money-formatter';
+import { FormControl } from '@angular/forms';
+import { MarketCap } from '../../../../shared/models/enums/market-cap';
+import { StockService } from '../../../../core/services/stock.service';
+import { IexCloudService } from '../../../../core/services/iex-cloud.service';
+import { IexCloudSecurityType, StockRatingListItem } from '@ratemystocks/api-interface';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { IexCloudCountryToIsoCode } from '../../../../shared/utilities/iex-cloud-country-to-code';
+import { SortEvent } from 'primeng/api';
+
+enum FilterType {
+  Search,
+  Country,
+  Sector,
+  MarketCap,
+}
+
+interface StocksTableDropdownType {
+  name: string;
+  code: 'most-popular' | 'most-liked' | 'most-disliked';
+}
 
 @Component({
   selector: 'app-stocks',
@@ -24,100 +42,181 @@ import { Product } from '../../../../shared/models/product';
     `,
   ],
 })
-export class StocksComponent implements OnInit {
-  customers1: Customer[] = [];
+export class StocksComponent implements OnInit, OnDestroy {
+  // MoneyFormatter & FilterType are needed in the HTML template, so they must be initialized like this
+  MoneyFormatter = MoneyFormatter;
+  IexCloudCountryToIsoCode = IexCloudCountryToIsoCode;
+  FilterType = FilterType;
+  IexCloudSecurityType = IexCloudSecurityType;
 
-  customers2: Customer[] = [];
+  stocks: StockRatingListItem[];
+  // iexStockDataMap: { [ticker: string]: { company: object; quote: object; stats: object } };
+  iexStockDataMap: unknown;
 
-  customers3: Customer[] = [];
+  countries = new FormControl();
+  countryList: Set<string> = new Set();
 
-  selectedCustomers1: Customer[] = [];
+  marketCap = new FormControl();
+  marketCapList: string[] = [
+    MarketCap.MegaCap,
+    MarketCap.LargeCap,
+    MarketCap.MidCap,
+    MarketCap.SmallCap,
+    MarketCap.MicroCap,
+  ];
 
-  selectedCustomer: Customer;
+  sectors = new FormControl();
+  sectorList: Set<string> = new Set();
 
-  representatives: Representative[] = [];
+  textSearchFilterBeingApplied: string;
+  countryFiltersBeingApplied: Set<string> = new Set();
+  marketCapFiltersBeingApplied: Set<string> = new Set();
+  sectorFiltersBeingApplied: Set<string> = new Set();
 
-  statuses: any[] = [];
+  selectedListType!: StocksTableDropdownType;
+  listTypes: StocksTableDropdownType[] = [
+    { name: 'Most Popular', code: 'most-popular' },
+    { name: 'Most Liked', code: 'most-liked' },
+    { name: 'Most Disliked', code: 'most-disliked' },
+  ];
 
-  products: Product[] = [];
-
-  rowGroupMetadata: any;
-
-  activityValues: number[] = [0, 100];
+  selectedTimeFrame;
+  timeframes = [
+    { value: 'all-time', name: 'All-time' },
+    { value: 1, name: 'Last 24 Hours' },
+    { value: 7, name: 'Last 7 Days' },
+    { value: 30, name: 'Last 30 Days' },
+  ];
+  private ngUnsubscribe = new Subject();
 
   @ViewChild('dt') table!: Table;
 
   constructor(
-    private customerService: CustomerService,
-    private productService: ProductService,
-    private breadcrumbService: AppBreadcrumbService
+    private breadcrumbService: AppBreadcrumbService,
+    private stockService: StockService,
+    private iexCloudService: IexCloudService
   ) {
     this.breadcrumbService.setItems([{ label: 'Home' }, { label: 'Stocks', routerLink: ['/uikit/table'] }]);
   }
 
   ngOnInit() {
-    this.customerService.getCustomersLarge().then((customers) => {
-      this.customers1 = customers;
-      // @ts-ignore
-      this.customers1.forEach((customer) => (customer.date = new Date(customer.date).toDateString()));
-    });
-    this.customerService.getCustomersMedium().then((customers) => (this.customers2 = customers));
-    this.customerService.getCustomersMedium().then((customers) => (this.customers3 = customers));
-    this.productService.getProductsWithOrdersSmall().then((data) => (this.products = data));
+    this.selectedListType = this.listTypes[0];
+    this.selectedTimeFrame = this.timeframes[0];
 
-    this.representatives = [
-      { name: 'Amy Elsner', image: 'amyelsner.png' },
-      { name: 'Anna Fali', image: 'annafali.png' },
-      { name: 'Asiya Javayant', image: 'asiyajavayant.png' },
-      { name: 'Bernardo Dominic', image: 'bernardodominic.png' },
-      { name: 'Elwin Sharvill', image: 'elwinsharvill.png' },
-      { name: 'Ioni Bowcher', image: 'ionibowcher.png' },
-      { name: 'Ivan Magalhaes', image: 'ivanmagalhaes.png' },
-      { name: 'Onyama Limba', image: 'onyamalimba.png' },
-      { name: 'Stephen Shaw', image: 'stephenshaw.png' },
-      { name: 'XuXue Feng', image: 'xuxuefeng.png' },
-    ];
+    this.stockService.getStocks('most-popular').subscribe((stocks: StockRatingListItem[]) => {
+      this.stocks = stocks;
 
-    this.statuses = [
-      { label: 'Unqualified', value: 'unqualified' },
-      { label: 'Qualified', value: 'qualified' },
-      { label: 'New', value: 'new' },
-      { label: 'Negotiation', value: 'negotiation' },
-      { label: 'Renewal', value: 'renewal' },
-      { label: 'Proposal', value: 'proposal' },
-    ];
-  }
-
-  onSort() {
-    this.updateRowGroupMetaData();
-  }
-
-  updateRowGroupMetaData() {
-    this.rowGroupMetadata = {};
-
-    if (this.customers3) {
-      for (let i = 0; i < this.customers3.length; i++) {
-        const rowData = this.customers3[i];
-        const representativeName = rowData.representative.name;
-
-        if (i === 0) {
-          this.rowGroupMetadata[representativeName] = {
-            index: 0,
-            size: 1,
-          };
-        } else {
-          const previousRowData = this.customers3[i - 1];
-          const previousRowGroup = previousRowData.representative.name;
-          if (representativeName === previousRowGroup) {
-            this.rowGroupMetadata[representativeName].size++;
-          } else {
-            this.rowGroupMetadata[representativeName] = {
-              index: i,
-              size: 1,
-            };
-          }
-        }
+      if (stocks.length > 0) {
+        this.updateIexStockDataMap();
       }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
+  /** Updates the map of ticker symbols to IEX Cloud API data */
+  updateIexStockDataMap(): void {
+    const tickerSymbols: string[] = this.stocks.map((stock: any) => stock.ticker);
+    this.iexCloudService
+      .batchGetStocks(tickerSymbols, ['stats', 'company', 'quote'])
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((result: any) => {
+        this.iexStockDataMap = result;
+
+        console.log('IEX CLOUD RESULTS: ', this.iexStockDataMap);
+
+        // Populate list to populate Country Filter dropdown
+        this.stocks.forEach((stock: any) => {
+          this.countryList.add(this.iexStockDataMap[stock.ticker]?.company?.country);
+          this.sectorList.add(this.iexStockDataMap[stock.ticker]?.company?.sector);
+        });
+
+        console.log(this.countryList);
+        console.log(this.sectorList);
+      });
+  }
+
+  /**
+   *
+   * @param event
+   */
+  onSelectListType(event: unknown) {
+    const lastNDays: number = this.selectedTimeFrame.value !== 'all-time' ? this.selectedTimeFrame.value : null;
+    this.stockService.getStocks(this.selectedListType.code, lastNDays).subscribe((stocks: StockRatingListItem[]) => {
+      this.stocks = stocks;
+
+      if (stocks.length > 0) {
+        this.updateIexStockDataMap();
+      }
+    });
+  }
+
+  /**
+   *
+   * @param event
+   */
+  customSort(event: SortEvent) {
+    if (event.field === 'country') {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(
+          event,
+          this.iexStockDataMap[data1.ticker]?.company?.country,
+          this.iexStockDataMap[data2.ticker]?.company?.country
+        );
+      });
+    } else if (event.field === 'price') {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(
+          event,
+          this.iexStockDataMap[data1.ticker]?.quote?.latestPrice,
+          this.iexStockDataMap[data2.ticker]?.quote?.latestPrice
+        );
+      });
+    } else if (event.field === 'sector') {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(
+          event,
+          this.iexStockDataMap[data1.ticker]?.company?.sector,
+          this.iexStockDataMap[data2.ticker]?.company?.sector
+        );
+      });
+    } else if (event.field === 'dividend') {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(
+          event,
+          this.iexStockDataMap[data1.ticker]?.stats?.dividendYield,
+          this.iexStockDataMap[data2.ticker]?.stats?.dividendYield
+        );
+      });
+    } else if (event.field === 'marketcap') {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(
+          event,
+          this.iexStockDataMap[data1.ticker]?.stats?.marketcap,
+          this.iexStockDataMap[data2.ticker]?.stats?.marketcap
+        );
+      });
+    } else {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(event, data1[event.field], data2[event.field]);
+      });
     }
+  }
+
+  private sortCompare(event, data1, data2) {
+    let value1 = data1;
+    let value2 = data2;
+    let result = null;
+
+    if (value1 == null && value2 != null) result = -1;
+    else if (value1 != null && value2 == null) result = 1;
+    else if (value1 == null && value2 == null) result = 0;
+    else if (typeof value1 === 'string' && typeof value2 === 'string') result = value1.localeCompare(value2);
+    else result = value1 < value2 ? -1 : value1 > value2 ? 1 : 0;
+
+    return event.order * result;
   }
 }

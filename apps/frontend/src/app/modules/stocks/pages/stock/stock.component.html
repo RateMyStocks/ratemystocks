@@ -5,44 +5,54 @@
     </a>
 </div>
 
-<div class="layout-dashboard">
+<div class="layout-dashboard" *ngIf="stock; else stockNotLoaded">
     <div class="p-grid">
         <div class="p-col-12 p-md-12 p-xl-9">
             <div class="p-grid">
                 <div class="p-col-12 p-md-12 p-xl-4">
                     <div class="card overview-box-1 blue">
                         <div class="card-header">
-                            <h6>Revenue Status</h6>
+                            <h6>{{ stock.data.stats.companyName }} | {{ stock.data.company.exchange }}</h6>
                             <div class="header-buttons">
-                                <a href="#"><i class="pi pi-arrow-up"></i></a>
+                                <a href="#"><i class="pi pi-star-o"></i></a>
                             </div>
                         </div>
                         <div class="overview-content">
-                            <h3>87363</h3>
-                            <div class="overview-graph">
-                                <span style="height: 12px;"><span class="graph-tooltip">12</span></span>
-                                <span style="height: 40px;"><span class="graph-tooltip">40</span></span>
-                                <span style="height: 26px;"><span class="graph-tooltip">26</span></span>
-                                <span style="height: 17px;"><span class="graph-tooltip">17</span></span>
-                                <span style="height: 36px;"><span class="graph-tooltip">36</span></span>
-                                <span style="height: 51px;"><span class="graph-tooltip">51</span></span>
-                            </div>
+                            <h3 style="display: flex; align-items: center;">
+                              <img
+                                class="stock-logo p-mr-4"
+                                src="https://storage.googleapis.com/iex/api/logos/{{ ticker }}.png"
+                                onerror="this.onerror=null; this.src=''"
+                                style="width:40px;height: auto;"
+                              />
+                              <b>{{ ticker }}</b>
+                            </h3>
+                            <div>
+                              <h4 [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }">
+                                ${{ stock.data.quote.latestPrice?.toLocaleString(undefined, {minimumFractionDigits: 2}) }}
+                              </h4>
+                          </div>
                         </div>
                         <div class="overview-footer">
-                            <span><i class="pi pi-arrow-up"></i> <span>55%</span> increase in today sales</span>
+                            <!-- <span><i class="pi pi-arrow-up"></i> <span>55%</span> increase in today sales</span> -->
+                            <small [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }"
+                              ><span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote.change }} ({{
+                                (stock.data.quote.changePercent * 100)?.toFixed(2)
+                              }}%)</small
+                            >
                         </div>
                     </div>
                 </div>
                 <div class="p-col-12 p-md-12 p-xl-4">
                     <div class="card overview-box-1 teal">
                         <div class="card-header">
-                            <h6>Page View</h6>
+                            <h6>Followers</h6>
                             <div class="header-buttons">
-                                <a href="#"><i class="pi pi-arrow-up"></i></a>
+                                <!-- <a href="#"><i class="pi pi-arrow-up"></i></a> -->
                             </div>
                         </div>
                         <div class="overview-content">
-                            <h3>5592</h3>
+                            <h3>{{followers}}</h3>
                             <div class="overview-graph">
                                 <span style="height: 30px;"><span class="graph-tooltip">30</span></span>
                                 <span style="height: 43px;"><span class="graph-tooltip">43</span></span>
@@ -53,7 +63,7 @@
                             </div>
                         </div>
                         <div class="overview-footer down">
-                            <span><i class="pi pi-arrow-down"></i> <span>12%</span> decrease in today sales</span>
+                            <span><i class="pi pi-arrow-down"></i> <span>12%</span> decrease in followers today.</span>
                         </div>
                     </div>
                 </div>
@@ -62,11 +72,11 @@
                         <div class="card-header">
                             <h6>Bounce Rate</h6>
                             <div class="header-buttons">
-                                <a href="#"><i class="pi pi-arrow-up"></i></a>
+                                <!-- <a href="#"><i class="pi pi-arrow-up"></i></a> -->
                             </div>
                         </div>
                         <div class="overview-content">
-                            <h3>55.95%</h3>
+                            <!-- <h3>55.95%</h3>
                             <div class="overview-graph">
                                 <span style="height: 20px;"><span class="graph-tooltip">20</span></span>
                                 <span style="height: 23px;"><span class="graph-tooltip">23</span></span>
@@ -74,19 +84,19 @@
                                 <span style="height: 18px;"><span class="graph-tooltip">18</span></span>
                                 <span style="height: 28px;"><span class="graph-tooltip">28</span></span>
                                 <span style="height: 42px;"><span class="graph-tooltip">42</span></span>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="overview-footer">
-                            <span><i class="pi pi-arrow-up"></i> <span>6%</span> increase in today sales</span>
+                            <!-- <span><i class="pi pi-arrow-up"></i> <span>6%</span> increase in today sales</span> -->
                         </div>
                     </div>
                 </div>
                 <div class="p-col-12">
                     <div class="card sale-graph">
                         <div class="card-header">
-                            <h6>Top Products</h6>
+                            <h6>Performance</h6>
                         </div>
-                        <div id="order-tabs-container" class="order-tabs">
+                        <!-- <div id="order-tabs-container" class="order-tabs">
                             <div class="order-tab" [ngClass]="{'order-tab-active':activeOrders===0}"
                                  (click)="changeDataset($event); orders.refresh()"
                                  data-label="New Sales" data-index="0" data-stroke="#00acac" >
@@ -99,9 +109,9 @@
                                 <h6>Previous Week</h6>
                                 <h3>$244.40</h3>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="overview-chart">
-                            <p-chart #orders type="line" [data]="ordersChart" [options]="ordersOptions" [responsive]="true"></p-chart>
+                            <app-stock-performance-chart [ticker]="ticker"></app-stock-performance-chart>
                         </div>
                     </div>
                 </div>
@@ -113,58 +123,128 @@
                 <div class="p-col-12 p-md-6 p-xl-12">
                     <div class="card traffic">
                         <div class="card-header">
-                            <h6>Traffic</h6>
+                            <h6>User Ratings</h6>
                         </div>
-                        <span>26 May - 27 May</span>
+                        <!-- <span>26 May - 27 May</span> -->
                         <div class="traffic-chart">
                             <p-chart #traffic type="doughnut" [data]="trafficChart" [options]="trafficOptions" [responsive]="true" width="210px" height="210px"></p-chart>
                         </div>
                         <div id="traffic-tabs-container" class="traffic-tabs">
                             <div class="traffic-tab" [ngClass]="{'traffic-tab-active':activeTraffic===0}"
-                                 (click)="changeTrafficset($event); traffic.refresh()"
+                                 (click)="toggleStockRating($event, 'buy'); traffic.refresh()"
                                  data-label="New Sales" data-index="0"  >
-                                <h6>48%</h6>
-                                <i class="pi pi-facebook"></i>
-                                <span>Facebook</span>
+                                <h6>50%</h6>
+                                <!-- <i class="pi pi-facebook"></i> -->
+                                <!-- <h6>Buy <span style="color: #3ac961; font-size: 32px;">&#8226;</span></h6> -->
+                                <h6 style="text-decoration: 2px underline #3ac961; text-underline-offset: 4px;">Buy</h6>
                             </div>
                             <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===1}"
-                                 (click)="changeTrafficset($event); traffic.refresh()"
+                                 (click)="toggleStockRating($event, 'hold'); traffic.refresh()"
                                  data-label="Previous Sales" data-index="1">
-                                <h6>26%</h6>
-                                <i class="pi pi-twitter"></i>
-                                <span>Twitter</span>
+                                <h6>25%</h6>
+                                <h6 style="text-decoration: 2px underline #c98b3a; text-underline-offset: 4px;">Hold</h6>
                             </div>
                             <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===2}"
-                                 (click)="changeTrafficset($event); traffic.refresh()"
+                                 (click)="toggleStockRating($event, 'sell'); traffic.refresh()"
                                  data-label="Previous Sales" data-index="2">
-                                <h6>17%</h6>
-                                <i class="pi pi-github"></i>
-                                <span>Github</span>
+                                <h6>25%</h6>
+                                <!-- <i class="pi pi-github"></i> -->
+                                <h6 style="text-decoration: 2px underline red; text-underline-offset: 4px;">Sell</h6>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="p-col-12 p-md-6 p-xl-12">
-                    <div class="card goals">
+                    <!-- <div class="card">
                         <div class="card-header">
-                            <h6>Today's Goal</h6>
-                            <span><span>183</span> / 255</span>
+                            <h6>About</h6>
                         </div>
-                        <span>22 June, 2020</span>
-                        <div class="goal-graph">
-                            <p-chart #goal type="pie" [data]="goalChart" [options]="goalOptions" [responsive]="true" [style]="{'width': '50%'}"></p-chart>
+                        <br>
+                        <p>{{ stock.data.company.description }}</p>
+                    </div> -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h6>Company Info</h6>
                         </div>
+                        <div class="p-mb-2"><small><b>CEO:</b> {{ stock.data.company.CEO }}</small></div>
+                        <div class="p-mb-2">
+                          <small>
+                            <b>Headquarters:</b> {{ stock.data.company.address }}, {{ stock.data.company.city }},
+                            {{ stock.data.company.state }},
+                            {{ stock.data.company.country }}
+                          </small>
+                        </div>
+                        <div class="p-mb-2"><small><b>Employees:</b> {{ stock.data.company.employees?.toLocaleString() }}</small></div>
+                        <div class="p-mb-2"><small><b>Industry:</b> {{ stock.data.company.industry }}</small></div>
+                        <div class="p-mb-2"><small><b>Sector:</b> {{ stock.data.company.sector }}</small></div>
                     </div>
                 </div>
+                <!-- <div class="p-col-12 p-md-6 p-xl-12">
+                  <div class="card">
+                      <div class="card-header">
+                          <h6>Stats</h6>
+                      </div>
+                      <br>
+                      <p>
+                        <small style="font-size: 12px"
+                          >Open: <strong> ${{ stock.data.quote.open?.toFixed(2) }}</strong></small
+                        >
+                      </p>
+                      <p>
+                        <small style="font-size: 12px"
+                          >Close: <strong> ${{ stock.data.quote.close?.toFixed(2) }}</strong></small
+                        >
+                      </p>
+                      <p>
+                        <small style="font-size: 12px">
+                          Today's High: <strong>${{ stock.data.quote.high }}</strong>
+                        </small>
+                      </p>
+                      <p>
+                        <small style="font-size: 12px">
+                          Today's Low: <strong>${{ stock.data.quote.low }}</strong>
+                        </small>
+                      </p>
+                      <p>
+                        <small style="font-size: 12px">
+                          52 Week Low: <strong>${{ stock.data.stats.week52low }}</strong>
+                        </small>
+                      </p>
+                      <p>
+                        <small style="font-size: 12px">
+                          52 Week High: <strong>${{ stock.data.stats.week52high }}</strong>
+                        </small>
+                      </p>
+                  </div>
+                </div> -->
             </div>
         </div>
 
         <div class="p-col-12 p-md-6 p-xl-4">
             <div class="card leaderboard">
                 <div class="card-header">
-                    <h6>Leaderboard</h6>
+                    <h6>Stats</h6>
                 </div>
-                <ul>
+                <div class="p-grid">
+                  <div class="p-col-6">
+                    <div class="p-mb-2"><small><b>Open:</b> ${{ stock.data.quote.open?.toFixed(2) }}</small></div>
+                    <div class="p-mb-2"><small><b>Close:</b> ${{ stock.data.quote.close?.toFixed(2) }}</small></div>
+                    <div class="p-mb-2"><small><b>Today's High:</b> ${{ stock.data.quote.high }}</small></div>
+                    <div class="p-mb-2"><small><b>Today's Low:</b> ${{ stock.data.quote.low }}</small></div>
+                    <div class="p-mb-2"><small><b>52 Week High:</b> ${{ stock.data.stats.week52high}}</small></div>
+                    <div class="p-mb-2"><small><b>52 Week Low:</b> ${{ stock.data.stats.week52low}}</small></div>
+                  </div>
+                  <div class="p-col-6">
+                    <div class="p-mb-2"><small><b>Volume:</b> {{ stock.data.quote.volume?.toLocaleString() }}</small></div>
+                    <div class="p-mb-2"><small><b>Avg. Total Volume:</b> {{ stock.data.quote.avgTotalVolume?.toLocaleString() }}</small></div>
+                    <div class="p-mb-2"><small><b>Market Cap:</b> {{ MoneyFormatter.formatCash(stock.data.stats.marketcap) }}</small></div>
+                    <div class="p-mb-2"><small><b>P/E Ratio:</b> {{ stock.data.stats.peRatio.toFixed(2) }}</small></div>
+                    <div class="p-mb-2"><small><b>Beta:</b> {{ stock.data.stats.beta.toFixed(2) }}</small></div>
+                    <div class="p-mb-2"><small><b>Dividend Yield:</b> {{ (stock.data.stats.dividendYield * 100).toFixed(2) }}</small></div>
+                  </div>
+                </div>
+
+                <!-- <ul>
                     <li>
                         <div class="person">
                             <img src="assets/layout/images/dashboard/leader-1.png" alt="poseidon-layout" />
@@ -235,14 +315,24 @@
                             <i class="pi pi-arrow-up"></i>
                         </div>
                     </li>
-                </ul>
+                </ul> -->
             </div>
+        </div>
+
+        <!-- TODO: Apply Shorten Pipe or set a max-height and make scrollable -->
+        <div class="p-col-12 p-md-6 p-xl-4">
+          <div class="card sellers">
+              <div class="card-header">
+                  <h6>About</h6>
+              </div>
+              <small>{{ stock.data.company?.description }}</small>
+          </div>
         </div>
 
         <div class="p-col-12 p-md-6 p-xl-4">
             <div class="card product-list">
                 <div class="card-header">
-                    <h6>Product List</h6>
+                    <h6>News</h6>
                 </div>
                 <ul>
                     <li>
@@ -305,87 +395,7 @@
         </div>
 
         <div class="p-col-12 p-md-6 p-xl-4">
-            <div class="card sellers">
-                <div class="card-header">
-                    <h6>Seller List</h6>
-                </div>
-                <ul>
-                    <li>
-                        <div class="seller">
-                            <img src="assets/layout/images/dashboard/seller-1.png" alt="poseidon-layout" />
-                            <p>Hector Mariano</p>
-                        </div>
-                        <span>Tier 1</span>
-                        <p-rating [(ngModel)]="val2" readonly="true" stars="3"></p-rating>
-                        <p-menu #menu1 [popup]="true" [model]="items"></p-menu>
-                        <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-secondary p-button-outlined" (click)="menu1.toggle($event)"></button>
-                    </li>
-                    <li>
-                        <div class="seller">
-                            <img src="assets/layout/images/dashboard/seller-2.png" alt="poseidon-layout" />
-                            <p>Maria Illescas</p>
-                        </div>
-                        <span>Tier 2</span>
-                        <p-rating [(ngModel)]="val2" readonly="true" stars="3"></p-rating>
-                        <p-menu #menu2 [popup]="true" [model]="items"></p-menu>
-                        <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-secondary p-button-outlined" (click)="menu2.toggle($event)"></button>
-                    </li>
-                    <li>
-                        <div class="seller">
-                            <img src="assets/layout/images/dashboard/seller-3.png" alt="poseidon-layout" />
-                            <p>Ngô Hải Giang</p>
-                        </div>
-                        <span>Tier 3</span>
-                        <p-rating [(ngModel)]="val1" readonly="true" stars="3"></p-rating>
-                        <p-menu #menu3 [popup]="true" [model]="items"></p-menu>
-                        <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-secondary p-button-outlined" (click)="menu3.toggle($event)"></button>
-                    </li>
-                    <li>
-                        <div class="seller">
-                            <img src="assets/layout/images/dashboard/seller-4.png" alt="poseidon-layout" />
-                            <p>Tamas Bunce</p>
-                        </div>
-                        <span>Tier 4</span>
-                        <p-rating [(ngModel)]="val1" readonly="true" stars="3"></p-rating>
-                        <p-menu #menu4 [popup]="true" [model]="items"></p-menu>
-                        <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-secondary p-button-outlined" (click)="menu4.toggle($event)"></button>
-                    </li>
-                    <li>
-                        <div class="seller">
-                            <img src="assets/layout/images/dashboard/avatar-conan.png" alt="poseidon-layout" />
-                            <p>Conan Matusov</p>
-                        </div>
-                        <span>Tier 4</span>
-                        <p-rating [(ngModel)]="val1" readonly="true" stars="3"></p-rating>
-                        <p-menu #menu5 [popup]="true" [model]="items"></p-menu>
-                        <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-secondary p-button-outlined" (click)="menu5.toggle($event)"></button>
-                    </li>
-                    <li>
-                        <div class="seller">
-                            <img src="assets/layout/images/dashboard/leader-4.png" alt="poseidon-layout" />
-                            <p>Maria Illescas</p>
-                        </div>
-                        <span>Tier 4</span>
-                        <p-rating [(ngModel)]="val1" readonly="true" stars="3"></p-rating>
-                        <p-menu #menu6 [popup]="true" [model]="items"></p-menu>
-                        <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-secondary p-button-outlined" (click)="menu6.toggle($event)"></button>
-                    </li>
-                    <li>
-                        <div class="seller">
-                            <img src="assets/layout/images/dashboard/leader-3.png" alt="poseidon-layout" />
-                            <p>Su Hua</p>
-                        </div>
-                        <span>Tier 4</span>
-                        <p-rating [(ngModel)]="val1" readonly="true" stars="3"></p-rating>
-                        <p-menu #menu7 [popup]="true" [model]="items"></p-menu>
-                        <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-secondary p-button-outlined" (click)="menu7.toggle($event)"></button>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="p-col-12 p-md-6 p-xl-4">
-            <div class="card tasks">
+            <!-- <div class="card tasks">
                 <div class="card-header">
                     <h6>Tasks</h6>
                 </div>
@@ -454,12 +464,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
 
 
         <div class="p-col-12 p-xl-8">
-            <div class="card sales">
+            <!-- <div class="card sales">
                 <div class="card-header">
                     <h4>Recent Sales</h4>
                     <p-dropdown [options]="orderWeek" [(ngModel)]="selectedOrderWeek" optionLabel="name" (onChange)="recentSales($event)"
@@ -468,48 +478,12 @@
 
                 <p>Your sales activity over time.</p>
 
-
-                <p-table [value]="products" [paginator]="true" [rows]="5" styleClass="p-datatable-customers">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th pSortableColumn="id">ID
-                                <p-sortIcon field="id"></p-sortIcon>
-                            </th>
-                            <th pSortableColumn="category">Category
-                                <p-sortIcon field="category"></p-sortIcon>
-                            </th>
-                            <th pSortableColumn="price">Price
-                                <p-sortIcon field="price"></p-sortIcon>
-                            </th>
-                            <th pSortableColumn="inventoryStatus">Status
-                                <p-sortIcon field="inventoryStatus"></p-sortIcon>
-                            </th>
-                            <th></th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-product>
-                        <tr>
-                            <td>
-                                <span class="p-column-title">Id</span>
-                                {{product.id}}</td>
-                            <td>
-                                <span class="p-column-title">Category</span>
-                                {{product.category}}</td>
-                            <td>
-                                <span class="p-column-title">Price</span>
-                                {{product.price | currency:'USD'}}</td>
-                            <td>
-                                <span class="p-column-title">Status</span>
-                                <span
-                                    [class]="'product-badge status-' + product.inventoryStatus.toLowerCase()">{{product.inventoryStatus}}</span>
-                            </td>
-                            <td style="text-align: center">
-                                <button pButton type="button" icon="pi pi-search"></button>
-                            </td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
+<ng-template #stockNotLoaded>
+    <div class="vertically-and-horizontally-centered">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
+</ng-template>

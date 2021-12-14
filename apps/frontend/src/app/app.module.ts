@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -32,6 +32,11 @@ import { SharedModule } from './shared/shared.module';
 import { MessageService } from 'primeng/api';
 import { ResetPasswordLinkGuard } from './core/guards/reset-password-link.guard';
 
+import { HighchartsChartModule } from 'highcharts-angular';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { ErrorInterceptor } from './core/interceptors/error-interceptor';
+import { GlobalErrorHandler } from './core/error-handlers/global-error-handler';
+
 @NgModule({
   imports: [
     AppCodeModule,
@@ -40,6 +45,7 @@ import { ResetPasswordLinkGuard } from './core/guards/reset-password-link.guard'
     BrowserAnimationsModule,
     CoreModule,
     FormsModule,
+    HighchartsChartModule,
     HttpClientModule,
     PrimeNGModule,
     ReactiveFormsModule,
@@ -68,6 +74,9 @@ import { ResetPasswordLinkGuard } from './core/guards/reset-password-link.guard'
     MenuService,
     MessageService,
     ResetPasswordLinkGuard,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
   ],
   bootstrap: [AppComponent],
 })

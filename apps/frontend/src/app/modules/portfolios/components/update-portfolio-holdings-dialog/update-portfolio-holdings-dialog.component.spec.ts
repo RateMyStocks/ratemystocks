@@ -2,10 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UpdatePortfolioHoldingsDialogComponent } from './update-portfolio-holdings-dialog.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { PortfolioModule } from '../../portfolio.module';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PortfoliosModule } from '../../portfolios.module';
 
 describe('UpdatePortfolioHoldingsDialogComponent', () => {
   let component: UpdatePortfolioHoldingsDialogComponent;
@@ -14,11 +13,7 @@ describe('UpdatePortfolioHoldingsDialogComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [UpdatePortfolioHoldingsDialogComponent],
-      imports: [BrowserAnimationsModule, HttpClientTestingModule, RouterTestingModule, PortfolioModule],
-      providers: [
-        { provide: MAT_DIALOG_DATA, useValue: { portfolioStocks: [] } },
-        { provide: MatDialogRef, useValue: {} },
-      ],
+      imports: [BrowserAnimationsModule, HttpClientTestingModule, RouterTestingModule, PortfoliosModule],
     }).compileComponents();
   });
 

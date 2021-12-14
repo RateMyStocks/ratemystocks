@@ -1,6 +1,6 @@
 import { ErrorHandler, Injectable, Injector, NgZone } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material/snack-bar';
+// import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -9,7 +9,7 @@ export class GlobalErrorHandler implements ErrorHandler {
   constructor(private injector: Injector, private ngZone: NgZone) {}
 
   handleError(error: Error | HttpErrorResponse) {
-    const snackBar = this.injector.get(MatSnackBar);
+    // const snackBar = this.injector.get(MatSnackBar);
     let errorType: string;
     if (error instanceof HttpErrorResponse) {
       if (error.status >= 500) {
@@ -21,13 +21,13 @@ export class GlobalErrorHandler implements ErrorHandler {
       errorType = 'Unknown Client Error';
     }
     this.ngZone.run(() => {
-      snackBar.open(
-        `An unexpected error occurred. If you continue to receive this error please report it to support@ratemystocks.com`,
-        errorType,
-        {
-          duration: 3000,
-        }
-      );
+      // snackBar.open(
+      //   `An unexpected error occurred. If you continue to receive this error please report it to support@ratemystocks.com`,
+      //   errorType,
+      //   {
+      //     duration: 3000,
+      //   }
+      // );
     });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { ProductService } from '../../../../core/services/productservice';
 import { Product } from '../../../../shared/models/product';
@@ -6,15 +6,19 @@ import { AppBreadcrumbService } from '../../../../app.breadcrumb.service';
 import { AppMainComponent } from '../../../../app.main.component';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { IexCloudStockDataDto, StockRatingCountDto } from '@ratemystocks/api-interface';
+import { StockService } from '../../../../core/services/stock.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import { AuthService } from '../../../../core/services/auth.service';
+import { MoneyFormatter } from '../../../../shared/utilities/money-formatter';
 
 @Component({
   templateUrl: './stock.component.html',
   styleUrls: ['./stock.component.scss'],
 })
-export class StockComponent implements OnInit {
-  ordersChart: any;
-
-  ordersOptions: any;
+export class StockComponent implements OnInit, OnDestroy {
+  MoneyFormatter = MoneyFormatter;
 
   activeOrders = 0;
 
@@ -24,112 +28,63 @@ export class StockComponent implements OnInit {
 
   activeTraffic = 0;
 
-  goalChart: any;
-
-  goalOptions: any;
-
   items: MenuItem[];
 
   val1 = 1;
 
   val2 = 2;
 
-  orderWeek: any;
-
-  selectedOrderWeek: any;
-
-  products: Product[];
-
-  productsThisWeek: Product[];
-
-  productsLastWeek: Product[];
+  ticker = '';
+  stock: { rating: StockRatingCountDto; data: IexCloudStockDataDto } = null;
+  stockLoaded = false;
+  followers = 0;
+  isAuth: boolean;
+  userRating: string;
+  auth$: Subscription;
+  private ngUnsubscribe = new Subject();
 
   constructor(
-    private productService: ProductService,
     private breadcrumbService: AppBreadcrumbService,
     private appMain: AppMainComponent,
     private route: ActivatedRoute,
+    private authService: AuthService,
+    private stockService: StockService,
     @Inject(DOCUMENT) private document: Document
   ) {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      // this.ticker = paramMap.get('ticker');
-      // this.stockService
-      //   .getStock(this.ticker)
-      //   .pipe(takeUntil(this.ngUnsubscribe))
-      //   .subscribe((response: any) => {
-      //     this.stock = response;
+      this.ticker = paramMap.get('ticker');
+      this.stockService
+        .getStock(this.ticker)
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe((response: any) => {
+          this.stock = response;
 
-      //     this.stockLoaded = true;
+          this.stockLoaded = true;
 
-      //     this.updateStockRatingsBarChartItems();
-      //   });
-      this.breadcrumbService.setItems([{ label: 'Home' }, { label: 'Stocks', routerLink: ['/stocks'] }, { label: paramMap.get('ticker') }]);
+          // this.updateStockRatingsBarChartItems();
+        });
+      this.breadcrumbService.setItems([
+        { label: 'Home' },
+        { label: 'Stocks', routerLink: ['/stocks'] },
+        { label: paramMap.get('ticker') },
+      ]);
     });
-    
   }
 
   ngOnInit() {
-    this.productService.getProducts().then((data) => (this.products = data));
-    this.productService.getProducts().then((data) => (this.productsThisWeek = data));
-    this.productService.getProductsMixed().then((data) => (this.productsLastWeek = data));
+    this.isAuth = this.authService.isAuthorized();
+    if (this.isAuth) {
+      this.fetchUserRating();
+    } else {
+      this.userRating = null;
+    }
 
-    this.ordersChart = {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September'],
-      datasets: [
-        {
-          label: 'Revenue',
-          data: [31, 83, 69, 29, 62, 25, 59, 26, 46],
-          borderColor: ['#00acac'],
-          borderWidth: 2,
-          fill: false,
-          borderDash: [3, 6],
-          tension: 0.4,
-        },
-        {
-          label: 'Cost',
-          data: [67, 98, 27, 88, 38, 3, 22, 60, 56],
-          borderColor: ['#f1b263'],
-          backgroundColor: ['rgba(241, 178, 99, .07)'],
-          borderWidth: 2,
-          fill: true,
-          pointRadius: 3,
-          tension: 0.4,
-        },
-      ],
-    };
-
-    this.ordersOptions = {
-      plugins: {
-        legend: {
-          display: true,
-          labels: {
-            color: '#A0A7B5',
-          },
-        },
-      },
-      responsive: true,
-      hover: {
-        mode: 'index',
-      },
-      scales: {
-        y: {
-          ticks: {
-            color: '#A0A7B5',
-          },
-          grid: {
-            color: 'rgba(160, 167, 181, .3)',
-          },
-        },
-        x: {
-          ticks: {
-            color: '#A0A7B5',
-          },
-          grid: {
-            color: 'rgba(160, 167, 181, .3)',
-          },
-        },
-      },
-    };
+    this.auth$ = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
+      this.isAuth = authStatus;
+      if (this.isAuth) {
+        this.fetchUserRating();
+      }
+    });
 
     this.trafficChart = this.getTrafficChartData();
 
@@ -146,49 +101,21 @@ export class StockComponent implements OnInit {
     this.appMain['refreshTrafficChart'] = () => {
       this.trafficChart = this.getTrafficChartData();
     };
+  }
 
-    this.goalChart = {
-      labels: ['Complete', 'Not Complete', 'Extra Tasks'],
-      datasets: [
-        {
-          data: [183, 62, 10],
-          backgroundColor: ['#ffffff', 'rgba(255,255,255,.2)', 'rgba(255,255,255,.5)'],
-          borderWidth: 0,
-        },
-      ],
-    };
-
-    this.goalOptions = {
-      plugins: {
-        legend: {
-          display: false,
-        },
-      },
-      responsive: true,
-    };
-
-    this.items = [
-      { label: 'View Profile', icon: 'pi pi-user' },
-      { label: 'Update Profile', icon: 'pi pi-refresh' },
-      { label: 'Delete Profile', icon: 'pi pi-trash' },
-    ];
-
-    this.orderWeek = [
-      { name: 'This Week', code: '0' },
-      { name: 'Last Week', code: '1' },
-    ];
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   getTrafficChartData() {
     return {
-      labels: ['Add View', 'Total View'],
+      labels: ['Buy Ratings', 'Hold Ratings', 'Sell Ratings'],
       datasets: [
         {
-          data: [48, 52],
-          backgroundColor: [
-            getComputedStyle(this.document.body).getPropertyValue('--primary-dark-color') || '#2c84d8',
-            getComputedStyle(this.document.body).getPropertyValue('--content-alt-bg-color') || '#B1B9C9',
-          ],
+          data: [50, 25, 25],
+          backgroundColor: ['#3ac961', '#c98b3a', 'red'],
+          hoverBackgroundColor: ['#32a12f', '#bf6f06', '#c94d4d'],
           borderWidth: 0,
         },
       ],
@@ -206,14 +133,9 @@ export class StockComponent implements OnInit {
     ];
 
     this.activeOrders = parseInt(event.currentTarget.getAttribute('data-index'));
-
-    this.ordersChart.datasets[0].data = dataSet[parseInt(event.currentTarget.getAttribute('data-index'))];
-    this.ordersChart.datasets[1].data = dataSet2[parseInt(event.currentTarget.getAttribute('data-index'))];
-    this.ordersChart.datasets[0].label = event.currentTarget.getAttribute('data-label');
-    this.ordersChart.datasets[0].borderColor = event.currentTarget.getAttribute('data-stroke');
   }
 
-  changeTrafficset(event) {
+  setUserStockRating(event) {
     const traffidDataSet = [
       [48, 52],
       [26, 74],
@@ -224,12 +146,49 @@ export class StockComponent implements OnInit {
     this.trafficChart.datasets[0].data = traffidDataSet[parseInt(event.currentTarget.getAttribute('data-index'))];
   }
 
-  recentSales(event) {
-    if (event.value.code === '0') {
-      this.products = this.productsThisWeek;
+  /**
+   * Calls the backend to create a new user active stock rating and deactives the user's previous rating.
+   * @param value The rating type e.g. "Buy", "Hold", or "Sell"
+   */
+  toggleStockRating(event, value: string): void {
+    if (this.isAuth) {
+      if (this.userRating !== value) {
+        this.stock.rating[this.userRating] = this.stock.rating[this.userRating] - 1;
+        this.userRating = value;
+        this.stock.rating[this.userRating] = this.stock.rating[this.userRating] + 1;
+        console.log('USER RATING: ', this.userRating);
+        this.stockService
+          .updateUserRating(this.ticker, this.userRating)
+          .pipe(takeUntil(this.ngUnsubscribe))
+          .subscribe();
+
+        // this.ratingUpdated.emit();
+      }
     } else {
-      this.products = this.productsLastWeek;
+      // this.snackBar.open('You must login to rate this stock.', 'OK', {
+      //   duration: 3000,
+      //   panelClass: 'warn-snackbar',
+      // });
     }
+
+    const traffidDataSet = [
+      [48, 52],
+      [26, 74],
+      [12, 88],
+    ];
+    this.activeTraffic = parseInt(event.currentTarget.getAttribute('data-index'));
+
+    this.trafficChart.datasets[0].data = traffidDataSet[parseInt(event.currentTarget.getAttribute('data-index'))];
+  }
+
+  /** Calls the backend to get the user's active rating for a given stock, if it exists. */
+  fetchUserRating(): void {
+    this.stockService
+      .getUserRating(this.ticker)
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((res: { stockRating: string }) => {
+        this.userRating = res.stockRating;
+      });
   }
 }
 
