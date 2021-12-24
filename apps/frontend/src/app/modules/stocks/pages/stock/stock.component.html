@@ -14,7 +14,7 @@
                         <div class="card-header">
                             <h6>{{ stock.data.stats.companyName }} | {{ stock.data.company.exchange }}</h6>
                             <div class="header-buttons">
-                                <a href="#"><i class="pi pi-star-o"></i></a>
+                                <!-- <a href="#"><i class="pi pi-star-o"></i></a> -->
                             </div>
                         </div>
                         <div class="overview-content">
@@ -48,11 +48,12 @@
                         <div class="card-header">
                             <h6>Followers</h6>
                             <div class="header-buttons">
-                                <!-- <a href="#"><i class="pi pi-arrow-up"></i></a> -->
+                              <a href="#"><i class="pi pi-star-o"></i></a>
                             </div>
                         </div>
                         <div class="overview-content">
-                            <h3>{{followers}}</h3>
+                            <!-- <h3>{{followers}}</h3> -->
+                            <h3>3.5k</h3>
                             <div class="overview-graph">
                                 <span style="height: 30px;"><span class="graph-tooltip">30</span></span>
                                 <span style="height: 43px;"><span class="graph-tooltip">43</span></span>
@@ -70,13 +71,14 @@
                 <div class="p-col-12 p-md-12 p-xl-4">
                     <div class="card  overview-box-1 orange">
                         <div class="card-header">
-                            <h6>Bounce Rate</h6>
+                            <h6>Visitors</h6>
                             <div class="header-buttons">
                                 <!-- <a href="#"><i class="pi pi-arrow-up"></i></a> -->
                             </div>
                         </div>
                         <div class="overview-content">
-                            <!-- <h3>55.95%</h3>
+                            <!-- <h3>{{ visitors }}</h3> -->
+                            <h3>1.2m</h3>
                             <div class="overview-graph">
                                 <span style="height: 20px;"><span class="graph-tooltip">20</span></span>
                                 <span style="height: 23px;"><span class="graph-tooltip">23</span></span>
@@ -84,10 +86,11 @@
                                 <span style="height: 18px;"><span class="graph-tooltip">18</span></span>
                                 <span style="height: 28px;"><span class="graph-tooltip">28</span></span>
                                 <span style="height: 42px;"><span class="graph-tooltip">42</span></span>
-                            </div> -->
+                            </div>
                         </div>
                         <div class="overview-footer">
                             <!-- <span><i class="pi pi-arrow-up"></i> <span>6%</span> increase in today sales</span> -->
+                            <span><i class="pi pi-arrow-down"></i> <span>12%</span> decrease in visitors today.</span>
                         </div>
                     </div>
                 </div>
@@ -96,20 +99,6 @@
                         <div class="card-header">
                             <h6>Performance</h6>
                         </div>
-                        <!-- <div id="order-tabs-container" class="order-tabs">
-                            <div class="order-tab" [ngClass]="{'order-tab-active':activeOrders===0}"
-                                 (click)="changeDataset($event); orders.refresh()"
-                                 data-label="New Sales" data-index="0" data-stroke="#00acac" >
-                                <h6>Current Week</h6>
-                                <h3>$455.55</h3>
-                            </div>
-                            <div class="order-tab" [ngClass]="{'order-tab-active':activeOrders===1}"
-                                 (click)="changeDataset($event); orders.refresh()"
-                                 data-label="Previous Sales" data-index="1" data-stroke="#2f8ee5">
-                                <h6>Previous Week</h6>
-                                <h3>$244.40</h3>
-                            </div>
-                        </div> -->
                         <div class="overview-chart">
                             <app-stock-performance-chart [ticker]="ticker"></app-stock-performance-chart>
                         </div>
@@ -137,6 +126,7 @@
                                 <!-- <i class="pi pi-facebook"></i> -->
                                 <!-- <h6>Buy <span style="color: #3ac961; font-size: 32px;">&#8226;</span></h6> -->
                                 <h6 style="text-decoration: 2px underline #3ac961; text-underline-offset: 4px;">Buy</h6>
+                                <!-- <h6 style="font-size: small;">(124 ratings)</h6> -->
                             </div>
                             <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===1}"
                                  (click)="toggleStockRating($event, 'hold'); traffic.refresh()"
@@ -155,13 +145,6 @@
                     </div>
                 </div>
                 <div class="p-col-12 p-md-6 p-xl-12">
-                    <!-- <div class="card">
-                        <div class="card-header">
-                            <h6>About</h6>
-                        </div>
-                        <br>
-                        <p>{{ stock.data.company.description }}</p>
-                    </div> -->
                     <div class="card">
                         <div class="card-header">
                             <h6>Company Info</h6>
@@ -179,45 +162,17 @@
                         <div class="p-mb-2"><small><b>Sector:</b> {{ stock.data.company.sector }}</small></div>
                     </div>
                 </div>
-                <!-- <div class="p-col-12 p-md-6 p-xl-12">
-                  <div class="card">
-                      <div class="card-header">
-                          <h6>Stats</h6>
-                      </div>
-                      <br>
-                      <p>
-                        <small style="font-size: 12px"
-                          >Open: <strong> ${{ stock.data.quote.open?.toFixed(2) }}</strong></small
-                        >
-                      </p>
-                      <p>
-                        <small style="font-size: 12px"
-                          >Close: <strong> ${{ stock.data.quote.close?.toFixed(2) }}</strong></small
-                        >
-                      </p>
-                      <p>
-                        <small style="font-size: 12px">
-                          Today's High: <strong>${{ stock.data.quote.high }}</strong>
-                        </small>
-                      </p>
-                      <p>
-                        <small style="font-size: 12px">
-                          Today's Low: <strong>${{ stock.data.quote.low }}</strong>
-                        </small>
-                      </p>
-                      <p>
-                        <small style="font-size: 12px">
-                          52 Week Low: <strong>${{ stock.data.stats.week52low }}</strong>
-                        </small>
-                      </p>
-                      <p>
-                        <small style="font-size: 12px">
-                          52 Week High: <strong>${{ stock.data.stats.week52high }}</strong>
-                        </small>
-                      </p>
-                  </div>
-                </div> -->
             </div>
+        </div>
+
+        <!-- TODO: Apply Shorten Pipe or set a max-height and make scrollable -->
+        <div class="p-col-12 p-md-6 p-xl-4">
+          <div class="card sellers">
+              <div class="card-header">
+                  <h6>About</h6>
+              </div>
+              <p>{{ stock.data.company?.description }}</p>
+          </div>
         </div>
 
         <div class="p-col-12 p-md-6 p-xl-4">
@@ -233,6 +188,12 @@
                     <div class="p-mb-2"><small><b>Today's Low:</b> ${{ stock.data.quote.low }}</small></div>
                     <div class="p-mb-2"><small><b>52 Week High:</b> ${{ stock.data.stats.week52high}}</small></div>
                     <div class="p-mb-2"><small><b>52 Week Low:</b> ${{ stock.data.stats.week52low}}</small></div>
+                    <div class="p-mb-2"><small><b>YTD Change %:</b> {{ (stock.data.stats.ytdChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>1-month Change %: </b> {{ (stock.data.stats.month1ChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>3-month Change %3 </b> {{ (stock.data.stats.month3ChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>6-month Change %3 </b> {{ (stock.data.stats.month6ChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>1-year Change %3 </b> {{ (stock.data.stats.year1ChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>5-year Change %3 </b> {{ (stock.data.stats.year5ChangePercent * 100).toFixed(2) }}%</small></div>
                   </div>
                   <div class="p-col-6">
                     <div class="p-mb-2"><small><b>Volume:</b> {{ stock.data.quote.volume?.toLocaleString() }}</small></div>
@@ -243,90 +204,7 @@
                     <div class="p-mb-2"><small><b>Dividend Yield:</b> {{ (stock.data.stats.dividendYield * 100).toFixed(2) }}</small></div>
                   </div>
                 </div>
-
-                <!-- <ul>
-                    <li>
-                        <div class="person">
-                            <img src="assets/layout/images/dashboard/leader-1.png" alt="poseidon-layout" />
-                            <p>Peter Taylor</p>
-                        </div>
-                        <div class="person-numbers">
-                            <h6>$224.44</h6>
-                            <i class="pi pi-arrow-up"></i>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="person">
-                            <img src="assets/layout/images/dashboard/leader-2.png" alt="poseidon-layout" />
-                            <p>Nicolina Lindholm</p>
-                        </div>
-                        <div class="person-numbers">
-                            <h6>$86.05</h6>
-                            <i class="pi pi-arrow-up"></i>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="person">
-                            <img src="assets/layout/images/dashboard/leader-3.png" alt="poseidon-layout" />
-                            <p>Su Hua</p>
-                        </div>
-                        <div class="person-numbers">
-                            <h6>$59.44</h6>
-                            <i class="pi pi-arrow-up"></i>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="person">
-                            <img src="assets/layout/images/dashboard/leader-4.png" alt="poseidon-layout" />
-                            <p>Maria Illescas</p>
-                        </div>
-                        <div class="person-numbers">
-                            <h6>$12.32</h6>
-                            <i class="pi pi-arrow-up"></i>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="person">
-                            <img src="assets/layout/images/dashboard/avatar-dengra.png" alt="poseidon-layout" />
-                            <p>Ezequiel Dengra</p>
-                        </div>
-                        <div class="person-numbers">
-                            <h6>$12.32</h6>
-                            <i class="pi pi-arrow-up"></i>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="person">
-                            <img src="assets/layout/images/dashboard/avatar-conan.png" alt="poseidon-layout" />
-                            <p>Conan Matusov</p>
-                        </div>
-                        <div class="person-numbers">
-                            <h6>$12.32</h6>
-                            <i class="pi pi-arrow-up"></i>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="person">
-                            <img src="assets/layout/images/dashboard/seller-1.png" alt="poseidon-layout" />
-                            <p>Hector Mariano</p>
-                        </div>
-                        <div class="person-numbers">
-                            <h6>$12.32</h6>
-                            <i class="pi pi-arrow-up"></i>
-                        </div>
-                    </li>
-                </ul> -->
             </div>
-        </div>
-
-        <!-- TODO: Apply Shorten Pipe or set a max-height and make scrollable -->
-        <div class="p-col-12 p-md-6 p-xl-4">
-          <div class="card sellers">
-              <div class="card-header">
-                  <h6>About</h6>
-              </div>
-              <small>{{ stock.data.company?.description }}</small>
-          </div>
         </div>
 
         <div class="p-col-12 p-md-6 p-xl-4">
@@ -339,56 +217,56 @@
                         <div class="product">
                             <img src="assets/layout/images/dashboard/image-product-1.png" alt="poseidon-layout" />
                             <div class="product-info">
-                                <p>Nike Air X12</p>
-                                <span>Sold <span>250</span> times</span>
+                                <p>News 1</p>
+                                <small>3 hours ago</small>
                             </div>
 
                         </div>
-                        <i class="pi pi-arrow-up"></i>
+                        <!-- <i class="pi pi-arrow-up"></i> -->
                     </li>
                     <li>
                         <div class="product">
                             <img src="assets/layout/images/dashboard/image-product-2.png" alt="poseidon-layout" />
                             <div class="product-info">
-                                <p>Nike Sports Watch</p>
-                                <span>Sold <span>189</span> times</span>
+                                <p>News 2</p>
+                                <small>4 hours ago</small>
                             </div>
 
                         </div>
-                        <i class="pi pi-arrow-up"></i>
+                        <!-- <i class="pi pi-arrow-up"></i> -->
                     </li>
                     <li>
                         <div class="product">
                             <img src="assets/layout/images/dashboard/image-product-3.png" alt="poseidon-layout" />
                             <div class="product-info">
-                                <p>Heinz Yellow Mustard</p>
-                                <span>Sold <span>24</span> times</span>
+                                <p>News 3</p>
+                                <small>5 hours ago</small>
                             </div>
 
                         </div>
-                        <i class="pi pi-arrow-up"></i>
+                        <!-- <i class="pi pi-arrow-up"></i> -->
                     </li>
                     <li>
                         <div class="product">
                             <img src="assets/layout/images/dashboard/image-product-4.png" alt="poseidon-layout" />
                             <div class="product-info">
-                                <p>Beats Headphone</p>
-                                <span>Sold <span>24</span> times</span>
+                                <p>News 4</p>
+                                <small>1 day ago</small>
                             </div>
 
                         </div>
-                        <i class="pi pi-arrow-down down"></i>
+                        <!-- <i class="pi pi-arrow-down down"></i> -->
                     </li>
                     <li>
                         <div class="product">
                             <img src="assets/layout/images/dashboard/image-product-5.png" alt="poseidon-layout" />
                             <div class="product-info">
-                                <p>Black Racing Bike</p>
-                                <span>Sold <span>24</span> times</span>
+                                <p>News 5</p>
+                                <small>2 days ago</small>
                             </div>
 
                         </div>
-                        <i class="pi pi-arrow-up"></i>
+                        <!-- <i class="pi pi-arrow-up"></i> -->
                     </li>
                 </ul>
             </div>
@@ -468,17 +346,18 @@
         </div>
 
 
-        <div class="p-col-12 p-xl-8">
-            <!-- <div class="card sales">
-                <div class="card-header">
-                    <h4>Recent Sales</h4>
-                    <p-dropdown [options]="orderWeek" [(ngModel)]="selectedOrderWeek" optionLabel="name" (onChange)="recentSales($event)"
-                                styleClass="dashbard-demo-dropdown" [ngStyle]="{'min-width': '8rem'}"></p-dropdown>
-                </div>
-
-                <p>Your sales activity over time.</p>
-
-            </div> -->
+        <div class="p-col-12">
+          <p-tabView>
+            <p-tabPanel header="Header 1">
+               Content 1
+            </p-tabPanel>
+            <p-tabPanel header="Header 2">
+                Content 2
+            </p-tabPanel>
+            <p-tabPanel header="Header 3">
+                Content 3
+            </p-tabPanel>
+          </p-tabView>
         </div>
     </div>
 </div>

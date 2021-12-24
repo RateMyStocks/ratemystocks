@@ -36,6 +36,7 @@ import { HighchartsChartModule } from 'highcharts-angular';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { ErrorInterceptor } from './core/interceptors/error-interceptor';
 import { GlobalErrorHandler } from './core/error-handlers/global-error-handler';
+import { AppStockNewsBarComponent } from './app.stocknewsbar.component';
 
 @NgModule({
   imports: [
@@ -67,6 +68,7 @@ import { GlobalErrorHandler } from './core/error-handlers/global-error-handler';
     AppErrorComponent,
     AppAccessdeniedComponent,
     AppResetPasswordComponent,
+    AppStockNewsBarComponent,
   ],
   providers: [
     // { provide: LocationStrategy, useClass: HashLocationStrategy },

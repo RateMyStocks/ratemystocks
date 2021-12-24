@@ -1,7 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { ProductService } from '../../../../core/services/productservice';
-import { Product } from '../../../../shared/models/product';
 import { AppBreadcrumbService } from '../../../../app.breadcrumb.service';
 import { AppMainComponent } from '../../../../app.main.component';
 import { DOCUMENT } from '@angular/common';
@@ -38,6 +36,7 @@ export class StockComponent implements OnInit, OnDestroy {
   stock: { rating: StockRatingCountDto; data: IexCloudStockDataDto } = null;
   stockLoaded = false;
   followers = 0;
+  visitors = 0;
   isAuth: boolean;
   userRating: string;
   auth$: Subscription;
