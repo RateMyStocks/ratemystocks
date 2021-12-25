@@ -27,7 +27,7 @@ export class StockPerformanceChartComponent implements OnInit, OnChanges {
 
   initialize(): void {
     this.iexCloudService
-      .getStockCharts(this.ticker, '5y') // TODO: Make this use lazy loading
+      .getStockCharts(this.ticker, '1m')
       .pipe(takeUntil(this.ngUnsubscribe.asObservable()))
       .subscribe((response: IexCloudHistoricalPriceDto[]) => {
         const highChartsData = this.mapIexCloudHistoricalPricesToHighchartsFormat(response);
@@ -83,12 +83,21 @@ export class StockPerformanceChartComponent implements OnInit, OnChanges {
               },
             ],
           },
+          xAxis: {
+            events: {
+                afterSetExtremes: this.afterSetExtremes.bind(this)
+            },
+            minRange: 3600 * 1000 // one hour
+          },
+          yAxis: {
+              floor: 0
+          },
           series: [
             {
               type: 'line',
               pointInterval: 24 * 3600 * 1000,
               data: highChartsData,
-              // color: '#3ac961', TODO: this needs to show the line as green or red based on the timeframe selected and whether or not the price change for that timeframe is positive or negative
+              color: '#3ac961', // TODO: this needs to show the line as green or red based on the timeframe selected and whether or not the price change for that timeframe is positive or negative
             },
           ],
         };
@@ -107,6 +116,26 @@ export class StockPerformanceChartComponent implements OnInit, OnChanges {
       this.initialize();
     }
   }
+
+  /**
+   *
+   * @param e
+   */
+  afterSetExtremes(e): void {
+    const { chart } = e.target;
+    chart.showLoading('Loading data from server...');
+
+    this.iexCloudService.getStockCharts(this.ticker, e.rangeSelectorButton.text).pipe(takeUntil(this.ngUnsubscribe.asObservable()))
+      .subscribe(data => {
+        const highChartsData = this.mapIexCloudHistoricalPricesToHighchartsFormat(data);
+
+        console.log('HIGHCHARTS DATA: ', highChartsData)
+        console.log('CHART:', chart);
+
+        chart.series[0].setData(highChartsData);
+        chart.hideLoading();
+      });
+}
 
   /**
    * Maps data returned IEX Cloud API to the data format that the Highcharts Stock Chart expects

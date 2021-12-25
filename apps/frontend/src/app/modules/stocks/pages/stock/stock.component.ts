@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { AppBreadcrumbService } from '../../../../app.breadcrumb.service';
 import { AppMainComponent } from '../../../../app.main.component';
@@ -11,11 +11,12 @@ import { Subject, Subscription } from 'rxjs';
 import { AuthService } from '../../../../core/services/auth.service';
 import { MoneyFormatter } from '../../../../shared/utilities/money-formatter';
 
+declare const TradingView: any;
 @Component({
   templateUrl: './stock.component.html',
   styleUrls: ['./stock.component.scss'],
 })
-export class StockComponent implements OnInit, OnDestroy {
+export class StockComponent implements OnInit, OnDestroy, AfterViewInit {
   MoneyFormatter = MoneyFormatter;
 
   activeOrders = 0;
@@ -57,6 +58,8 @@ export class StockComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.ngUnsubscribe))
         .subscribe((response: any) => {
           this.stock = response;
+
+          console.log('STOCK: ', this.stock);
 
           this.stockLoaded = true;
 
@@ -105,6 +108,25 @@ export class StockComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  ngAfterViewInit() {
+    // new TradingView.widget(
+    //   {
+    //     "width": 980,
+    //     "height": 610,
+    //   "autosize": true,
+    //   "symbol": "NASDAQ:AAPL",
+    //   "interval": "D",
+    //   "timezone": "Etc/UTC",
+    //   "theme": "light",
+    //   "style": "2",
+    //   "locale": "en",
+    //   "toolbar_bg": "#f1f3f6",
+    //   "enable_publishing": false,
+    //   "container_id": "tradingview_191df"
+    // });
+    console.log('sfsd');
   }
 
   getTrafficChartData() {

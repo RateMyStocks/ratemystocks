@@ -4,6 +4,7 @@ import { UsernameFormFieldValidatorPipe } from './pipes/username-form-field-vali
 import { EmailFormFieldValidatorPipe } from './pipes/email-form-field-validator.pipe';
 import { PasswordFormFieldValidatorPipe } from './pipes/password-form-field-validator.pipe';
 import { PasswordReenterFormFieldValidatorPipe } from './pipes/password-reenter-form-field-validator.pipe';
+import { TruncatePipe } from './pipes/truncate.pipe';
 
 @NgModule({
   declarations: [
@@ -11,6 +12,7 @@ import { PasswordReenterFormFieldValidatorPipe } from './pipes/password-reenter-
     EmailFormFieldValidatorPipe,
     PasswordFormFieldValidatorPipe,
     PasswordReenterFormFieldValidatorPipe,
+    TruncatePipe,
   ],
   imports: [CommonModule],
   exports: [
@@ -18,6 +20,7 @@ import { PasswordReenterFormFieldValidatorPipe } from './pipes/password-reenter-
     EmailFormFieldValidatorPipe,
     PasswordFormFieldValidatorPipe,
     PasswordReenterFormFieldValidatorPipe,
+    TruncatePipe,
   ],
 })
 export class SharedModule {}

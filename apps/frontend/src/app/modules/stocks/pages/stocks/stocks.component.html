@@ -196,9 +196,9 @@
             </td> -->
             <td>
               <span class="p-column-title">Market Cap</span>
-              <span *ngIf="iexStockDataMap">
+              <small *ngIf="iexStockDataMap">
                 ${{ MoneyFormatter.formatCash(iexStockDataMap[stock.ticker]?.stats?.marketcap) }}
-              </span>
+              </small>
             </td>
             <!-- <td style="text-align: center">
               <button pButton type="button" class="p-button-secondary" icon="pi pi-cog"></button>

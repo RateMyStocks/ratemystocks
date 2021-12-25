@@ -1,9 +1,9 @@
 <!-- TODO: Get this to show social media icons -->
-<div id="layout-config" class="layout-config" [ngClass]="{'layout-config-active': false}">
+<!-- <div id="layout-config" class="layout-config" [ngClass]="{'layout-config-active': false}">
     <a style="cursor: pointer" id="layout-config-button" class="layout-config-button">
-        <i class="pi pi-check"></i>
+        <i class="pi pi-reddit"></i>
     </a>
-</div>
+</div> -->
 
 <div class="layout-dashboard" *ngIf="stock; else stockNotLoaded">
     <div class="p-grid">
@@ -12,9 +12,9 @@
                 <div class="p-col-12 p-md-12 p-xl-4">
                     <div class="card overview-box-1 blue">
                         <div class="card-header">
-                            <h6>{{ stock.data.stats.companyName }} | {{ stock.data.company.exchange }}</h6>
+                            <h6>{{ stock.data.stats.companyName | truncate:[15, '...'] }} | {{ stock.data.company?.exchange === 'NEW YORK STOCK EXCHANGE INC.' ? 'NYSE' : stock.data.company?.exchange }}</h6>
                             <div class="header-buttons">
-                                <!-- <a href="#"><i class="pi pi-star-o"></i></a> -->
+                                <a href="#"><i class="pi pi-share-alt"></i></a>
                             </div>
                         </div>
                         <div class="overview-content">
@@ -28,18 +28,25 @@
                               <b>{{ ticker }}</b>
                             </h3>
                             <div>
-                              <h4 [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }">
+                              <h4 class="p-mb-0" [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }">
                                 ${{ stock.data.quote.latestPrice?.toLocaleString(undefined, {minimumFractionDigits: 2}) }}
                               </h4>
+                              <small [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }"
+                                ><span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote.change }} ({{
+                                  (stock.data.quote.changePercent * 100)?.toFixed(2)
+                                }}%)</small
+                              >
                           </div>
                         </div>
                         <div class="overview-footer">
-                            <!-- <span><i class="pi pi-arrow-up"></i> <span>55%</span> increase in today sales</span> -->
-                            <small [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }"
-                              ><span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote.change }} ({{
-                                (stock.data.quote.changePercent * 100)?.toFixed(2)
-                              }}%)</small
-                            >
+
+                            <small class="p-ml-2">After Hours: </small>
+                            <small [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }">
+                              ${{ stock.data.quote?.extendedPrice }}
+                              <span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote?.extendedChange }} ({{
+                                (stock.data.quote?.extendedChangePercent * 100)?.toFixed(2)
+                              }}%)
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -48,7 +55,7 @@
                         <div class="card-header">
                             <h6>Followers</h6>
                             <div class="header-buttons">
-                              <a href="#"><i class="pi pi-star-o"></i></a>
+                              <a href="#"><i class="pi pi-plus-circle"></i></a>
                             </div>
                         </div>
                         <div class="overview-content">
@@ -95,12 +102,14 @@
                     </div>
                 </div>
                 <div class="p-col-12">
+                  <!-- <app-trading-view-stock-chart></app-trading-view-stock-chart> -->
                     <div class="card sale-graph">
                         <div class="card-header">
                             <h6>Performance</h6>
                         </div>
                         <div class="overview-chart">
-                            <app-stock-performance-chart [ticker]="ticker"></app-stock-performance-chart>
+                            <!-- <app-stock-performance-chart [ticker]="ticker"></app-stock-performance-chart> -->
+                            <app-trading-view-stock-chart [ticker]="ticker" [exchange]="stock.data.company?.exchange"></app-trading-view-stock-chart>
                         </div>
                     </div>
                 </div>
@@ -152,16 +161,51 @@
                         <div class="p-mb-2"><small><b>CEO:</b> {{ stock.data.company.CEO }}</small></div>
                         <div class="p-mb-2">
                           <small>
-                            <b>Headquarters:</b> {{ stock.data.company.address }}, {{ stock.data.company.city }},
-                            {{ stock.data.company.state }},
+                            <b>Headquarters:</b> {{ stock.data.company.city }},
+                            {{ stock.data.company.state }}
                             {{ stock.data.company.country }}
                           </small>
                         </div>
                         <div class="p-mb-2"><small><b>Employees:</b> {{ stock.data.company.employees?.toLocaleString() }}</small></div>
-                        <div class="p-mb-2"><small><b>Industry:</b> {{ stock.data.company.industry }}</small></div>
-                        <div class="p-mb-2"><small><b>Sector:</b> {{ stock.data.company.sector }}</small></div>
+                        <div class="p-mb-2"><small><b>Industry:</b> {{ stock.data.company?.industry }}</small></div>
+                        <div class="p-mb-2"><small><b>Sector:</b> {{ stock.data.company?.sector }}</small></div>
+                        <div class="p-mb-2"><small><b>Website:</b> <a href="https://{{stock.data.company?.website}}" target="_blank"> {{ stock.data.company?.website }}</a></small></div>
                     </div>
                 </div>
+                <!-- <div class="p-col-12 p-md-6 p-xl-12">
+                  <div class="card">
+                    <div class="card-header">
+                        <h6>Share</h6>
+                    </div>
+                    <div class="social-media-icons-container">
+                      <img
+                        src="../../../../../assets/layout/images/social-media/reddit.png"
+                        (click)="shareOnSocialMedia('http://www.reddit.com/submit?url=')"
+                        title="Share on Reddit"
+                        class="p-mr-3"
+                      />
+                      <img
+                        src="../../../../../assets/layout/images/social-media/facebook.png"
+                        (click)="shareOnSocialMedia('https://www.facebook.com/sharer/sharer.php?u=')"
+                        title="Share on Facebook"
+                        class="p-mr-3"
+                      />
+                      <img
+                        src="../../../../../assets/layout/images/social-media/twitter.png"
+                        (click)="shareOnSocialMedia('http://twitter.com/share?text=Check out my portfolio!&url=')"
+                        title="Share on Twitter"
+                        class="p-mr-3"
+                      />
+                      <img
+                        src="../../../../../assets/layout/images/social-media/link.png"
+                        title="Copy Link"
+                        [cdkCopyToClipboard]="copiedPortfolioLink"
+                        (click)="onCopyPageLink()"
+                        class="p-mr-3"
+                      />
+                    </div>
+                  </div>
+                </div> -->
             </div>
         </div>
 
@@ -171,7 +215,7 @@
               <div class="card-header">
                   <h6>About</h6>
               </div>
-              <p>{{ stock.data.company?.description }}</p>
+              <p>{{ stock.data.company?.description | truncate:[1000, '...'] }}</p>
           </div>
         </div>
 
@@ -188,12 +232,12 @@
                     <div class="p-mb-2"><small><b>Today's Low:</b> ${{ stock.data.quote.low }}</small></div>
                     <div class="p-mb-2"><small><b>52 Week High:</b> ${{ stock.data.stats.week52high}}</small></div>
                     <div class="p-mb-2"><small><b>52 Week Low:</b> ${{ stock.data.stats.week52low}}</small></div>
-                    <div class="p-mb-2"><small><b>YTD Change %:</b> {{ (stock.data.stats.ytdChangePercent * 100).toFixed(2) }}%</small></div>
-                    <div class="p-mb-2"><small><b>1-month Change %: </b> {{ (stock.data.stats.month1ChangePercent * 100).toFixed(2) }}%</small></div>
-                    <div class="p-mb-2"><small><b>3-month Change %3 </b> {{ (stock.data.stats.month3ChangePercent * 100).toFixed(2) }}%</small></div>
-                    <div class="p-mb-2"><small><b>6-month Change %3 </b> {{ (stock.data.stats.month6ChangePercent * 100).toFixed(2) }}%</small></div>
-                    <div class="p-mb-2"><small><b>1-year Change %3 </b> {{ (stock.data.stats.year1ChangePercent * 100).toFixed(2) }}%</small></div>
-                    <div class="p-mb-2"><small><b>5-year Change %3 </b> {{ (stock.data.stats.year5ChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>YTD Change:</b> {{ (stock.data.stats.ytdChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>1m Change: </b> {{ (stock.data.stats.month1ChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>3m Change: </b> {{ (stock.data.stats.month3ChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>6m Change: </b> {{ (stock.data.stats.month6ChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>1y Change: </b> {{ (stock.data.stats.year1ChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>5y Change: </b> {{ (stock.data.stats.year5ChangePercent * 100).toFixed(2) }}%</small></div>
                   </div>
                   <div class="p-col-6">
                     <div class="p-mb-2"><small><b>Volume:</b> {{ stock.data.quote.volume?.toLocaleString() }}</small></div>
@@ -272,81 +316,8 @@
             </div>
         </div>
 
-        <div class="p-col-12 p-md-6 p-xl-4">
-            <!-- <div class="card tasks">
-                <div class="card-header">
-                    <h6>Tasks</h6>
-                </div>
-                <div>
-                    <div class="task task-1">
-                        <div class="task-info">
-                            <div class="task-name"><span>12</span> Orders to fulfill</div>
-                            <i class="pi pi-tag"></i>
-                        </div>
-                        <div class="task-progress">
-                            <div></div>
-                        </div>
-                    </div>
-                    <div class="task task-2">
-                        <div class="task-info">
-                            <div class="task-name"><span>40+</span> Payments to withdraw</div>
-                            <i class="pi pi-money-bill"></i>
-                        </div>
-                        <div class="task-progress">
-                            <div></div>
-                        </div>
-                    </div>
-                    <div class="task task-3">
-                        <div class="task-info">
-                            <div class="task-name"><span>4</span> Reports to revise</div>
-                            <i class="pi pi-file"></i>
-                        </div>
-                        <div class="task-progress">
-                            <div></div>
-                        </div>
-                    </div>
-                    <div class="task task-4">
-                        <div class="task-info">
-                            <div class="task-name"><span>6</span> Questions to respond</div>
-                            <i class="pi pi-comment"></i>
-                        </div>
-                        <div class="task-progress">
-                            <div></div>
-                        </div>
-                    </div>
-                    <div class="task task-5">
-                        <div class="task-info">
-                            <div class="task-name"><span>2</span> Chargebacks to review</div>
-                            <i class="pi pi-check-square"></i>
-                        </div>
-                        <div class="task-progress">
-                            <div></div>
-                        </div>
-                    </div>
-                    <div class="task task-1">
-                        <div class="task-info">
-                            <div class="task-name"><span>12</span> Orders to fulfill</div>
-                            <i class="pi pi-tag"></i>
-                        </div>
-                        <div class="task-progress">
-                            <div></div>
-                        </div>
-                    </div>
-                    <div class="task task-2">
-                        <div class="task-info">
-                            <div class="task-name"><span>40+</span> Payments to withdraw</div>
-                            <i class="pi pi-money-bill"></i>
-                        </div>
-                        <div class="task-progress">
-                            <div></div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-        </div>
 
-
-        <div class="p-col-12">
+        <!-- <div class="p-col-12">
           <p-tabView>
             <p-tabPanel header="Header 1">
                Content 1
@@ -358,7 +329,7 @@
                 Content 3
             </p-tabPanel>
           </p-tabView>
-        </div>
+        </div> -->
     </div>
 </div>
 <ng-template #stockNotLoaded>

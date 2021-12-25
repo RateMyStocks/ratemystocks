@@ -9,9 +9,10 @@ import { StocksRoutingModule } from './stocks-routing.module';
 import { StockComponent } from './pages/stock/stock.component';
 import { StockPerformanceChartComponent } from './components/stock-performance-chart/stock-performance-chart.component';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { TradingViewStockChartComponent } from './components/trading-view-stock-chart/trading-view-stock-chart.component';
 
 @NgModule({
-  declarations: [StocksComponent, StockComponent, StockPerformanceChartComponent],
+  declarations: [StocksComponent, StockComponent, StockPerformanceChartComponent, TradingViewStockChartComponent],
   imports: [
     CommonModule,
     FormsModule,
