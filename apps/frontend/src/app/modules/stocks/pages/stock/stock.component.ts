@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { MessageService } from 'primeng/api';
 import { AppBreadcrumbService } from '../../../../app.breadcrumb.service';
 import { AppMainComponent } from '../../../../app.main.component';
 import { DOCUMENT } from '@angular/common';
@@ -10,37 +10,36 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { AuthService } from '../../../../core/services/auth.service';
 import { MoneyFormatter } from '../../../../shared/utilities/money-formatter';
+import * as moment from 'moment';
 
-declare const TradingView: any;
 @Component({
   templateUrl: './stock.component.html',
   styleUrls: ['./stock.component.scss'],
 })
-export class StockComponent implements OnInit, OnDestroy, AfterViewInit {
+export class StockComponent implements OnInit, OnDestroy {
   MoneyFormatter = MoneyFormatter;
+  moment = moment;
 
   activeOrders = 0;
 
-  trafficChart: any;
+  stockRatingsPieChart: any;
 
   trafficOptions: any;
 
-  activeTraffic = 0;
-
-  items: MenuItem[];
-
-  val1 = 1;
-
-  val2 = 2;
+  activeTraffic!: number;
 
   ticker = '';
   stock: { rating: StockRatingCountDto; data: IexCloudStockDataDto } = null;
+  stockRatingBuyPercent = 0;
+  stockRatingHoldPercent = 0;
+  stockRatingSellPercent = 0;
   stockLoaded = false;
   followers = 0;
   visitors = 0;
   isAuth: boolean;
-  userRating: string;
+  userRating: string; // string that has the value buy, hold, or sell
   auth$: Subscription;
+  copiedPortfolioLink: string = window.location.href;
   private ngUnsubscribe = new Subject();
 
   constructor(
@@ -49,31 +48,47 @@ export class StockComponent implements OnInit, OnDestroy, AfterViewInit {
     private route: ActivatedRoute,
     private authService: AuthService,
     private stockService: StockService,
+    private messageService: MessageService,
     @Inject(DOCUMENT) private document: Document
-  ) {
+  ) {}
+
+  ngOnInit() {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      this.activeTraffic = null;
       this.ticker = paramMap.get('ticker');
       this.stockService
         .getStock(this.ticker)
         .pipe(takeUntil(this.ngUnsubscribe))
-        .subscribe((response: any) => {
+        .subscribe((response: { rating: StockRatingCountDto; data: IexCloudStockDataDto }) => {
           this.stock = response;
 
           console.log('STOCK: ', this.stock);
 
           this.stockLoaded = true;
 
-          // this.updateStockRatingsBarChartItems();
+          this.stockRatingsPieChart = this.getStockRatingsChartData(this.stock.rating);
+
+          const totalRatingCount = this.stock.rating.buy + this.stock.rating.hold + this.stock.rating.sell;
+          this.stockRatingBuyPercent = totalRatingCount > 0 ? (this.stock.rating.buy / totalRatingCount) * 100 : 0;
+          console.log(totalRatingCount);
+          this.stockRatingHoldPercent = totalRatingCount > 0 ? (this.stock.rating.hold / totalRatingCount) * 100 : 0;
+          this.stockRatingSellPercent = totalRatingCount > 0 ? (this.stock.rating.sell / totalRatingCount) * 100 : 0;
         });
+
       this.breadcrumbService.setItems([
         { label: 'Home' },
         { label: 'Stocks', routerLink: ['/stocks'] },
         { label: paramMap.get('ticker') },
       ]);
-    });
-  }
 
-  ngOnInit() {
+      this.isAuth = this.authService.isAuthorized();
+      if (this.isAuth) {
+        this.fetchUserRating();
+      } else {
+        this.userRating = null;
+      }
+    });
+
     this.isAuth = this.authService.isAuthorized();
     if (this.isAuth) {
       this.fetchUserRating();
@@ -88,8 +103,6 @@ export class StockComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
 
-    this.trafficChart = this.getTrafficChartData();
-
     this.trafficOptions = {
       plugins: {
         legend: {
@@ -98,11 +111,20 @@ export class StockComponent implements OnInit, OnDestroy, AfterViewInit {
       },
       responsive: true,
       cutout: 70,
+      scales: {
+        y: {
+          type: 'linear',
+          display: true,
+          ticks: {
+            stepSize: 1,
+          },
+        },
+      },
     };
 
-    this.appMain['refreshTrafficChart'] = () => {
-      this.trafficChart = this.getTrafficChartData();
-    };
+    // this.appMain['refreshstockRatingsPieChart'] = () => {
+    //   this.stockRatingsPieChart = this.getStockRatingsChartData();
+    // };
   }
 
   ngOnDestroy(): void {
@@ -110,61 +132,18 @@ export class StockComponent implements OnInit, OnDestroy, AfterViewInit {
     this.ngUnsubscribe.complete();
   }
 
-  ngAfterViewInit() {
-    // new TradingView.widget(
-    //   {
-    //     "width": 980,
-    //     "height": 610,
-    //   "autosize": true,
-    //   "symbol": "NASDAQ:AAPL",
-    //   "interval": "D",
-    //   "timezone": "Etc/UTC",
-    //   "theme": "light",
-    //   "style": "2",
-    //   "locale": "en",
-    //   "toolbar_bg": "#f1f3f6",
-    //   "enable_publishing": false,
-    //   "container_id": "tradingview_191df"
-    // });
-    console.log('sfsd');
-  }
-
-  getTrafficChartData() {
+  getStockRatingsChartData(stockRatingCounts: StockRatingCountDto) {
     return {
       labels: ['Buy Ratings', 'Hold Ratings', 'Sell Ratings'],
       datasets: [
         {
-          data: [50, 25, 25],
+          data: [stockRatingCounts.buy, stockRatingCounts.hold, stockRatingCounts.sell],
           backgroundColor: ['#3ac961', '#c98b3a', 'red'],
           hoverBackgroundColor: ['#32a12f', '#bf6f06', '#c94d4d'],
           borderWidth: 0,
         },
       ],
     };
-  }
-
-  changeDataset(event) {
-    const dataSet = [
-      [31, 83, 69, 29, 62, 25, 59, 26, 46],
-      [40, 29, 7, 73, 81, 69, 46, 21, 96],
-    ];
-    const dataSet2 = [
-      [67, 98, 27, 88, 38, 3, 22, 60, 56],
-      [74, 67, 11, 36, 100, 49, 34, 56, 45],
-    ];
-
-    this.activeOrders = parseInt(event.currentTarget.getAttribute('data-index'));
-  }
-
-  setUserStockRating(event) {
-    const traffidDataSet = [
-      [48, 52],
-      [26, 74],
-      [12, 88],
-    ];
-    this.activeTraffic = parseInt(event.currentTarget.getAttribute('data-index'));
-
-    this.trafficChart.datasets[0].data = traffidDataSet[parseInt(event.currentTarget.getAttribute('data-index'))];
   }
 
   /**
@@ -177,29 +156,34 @@ export class StockComponent implements OnInit, OnDestroy, AfterViewInit {
         this.stock.rating[this.userRating] = this.stock.rating[this.userRating] - 1;
         this.userRating = value;
         this.stock.rating[this.userRating] = this.stock.rating[this.userRating] + 1;
-        console.log('USER RATING: ', this.userRating);
+
         this.stockService
           .updateUserRating(this.ticker, this.userRating)
           .pipe(takeUntil(this.ngUnsubscribe))
           .subscribe();
 
-        // this.ratingUpdated.emit();
+        // Index of the stock rating button that is clicked
+        const activeRatingIndex = parseInt(event.currentTarget.getAttribute('data-index'));
+        this.activeTraffic = activeRatingIndex;
+
+        this.stockRatingsPieChart.datasets[0].data = [
+          this.stock.rating.buy,
+          this.stock.rating.hold,
+          this.stock.rating.sell,
+        ];
+
+        const totalRatingCount = this.stock.rating.buy + this.stock.rating.hold + this.stock.rating.sell;
+        this.stockRatingBuyPercent = totalRatingCount > 0 ? this.stock.rating.buy / totalRatingCount : 0;
+        this.stockRatingHoldPercent = totalRatingCount > 0 ? this.stock.rating.hold / totalRatingCount : 0;
+        this.stockRatingSellPercent = totalRatingCount > 0 ? this.stock.rating.sell / totalRatingCount : 0;
       }
     } else {
-      // this.snackBar.open('You must login to rate this stock.', 'OK', {
-      //   duration: 3000,
-      //   panelClass: 'warn-snackbar',
-      // });
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Please Login!',
+        detail: 'You must login to rate this stock',
+      });
     }
-
-    const traffidDataSet = [
-      [48, 52],
-      [26, 74],
-      [12, 88],
-    ];
-    this.activeTraffic = parseInt(event.currentTarget.getAttribute('data-index'));
-
-    this.trafficChart.datasets[0].data = traffidDataSet[parseInt(event.currentTarget.getAttribute('data-index'))];
   }
 
   /** Calls the backend to get the user's active rating for a given stock, if it exists. */
@@ -209,88 +193,39 @@ export class StockComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((res: { stockRating: string }) => {
         this.userRating = res.stockRating;
+
+        switch (this.userRating.toUpperCase()) {
+          case 'BUY':
+            this.activeTraffic = 0;
+            break;
+          case 'HOLD':
+            this.activeTraffic = 1;
+            break;
+          case 'SELL':
+            this.activeTraffic = 2;
+            break;
+          default:
+            break;
+        }
       });
   }
+
+  /**
+   * Social media icon click event handler to share the portfolio link to the corresponding site.
+   * NOTE: When redirecting from localhost, some social media sites will block the request.
+   * @param socialMediaUrl The URL of the social media site that the portfolio will be shared on.
+   */
+  shareOnSocialMedia(socialMediaUrl: string): void {
+    window.open(socialMediaUrl + window.location.href, '_blank');
+  }
+
+  /** The click handler for the cdkCopyToClipboard directive shows a message when the link is copied. */
+  onCopyPageLink(): void {
+    // this.snackbar.open('Portfolio link copied to clipboard.', 'OK', {
+    //   duration: 3000,
+    //   panelClass: 'success-snackbar',
+    //   verticalPosition: 'top',
+    //   horizontalPosition: 'right',
+    // });
+  }
 }
-
-// import { Component, OnInit, OnDestroy } from '@angular/core';
-// import { ActivatedRoute, ParamMap } from '@angular/router';
-// import { Subscription } from 'rxjs';
-// import { StockRatingCountDto, IexCloudStockDataDto } from '@ratemystocks/api-interface';
-// import { AuthService } from '../../../../core/services/auth.service';
-// import { MoneyFormatter } from '../../../../shared/utilities/money-formatter';
-// import { StockService } from '../../../../core/services/stock.service';
-// import * as moment from 'moment';
-// import { Subject } from 'rxjs';
-// import { takeUntil } from 'rxjs/operators';
-
-// @Component({
-//   selector: 'app-stock',
-//   templateUrl: './stock.component.html',
-//   styleUrls: ['./stock.component.scss'],
-// })
-// export class StockComponent implements OnInit, OnDestroy {
-//   ticker: string;
-
-//   moment = moment;
-
-//   MoneyFormatter = MoneyFormatter;
-//   isAuth: boolean;
-//   userRating: string;
-//   stock: { rating: StockRatingCountDto; data: IexCloudStockDataDto } = null;
-//   auth$: Subscription;
-
-//   stockRatingBarChartItems: {
-//     buyRating: { name: string; value: number };
-//     holdRating: { name: string; value: number };
-//     sellRating: { name: string; value: number };
-//   };
-
-//   stockLoaded = false;
-
-//   private ngUnsubscribe = new Subject();
-
-//   constructor(private route: ActivatedRoute, private stockService: StockService, private authService: AuthService) {}
-
-//   ngOnInit(): void {
-//     this.isAuth = this.authService.isAuthorized();
-//     this.auth$ = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
-//       this.isAuth = authStatus;
-//     });
-
-//     this.route.paramMap.subscribe((paramMap: ParamMap) => {
-//       this.ticker = paramMap.get('ticker');
-//       this.stockService
-//         .getStock(this.ticker)
-//         .pipe(takeUntil(this.ngUnsubscribe))
-//         .subscribe((response: any) => {
-//           this.stock = response;
-
-//           this.stockLoaded = true;
-
-//           this.updateStockRatingsBarChartItems();
-//         });
-//     });
-//   }
-
-//   ngOnDestroy(): void {
-//     this.auth$.unsubscribe();
-
-//     this.ngUnsubscribe.next();
-//     this.ngUnsubscribe.complete();
-//   }
-
-//   /** Event handler for the Stock Page Header emitting an event when the user clicks a rating button */
-//   onRatingUpdated(): void {
-//     this.updateStockRatingsBarChartItems();
-//   }
-
-//   /** Sets an array of objects representing a stock rating counts that will be passed to the Ngx Bar Chart */
-//   updateStockRatingsBarChartItems(): void {
-//     this.stockRatingBarChartItems = {
-//       buyRating: { name: 'Buy', value: this.stock.rating.buy },
-//       holdRating: { name: 'Hold', value: this.stock.rating.hold },
-//       sellRating: { name: 'Sell', value: this.stock.rating.sell },
-//     };
-//   }
-// }

@@ -33,6 +33,8 @@ export class UserAccount extends BaseEntity {
   @OneToMany((type) => StockRating, (stockRating) => stockRating.userAccount, { eager: false, cascade: true })
   stockRatings: StockRating[];
 
+  // TODO: Add OneToMany relationship of User to notifications
+
   // @Column({
   //   type: 'enum',
   //   enum: UserRole,

@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { StocksComponent } from './pages/stocks/stocks.component';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +15,7 @@ import { TradingViewStockChartComponent } from './components/trading-view-stock-
 @NgModule({
   declarations: [StocksComponent, StockComponent, StockPerformanceChartComponent, TradingViewStockChartComponent],
   imports: [
+    ClipboardModule,
     CommonModule,
     FormsModule,
     HighchartsChartModule,

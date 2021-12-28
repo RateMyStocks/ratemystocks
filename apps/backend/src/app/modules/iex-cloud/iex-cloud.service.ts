@@ -36,7 +36,7 @@ export class IexCloudService {
    */
   async getStockData(ticker: string): Promise<IexCloudStockDataDto> {
     const stockInfo: IexCloudStockInfoDto = await this.httpService
-      .get(`/stock/${ticker}/batch?types=stats,company,quote`)
+      .get(`/stock/${ticker}/batch?types=stats,company,quote,news`)
       .toPromise();
     const stockData: IexCloudStockDataDto = stockInfo.data;
     return stockData;

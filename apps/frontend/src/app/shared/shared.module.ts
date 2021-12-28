@@ -5,6 +5,7 @@ import { EmailFormFieldValidatorPipe } from './pipes/email-form-field-validator.
 import { PasswordFormFieldValidatorPipe } from './pipes/password-form-field-validator.pipe';
 import { PasswordReenterFormFieldValidatorPipe } from './pipes/password-reenter-form-field-validator.pipe';
 import { TruncatePipe } from './pipes/truncate.pipe';
+import { RoundingPipe } from './pipes/rounding.pipe';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,7 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     EmailFormFieldValidatorPipe,
     PasswordFormFieldValidatorPipe,
     PasswordReenterFormFieldValidatorPipe,
+    RoundingPipe,
     TruncatePipe,
   ],
   imports: [CommonModule],
@@ -20,6 +22,7 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     EmailFormFieldValidatorPipe,
     PasswordFormFieldValidatorPipe,
     PasswordReenterFormFieldValidatorPipe,
+    RoundingPipe,
     TruncatePipe,
   ],
 })

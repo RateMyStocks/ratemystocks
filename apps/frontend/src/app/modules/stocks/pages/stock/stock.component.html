@@ -4,7 +4,6 @@
         <i class="pi pi-reddit"></i>
     </a>
 </div> -->
-
 <div class="layout-dashboard" *ngIf="stock; else stockNotLoaded">
     <div class="p-grid">
         <div class="p-col-12 p-md-12 p-xl-9">
@@ -39,14 +38,15 @@
                           </div>
                         </div>
                         <div class="overview-footer">
-
-                            <small class="p-ml-2">After Hours: </small>
-                            <small [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }">
-                              ${{ stock.data.quote?.extendedPrice }}
-                              <span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote?.extendedChange }} ({{
-                                (stock.data.quote?.extendedChangePercent * 100)?.toFixed(2)
-                              }}%)
-                            </small>
+                            <span *ngIf="stock.data.quote.extendedPrice">
+                              <small class="p-ml-2">After Hours: </small>
+                              <small [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }">
+                                ${{ stock.data.quote?.extendedPrice }}
+                                <span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote?.extendedChange }} ({{
+                                  (stock.data.quote?.extendedChangePercent * 100)?.toFixed(2)
+                                }}%)
+                              </small>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -59,8 +59,8 @@
                             </div>
                         </div>
                         <div class="overview-content">
-                            <!-- <h3>{{followers}}</h3> -->
-                            <h3>3.5k</h3>
+                            <h3>{{followers}}</h3>
+                            <!-- <h3>3.5k</h3> -->
                             <div class="overview-graph">
                                 <span style="height: 30px;"><span class="graph-tooltip">30</span></span>
                                 <span style="height: 43px;"><span class="graph-tooltip">43</span></span>
@@ -84,8 +84,8 @@
                             </div>
                         </div>
                         <div class="overview-content">
-                            <!-- <h3>{{ visitors }}</h3> -->
-                            <h3>1.2m</h3>
+                            <h3>{{ visitors }}</h3>
+                            <!-- <h3>1.2m</h3> -->
                             <div class="overview-graph">
                                 <span style="height: 20px;"><span class="graph-tooltip">20</span></span>
                                 <span style="height: 23px;"><span class="graph-tooltip">23</span></span>
@@ -118,94 +118,115 @@
 
         <div class="p-col-12 p-md-12 p-xl-3">
             <div class="p-grid">
-                <div class="p-col-12 p-md-6 p-xl-12">
-                    <div class="card traffic">
-                        <div class="card-header">
-                            <h6>User Ratings</h6>
-                        </div>
-                        <!-- <span>26 May - 27 May</span> -->
-                        <div class="traffic-chart">
-                            <p-chart #traffic type="doughnut" [data]="trafficChart" [options]="trafficOptions" [responsive]="true" width="210px" height="210px"></p-chart>
-                        </div>
-                        <div id="traffic-tabs-container" class="traffic-tabs">
-                            <div class="traffic-tab" [ngClass]="{'traffic-tab-active':activeTraffic===0}"
-                                 (click)="toggleStockRating($event, 'buy'); traffic.refresh()"
-                                 data-label="New Sales" data-index="0"  >
-                                <h6>50%</h6>
-                                <!-- <i class="pi pi-facebook"></i> -->
-                                <!-- <h6>Buy <span style="color: #3ac961; font-size: 32px;">&#8226;</span></h6> -->
-                                <h6 style="text-decoration: 2px underline #3ac961; text-underline-offset: 4px;">Buy</h6>
-                                <!-- <h6 style="font-size: small;">(124 ratings)</h6> -->
-                            </div>
-                            <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===1}"
-                                 (click)="toggleStockRating($event, 'hold'); traffic.refresh()"
-                                 data-label="Previous Sales" data-index="1">
-                                <h6>25%</h6>
-                                <h6 style="text-decoration: 2px underline #c98b3a; text-underline-offset: 4px;">Hold</h6>
-                            </div>
-                            <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===2}"
-                                 (click)="toggleStockRating($event, 'sell'); traffic.refresh()"
-                                 data-label="Previous Sales" data-index="2">
-                                <h6>25%</h6>
-                                <!-- <i class="pi pi-github"></i> -->
-                                <h6 style="text-decoration: 2px underline red; text-underline-offset: 4px;">Sell</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-col-12 p-md-6 p-xl-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6>Company Info</h6>
-                        </div>
-                        <div class="p-mb-2"><small><b>CEO:</b> {{ stock.data.company.CEO }}</small></div>
-                        <div class="p-mb-2">
-                          <small>
-                            <b>Headquarters:</b> {{ stock.data.company.city }},
-                            {{ stock.data.company.state }}
-                            {{ stock.data.company.country }}
-                          </small>
-                        </div>
-                        <div class="p-mb-2"><small><b>Employees:</b> {{ stock.data.company.employees?.toLocaleString() }}</small></div>
-                        <div class="p-mb-2"><small><b>Industry:</b> {{ stock.data.company?.industry }}</small></div>
-                        <div class="p-mb-2"><small><b>Sector:</b> {{ stock.data.company?.sector }}</small></div>
-                        <div class="p-mb-2"><small><b>Website:</b> <a href="https://{{stock.data.company?.website}}" target="_blank"> {{ stock.data.company?.website }}</a></small></div>
-                    </div>
-                </div>
-                <!-- <div class="p-col-12 p-md-6 p-xl-12">
-                  <div class="card">
-                    <div class="card-header">
-                        <h6>Share</h6>
-                    </div>
-                    <div class="social-media-icons-container">
-                      <img
-                        src="../../../../../assets/layout/images/social-media/reddit.png"
-                        (click)="shareOnSocialMedia('http://www.reddit.com/submit?url=')"
-                        title="Share on Reddit"
-                        class="p-mr-3"
-                      />
-                      <img
-                        src="../../../../../assets/layout/images/social-media/facebook.png"
-                        (click)="shareOnSocialMedia('https://www.facebook.com/sharer/sharer.php?u=')"
-                        title="Share on Facebook"
-                        class="p-mr-3"
-                      />
-                      <img
-                        src="../../../../../assets/layout/images/social-media/twitter.png"
-                        (click)="shareOnSocialMedia('http://twitter.com/share?text=Check out my portfolio!&url=')"
-                        title="Share on Twitter"
-                        class="p-mr-3"
-                      />
-                      <img
-                        src="../../../../../assets/layout/images/social-media/link.png"
-                        title="Copy Link"
-                        [cdkCopyToClipboard]="copiedPortfolioLink"
-                        (click)="onCopyPageLink()"
-                        class="p-mr-3"
-                      />
-                    </div>
+              <div class="p-col-12 p-md-6 p-xl-12">
+                <div class="card">
+                  <div class="card-header">
+                      <h6>Share</h6>
                   </div>
-                </div> -->
+                  <div class="social-media-icons-container">
+                    <img
+                      src="../../../../../assets/layout/images/social-media/reddit.png"
+                      (click)="shareOnSocialMedia('http://www.reddit.com/submit?url=')"
+                      title="Share on Reddit"
+                      class="p-mr-3"
+                    />
+                    <img
+                      src="../../../../../assets/layout/images/social-media/facebook.png"
+                      (click)="shareOnSocialMedia('https://www.facebook.com/sharer/sharer.php?u=')"
+                      title="Share on Facebook"
+                      class="p-mr-3"
+                    />
+                    <img
+                      src="../../../../../assets/layout/images/social-media/twitter.png"
+                      (click)="shareOnSocialMedia('http://twitter.com/share?text=Check out my portfolio!&url=')"
+                      title="Share on Twitter"
+                      class="p-mr-3"
+                    />
+                    <img
+                      src="../../../../../assets/layout/images/social-media/linkedin.png"
+                      (click)="shareOnSocialMedia('https://www.linkedin.com/sharing/share-offsite/?url=')"
+                      title="Share on LinkedIn"
+                      class="p-mr-3"
+                    />
+                    <!-- <img
+                      src="../../../../../assets/layout/images/social-media/whatsapp.png"
+                      (click)="shareOnSocialMedia('')"
+                      title="Share on WhatsApp"
+                      class="p-mr-3"
+                    />
+                    <img
+                      src="../../../../../assets/layout/images/social-media/kakaotalk.png"
+                      (click)="shareOnSocialMedia('')"
+                      title="Share on KakaoTalk"
+                      class="p-mr-3"
+                    /> -->
+                    <img
+                      src="../../../../../assets/layout/images/social-media/link.png"
+                      title="Copy Link"
+                      [cdkCopyToClipboard]="copiedPortfolioLink"
+                      (click)="onCopyPageLink()"
+                      class="p-mr-3"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="p-col-12 p-md-6 p-xl-12">
+                <div class="card traffic">
+                  <div class="card-header">
+                    <h6>User Ratings</h6>
+                  </div>
+                  <div class="traffic-chart">
+                    <!-- <p-chart #traffic type="doughnut" [data]="stockRatingsPieChart" [options]="trafficOptions" [responsive]="true" width="210px" height="210px"></p-chart> -->
+                    <p-chart #traffic  type="bar" [data]="stockRatingsPieChart" [options]="trafficOptions" [responsive]="true" ></p-chart>
+                  </div>
+                  <!-- <div style="text-align: center;">
+                    <p *ngIf="stock.rating.buy === 0 && stock.rating.hold === 0 && stock.rating.sell === 0; else noStockRatings">This stock has not been rated yet.</p>
+                  </div> -->
+                  <div id="traffic-tabs-container" class="traffic-tabs">
+                    <div class="traffic-tab" [ngClass]="{'traffic-tab-active':activeTraffic===0}"
+                          (click)="toggleStockRating($event, 'buy'); traffic.refresh()"
+                          data-label="New Sales" data-index="0"  >
+                      <h6>{{stockRatingBuyPercent | round}}%</h6>
+                      <!-- <i class="pi pi-facebook"></i> -->
+                      <!-- <h6>Buy <span style="color: #3ac961; font-size: 32px;">&#8226;</span></h6> -->
+                      <h6 style="text-decoration: 3px underline #3ac961; text-underline-offset: 4px;">Buy</h6>
+                      <!-- <h6 style="font-size: small;">(124 ratings)</h6> -->
+                    </div>
+                      <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===1}"
+                            (click)="toggleStockRating($event, 'hold'); traffic.refresh()"
+                            data-label="Previous Sales" data-index="1">
+                        <h6>{{stockRatingHoldPercent | round}}%</h6>
+                        <h6 style="text-decoration: 3px underline #c98b3a; text-underline-offset: 4px;">Hold</h6>
+                      </div>
+                      <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===2}"
+                            (click)="toggleStockRating($event, 'sell'); traffic.refresh()"
+                            data-label="Previous Sales" data-index="2">
+                        <h6>{{stockRatingSellPercent | round}}%</h6>
+                        <!-- <i class="pi pi-github"></i> -->
+                        <h6 style="text-decoration: 3px underline red; text-underline-offset: 4px;">Sell</h6>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <div class="p-col-12 p-md-6 p-xl-12">
+                  <div class="card">
+                      <div class="card-header">
+                          <h6>Company Info</h6>
+                      </div>
+                      <div class="p-mb-2"><small><b>CEO:</b> {{ stock.data.company.CEO }}</small></div>
+                      <div class="p-mb-2">
+                        <small>
+                          <b>Headquarters:</b> {{ stock.data.company.city }},
+                          {{ stock.data.company.state }}
+                          {{ stock.data.company.country }}
+                        </small>
+                      </div>
+                      <div class="p-mb-2"><small><b>Employees:</b> {{ stock.data.company.employees?.toLocaleString() }}</small></div>
+                      <div class="p-mb-2"><small><b>Industry:</b> {{ stock.data.company?.industry }}</small></div>
+                      <div class="p-mb-2"><small><b>Sector:</b> {{ stock.data.company?.sector }}</small></div>
+                      <div class="p-mb-2"><small><b>Website:</b> <a href="https://{{stock.data.company?.website}}" target="_blank"> {{ stock.data.company?.website }}</a></small></div>
+                  </div>
+              </div>
             </div>
         </div>
 
@@ -256,61 +277,18 @@
                 <div class="card-header">
                     <h6>News</h6>
                 </div>
-                <ul>
-                    <li>
-                        <div class="product">
-                            <img src="assets/layout/images/dashboard/image-product-1.png" alt="poseidon-layout" />
-                            <div class="product-info">
-                                <p>News 1</p>
-                                <small>3 hours ago</small>
-                            </div>
-
+                <ul style="max-height:300px;margin:0;overflow:auto;">
+                    <li *ngFor="let article of stock.data.news">
+                      <div class="product">
+                        <img src="{{article?.image}}" />
+                        <div class="product-info">
+                            <p><b>{{article?.headline | truncate:[50, '...'] }}</b></p>
+                            <small>{{article?.source}}</small>
+                            &#8226;
+                            <small>{{ moment(article?.datetime).fromNow() }}</small>
                         </div>
-                        <!-- <i class="pi pi-arrow-up"></i> -->
-                    </li>
-                    <li>
-                        <div class="product">
-                            <img src="assets/layout/images/dashboard/image-product-2.png" alt="poseidon-layout" />
-                            <div class="product-info">
-                                <p>News 2</p>
-                                <small>4 hours ago</small>
-                            </div>
-
-                        </div>
-                        <!-- <i class="pi pi-arrow-up"></i> -->
-                    </li>
-                    <li>
-                        <div class="product">
-                            <img src="assets/layout/images/dashboard/image-product-3.png" alt="poseidon-layout" />
-                            <div class="product-info">
-                                <p>News 3</p>
-                                <small>5 hours ago</small>
-                            </div>
-
-                        </div>
-                        <!-- <i class="pi pi-arrow-up"></i> -->
-                    </li>
-                    <li>
-                        <div class="product">
-                            <img src="assets/layout/images/dashboard/image-product-4.png" alt="poseidon-layout" />
-                            <div class="product-info">
-                                <p>News 4</p>
-                                <small>1 day ago</small>
-                            </div>
-
-                        </div>
-                        <!-- <i class="pi pi-arrow-down down"></i> -->
-                    </li>
-                    <li>
-                        <div class="product">
-                            <img src="assets/layout/images/dashboard/image-product-5.png" alt="poseidon-layout" />
-                            <div class="product-info">
-                                <p>News 5</p>
-                                <small>2 days ago</small>
-                            </div>
-
-                        </div>
-                        <!-- <i class="pi pi-arrow-up"></i> -->
+                      </div>
+                      <!-- <i class="pi pi-arrow-up"></i> -->
                     </li>
                 </ul>
             </div>
