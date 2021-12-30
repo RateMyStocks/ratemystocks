@@ -14,11 +14,11 @@ For more info on our development processes, visit our [wiki](https://github.com/
 
 # Prerequisites
 
-1. Install Node.js & npm: [Node.js Download](https://nodejs.org/en/download/)
-2. Install Angular CLI: `npm install -g @angular/cli`.
+1. Install Node.js & npm: [Node.js Download](https://nodejs.org/en/download/). Currently this application is verified to work with `Node v14.x` & `npm v6.x` & may or may not work fine with the latest versions.
+2. Install Angular CLI: `npm install -g @angular/cli`. Currently this application is on `Angular 12`, but it may be fine to use later versions of the CLI.
 3. Install Nx CLI Globally: `npm install -g nx`.
-4. Install Docker: [Docker Download](https://docs.docker.com/get-docker/)
-5. (Optional) Install [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
+4. Install Docker: [Docker Download](https://docs.docker.com/get-docker/).
+5. (Optional) Install [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli).
 
 # Running the app locally
 

@@ -76,4 +76,18 @@ export class StockService {
       { withCredentials: true }
     );
   }
+
+  /**
+   * Adds a visit to the stock_visit table indicating a page visit on a given stock page.
+   * @param ticker The ticker symbol of the stock page being visited.
+   * @param userId (Optional) If a logged-in user visits the stock page, this query parameter will be supplied.
+   * @returns The number of page visits for a given stock ticker symbol.
+   */
+  addStockPageVisit(ticker: string, userId?: string): Observable<number> {
+    // return this.httpClient.post<any>(`${this.baseApiUrl}/visit-count/${ticker}?userId=${userId}`, null);
+    const url = userId
+      ? `${this.baseApiUrl}/visit-count/${ticker}?userId=${userId}`
+      : `${this.baseApiUrl}/visit-count/${ticker}`;
+    return this.httpClient.post<any>(url, null);
+  }
 }

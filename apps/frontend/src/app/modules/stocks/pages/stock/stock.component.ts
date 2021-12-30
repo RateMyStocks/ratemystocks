@@ -36,6 +36,7 @@ export class StockComponent implements OnInit, OnDestroy {
   stockLoaded = false;
   followers = 0;
   visitors = 0;
+  isLoggedInUserFollowing = false;
   isAuth: boolean;
   userRating: string; // string that has the value buy, hold, or sell
   auth$: Subscription;
@@ -70,7 +71,6 @@ export class StockComponent implements OnInit, OnDestroy {
 
           const totalRatingCount = this.stock.rating.buy + this.stock.rating.hold + this.stock.rating.sell;
           this.stockRatingBuyPercent = totalRatingCount > 0 ? (this.stock.rating.buy / totalRatingCount) * 100 : 0;
-          console.log(totalRatingCount);
           this.stockRatingHoldPercent = totalRatingCount > 0 ? (this.stock.rating.hold / totalRatingCount) * 100 : 0;
           this.stockRatingSellPercent = totalRatingCount > 0 ? (this.stock.rating.sell / totalRatingCount) * 100 : 0;
         });
@@ -84,17 +84,23 @@ export class StockComponent implements OnInit, OnDestroy {
       this.isAuth = this.authService.isAuthorized();
       if (this.isAuth) {
         this.fetchUserRating();
+        this.stockService
+          .addStockPageVisit(this.ticker, this.authService.getUserId())
+          .subscribe((visitCount: number) => (this.visitors = visitCount));
       } else {
         this.userRating = null;
+        this.stockService
+          .addStockPageVisit(this.ticker)
+          .subscribe((visitCount: number) => (this.visitors = visitCount));
       }
     });
 
-    this.isAuth = this.authService.isAuthorized();
-    if (this.isAuth) {
-      this.fetchUserRating();
-    } else {
-      this.userRating = null;
-    }
+    // this.isAuth = this.authService.isAuthorized();
+    // if (this.isAuth) {
+    //   this.fetchUserRating();
+    // } else {
+    //   this.userRating = null;
+    // }
 
     this.auth$ = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
       this.isAuth = authStatus;
@@ -134,7 +140,7 @@ export class StockComponent implements OnInit, OnDestroy {
 
   getStockRatingsChartData(stockRatingCounts: StockRatingCountDto) {
     return {
-      labels: ['Buy Ratings', 'Hold Ratings', 'Sell Ratings'],
+      labels: ['Buy', 'Hold', 'Sell'],
       datasets: [
         {
           data: [stockRatingCounts.buy, stockRatingCounts.hold, stockRatingCounts.sell],
@@ -173,9 +179,9 @@ export class StockComponent implements OnInit, OnDestroy {
         ];
 
         const totalRatingCount = this.stock.rating.buy + this.stock.rating.hold + this.stock.rating.sell;
-        this.stockRatingBuyPercent = totalRatingCount > 0 ? this.stock.rating.buy / totalRatingCount : 0;
-        this.stockRatingHoldPercent = totalRatingCount > 0 ? this.stock.rating.hold / totalRatingCount : 0;
-        this.stockRatingSellPercent = totalRatingCount > 0 ? this.stock.rating.sell / totalRatingCount : 0;
+        this.stockRatingBuyPercent = totalRatingCount > 0 ? (this.stock.rating.buy / totalRatingCount) * 100 : 0;
+        this.stockRatingHoldPercent = totalRatingCount > 0 ? (this.stock.rating.hold / totalRatingCount) * 100 : 0;
+        this.stockRatingSellPercent = totalRatingCount > 0 ? (this.stock.rating.sell / totalRatingCount) * 100 : 0;
       }
     } else {
       this.messageService.add({
@@ -210,6 +216,14 @@ export class StockComponent implements OnInit, OnDestroy {
       });
   }
 
+  followStock(): void {
+    this.isLoggedInUserFollowing = true;
+  }
+
+  unfollowStock(): void {
+    this.isLoggedInUserFollowing = false;
+  }
+
   /**
    * Social media icon click event handler to share the portfolio link to the corresponding site.
    * NOTE: When redirecting from localhost, some social media sites will block the request.
@@ -221,11 +235,11 @@ export class StockComponent implements OnInit, OnDestroy {
 
   /** The click handler for the cdkCopyToClipboard directive shows a message when the link is copied. */
   onCopyPageLink(): void {
-    // this.snackbar.open('Portfolio link copied to clipboard.', 'OK', {
-    //   duration: 3000,
-    //   panelClass: 'success-snackbar',
-    //   verticalPosition: 'top',
-    //   horizontalPosition: 'right',
-    // });
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Copied!',
+      detail: 'Page link copied to clipboard',
+      // position:
+    });
   }
 }

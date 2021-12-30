@@ -99,4 +99,15 @@ export class StockController {
   getMostDislikedStocks(@Query('lastNDays') lastNDays?: number): Promise<StockRatingListItem[]> {
     return this.stockService.getMostDislikedStocks(lastNDays);
   }
+
+  /**
+   * Adds a visit to the stock_visit table indicating a page visit on a given stock page.
+   * @param ticker The ticker symbol of the stock page being visited.
+   * @param userId (Optional) If a logged-in user visits the stock page, this query parameter will be supplied.
+   * @returns The number of page visits for a given stock ticker symbol.
+   */
+  @Post('/visit-count/:ticker')
+  addStockPageVisit(@Param('ticker') ticker: string, @Query('userId') userId?: string): Promise<number> {
+    return this.stockService.addStockPageVisit(ticker, userId);
+  }
 }

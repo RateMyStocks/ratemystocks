@@ -4,6 +4,8 @@ import { PortfolioRating } from './portfolioRating.entity';
 import * as bcrypt from 'bcryptjs';
 import { StockRating } from './stockRating.entity';
 import { SpiritAnimal, UserRole } from '@ratemystocks/api-interface';
+import { StockFollower } from './stockFollower.entity';
+import { StockVisit } from './stockVisit.entity';
 
 @Entity({ name: 'user_account' })
 @Unique('uq_user_account_username', ['username'])
@@ -34,6 +36,12 @@ export class UserAccount extends BaseEntity {
   stockRatings: StockRating[];
 
   // TODO: Add OneToMany relationship of User to notifications
+
+  @OneToMany((type) => StockVisit, (stockVisit) => stockVisit.userAccount, { eager: false, cascade: true })
+  stockVisits: StockVisit[];
+
+  @OneToMany((type) => StockFollower, (stockFollower) => stockFollower.userAccount, { eager: false, cascade: true })
+  stockFollowers: StockFollower[];
 
   // @Column({
   //   type: 'enum',

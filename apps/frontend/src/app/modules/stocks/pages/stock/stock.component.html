@@ -55,7 +55,8 @@
                         <div class="card-header">
                             <h6>Followers</h6>
                             <div class="header-buttons">
-                              <a href="#"><i class="pi pi-plus-circle"></i></a>
+                              <a *ngIf="!isLoggedInUserFollowing" (click)="followStock()"><i class="pi pi-plus-circle"></i></a>
+                              <a *ngIf="isLoggedInUserFollowing" (click)="unfollowStock()"><i class="pi pi-check-circle"></i></a>
                             </div>
                         </div>
                         <div class="overview-content">
@@ -80,7 +81,7 @@
                         <div class="card-header">
                             <h6>Visitors</h6>
                             <div class="header-buttons">
-                                <!-- <a href="#"><i class="pi pi-arrow-up"></i></a> -->
+                                <a><i class="pi pi-users"></i></a>
                             </div>
                         </div>
                         <div class="overview-content">
@@ -177,7 +178,7 @@
                   </div>
                   <div class="traffic-chart">
                     <!-- <p-chart #traffic type="doughnut" [data]="stockRatingsPieChart" [options]="trafficOptions" [responsive]="true" width="210px" height="210px"></p-chart> -->
-                    <p-chart #traffic  type="bar" [data]="stockRatingsPieChart" [options]="trafficOptions" [responsive]="true" ></p-chart>
+                    <p-chart #traffic  type="bar" [data]="stockRatingsPieChart" [options]="trafficOptions" [responsive]="true" width="210px" height="auto"></p-chart>
                   </div>
                   <!-- <div style="text-align: center;">
                     <p *ngIf="stock.rating.buy === 0 && stock.rating.hold === 0 && stock.rating.sell === 0; else noStockRatings">This stock has not been rated yet.</p>
@@ -189,21 +190,21 @@
                       <h6>{{stockRatingBuyPercent | round}}%</h6>
                       <!-- <i class="pi pi-facebook"></i> -->
                       <!-- <h6>Buy <span style="color: #3ac961; font-size: 32px;">&#8226;</span></h6> -->
-                      <h6 style="text-decoration: 3px underline #3ac961; text-underline-offset: 4px;">Buy</h6>
+                      <h6 style="text-decoration: 3px underline #3ac961; text-underline-offset: 5px;">Buy</h6>
                       <!-- <h6 style="font-size: small;">(124 ratings)</h6> -->
                     </div>
                       <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===1}"
                             (click)="toggleStockRating($event, 'hold'); traffic.refresh()"
                             data-label="Previous Sales" data-index="1">
                         <h6>{{stockRatingHoldPercent | round}}%</h6>
-                        <h6 style="text-decoration: 3px underline #c98b3a; text-underline-offset: 4px;">Hold</h6>
+                        <h6 style="text-decoration: 3px underline #c98b3a; text-underline-offset: 5px;">Hold</h6>
                       </div>
                       <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===2}"
                             (click)="toggleStockRating($event, 'sell'); traffic.refresh()"
                             data-label="Previous Sales" data-index="2">
                         <h6>{{stockRatingSellPercent | round}}%</h6>
                         <!-- <i class="pi pi-github"></i> -->
-                        <h6 style="text-decoration: 3px underline red; text-underline-offset: 4px;">Sell</h6>
+                        <h6 style="text-decoration: 3px underline red; text-underline-offset: 5px;">Sell</h6>
                       </div>
                   </div>
                 </div>
@@ -279,15 +280,17 @@
                 </div>
                 <ul style="max-height:300px;margin:0;overflow:auto;">
                     <li *ngFor="let article of stock.data.news">
-                      <div class="product">
-                        <img src="{{article?.image}}" />
-                        <div class="product-info">
-                            <p><b>{{article?.headline | truncate:[50, '...'] }}</b></p>
-                            <small>{{article?.source}}</small>
-                            &#8226;
-                            <small>{{ moment(article?.datetime).fromNow() }}</small>
+                      <a href="{{article?.url}}" target="_blank">
+                        <div class="product">
+                          <img src="{{article?.image}}" />
+                          <div class="product-info">
+                              <p><b>{{article?.headline | truncate:[50, '...'] }}</b></p>
+                              <small>{{article?.source}}</small>
+                              &#8226;
+                              <small>{{ moment(article?.datetime).fromNow() }}</small>
+                          </div>
                         </div>
-                      </div>
+                      </a>
                       <!-- <i class="pi pi-arrow-up"></i> -->
                     </li>
                 </ul>

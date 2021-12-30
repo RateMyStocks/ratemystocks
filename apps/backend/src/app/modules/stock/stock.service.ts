@@ -4,10 +4,15 @@ import { StockRatingRepository } from './stock-rating.repository';
 import { StockRatingCountDto, StockRatingDto, StockRatingListItem } from '@ratemystocks/api-interface';
 import { StockRating, StockRatingEnum } from '../../../models/stockRating.entity';
 import { UserAccount } from '../../../models/userAccount.entity';
+import { StockVisitRepository } from './stock-visit.repository';
+import { StockVisit } from 'apps/backend/src/models/stockVisit.entity';
 
 @Injectable()
 export class StockService {
-  constructor(@InjectRepository(StockRatingRepository) private stockRatingRepo: StockRatingRepository) {}
+  constructor(
+    @InjectRepository(StockRatingRepository) private stockRatingRepo: StockRatingRepository,
+    @InjectRepository(StockVisitRepository) private stockVisitRepo: StockVisitRepository
+  ) {}
 
   /**
    * Counts the number of buy, sell and hold counts for a stock
@@ -216,5 +221,15 @@ export class StockService {
       .getRawMany();
 
     return stockRatings;
+  }
+
+  /**
+   * Adds a visit to the stock_visit table indicating a page visit on a given stock page.
+   * @param ticker The ticker symbol of the stock page being visited.
+   * @param userId (Optional) If a logged-in user visits the stock page, this query parameter will be supplied.
+   * @returns The number of page visits for a given stock ticker symbol.
+   */
+  async addStockPageVisit(ticker: string, userId?: string): Promise<number> {
+    return this.stockVisitRepo.addStockPageVisit(ticker, userId);
   }
 }
