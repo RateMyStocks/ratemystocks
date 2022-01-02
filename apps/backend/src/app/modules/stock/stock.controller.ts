@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
   IexCloudStockDataDto,
@@ -109,5 +109,48 @@ export class StockController {
   @Post('/visit-count/:ticker')
   addStockPageVisit(@Param('ticker') ticker: string, @Query('userId') userId?: string): Promise<number> {
     return this.stockService.addStockPageVisit(ticker, userId);
+  }
+
+  @Get('/visit-counts')
+  getLastNVisitCounts(@Param('ticker') ticker: string, @Query('lastNDays') lastNDays?: number): Promise<any[]> {
+    return null;
+  }
+
+  /**
+   * Creating an entry in the stock_follower table, thus tying a logged-in user to a given ticker symbol so they
+   * can be notified of updates and news events later on.
+   * @param userAccount The logged-in user following the stock.
+   * @param ticker The ticker symbol of the stock page being followed.
+   * @returns The number of page visits for a given stock ticker symbol.
+   */
+  @Post('/follow/:ticker')
+  @UseGuards(AuthGuard())
+  followStock(@GetUser() userAccount: UserAccount, @Param('ticker') ticker: string): Promise<void> {
+    return this.stockService.followStock(userAccount, ticker);
+  }
+
+  /**
+   * Deletes the entry in the stock_follower table, so the specified user
+   * will unfollow a stock if it is already following it.
+   * @param userAccount The account object of the logged-in user.
+   * @param ticker The ticker symbol of the stock the user is following.
+   * @throws NotFoundException If the user specified isn't actually following the stock.
+   */
+  @Delete('/unfollow/:ticker')
+  @UseGuards(AuthGuard())
+  unfollowStock(@GetUser() userAccount: UserAccount, @Param('ticker') ticker: string): Promise<void> {
+    return this.stockService.unfollowStock(userAccount, ticker);
+  }
+
+  /**
+   * Returns true if the logged-in user is following a given stock, false otherwise.
+   * @param userAccount The UserAccount object of the logged-in user.
+   * @param ticker The ticker symbol of the stock to check against.
+   * @returns true if the logged-in user is following a given stock, false otherwise.
+   */
+  @Get('/isfollowing/:ticker')
+  @UseGuards(AuthGuard())
+  isFollowingStock(@GetUser() userAccount: UserAccount, @Param('ticker') ticker: string): Promise<boolean> {
+    return this.stockService.isFollowingStock(userAccount, ticker);
   }
 }

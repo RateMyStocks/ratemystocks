@@ -130,7 +130,7 @@
                   *ngIf="stock.ticker"
                   class="stock-logo"
                   src="https://storage.googleapis.com/iex/api/logos/{{ stock.ticker }}.png"
-                  onerror="this.onerror=null; this.src='assets/images/question-mark-placeholder.png'"
+                  onerror="this.onerror=null; this.src=''"
                 />
                 <a routerLink="/stocks/{{ stock.ticker }}">
                   <b>{{ stock.ticker }}</b>

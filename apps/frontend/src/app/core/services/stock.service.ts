@@ -90,4 +90,36 @@ export class StockService {
       : `${this.baseApiUrl}/visit-count/${ticker}`;
     return this.httpClient.post<any>(url, null);
   }
+
+  /**
+   * Creating an entry in the stock_follower table, thus tying a logged-in user to a given ticker symbol so they
+   * can be notified of updates and news events later on.
+   * @param userAccount The logged-in user following the stock.
+   * @param ticker The ticker symbol of the stock page being followed.
+   * @returns The number of page visits for a given stock ticker symbol.
+   */
+  followStock(ticker: string): Observable<void> {
+    return this.httpClient.post<void>(`${this.baseApiUrl}/follow/${ticker}`, null, { withCredentials: true });
+  }
+
+  /**
+   * Deletes the entry in the stock_follower table, so the specified user
+   * will unfollow a stock if it is already following it.
+   * @param userAccount The account object of the logged-in user.
+   * @param ticker The ticker symbol of the stock the user is following.
+   * @throws 404 If the user specified isn't actually following the stock.
+   */
+  unfollowStock(ticker: string): Observable<void> {
+    return this.httpClient.delete<void>(`${this.baseApiUrl}/unfollow/${ticker}`, { withCredentials: true });
+  }
+
+  /**
+   * Returns true if the logged-in user is following a given stock, false otherwise.
+   * @param userAccount The UserAccount object of the logged-in user.
+   * @param ticker The ticker symbol of the stock to check against.
+   * @returns true if the logged-in user is following a given stock, false otherwise.
+   */
+  isFollowingStock(ticker: string): Observable<boolean> {
+    return this.httpClient.get<boolean>(`${this.baseApiUrl}/isfollowing/${ticker}`, { withCredentials: true });
+  }
 }

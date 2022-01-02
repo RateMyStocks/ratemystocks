@@ -11,6 +11,7 @@ import { Subject, Subscription } from 'rxjs';
 import { AuthService } from '../../../../core/services/auth.service';
 import { MoneyFormatter } from '../../../../shared/utilities/money-formatter';
 import * as moment from 'moment';
+import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
   templateUrl: './stock.component.html',
@@ -36,6 +37,7 @@ export class StockComponent implements OnInit, OnDestroy {
   stockLoaded = false;
   followers = 0;
   visitors = 0;
+  visitCountsByDay!: any[];
   isLoggedInUserFollowing = false;
   isAuth: boolean;
   userRating: string; // string that has the value buy, hold, or sell
@@ -50,6 +52,8 @@ export class StockComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private stockService: StockService,
     private messageService: MessageService,
+    private meta: Meta,
+    private title: Title,
     @Inject(DOCUMENT) private document: Document
   ) {}
 
@@ -57,11 +61,30 @@ export class StockComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.activeTraffic = null;
       this.ticker = paramMap.get('ticker');
+
       this.stockService
         .getStock(this.ticker)
         .pipe(takeUntil(this.ngUnsubscribe))
         .subscribe((response: { rating: StockRatingCountDto; data: IexCloudStockDataDto }) => {
           this.stock = response;
+
+          this.title.setTitle(
+            `${this.stock.data.company?.companyName} (${this.ticker}) Stock Price, Information, & News - ratemystocks.com`
+          );
+          this.meta.addTags([
+            {
+              name: 'description',
+              content: `Get real-time stock quote, news, performance, & other information for ${this.ticker}. Rate & discuss stonks with other investors & traders on ratemystocks.com.`,
+            },
+            {
+              name: 'keywords',
+              content: `${this.stock.data.company?.companyName}, ${this.stock.data.company?.companyName} stock price, ${this.stock.data.company?.companyName} news, ${this.ticker}, ${this.ticker} stock price, ${this.ticker} news, ${this.ticker} charting, financial forum, stock forum, stock discussion`,
+            },
+            {
+              name: 'viewport',
+              content: 'width=device-width, initial-scale=1',
+            },
+          ]);
 
           console.log('STOCK: ', this.stock);
 
@@ -87,6 +110,10 @@ export class StockComponent implements OnInit, OnDestroy {
         this.stockService
           .addStockPageVisit(this.ticker, this.authService.getUserId())
           .subscribe((visitCount: number) => (this.visitors = visitCount));
+
+        this.stockService.isFollowingStock(this.ticker).subscribe((isFollowingStock: boolean) => {
+          this.isLoggedInUserFollowing = isFollowingStock;
+        });
       } else {
         this.userRating = null;
         this.stockService
@@ -106,6 +133,13 @@ export class StockComponent implements OnInit, OnDestroy {
       this.isAuth = authStatus;
       if (this.isAuth) {
         this.fetchUserRating();
+        this.stockService
+          .addStockPageVisit(this.ticker, this.authService.getUserId())
+          .subscribe((visitCount: number) => (this.visitors = visitCount));
+
+        this.stockService.isFollowingStock(this.ticker).subscribe((isFollowingStock: boolean) => {
+          this.isLoggedInUserFollowing = isFollowingStock;
+        });
       }
     });
 
@@ -217,11 +251,36 @@ export class StockComponent implements OnInit, OnDestroy {
   }
 
   followStock(): void {
-    this.isLoggedInUserFollowing = true;
+    if (this.isAuth) {
+      this.stockService.followStock(this.ticker).subscribe(() => {
+        this.isLoggedInUserFollowing = true;
+        // this.messageService.add({
+        //   key: 'stockPageToast',
+        //   severity: 'success',
+        //   summary: `Following ${this.ticker}!`,
+        //   detail: 'You are now following this stock for news & updates.',
+        // });
+      });
+    } else {
+      this.messageService.add({
+        key: 'stockPageToast',
+        severity: 'success',
+        summary: 'Account Required!',
+        detail: 'Please login or sign up if you do not yet have an account.',
+      });
+    }
   }
 
   unfollowStock(): void {
-    this.isLoggedInUserFollowing = false;
+    this.stockService.unfollowStock(this.ticker).subscribe(() => {
+      this.isLoggedInUserFollowing = false;
+      // this.messageService.add({
+      //   key: 'stockPageToast',
+      //   severity: 'success',
+      //   summary: `Unfollowing ${this.ticker}.`,
+      //   detail: 'You have unfollowed this stock and will not receive news & updates.',
+      // });
+    });
   }
 
   /**
@@ -236,10 +295,29 @@ export class StockComponent implements OnInit, OnDestroy {
   /** The click handler for the cdkCopyToClipboard directive shows a message when the link is copied. */
   onCopyPageLink(): void {
     this.messageService.add({
+      key: 'stockPageToast',
       severity: 'success',
       summary: 'Copied!',
       detail: 'Page link copied to clipboard',
-      // position:
     });
+  }
+
+  /**
+   *
+   * @returns
+   */
+  getVisitCountsPastWeek(): number[] {
+    const maxHeightPixels = 50;
+
+    // loop through
+
+    const totalVisitCountLastNDays = 253;
+
+    const day1Count = 20;
+    const day7Count = 100;
+    const day7PercentageOfWeekTotal = (day7Count / totalVisitCountLastNDays) * 100;
+    const day7PixelCount = maxHeightPixels * day7PercentageOfWeekTotal;
+
+    return null;
   }
 }

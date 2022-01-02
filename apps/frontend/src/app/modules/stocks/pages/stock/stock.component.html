@@ -1,9 +1,4 @@
-<!-- TODO: Get this to show social media icons -->
-<!-- <div id="layout-config" class="layout-config" [ngClass]="{'layout-config-active': false}">
-    <a style="cursor: pointer" id="layout-config-button" class="layout-config-button">
-        <i class="pi pi-reddit"></i>
-    </a>
-</div> -->
+<p-toast key="stockPageToast" position="top-center"></p-toast>
 <div class="layout-dashboard" *ngIf="stock; else stockNotLoaded">
     <div class="p-grid">
         <div class="p-col-12 p-md-12 p-xl-9">
@@ -31,7 +26,7 @@
                                 ${{ stock.data.quote.latestPrice?.toLocaleString(undefined, {minimumFractionDigits: 2}) }}
                               </h4>
                               <small [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }"
-                                ><span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote.change }} ({{
+                                ><span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote?.change?.toLocaleString(undefined, {minimumFractionDigits: 2}) }} ({{
                                   (stock.data.quote.changePercent * 100)?.toFixed(2)
                                 }}%)</small
                               >
@@ -42,7 +37,7 @@
                               <small class="p-ml-2">After Hours: </small>
                               <small [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }">
                                 ${{ stock.data.quote?.extendedPrice }}
-                                <span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote?.extendedChange }} ({{
+                                <span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote?.extendedChange?.toLocaleString(undefined, {minimumFractionDigits: 2}) }} ({{
                                   (stock.data.quote?.extendedChangePercent * 100)?.toFixed(2)
                                 }}%)
                               </small>
@@ -56,7 +51,8 @@
                             <h6>Followers</h6>
                             <div class="header-buttons">
                               <a *ngIf="!isLoggedInUserFollowing" (click)="followStock()"><i class="pi pi-plus-circle"></i></a>
-                              <a *ngIf="isLoggedInUserFollowing" (click)="unfollowStock()"><i class="pi pi-check-circle"></i></a>
+                              <a *ngIf="isLoggedInUserFollowing" (click)="unfollowStock()" class="header-button-active"><i class="pi pi-check-circle"></i></a>
+                              <!-- <button *ngIf="isLoggedInUserFollowing" (click)="unfollowStock()" pButton pRipple type="button" icon="pi pi-check" class="p-button-rounded p-button-success"></button> -->
                             </div>
                         </div>
                         <div class="overview-content">
@@ -79,7 +75,7 @@
                 <div class="p-col-12 p-md-12 p-xl-4">
                     <div class="card  overview-box-1 orange">
                         <div class="card-header">
-                            <h6>Visitors</h6>
+                            <h6>Visits</h6>
                             <div class="header-buttons">
                                 <a><i class="pi pi-users"></i></a>
                             </div>
@@ -88,17 +84,18 @@
                             <h3>{{ visitors }}</h3>
                             <!-- <h3>1.2m</h3> -->
                             <div class="overview-graph">
-                                <span style="height: 20px;"><span class="graph-tooltip">20</span></span>
-                                <span style="height: 23px;"><span class="graph-tooltip">23</span></span>
+                                <span style="height: 0.1px;"><span class="graph-tooltip">0</span></span>
+                                <span style="height: 1px;"><span class="graph-tooltip">23</span></span>
                                 <span style="height: 52px;"><span class="graph-tooltip">52</span></span>
                                 <span style="height: 18px;"><span class="graph-tooltip">18</span></span>
                                 <span style="height: 28px;"><span class="graph-tooltip">28</span></span>
                                 <span style="height: 42px;"><span class="graph-tooltip">42</span></span>
+                                <!-- <span *ngFor="let visitCount of visitCountsByDay" [ngStyle]="{'height': visitCount}"><span class="graph-tooltip">{{visitCount}}</span></span> -->
                             </div>
                         </div>
                         <div class="overview-footer">
                             <!-- <span><i class="pi pi-arrow-up"></i> <span>6%</span> increase in today sales</span> -->
-                            <span><i class="pi pi-arrow-down"></i> <span>12%</span> decrease in visitors today.</span>
+                            <span><i class="pi pi-arrow-down"></i> <span>12%</span> decrease in visits today.</span>
                         </div>
                     </div>
                 </div>
@@ -178,7 +175,7 @@
                   </div>
                   <div class="traffic-chart">
                     <!-- <p-chart #traffic type="doughnut" [data]="stockRatingsPieChart" [options]="trafficOptions" [responsive]="true" width="210px" height="210px"></p-chart> -->
-                    <p-chart #traffic  type="bar" [data]="stockRatingsPieChart" [options]="trafficOptions" [responsive]="true" width="210px" height="auto"></p-chart>
+                    <p-chart #traffic  type="bar" [data]="stockRatingsPieChart" [options]="trafficOptions" [responsive]="true" width="250px" height="auto"></p-chart>
                   </div>
                   <!-- <div style="text-align: center;">
                     <p *ngIf="stock.rating.buy === 0 && stock.rating.hold === 0 && stock.rating.sell === 0; else noStockRatings">This stock has not been rated yet.</p>

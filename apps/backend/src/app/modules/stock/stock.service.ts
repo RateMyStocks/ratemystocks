@@ -1,17 +1,18 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StockRatingRepository } from './stock-rating.repository';
 import { StockRatingCountDto, StockRatingDto, StockRatingListItem } from '@ratemystocks/api-interface';
 import { StockRating, StockRatingEnum } from '../../../models/stockRating.entity';
 import { UserAccount } from '../../../models/userAccount.entity';
 import { StockVisitRepository } from './stock-visit.repository';
-import { StockVisit } from 'apps/backend/src/models/stockVisit.entity';
+import { StockFollowerRepository } from './stock-follower.repository';
 
 @Injectable()
 export class StockService {
   constructor(
     @InjectRepository(StockRatingRepository) private stockRatingRepo: StockRatingRepository,
-    @InjectRepository(StockVisitRepository) private stockVisitRepo: StockVisitRepository
+    @InjectRepository(StockVisitRepository) private stockVisitRepo: StockVisitRepository,
+    @InjectRepository(StockFollowerRepository) private stockFollowerRepo: StockFollowerRepository
   ) {}
 
   /**
@@ -231,5 +232,42 @@ export class StockService {
    */
   async addStockPageVisit(ticker: string, userId?: string): Promise<number> {
     return this.stockVisitRepo.addStockPageVisit(ticker, userId);
+  }
+
+  /**
+   * Creating an entry in the stock_follower table, thus tying a logged-in user to a given ticker symbol so they
+   * can be notified of updates and news events later on.
+   * @param userAccount The logged-in user following the stock.
+   * @param ticker The ticker symbol of the stock page being followed.
+   * @returns The number of page visits for a given stock ticker symbol.
+   */
+  async followStock(userAccount: UserAccount, ticker: string): Promise<void> {
+    return this.stockFollowerRepo.followStock(userAccount, ticker);
+  }
+
+  /**
+   * Deletes the entry in the stock_follower table, so the specified user
+   * will unfollow a stock if it is already following it.
+   * @param userAccount The account object of the logged-in user.
+   * @param ticker The ticker symbol of the stock the user is following.
+   * @throws NotFoundException If the user specified isn't actually following the stock.
+   */
+  async unfollowStock(userAccount: UserAccount, ticker: string): Promise<void> {
+    const result = await this.stockFollowerRepo.delete({ userId: userAccount.id, ticker });
+    if (result.affected === 0) {
+      throw new NotFoundException(`${userAccount.username} is not following ${ticker} not found`);
+    }
+  }
+
+  /**
+   * Returns true if the logged-in user is following a given stock, false otherwise.
+   * @param userAccount The UserAccount object of the logged-in user.
+   * @param ticker The ticker symbol of the stock to check against.
+   * @returns true if the logged-in user is following a given stock, false otherwise.
+   */
+  async isFollowingStock(userAccount: UserAccount, ticker: string): Promise<boolean> {
+    const count: number = await this.stockFollowerRepo.count({ userId: userAccount.id, ticker });
+
+    return count === 1;
   }
 }

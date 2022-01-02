@@ -1,4 +1,4 @@
-import { StockVisit } from 'apps/backend/src/models/stockVisit.entity';
+import { StockVisit } from '../../../models/stockVisit.entity';
 import { Repository, EntityRepository } from 'typeorm';
 
 @EntityRepository(StockVisit)

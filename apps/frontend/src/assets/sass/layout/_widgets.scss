@@ -25,6 +25,20 @@
           border-color: #949aa6;
         }
       }
+      .header-button-active {
+        background-color: #549e58 !important;
+        border: 1px solid transparent;
+
+        i {
+          color: white !important;
+          font-size: 12px;
+          width: 12px;
+        }
+
+        &:hover {
+          border-color: white !important;
+        }
+      }
     }
   }
 
