@@ -92,6 +92,17 @@ export class StockService {
   }
 
   /**
+   * Returns a list of the stock page visit counts for the last N days (defaults to 6).
+   * @param ticker The ticker symbol of the stock to get the visit count sfor.
+   * @param lastNDays Query param indicating the number of days from the current day to get visit counts for.
+   * @returns A list of the stock page visit counts for the last N days.
+   */
+  getStockVisitCounts(ticker: string, lastNDays?: number): Observable<any> {
+    const url = `${this.baseApiUrl}/visit-counts/${ticker}?lastNDays=lastNDays`;
+    return this.httpClient.get<any>(url);
+  }
+
+  /**
    * Creating an entry in the stock_follower table, thus tying a logged-in user to a given ticker symbol so they
    * can be notified of updates and news events later on.
    * @param userAccount The logged-in user following the stock.

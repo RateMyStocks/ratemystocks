@@ -25,9 +25,9 @@ export class StockComponent implements OnInit, OnDestroy {
 
   stockRatingsPieChart: any;
 
-  trafficOptions: any;
+  stockRatingChartOptions!: any;
 
-  activeTraffic!: number;
+  activeStockRatingIndex!: number;
 
   ticker = '';
   stock: { rating: StockRatingCountDto; data: IexCloudStockDataDto } = null;
@@ -59,7 +59,7 @@ export class StockComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      this.activeTraffic = null;
+      this.activeStockRatingIndex = null;
       this.ticker = paramMap.get('ticker');
 
       this.stockService
@@ -96,6 +96,8 @@ export class StockComponent implements OnInit, OnDestroy {
           this.stockRatingBuyPercent = totalRatingCount > 0 ? (this.stock.rating.buy / totalRatingCount) * 100 : 0;
           this.stockRatingHoldPercent = totalRatingCount > 0 ? (this.stock.rating.hold / totalRatingCount) * 100 : 0;
           this.stockRatingSellPercent = totalRatingCount > 0 ? (this.stock.rating.sell / totalRatingCount) * 100 : 0;
+
+          this.populateVisitCountsWidget(this.ticker);
         });
 
       this.breadcrumbService.setItems([
@@ -143,7 +145,7 @@ export class StockComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.trafficOptions = {
+    this.stockRatingChartOptions = {
       plugins: {
         legend: {
           display: false,
@@ -204,7 +206,7 @@ export class StockComponent implements OnInit, OnDestroy {
 
         // Index of the stock rating button that is clicked
         const activeRatingIndex = parseInt(event.currentTarget.getAttribute('data-index'));
-        this.activeTraffic = activeRatingIndex;
+        this.activeStockRatingIndex = activeRatingIndex;
 
         this.stockRatingsPieChart.datasets[0].data = [
           this.stock.rating.buy,
@@ -236,13 +238,13 @@ export class StockComponent implements OnInit, OnDestroy {
 
         switch (this.userRating.toUpperCase()) {
           case 'BUY':
-            this.activeTraffic = 0;
+            this.activeStockRatingIndex = 0;
             break;
           case 'HOLD':
-            this.activeTraffic = 1;
+            this.activeStockRatingIndex = 1;
             break;
           case 'SELL':
-            this.activeTraffic = 2;
+            this.activeStockRatingIndex = 2;
             break;
           default:
             break;
@@ -254,12 +256,6 @@ export class StockComponent implements OnInit, OnDestroy {
     if (this.isAuth) {
       this.stockService.followStock(this.ticker).subscribe(() => {
         this.isLoggedInUserFollowing = true;
-        // this.messageService.add({
-        //   key: 'stockPageToast',
-        //   severity: 'success',
-        //   summary: `Following ${this.ticker}!`,
-        //   detail: 'You are now following this stock for news & updates.',
-        // });
       });
     } else {
       this.messageService.add({
@@ -274,12 +270,6 @@ export class StockComponent implements OnInit, OnDestroy {
   unfollowStock(): void {
     this.stockService.unfollowStock(this.ticker).subscribe(() => {
       this.isLoggedInUserFollowing = false;
-      // this.messageService.add({
-      //   key: 'stockPageToast',
-      //   severity: 'success',
-      //   summary: `Unfollowing ${this.ticker}.`,
-      //   detail: 'You have unfollowed this stock and will not receive news & updates.',
-      // });
     });
   }
 
@@ -303,21 +293,30 @@ export class StockComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
-   * @returns
+   * Used to populate the page visits widget showing the number of page visits per day as bars.
+   * Sets an array of objects containing number of visits per day and the height in pixels the bar for that day should be.
    */
-  getVisitCountsPastWeek(): number[] {
-    const maxHeightPixels = 50;
+  populateVisitCountsWidget(ticker: string): void {
+    // The max number of pixels the highest "bar" in the visits chart should be.
+    const maxHeightPixels = 52;
 
-    // loop through
+    this.stockService.getStockVisitCounts(ticker).subscribe((counts: any[]) => {
+      console.log(counts);
+      // TODO: do we really need to map to ints first?
+      const totalCount = counts
+        .map((countObj: any) => parseInt(countObj.visit_count))
+        .reduce((prev, curr) => prev + curr, 0);
 
-    const totalVisitCountLastNDays = 253;
+      const highestCount = counts
+        .map((countObj: any) => parseInt(countObj.visit_count))
+        .reduce((prev, curr) => (prev > curr ? prev : curr));
 
-    const day1Count = 20;
-    const day7Count = 100;
-    const day7PercentageOfWeekTotal = (day7Count / totalVisitCountLastNDays) * 100;
-    const day7PixelCount = maxHeightPixels * day7PercentageOfWeekTotal;
-
-    return null;
+      this.visitCountsByDay = counts.map((countObj: any) => {
+        const dayCount = countObj.visit_count;
+        const fractionOfHighestCount = highestCount > 0 ? dayCount / highestCount : 0;
+        const pixelCount = maxHeightPixels * fractionOfHighestCount;
+        return { visitCount: dayCount, pixelCount: pixelCount > 0 ? pixelCount.toString() + 'px' : '0.1px' };
+      });
+    });
   }
 }

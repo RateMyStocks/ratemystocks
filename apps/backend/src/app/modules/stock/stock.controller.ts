@@ -111,9 +111,15 @@ export class StockController {
     return this.stockService.addStockPageVisit(ticker, userId);
   }
 
-  @Get('/visit-counts')
-  getLastNVisitCounts(@Param('ticker') ticker: string, @Query('lastNDays') lastNDays?: number): Promise<any[]> {
-    return null;
+  /**
+   * Returns a list of the stock page visit counts for the last N days (defaults to 6).
+   * @param ticker The ticker symbol of the stock to get the visit count sfor.
+   * @param lastNDays Query param indicating the number of days from the current day to get visit counts for.
+   * @returns A list of the stock page visit counts for the last N days.
+   */
+  @Get('/visit-counts/:ticker')
+  getVisitCounts(@Param('ticker') ticker: string, @Query('lastNDays') lastNDays: number = 6): Promise<any[]> {
+    return this.stockService.getVisitCounts(ticker, lastNDays);
   }
 
   /**

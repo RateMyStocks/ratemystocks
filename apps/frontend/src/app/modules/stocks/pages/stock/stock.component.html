@@ -8,7 +8,7 @@
                         <div class="card-header">
                             <h6>{{ stock.data.stats.companyName | truncate:[15, '...'] }} | {{ stock.data.company?.exchange === 'NEW YORK STOCK EXCHANGE INC.' ? 'NYSE' : stock.data.company?.exchange }}</h6>
                             <div class="header-buttons">
-                                <a href="#"><i class="pi pi-share-alt"></i></a>
+                                <a href="#"><i class="pi pi-chart-line"></i></a>
                             </div>
                         </div>
                         <div class="overview-content">
@@ -82,15 +82,14 @@
                         </div>
                         <div class="overview-content">
                             <h3>{{ visitors }}</h3>
-                            <!-- <h3>1.2m</h3> -->
                             <div class="overview-graph">
-                                <span style="height: 0.1px;"><span class="graph-tooltip">0</span></span>
+                                <!-- <span style="height: 0.1px;"><span class="graph-tooltip">0</span></span>
                                 <span style="height: 1px;"><span class="graph-tooltip">23</span></span>
                                 <span style="height: 52px;"><span class="graph-tooltip">52</span></span>
                                 <span style="height: 18px;"><span class="graph-tooltip">18</span></span>
                                 <span style="height: 28px;"><span class="graph-tooltip">28</span></span>
-                                <span style="height: 42px;"><span class="graph-tooltip">42</span></span>
-                                <!-- <span *ngFor="let visitCount of visitCountsByDay" [ngStyle]="{'height': visitCount}"><span class="graph-tooltip">{{visitCount}}</span></span> -->
+                                <span style="height: 42px;"><span class="graph-tooltip">42</span></span> -->
+                              <span *ngFor="let visitCount of visitCountsByDay" [ngStyle]="{'height': visitCount.pixelCount}"><span class="graph-tooltip">{{visitCount.visitCount}}</span></span>
                             </div>
                         </div>
                         <div class="overview-footer">
@@ -100,7 +99,6 @@
                     </div>
                 </div>
                 <div class="p-col-12">
-                  <!-- <app-trading-view-stock-chart></app-trading-view-stock-chart> -->
                     <div class="card sale-graph">
                         <div class="card-header">
                             <h6>Performance</h6>
@@ -117,9 +115,12 @@
         <div class="p-col-12 p-md-12 p-xl-3">
             <div class="p-grid">
               <div class="p-col-12 p-md-6 p-xl-12">
-                <div class="card">
+                <div class="card overview-box-1">
                   <div class="card-header">
                       <h6>Share</h6>
+                      <div class="header-buttons">
+                        <a><i class="pi pi-share-alt"></i></a>
+                    </div>
                   </div>
                   <div class="social-media-icons-container">
                     <img
@@ -174,29 +175,28 @@
                     <h6>User Ratings</h6>
                   </div>
                   <div class="traffic-chart">
-                    <!-- <p-chart #traffic type="doughnut" [data]="stockRatingsPieChart" [options]="trafficOptions" [responsive]="true" width="210px" height="210px"></p-chart> -->
-                    <p-chart #traffic  type="bar" [data]="stockRatingsPieChart" [options]="trafficOptions" [responsive]="true" width="250px" height="auto"></p-chart>
+                    <!-- <p-chart #traffic type="doughnut" [data]="stockRatingsPieChart" [options]="stockRatingChartOptions" [responsive]="true" width="210px" height="210px"></p-chart> -->
+                    <p-chart #traffic  type="bar" [data]="stockRatingsPieChart" [options]="stockRatingChartOptions" [responsive]="true" width="250px" height="auto"></p-chart>
                   </div>
                   <!-- <div style="text-align: center;">
                     <p *ngIf="stock.rating.buy === 0 && stock.rating.hold === 0 && stock.rating.sell === 0; else noStockRatings">This stock has not been rated yet.</p>
                   </div> -->
                   <div id="traffic-tabs-container" class="traffic-tabs">
-                    <div class="traffic-tab" [ngClass]="{'traffic-tab-active':activeTraffic===0}"
+                    <div class="traffic-tab" [ngClass]="{'traffic-tab-active':activeStockRatingIndex===0}"
                           (click)="toggleStockRating($event, 'buy'); traffic.refresh()"
                           data-label="New Sales" data-index="0"  >
                       <h6>{{stockRatingBuyPercent | round}}%</h6>
                       <!-- <i class="pi pi-facebook"></i> -->
                       <!-- <h6>Buy <span style="color: #3ac961; font-size: 32px;">&#8226;</span></h6> -->
                       <h6 style="text-decoration: 3px underline #3ac961; text-underline-offset: 5px;">Buy</h6>
-                      <!-- <h6 style="font-size: small;">(124 ratings)</h6> -->
                     </div>
-                      <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===1}"
+                      <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeStockRatingIndex===1}"
                             (click)="toggleStockRating($event, 'hold'); traffic.refresh()"
                             data-label="Previous Sales" data-index="1">
                         <h6>{{stockRatingHoldPercent | round}}%</h6>
                         <h6 style="text-decoration: 3px underline #c98b3a; text-underline-offset: 5px;">Hold</h6>
                       </div>
-                      <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===2}"
+                      <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeStockRatingIndex===2}"
                             (click)="toggleStockRating($event, 'sell'); traffic.refresh()"
                             data-label="Previous Sales" data-index="2">
                         <h6>{{stockRatingSellPercent | round}}%</h6>
