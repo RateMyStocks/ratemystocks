@@ -52,12 +52,10 @@
                             <div class="header-buttons">
                               <a *ngIf="!isLoggedInUserFollowing" (click)="followStock()"><i class="pi pi-plus-circle"></i></a>
                               <a *ngIf="isLoggedInUserFollowing" (click)="unfollowStock()" class="header-button-active"><i class="pi pi-check-circle"></i></a>
-                              <!-- <button *ngIf="isLoggedInUserFollowing" (click)="unfollowStock()" pButton pRipple type="button" icon="pi pi-check" class="p-button-rounded p-button-success"></button> -->
                             </div>
                         </div>
                         <div class="overview-content">
                             <h3>{{followers}}</h3>
-                            <!-- <h3>3.5k</h3> -->
                             <div class="overview-graph">
                                 <span style="height: 30px;"><span class="graph-tooltip">30</span></span>
                                 <span style="height: 43px;"><span class="graph-tooltip">43</span></span>
@@ -83,18 +81,16 @@
                         <div class="overview-content">
                             <h3>{{ visitors }}</h3>
                             <div class="overview-graph">
-                                <!-- <span style="height: 0.1px;"><span class="graph-tooltip">0</span></span>
-                                <span style="height: 1px;"><span class="graph-tooltip">23</span></span>
-                                <span style="height: 52px;"><span class="graph-tooltip">52</span></span>
-                                <span style="height: 18px;"><span class="graph-tooltip">18</span></span>
-                                <span style="height: 28px;"><span class="graph-tooltip">28</span></span>
-                                <span style="height: 42px;"><span class="graph-tooltip">42</span></span> -->
                               <span *ngFor="let visitCount of visitCountsByDay" [ngStyle]="{'height': visitCount.pixelCount}"><span class="graph-tooltip">{{visitCount.visitCount}}</span></span>
                             </div>
                         </div>
-                        <div class="overview-footer">
+                        <div class="overview-footer" [ngClass]="{'down': visitPercentChangeToday < 0, 'up': visitPercentChangeToday >= 0}">
                             <!-- <span><i class="pi pi-arrow-up"></i> <span>6%</span> increase in today sales</span> -->
-                            <span><i class="pi pi-arrow-down"></i> <span>12%</span> decrease in visits today.</span>
+                            <span *ngIf="visitPercentChangeToday != Infinity && visitPercentChangeToday !== 0">
+                              <i [ngClass]="{'pi': true, 'p-mr-2': true, 'pi-arrow-down': visitPercentChangeToday < 0, 'pi-arrow-up': visitPercentChangeToday > 0}"></i>
+                              <span class="p-mr-1">{{ visitPercentChangeToday.toFixed(0) }}%</span>
+                              <span><span *ngIf="visitPercentChangeToday >= 0">increase</span> <span *ngIf="visitPercentChangeToday < 0">decrease</span> in visits today.</span>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -290,6 +286,7 @@
                       </a>
                       <!-- <i class="pi pi-arrow-up"></i> -->
                     </li>
+                    <p-scrollTop target="parent"></p-scrollTop>
                 </ul>
             </div>
         </div>

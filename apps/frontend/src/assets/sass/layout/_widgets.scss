@@ -98,13 +98,21 @@
     > span {
       font-size: 13px;
 
-      i {
-        color: #00acac;
-      }
-
       > span {
-        color: #00acac;
         font-weight: 600;
+      }
+    }
+
+    &.up {
+      > span {
+        i {
+          color: #00acac;
+        }
+
+        > span {
+          color: #00acac;
+          font-weight: 600;
+        }
       }
     }
 

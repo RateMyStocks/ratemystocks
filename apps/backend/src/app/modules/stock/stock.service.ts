@@ -6,13 +6,15 @@ import { StockRating, StockRatingEnum } from '../../../models/stockRating.entity
 import { UserAccount } from '../../../models/userAccount.entity';
 import { StockVisitRepository } from './stock-visit.repository';
 import { StockFollowerRepository } from './stock-follower.repository';
+import { IexCloudService } from '../iex-cloud/iex-cloud.service';
 
 @Injectable()
 export class StockService {
   constructor(
     @InjectRepository(StockRatingRepository) private stockRatingRepo: StockRatingRepository,
     @InjectRepository(StockVisitRepository) private stockVisitRepo: StockVisitRepository,
-    @InjectRepository(StockFollowerRepository) private stockFollowerRepo: StockFollowerRepository
+    @InjectRepository(StockFollowerRepository) private stockFollowerRepo: StockFollowerRepository,
+    private readonly iexCloudService: IexCloudService
   ) {}
 
   /**
@@ -279,5 +281,59 @@ export class StockService {
     const count: number = await this.stockFollowerRepo.count({ userId: userAccount.id, ticker });
 
     return count === 1;
+  }
+
+  /**
+   * Gets the most viewed stock tickers today.
+   * @param numStocks The limit of stocks to get e.g. top 20 most viewed, top 10, etc.
+   * @returns The most viewed stocks in the system in descending order.
+   */
+  async getMostViewedStocksToday(numStocks: number = 20): Promise<any> {
+    // Gets the most viewed stocks today
+    // If there are less than 20 stocks returned, return a curated list of generally popular stocks
+    const stocks = await this.stockVisitRepo.getMostViewedStocksToday(numStocks);
+
+    if (stocks.length < 20) {
+      const curatedStockList = [
+        'VTI',
+        'VOO',
+        'MSFT',
+        'AMZN',
+        'FB',
+        'TSLA',
+        'DIS',
+        'JPM',
+        'JNJ',
+        'AMD',
+        'GOOG',
+        'V',
+        'NFLX',
+        'MA',
+        'AMC',
+        'GME',
+        'SQ',
+        'SNAP',
+        'BABA',
+        'PFE',
+      ];
+
+      return this.getStocksWithQuotes(curatedStockList);
+    }
+
+    return this.getStocksWithQuotes(stocks);
+  }
+
+  private async getStocksWithQuotes(tickers: string[]): Promise<any[]> {
+    const iexCloudApiStockQuotes: any = await this.iexCloudService.batchGetStockStats(tickers.join(','), 'quote');
+
+    const stocksWithQuotes = tickers.map((ticker: any) => {
+      const price = iexCloudApiStockQuotes[ticker].quote.latestPrice;
+
+      const changePercent = iexCloudApiStockQuotes[ticker].quote.changePercent;
+
+      return { ticker, price, changePercent };
+    });
+
+    return stocksWithQuotes;
   }
 }

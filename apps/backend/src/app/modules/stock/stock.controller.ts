@@ -149,6 +149,27 @@ export class StockController {
   }
 
   /**
+   *
+   * @param ticker
+   * @param lastNDays
+   */
+  getTotalFollowerCounts(@Param('ticker') ticker: string): Promise<void> {
+    // return this.stockService.getTotalFollowerCounts();
+    return null;
+  }
+
+  /**
+   *
+   * @param ticker
+   * @param lastNDays
+   * @returns
+   */
+  getFollowerCounts(@Param('ticker') ticker: string, @Query('lastNDays') lastNDays: number = 6): Promise<any[]> {
+    // return this.stockService.getFollowerCounts(ticker, lastNDays);
+    return null;
+  }
+
+  /**
    * Returns true if the logged-in user is following a given stock, false otherwise.
    * @param userAccount The UserAccount object of the logged-in user.
    * @param ticker The ticker symbol of the stock to check against.
@@ -158,5 +179,15 @@ export class StockController {
   @UseGuards(AuthGuard())
   isFollowingStock(@GetUser() userAccount: UserAccount, @Param('ticker') ticker: string): Promise<boolean> {
     return this.stockService.isFollowingStock(userAccount, ticker);
+  }
+
+  /**
+   * Gets the most viewed stock tickers today.
+   * @param numStocks The limit of stocks to get e.g. top 20 most viewed, top 10, etc.
+   * @returns The most viewed stocks in the system in descending order.
+   */
+  @Get('/trending/today')
+  getMostViewedStocksToday(@Query() numStocks?: number): Promise<any> {
+    return this.stockService.getMostViewedStocksToday(numStocks);
   }
 }

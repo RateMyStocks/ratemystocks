@@ -2,7 +2,7 @@
     <div class="breadcrumb">
         <div class="route-bar-breadcrumb">
             <ng-template ngFor let-item let-last="last" [ngForOf]="items">
-                <li>
+                <li [ngStyle]="last && { 'font-weight': 'bold' }">
                     <a [routerLink]="item.routerLink" class="p-link" *ngIf="item.routerLink">{{item.label}}</a>
                     <ng-container *ngIf="!item.routerLink">{{item.label}}</ng-container>
                 </li>

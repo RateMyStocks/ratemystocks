@@ -18,10 +18,10 @@ import { Meta, Title } from '@angular/platform-browser';
   styleUrls: ['./stock.component.scss'],
 })
 export class StockComponent implements OnInit, OnDestroy {
+  // Helper JS functions & types to reference in the template
   MoneyFormatter = MoneyFormatter;
   moment = moment;
-
-  activeOrders = 0;
+  Infinity = Infinity;
 
   stockRatingsPieChart: any;
 
@@ -38,6 +38,7 @@ export class StockComponent implements OnInit, OnDestroy {
   followers = 0;
   visitors = 0;
   visitCountsByDay!: any[];
+  visitPercentChangeToday = 0;
   isLoggedInUserFollowing = false;
   isAuth: boolean;
   userRating: string; // string that has the value buy, hold, or sell
@@ -124,20 +125,13 @@ export class StockComponent implements OnInit, OnDestroy {
       }
     });
 
-    // this.isAuth = this.authService.isAuthorized();
-    // if (this.isAuth) {
-    //   this.fetchUserRating();
-    // } else {
-    //   this.userRating = null;
-    // }
-
     this.auth$ = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
       this.isAuth = authStatus;
       if (this.isAuth) {
         this.fetchUserRating();
-        this.stockService
-          .addStockPageVisit(this.ticker, this.authService.getUserId())
-          .subscribe((visitCount: number) => (this.visitors = visitCount));
+        // this.stockService
+        //   .addStockPageVisit(this.ticker, this.authService.getUserId())
+        //   .subscribe((visitCount: number) => (this.visitors = visitCount));
 
         this.stockService.isFollowingStock(this.ticker).subscribe((isFollowingStock: boolean) => {
           this.isLoggedInUserFollowing = isFollowingStock;
@@ -174,6 +168,11 @@ export class StockComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
+  /**
+   *
+   * @param stockRatingCounts
+   * @returns
+   */
   getStockRatingsChartData(stockRatingCounts: StockRatingCountDto) {
     return {
       labels: ['Buy', 'Hold', 'Sell'],
@@ -252,6 +251,9 @@ export class StockComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   *
+   */
   followStock(): void {
     if (this.isAuth) {
       this.stockService.followStock(this.ticker).subscribe(() => {
@@ -267,6 +269,9 @@ export class StockComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+   */
   unfollowStock(): void {
     this.stockService.unfollowStock(this.ticker).subscribe(() => {
       this.isLoggedInUserFollowing = false;
@@ -300,15 +305,9 @@ export class StockComponent implements OnInit, OnDestroy {
     // The max number of pixels the highest "bar" in the visits chart should be.
     const maxHeightPixels = 52;
 
-    this.stockService.getStockVisitCounts(ticker).subscribe((counts: any[]) => {
-      console.log(counts);
-      // TODO: do we really need to map to ints first?
-      const totalCount = counts
-        .map((countObj: any) => parseInt(countObj.visit_count))
-        .reduce((prev, curr) => prev + curr, 0);
-
+    this.stockService.getStockVisitCounts(ticker).subscribe((counts: { visit_count: number }[]) => {
       const highestCount = counts
-        .map((countObj: any) => parseInt(countObj.visit_count))
+        .map((countObj: any) => countObj.visit_count)
         .reduce((prev, curr) => (prev > curr ? prev : curr));
 
       this.visitCountsByDay = counts.map((countObj: any) => {
@@ -317,6 +316,11 @@ export class StockComponent implements OnInit, OnDestroy {
         const pixelCount = maxHeightPixels * fractionOfHighestCount;
         return { visitCount: dayCount, pixelCount: pixelCount > 0 ? pixelCount.toString() + 'px' : '0.1px' };
       });
+
+      this.visitPercentChangeToday =
+        ((counts[counts.length - 1].visit_count - counts[counts.length - 2].visit_count) /
+          counts[counts.length - 2].visit_count) *
+        100;
     });
   }
 }

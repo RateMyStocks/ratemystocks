@@ -46,7 +46,7 @@ export class IexCloudService {
    * Makes a batch request to IEX Cloud for multiple stocks and to multiple IEX /stock endpoints.
    * {@link https://iexcloud.io/docs/api/#batch-requests}
    * @param tickerSymbols A comma delimited list of stock ticker symbols from the controller endpoints query params.
-   * @param iexEndpoints A comma delimited list of
+   * @param iexEndpoints A comma delimited list of IEX Cloud API endpoints.
    * @return The IEX Cloud API response for a batch request wrapped in a Promise.
    *         See the IEX Cloud API documentation for an example of the response format.
    */

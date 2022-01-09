@@ -25,7 +25,16 @@ export class TradingViewStockChartComponent implements AfterViewInit, OnChanges 
 
   createStockChartWidget(): void {
     // IEX Cloud API returns exchanges in a different format than how Trading View needs
-    const exchange = this.exchange === 'NEW YORK STOCK EXCHANGE INC.' ? 'NYSE' : this.exchange;
+    // const exchange = this.exchange === 'NEW YORK STOCK EXCHANGE INC.' ? 'NYSE' : this.exchange;
+    let exchange;
+
+    if (this.exchange === 'NEW YORK STOCK EXCHANGE INC.') {
+      exchange = 'NYSE';
+    } else if (this.exchange === 'NYSE ARCA') {
+      exchange = 'AMEX';
+    } else {
+      exchange = this.exchange;
+    }
 
     new TradingView.widget({
       width: '100%',

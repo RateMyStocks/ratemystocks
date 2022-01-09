@@ -133,4 +133,13 @@ export class StockService {
   isFollowingStock(ticker: string): Observable<boolean> {
     return this.httpClient.get<boolean>(`${this.baseApiUrl}/isfollowing/${ticker}`, { withCredentials: true });
   }
+
+  /**
+   * Gets the most viewed stock tickers today.
+   * @param limit The limit of stocks to get e.g. top 20 most viewed, top 10, etc.
+   * @returns The most viewed stocks in the system in descending order.
+   */
+  getMostViewedStocksToday(limit?: number): Observable<any[]> {
+    return this.httpClient.get<any[]>(`${this.baseApiUrl}/trending/today`);
+  }
 }

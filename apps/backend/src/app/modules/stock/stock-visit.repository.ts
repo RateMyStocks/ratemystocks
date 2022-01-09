@@ -1,5 +1,5 @@
 import { StockVisit } from '../../../models/stockVisit.entity';
-import { Repository, EntityRepository, MoreThan, getManager } from 'typeorm';
+import { Repository, EntityRepository, getManager } from 'typeorm';
 
 @EntityRepository(StockVisit)
 export class StockVisitRepository extends Repository<StockVisit> {
@@ -26,26 +26,14 @@ export class StockVisitRepository extends Repository<StockVisit> {
    * @returns A list of the stock page visit counts for the last N days.
    */
   async getVisitCounts(ticker: string, lastNDays: number): Promise<any[]> {
-    // TODO: Make this actually use the lastNDays in the SQL query with proper sanitzation
-    // const stockRatings: any[] = await this.createQueryBuilder('sr')
-    //   .select(
-    //     `
-    //       DATE_TRUNC('day', "visit_date") AS day,
-    //       COUNT("visit_date") AS visit_count
-    //     `
-    //   )
-    //   .where(`visit_date > current_date - interval '6' day AND ticker = :ticker`, { ticker })
-    //   .groupBy(`DATE_TRUNC('day', "visit_date")`)
-    //   .orderBy(`DATE_TRUNC('day', "visit_date")`)
-    //   .getRawMany();
     const entityManager = getManager();
-    const stockVisits: any[] = await entityManager.query(
+    const stockVisits = await entityManager.query(
       `
-      SELECT dt.series, COUNT(sv.visit_date) AS visit_count
+      SELECT dt.series AS day, COUNT(sv.visit_date) AS visit_count
       FROM stock_visit sv
       RIGHT OUTER JOIN (
           SELECT
-          GENERATE_SERIES( (NOW() - INTERVAL '6 day')::date, NOW()::date, '1 day')::date
+          GENERATE_SERIES( (NOW() - INTERVAL '5 day')::date, NOW()::date, '1 day')::date
           AS series
       ) AS dt
       ON DATE_TRUNC('day', sv.visit_date) = dt.series AND ticker = $1
@@ -55,6 +43,27 @@ export class StockVisitRepository extends Repository<StockVisit> {
       [ticker]
     );
 
+    stockVisits.map((sv) => {
+      sv.visit_count = parseInt(sv.visit_count);
+    });
+
     return stockVisits;
+  }
+
+  /**
+   * Gets the most viewed stock tickers today.
+   * @param numStocks The limit of stocks to get e.g. top 20 most viewed, top 10, etc.
+   * @returns The most viewed stocks in the system in descending order.
+   */
+  async getMostViewedStocksToday(numStocks: number = 20): Promise<any[]> {
+    const results: any[] = await this.createQueryBuilder('stock_visit')
+      .select('ticker, COUNT(visit_date) as num_visits')
+      .where(`DATE_TRUNC('day', visit_date) = CURRENT_DATE`)
+      .groupBy('ticker')
+      .orderBy('num_visits', 'DESC')
+      .limit(20)
+      .getRawMany();
+
+    return results;
   }
 }
