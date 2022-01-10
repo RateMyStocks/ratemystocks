@@ -178,6 +178,7 @@
                     <p *ngIf="stock.rating.buy === 0 && stock.rating.hold === 0 && stock.rating.sell === 0; else noStockRatings">This stock has not been rated yet.</p>
                   </div> -->
                   <div id="traffic-tabs-container" class="traffic-tabs">
+                    <p-confirmPopup></p-confirmPopup>
                     <div class="traffic-tab" [ngClass]="{'traffic-tab-active':activeStockRatingIndex===0}"
                           (click)="toggleStockRating($event, 'buy'); traffic.refresh()"
                           data-label="New Sales" data-index="0"  >

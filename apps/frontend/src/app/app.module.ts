@@ -29,7 +29,7 @@ import { CoreModule } from './core/core.module';
 import { PrimeNGModule } from './primeng.module';
 import { AppTopBarComponent } from './app.topbar.component';
 import { SharedModule } from './shared/shared.module';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ResetPasswordLinkGuard } from './core/guards/reset-password-link.guard';
 
 import { HighchartsChartModule } from 'highcharts-angular';
@@ -73,6 +73,7 @@ import { AppStockNewsBarComponent } from './app.stocknewsbar.component';
   providers: [
     // { provide: LocationStrategy, useClass: HashLocationStrategy },
     AppBreadcrumbService,
+    ConfirmationService,
     MenuService,
     MessageService,
     ResetPasswordLinkGuard,

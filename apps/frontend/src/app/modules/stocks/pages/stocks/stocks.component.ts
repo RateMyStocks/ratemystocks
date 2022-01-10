@@ -49,7 +49,7 @@ export class StocksComponent implements OnInit, OnDestroy {
   FilterType = FilterType;
   IexCloudSecurityType = IexCloudSecurityType;
 
-  stocks: StockRatingListItem[];
+  stocks: StockRatingListItem[] = [];
   // iexStockDataMap: { [ticker: string]: { company: object; quote: object; stats: object } };
   iexStockDataMap: unknown;
 

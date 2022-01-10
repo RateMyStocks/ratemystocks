@@ -305,15 +305,15 @@
               </div>
             </li>
             <li role="menuitem">
-              <a href="#" (click)="appMain.onTopbarSubItemClick($event)">
-                <i class="pi pi-cog"></i>
-                <h6>Settings</h6>
+              <a routerLink="/profile/users/{{username}}" (click)="appMain.onTopbarSubItemClick($event)">
+                <i class="pi pi-user"></i>
+                <h6>View Profile</h6>
               </a>
             </li>
             <li role="menuitem">
-              <a href="#" (click)="appMain.onTopbarSubItemClick($event)">
-                <i class="pi pi-file-o"></i>
-                <h6>Terms of Usage</h6>
+              <a routerLink="/profile/settings" (click)="appMain.onTopbarSubItemClick($event)">
+                <i class="pi pi-cog"></i>
+                <h6>Settings</h6>
               </a>
             </li>
             <li role="menuitem">

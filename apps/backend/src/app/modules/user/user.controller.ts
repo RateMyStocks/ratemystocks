@@ -18,12 +18,15 @@ export class UserController {
    */
   @Get('/:username')
   async getUserByUsername(@Param('username') username: string): Promise<UserProfileDto> {
-    const userEntity = await this.userService.getUserByUsername(username);
+    const userEntity: UserAccount = await this.userService.getUserByUsername(username);
     const userDto: UserProfileDto = {
       id: userEntity.id,
       username: userEntity.username,
       email: userEntity.email,
       spiritAnimal: userEntity.spiritAnimal,
+      dateJoined: userEntity.dateJoined,
+      lastLogin: userEntity.lastLogin,
+      bio: userEntity.bio,
     };
 
     return userDto;

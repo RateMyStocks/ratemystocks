@@ -1,9 +1,9 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { AppBreadcrumbService } from '../../../../app.breadcrumb.service';
 import { AppMainComponent } from '../../../../app.main.component';
 import { DOCUMENT } from '@angular/common';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { IexCloudStockDataDto, StockRatingCountDto } from '@ratemystocks/api-interface';
 import { StockService } from '../../../../core/services/stock.service';
 import { takeUntil } from 'rxjs/operators';
@@ -50,9 +50,11 @@ export class StockComponent implements OnInit, OnDestroy {
     private breadcrumbService: AppBreadcrumbService,
     private appMain: AppMainComponent,
     private route: ActivatedRoute,
+    private router: Router,
     private authService: AuthService,
     private stockService: StockService,
     private messageService: MessageService,
+    private confirmService: ConfirmationService,
     private meta: Meta,
     private title: Title,
     @Inject(DOCUMENT) private document: Document
@@ -219,10 +221,16 @@ export class StockComponent implements OnInit, OnDestroy {
         this.stockRatingSellPercent = totalRatingCount > 0 ? (this.stock.rating.sell / totalRatingCount) * 100 : 0;
       }
     } else {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Please Login!',
-        detail: 'You must login to rate this stock',
+      this.confirmService.confirm({
+        target: event.target,
+        message: 'You must be logged-in to rate this stock. Would you like to login?',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          this.router.navigate(['/login']);
+        },
+        reject: () => {
+          //reject action
+        },
       });
     }
   }
@@ -235,24 +243,27 @@ export class StockComponent implements OnInit, OnDestroy {
       .subscribe((res: { stockRating: string }) => {
         this.userRating = res.stockRating;
 
-        switch (this.userRating.toUpperCase()) {
-          case 'BUY':
-            this.activeStockRatingIndex = 0;
-            break;
-          case 'HOLD':
-            this.activeStockRatingIndex = 1;
-            break;
-          case 'SELL':
-            this.activeStockRatingIndex = 2;
-            break;
-          default:
-            break;
+        if (this.userRating) {
+          switch (this.userRating.toUpperCase()) {
+            case 'BUY':
+              this.activeStockRatingIndex = 0;
+              break;
+            case 'HOLD':
+              this.activeStockRatingIndex = 1;
+              break;
+            case 'SELL':
+              this.activeStockRatingIndex = 2;
+              break;
+            default:
+              break;
+          }
         }
       });
   }
 
   /**
-   *
+   * Event handler for clicking the Follow button. Calls the backend to add the logged-in user
+   * as a follower to the stock.
    */
   followStock(): void {
     if (this.isAuth) {
@@ -260,11 +271,17 @@ export class StockComponent implements OnInit, OnDestroy {
         this.isLoggedInUserFollowing = true;
       });
     } else {
-      this.messageService.add({
-        key: 'stockPageToast',
-        severity: 'success',
-        summary: 'Account Required!',
-        detail: 'Please login or sign up if you do not yet have an account.',
+      this.confirmService.confirm({
+        target: event.target,
+        message: 'You must be logged-in to follow this stock. Would you like to login?',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          // TODO: Instead of redirecting to the login page, display the login dialog as an overlay over the current page
+          this.router.navigate(['/login']);
+        },
+        reject: () => {
+          //reject action
+        },
       });
     }
   }

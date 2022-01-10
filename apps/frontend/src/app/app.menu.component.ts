@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { AppComponent } from './app.component';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-menu',
@@ -9,12 +11,31 @@ import { AppComponent } from './app.component';
     </ul>
   `,
 })
-export class AppMenuComponent implements OnInit {
+export class AppMenuComponent implements OnInit, OnDestroy {
+  userName = '';
+  authStatusSub!: Subscription;
+  isAuth = false;
+
   model!: any[];
 
-  constructor(public app: AppComponent) {}
+  constructor(public app: AppComponent, private authService: AuthService) {}
 
   ngOnInit() {
+    this.isAuth = this.authService.isAuthorized();
+    this.userName = this.authService.getUsername();
+
+    let profileRouterLink = this.isAuth ? '/profile/users/' : '/login';
+
+    this.authStatusSub = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
+      this.isAuth = authStatus;
+      if (this.isAuth) {
+        this.userName = this.authService.getUsername();
+        profileRouterLink = '/profile/users/';
+      } else {
+        this.userName = '';
+        profileRouterLink = '/login';
+      }
+    });
     this.model = [
       {
         label: 'Main',
@@ -40,12 +61,12 @@ export class AppMenuComponent implements OnInit {
       {
         label: 'Profile',
         icon: 'pi pi-fw pi-star',
-        routerLink: ['/proifle'],
+        routerLink: ['/profile'],
         items: [
           {
             label: 'My Profile',
             icon: 'pi pi-fw pi-user',
-            routerLink: ['/profile/users/someuser'],
+            routerLink: [profileRouterLink + this.userName],
           },
           {
             label: 'Favorites',
@@ -67,7 +88,7 @@ export class AppMenuComponent implements OnInit {
           {
             label: 'Help',
             icon: 'pi pi-fw pi-question-circle',
-            routerLink: ['pages/help'],
+            routerLink: ['resources/help'],
           },
         ],
       },
@@ -142,5 +163,9 @@ export class AppMenuComponent implements OnInit {
       //     ],
       // },
     ];
+  }
+
+  ngOnDestroy(): void {
+    this.authStatusSub.unsubscribe();
   }
 }
