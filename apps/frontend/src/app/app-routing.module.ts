@@ -29,7 +29,7 @@ const routes: Routes = [
         path: 'profile',
         loadChildren: () => import('./modules/profile/profile.module').then((m) => m.ProfileModule),
       },
-      { path: 'pages/help', component: AppHelpComponent },
+      { path: 'resources/help', component: AppHelpComponent },
     ],
   },
   // { path: 'error', component: AppErrorComponent },
