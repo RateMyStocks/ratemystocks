@@ -284,6 +284,25 @@ export class StockService {
   }
 
   /**
+   * Gets the number of followers for a given stock.
+   * @param ticker The ticker symbol of the stock to get the number of followers for.
+   * @return The number of followers for a given stock ticker symbol.
+   */
+  async getTotalFollowerCounts(ticker: string): Promise<number> {
+    return await this.stockFollowerRepo.count({ where: { ticker } });
+  }
+
+  /**
+   * Gets the number of followers by day for a given stock over a given time period.
+   * @param ticker The ticker symbol of the stock to get the number of followers for.
+   * @param lastNDays Optional query parameter indicating the past number of days to get counts for.
+   * @return The number of followers by day for a given stock over a given time period.
+   */
+  async getFollowerCountsLastNDays(ticker: string, lastNDays: number): Promise<any> {
+    return this.stockFollowerRepo.getFollowerCountsLastNDays(ticker, lastNDays);
+  }
+
+  /**
    * Gets the most viewed stock tickers today.
    * @param numStocks The limit of stocks to get e.g. top 20 most viewed, top 10, etc.
    * @returns The most viewed stocks in the system in descending order.
@@ -320,7 +339,7 @@ export class StockService {
       return this.getStocksWithQuotes(curatedStockList);
     }
 
-    return this.getStocksWithQuotes(stocks);
+    return this.getStocksWithQuotes(stocks.map((stockVisit) => stockVisit.ticker));
   }
 
   private async getStocksWithQuotes(tickers: string[]): Promise<any[]> {

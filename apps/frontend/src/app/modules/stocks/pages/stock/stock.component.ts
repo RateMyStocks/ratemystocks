@@ -36,6 +36,9 @@ export class StockComponent implements OnInit, OnDestroy {
   stockRatingSellPercent = 0;
   stockLoaded = false;
   followers = 0;
+  followerCountsByDay!: any[];
+  followerPercentChangeToday = 0;
+  noNewFollowers = false;
   visitors = 0;
   visitCountsByDay!: any[];
   visitPercentChangeToday = 0;
@@ -101,6 +104,7 @@ export class StockComponent implements OnInit, OnDestroy {
           this.stockRatingSellPercent = totalRatingCount > 0 ? (this.stock.rating.sell / totalRatingCount) * 100 : 0;
 
           this.populateVisitCountsWidget(this.ticker);
+          this.populateFollowerCountsWidget(this.ticker);
         });
 
       this.breadcrumbService.setItems([
@@ -116,6 +120,10 @@ export class StockComponent implements OnInit, OnDestroy {
           .addStockPageVisit(this.ticker, this.authService.getUserId())
           .subscribe((visitCount: number) => (this.visitors = visitCount));
 
+        this.stockService
+          .getTotalFollowerCounts(this.ticker)
+          .subscribe((followerCount: number) => (this.followers = followerCount));
+
         this.stockService.isFollowingStock(this.ticker).subscribe((isFollowingStock: boolean) => {
           this.isLoggedInUserFollowing = isFollowingStock;
         });
@@ -124,6 +132,10 @@ export class StockComponent implements OnInit, OnDestroy {
         this.stockService
           .addStockPageVisit(this.ticker)
           .subscribe((visitCount: number) => (this.visitors = visitCount));
+
+        this.stockService
+          .getTotalFollowerCounts(this.ticker)
+          .subscribe((followerCount: number) => (this.followers = followerCount));
       }
     });
 
@@ -269,6 +281,11 @@ export class StockComponent implements OnInit, OnDestroy {
     if (this.isAuth) {
       this.stockService.followStock(this.ticker).subscribe(() => {
         this.isLoggedInUserFollowing = true;
+
+        this.stockService
+          .getTotalFollowerCounts(this.ticker)
+          .subscribe((followerCount: number) => (this.followers = followerCount));
+        this.populateFollowerCountsWidget(this.ticker);
       });
     } else {
       this.confirmService.confirm({
@@ -287,12 +304,20 @@ export class StockComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
+   * Event handler for clicking the unfollow button on the stock page. Calls the backend to remove the logged-in user
+   * as a follower of the stock.
    */
   unfollowStock(): void {
-    this.stockService.unfollowStock(this.ticker).subscribe(() => {
-      this.isLoggedInUserFollowing = false;
-    });
+    if (this.isAuth) {
+      this.stockService.unfollowStock(this.ticker).subscribe(() => {
+        this.isLoggedInUserFollowing = false;
+
+        this.stockService
+          .getTotalFollowerCounts(this.ticker)
+          .subscribe((followerCount: number) => (this.followers = followerCount));
+        this.populateFollowerCountsWidget(this.ticker);
+      });
+    }
   }
 
   /**
@@ -338,6 +363,34 @@ export class StockComponent implements OnInit, OnDestroy {
         ((counts[counts.length - 1].visit_count - counts[counts.length - 2].visit_count) /
           counts[counts.length - 2].visit_count) *
         100;
+    });
+  }
+
+  populateFollowerCountsWidget(ticker: string): void {
+    // The max number of pixels the highest "bar" in the followers chart should be.
+    const maxHeightPixels = 52;
+    this.stockService.getFollowerCountsLastNDays(ticker).subscribe((counts: { follower_count: number }[]) => {
+      const highestCount = counts
+        .map((countObj: any) => countObj.follower_count)
+        .reduce((prev, curr) => (prev > curr ? prev : curr));
+
+      this.followerCountsByDay = counts.map((countObj: any) => {
+        const dayCount = countObj.follower_count;
+        const fractionOfHighestCount = highestCount > 0 ? dayCount / highestCount : 0;
+        const pixelCount = maxHeightPixels * fractionOfHighestCount;
+        return { followerCount: dayCount, pixelCount: pixelCount > 0 ? pixelCount.toString() + 'px' : '0.1px' };
+      });
+
+      const currentDayFollowerCount = counts[counts.length - 1].follower_count;
+      const previousDayFollowerCount = counts[counts.length - 2].follower_count;
+
+      this.followerPercentChangeToday =
+        previousDayFollowerCount > 0
+          ? ((currentDayFollowerCount - previousDayFollowerCount) / previousDayFollowerCount) * 100
+          : 0;
+
+      this.noNewFollowers = counts.map((countObj: any) => countObj.follower_count).every((num) => num === 0);
+      console.log(this.noNewFollowers);
     });
   }
 }

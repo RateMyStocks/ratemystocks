@@ -149,24 +149,27 @@ export class StockController {
   }
 
   /**
-   *
-   * @param ticker
-   * @param lastNDays
+   * Gets the number of followers for a given stock.
+   * @param ticker The ticker symbol of the stock to get the number of followers for.
+   * @return The number of followers for a given stock ticker symbol.
    */
-  getTotalFollowerCounts(@Param('ticker') ticker: string): Promise<void> {
-    // return this.stockService.getTotalFollowerCounts();
-    return null;
+  @Get('/follower-count/:ticker')
+  getTotalFollowerCounts(@Param('ticker') ticker: string): Promise<number> {
+    return this.stockService.getTotalFollowerCounts(ticker);
   }
 
   /**
-   *
-   * @param ticker
-   * @param lastNDays
-   * @returns
+   * Gets the number of followers by day for a given stock over a given time period.
+   * @param ticker The ticker symbol of the stock to get the number of followers for.
+   * @param lastNDays Optional query parameter indicating the past number of days to get counts for.
+   * @return The number of followers by day for a given stock over a given time period.
    */
-  getFollowerCounts(@Param('ticker') ticker: string, @Query('lastNDays') lastNDays: number = 6): Promise<any[]> {
-    // return this.stockService.getFollowerCounts(ticker, lastNDays);
-    return null;
+  @Get('/follower-counts/:ticker')
+  getFollowerCountsLastNDays(
+    @Param('ticker') ticker: string,
+    @Query('lastNDays') lastNDays: number = 6
+  ): Promise<any[]> {
+    return this.stockService.getFollowerCountsLastNDays(ticker, lastNDays);
   }
 
   /**

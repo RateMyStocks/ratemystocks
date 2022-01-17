@@ -10,6 +10,14 @@
             '.png'
           "
         />
+        <!-- <img
+          id="app-logo"
+          [src]="
+            'assets/layout/images/' +
+            (app.topbarTheme === 'light' ? 'stonkzilla-logo' : 'stonkzilla-logo-dark-theme') +
+            '.png'
+          "
+        /> -->
       </div>
     </div>
 
@@ -203,6 +211,21 @@
         <li
           #settings
           class="topbar-item settings"
+        >
+          <a *ngIf="isAuth" routerLink="/profile/settings">
+            <span class="topbar-icon">
+              <i class="pi pi-cog"></i>
+            </span>
+          </a>
+          <a *ngIf="!isAuth" (click)="showLoginDialog(authModeType.LOGIN)">
+            <span class="topbar-icon">
+              <i class="pi pi-cog"></i>
+            </span>
+          </a>
+        </li>
+        <!-- <li
+          #settings
+          class="topbar-item settings"
           [ngClass]="{
             'active-topmenuitem': appMain.activeTopbarItem === settings
           }"
@@ -249,7 +272,7 @@
               </a>
             </li>
           </ul>
-        </li>
+        </li> -->
         <li
           #signin
           *ngIf="!isAuth"
@@ -346,7 +369,7 @@
                       <div class="p-field">
                           <label for="username">Username or Email</label>
                           <span class="p-input-icon-left">
-                            <i class="pi pi-unlock"></i>
+                            <i class="pi pi-user"></i>
                             <input formControlName="usernameOrEmail" type="text" pInputText id="username" type="text"/>
                           </span>
                           <small *ngIf="!loginForm.controls['usernameOrEmail'].valid && loginForm.controls['usernameOrEmail'].touched" class="p-invalid">Please enter your username or email.</small>

@@ -57,7 +57,7 @@
                 <p-sortIcon field="sell_count"></p-sortIcon>
               </div>
             </th>
-            <th pSortableColumn="country">
+            <!-- <th pSortableColumn="country">
               <div class="p-d-flex p-jc-between p-ai-center">
                 Country
                 <p-sortIcon field="country"></p-sortIcon>
@@ -71,7 +71,7 @@
                   </ng-template>
                 </p-columnFilter>
               </div>
-            </th>
+            </th> -->
             <th pSortableColumn="sector">
               <div class="p-d-flex p-jc-between p-ai-center">
                 Sector
@@ -169,17 +169,15 @@
               <span class="p-column-title">Sell Ratings</span>
               <span style="margin-left: .5em;vertical-align: middle">{{ stock.sell_count }}</span>
             </td>
-            <td>
+            <!-- <td>
               <span class="p-column-title">Country</span>
               <img *ngIf="iexStockDataMap" src="assets/demo/flags/flag_placeholder.png" class="p-mr-2" [class]="'flag flag-' + IexCloudCountryToIsoCode.convertIexCloudCountryValueToISOCode(iexStockDataMap[stock.ticker]?.company?.country)" width="30">
-              <!-- <span class="image-text" style="margin-left: .5em;vertical-align: middle">{{customer.country.name}}</span> -->
               <small *ngIf="iexStockDataMap">{{
                 iexStockDataMap[stock.ticker]?.company?.country === 'US'
                   ? 'United States'
                   : iexStockDataMap[stock.ticker]?.company?.country
               }}</small>
-              <!-- <mat-progress-bar *ngIf="!iexStockDataMap" mode="buffer"></mat-progress-bar> -->
-            </td>
+            </td> -->
             <td>
               <span class="p-column-title">Sector</span>
               <small *ngIf="iexStockDataMap">{{ iexStockDataMap[stock.ticker]?.company?.sector }}</small>

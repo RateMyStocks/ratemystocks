@@ -135,6 +135,26 @@ export class StockService {
   }
 
   /**
+   * Gets the number of followers for a given stock.
+   * @param ticker The ticker symbol of the stock to get the number of followers for.
+   * @return The number of followers for a given stock ticker symbol.
+   */
+  getTotalFollowerCounts(ticker: string): Observable<number> {
+    return this.httpClient.get<number>(`${this.baseApiUrl}/follower-count/${ticker}`);
+  }
+
+  /**
+   * Gets the number of followers by day for a given stock over a given time period.
+   * @param ticker The ticker symbol of the stock to get the number of followers for.
+   * @param lastNDays Optional query parameter indicating the past number of days to get counts for.
+   * @return The number of followers by day for a given stock over a given time period.
+   */
+  getFollowerCountsLastNDays(ticker: string, lastNDays?: number): Observable<any> {
+    const url = `${this.baseApiUrl}/follower-counts/${ticker}?lastNDays=lastNDays`;
+    return this.httpClient.get<any>(url);
+  }
+
+  /**
    * Gets the most viewed stock tickers today.
    * @param limit The limit of stocks to get e.g. top 20 most viewed, top 10, etc.
    * @returns The most viewed stocks in the system in descending order.
