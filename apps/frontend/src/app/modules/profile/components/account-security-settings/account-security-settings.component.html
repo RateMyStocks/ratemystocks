@@ -1,0 +1,28 @@
+<form [formGroup]="form" (ngSubmit)="submitForm()">
+  <div class="p-fluid">
+    <div class="p-field p-grid">
+      <label for="new-password-field" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">New Password</label>
+      <div class="p-col-12 p-md-10">
+        <input id="new-password-field" formControlName="password" type="password" placeholder="New Password" (input)="onPasswordInput()" pInputText />
+        <small *ngIf="!password.valid && password.touched"class="p-invalid">{{ password | passwordFormFieldValidator }}</small>
+      </div>
+    </div>
+    <div class="p-field p-grid">
+      <label for="confirm-password-field" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Confirm Password</label>
+      <div class="p-col-12 p-md-10">
+        <input
+          id="confirm-password-field"
+          formControlName="passwordReenter"
+          type="password"
+          placeholder="Confirm new password"
+          (input)="onPasswordInput()"
+          pInputText
+        />
+        <small *ngIf="passwordReenter.invalid && passwordReenter.touched" class="p-invalid">{{ passwordReenter | passwordReenterFormFieldValidator }}</small>
+      </div>
+    </div>
+  </div>
+  <div class="p-mt-3">
+    <p-button label="Change Password" type="submit" [disabled]="!form.valid" styleClass="p-mb-3 p-mr-2"></p-button>
+  </div>
+</form>

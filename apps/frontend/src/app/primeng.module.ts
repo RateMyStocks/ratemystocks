@@ -65,6 +65,7 @@ import { SidebarModule } from 'primeng/sidebar';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SlideMenuModule } from 'primeng/slidemenu';
 import { SliderModule } from 'primeng/slider';
+import { SpeedDialModule } from 'primeng/speeddial';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { SplitterModule } from 'primeng/splitter';
 import { StepsModule } from 'primeng/steps';
@@ -156,6 +157,7 @@ FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPl
     SkeletonModule,
     SlideMenuModule,
     SliderModule,
+    SpeedDialModule,
     SplitButtonModule,
     SplitterModule,
     StepsModule,

@@ -36,7 +36,7 @@ const routes: Routes = [
   // { path: 'access', component: AppAccessdeniedComponent },
   { path: 'notfound', component: AppNotfoundComponent },
   // TODO: Add Login page
-  // { path: "login", component: AppLoginComponent },
+  { path: 'login', component: AppLoginComponent },
   { path: 'resetpassword/:userid/:token', component: AppResetPasswordComponent, canActivate: [ResetPasswordLinkGuard] },
   { path: '**', redirectTo: '/notfound' },
 ];

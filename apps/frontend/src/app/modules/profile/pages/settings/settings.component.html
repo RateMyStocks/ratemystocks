@@ -1,25 +1,12 @@
 
 <div class="p-grid">
 	<div class="p-col-12 p-md-6">
-		<div class="card">
-			<h5>Account Information</h5>
-			<div class="p-fluid">
-				<div class="p-field">
-					<label for="firstname1">Username</label>
-					<input id="firstname1" type="text" pInputText>
-				</div>
-				<div class="p-field">
-					<label for="lastname1">Email</label>
-					<input id="lastname1" type="text" pInputText>
-				</div>
-				<div class="p-field">
-					<label for="age1">Age</label>
-					<input id="age1" type="text" pInputText>
-				</div>
-			</div>
-		</div>
+    <div class="card">
+      <h5>Account Information</h5>
+      <app-account-info-settings></app-account-info-settings>
+    </div>
 
-		<div class="card">
+		<!-- <div class="card">
 			<h5>Preferences</h5>
 			<div class="p-fluid p-formgrid p-grid">
 				<div class="p-field p-col">
@@ -31,29 +18,36 @@
 					<input id="lastname2" type="text" pInputText>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 
 	<div class="p-col-12 p-md-6">
 		<div class="card">
 			<h5>Security</h5>
-			<div class="p-fluid">
+      <app-account-security-settings></app-account-security-settings>
+			<!-- <div class="p-fluid">
 				<div class="p-field p-grid">
-					<label for="firstname4" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Name</label>
+					<label for="firstname4" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Old Password</label>
 					<div class="p-col-12 p-md-10">
 						<input id="firstname4" type="text" pInputText>
 					</div>
 				</div>
 				<div class="p-field p-grid">
-					<label for="lastname4" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Email</label>
+					<label for="lastname4" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">New Password</label>
 					<div class="p-col-12 p-md-10">
 						<input id="lastname4" type="text" pInputText>
 					</div>
 				</div>
-			</div>
+        <div class="p-field p-grid">
+					<label for="lastname4" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Confirm Password</label>
+					<div class="p-col-12 p-md-10">
+						<input id="lastname4" type="text" pInputText>
+					</div>
+				</div>
+			</div> -->
 		</div>
 
-		<div class="card">
+		<!-- <div class="card">
 			<h5>Accounts</h5>
 			<div class="p-formgroup-inline">
 				<div class="p-field">
@@ -66,16 +60,16 @@
 				</div>
 				<button pButton pRipple type="button" label="Submit"></button>
 			</div>
-		</div>
+		</div> -->
 
-		<div class="card">
+		<!-- <div class="card">
 			<h5>Plan Information</h5>
 			<div class="p-field p-fluid">
 				<label for="username">Username</label>
 				<input id="username" type="username" pInputText aria-describedby="username-help">
 				<small id="username-help">Enter your username to reset your password.</small>
 			</div>
-		</div>
+		</div> -->
 	</div>
 
 	<!-- <div class="p-col-12">

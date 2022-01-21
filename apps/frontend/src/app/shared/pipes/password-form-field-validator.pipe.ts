@@ -7,7 +7,6 @@ import { PASSWORD_VALIDATION_MESSAGE } from '@ratemystocks/regex-patterns';
 })
 export class PasswordFormFieldValidatorPipe implements PipeTransform {
   transform(formControl: FormControl, ...args: unknown[]): string {
-    console.log('IN PASSWORD PIPE');
     return formControl.hasError('required')
       ? 'Password is required.'
       : formControl.hasError('pattern')

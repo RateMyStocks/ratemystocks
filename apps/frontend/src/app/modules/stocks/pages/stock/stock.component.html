@@ -1,4 +1,11 @@
 <p-toast key="stockPageToast" position="top-center"></p-toast>
+
+
+<div style="z-index: 999; position: fixed; padding: 0; top: 40%; right: 0; width: 60px; height: 100%;">
+  <p-speedDial [model]="socialMediaItems" showIcon="pi pi-share-alt" direction="down"></p-speedDial>
+</div>
+
+
 <div class="layout-dashboard" *ngIf="stock; else stockNotLoaded">
     <div class="p-grid">
         <div class="p-col-12 p-md-12 p-xl-9">
@@ -116,7 +123,15 @@
                         <a><i class="pi pi-share-alt"></i></a>
                     </div>
                   </div>
-                  <div class="social-media-icons-container" style="text-align: center;">
+                  <div>
+                    <span class="p-input-icon-right" style="width: 100%;">
+                      <i id="copy-page-link-button" class="pi pi-copy" style="cursor: pointer !important;" title="Copy Link" (click)="onCopyPageLink()"></i>
+                      <input type="text" pInputText [disabled]="true" [(ngModel)]="pageLink" style="width: 100%;" />
+                    </span>
+                    <!-- <input type="text" pInputText [disabled]="true" [(ngModel)]="pageLink" class="p-mr-2" />
+                    <button pButton type="button" label="COPY" class="p-button-outlined" icon="pi pi-copy" iconPos="right"></button> -->
+                  </div>
+                  <!-- <div class="social-media-icons-container" style="text-align: center;">
                     <img
                       src="../../../../../assets/layout/images/social-media/reddit.png"
                       (click)="shareOnSocialMedia('http://www.reddit.com/submit?url=')"
@@ -141,18 +156,6 @@
                       title="Share on LinkedIn"
                       class="p-mr-3"
                     />
-                    <!-- <img
-                      src="../../../../../assets/layout/images/social-media/whatsapp.png"
-                      (click)="shareOnSocialMedia('')"
-                      title="Share on WhatsApp"
-                      class="p-mr-3"
-                    />
-                    <img
-                      src="../../../../../assets/layout/images/social-media/kakaotalk.png"
-                      (click)="shareOnSocialMedia('')"
-                      title="Share on KakaoTalk"
-                      class="p-mr-3"
-                    /> -->
                     <img
                       src="../../../../../assets/layout/images/social-media/link.png"
                       title="Copy Link"
@@ -160,7 +163,7 @@
                       (click)="onCopyPageLink()"
                       class="p-mr-3"
                     />
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="p-col-12 p-md-6 p-xl-12">

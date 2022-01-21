@@ -46,7 +46,8 @@ export class StockComponent implements OnInit, OnDestroy {
   isAuth: boolean;
   userRating: string; // string that has the value buy, hold, or sell
   auth$: Subscription;
-  copiedPortfolioLink: string = window.location.href;
+  pageLink: string = window.location.href;
+  socialMediaItems = [];
   private ngUnsubscribe = new Subject();
 
   constructor(
@@ -67,6 +68,7 @@ export class StockComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.activeStockRatingIndex = null;
       this.ticker = paramMap.get('ticker');
+      this.pageLink = window.location.href;
 
       this.stockService
         .getStock(this.ticker)
@@ -175,6 +177,29 @@ export class StockComponent implements OnInit, OnDestroy {
     // this.appMain['refreshstockRatingsPieChart'] = () => {
     //   this.stockRatingsPieChart = this.getStockRatingsChartData();
     // };
+
+    this.socialMediaItems = [
+      {
+        icon: 'pi pi-facebook',
+        url: 'https://www.facebook.com/sharer/sharer.php?u=' + window.location.href,
+        tooltipOptions: {
+          tooltipLabel: 'Share on Facebook',
+        },
+      },
+      {
+        icon: 'pi pi-twitter',
+        url: 'http://twitter.com/share?text=Check out my portfolio!&url=' + window.location.href,
+        tooltipOptions: {
+          tooltipLabel: 'Share on Twitter',
+        },
+      },
+      // {
+      //   icon: 'pi pi-copy',
+      //   command: () => {
+
+      //   },
+      // },
+    ];
   }
 
   ngOnDestroy(): void {

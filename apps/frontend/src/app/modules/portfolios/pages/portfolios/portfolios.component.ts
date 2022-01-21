@@ -41,6 +41,7 @@ import { AppBreadcrumbService } from '../../../../app.breadcrumb.service';
 import { Customer, Representative } from '../../../../shared/models/customer';
 import { Product } from '../../../../shared/models/product';
 import { CustomerService } from '../../../../core/services/customerservice';
+import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-stocks',
@@ -86,8 +87,26 @@ export class PortfoliosComponent implements OnInit {
   constructor(
     private customerService: CustomerService,
     private productService: ProductService,
-    private breadcrumbService: AppBreadcrumbService
+    private breadcrumbService: AppBreadcrumbService,
+    private meta: Meta,
+    private title: Title
   ) {
+    this.title.setTitle(`Portfolios | ratemystocks.com`);
+    this.meta.addTags([
+      {
+        name: 'description',
+        content: `View sample portfolios from investors around the world or create your own to get feedback and insights into your holdings.`,
+      },
+      {
+        name: 'keywords',
+        content: `stock portfolio tracker, stock portfolio backtesting, stock portfolio analyzer, stock portfolio feedback, stock portfolio insights`,
+      },
+      {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1',
+      },
+    ]);
+
     this.breadcrumbService.setItems([{ label: 'Home' }, { label: 'Portfolios', routerLink: ['/uikit/table'] }]);
   }
 

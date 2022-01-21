@@ -11,6 +11,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IexCloudCountryToIsoCode } from '../../../../shared/utilities/iex-cloud-country-to-code';
 import { SortEvent } from 'primeng/api';
+import { Meta, Title } from '@angular/platform-browser';
 
 enum FilterType {
   Search,
@@ -94,8 +95,26 @@ export class StocksComponent implements OnInit, OnDestroy {
   constructor(
     private breadcrumbService: AppBreadcrumbService,
     private stockService: StockService,
-    private iexCloudService: IexCloudService
+    private iexCloudService: IexCloudService,
+    private meta: Meta,
+    private title: Title
   ) {
+    this.title.setTitle(`Trending Stocks - ratemystocks.com`);
+    this.meta.addTags([
+      {
+        name: 'description',
+        content: `Get real-time stock quote, news, performance, & other information for on ratemystocks.com`,
+      },
+      {
+        name: 'keywords',
+        content: `trending stocks, trending stocks today, trending stocks right now, trending stocsk to buy, stocks to buy now, stocks to invest in, stonkz, stonks, stonks meme, `,
+      },
+      {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1',
+      },
+    ]);
+
     this.breadcrumbService.setItems([{ label: 'Home' }, { label: 'Stocks', routerLink: ['/uikit/table'] }]);
   }
 

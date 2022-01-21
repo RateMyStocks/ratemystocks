@@ -8,9 +8,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCodeModule } from '../../app.code.component';
 import { PrimeNGModule } from '../../primeng.module';
 import { SharedModule } from '../../shared/shared.module';
+import { AccountInfoSettingsComponent } from './components/account-info-settings/account-info-settings.component';
+import { AccountSecuritySettingsComponent } from './components/account-security-settings/account-security-settings.component';
 
 @NgModule({
-  declarations: [FavoritesComponent, UserProfileComponent, SettingsComponent],
+  declarations: [FavoritesComponent, UserProfileComponent, SettingsComponent, AccountInfoSettingsComponent, AccountSecuritySettingsComponent],
   imports: [
     AppCodeModule,
     CommonModule,
