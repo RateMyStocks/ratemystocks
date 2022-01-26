@@ -6,6 +6,7 @@ import { PortfolioRepository } from '../portfolio/portfolio.repository';
 import { Portfolio } from '../../../models/portfolio.entity';
 import { getConnection } from 'typeorm';
 import { PortfolioDto } from '@ratemystocks/api-interface';
+import { StockFollowerRepository } from '../stock/stock-follower.repository';
 
 @Injectable()
 export class UserService {
@@ -13,7 +14,9 @@ export class UserService {
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
     @InjectRepository(PortfolioRepository)
-    private portfolioRepository: PortfolioRepository
+    private portfolioRepository: PortfolioRepository,
+    @InjectRepository(StockFollowerRepository)
+    private stockFollowerRepository: StockFollowerRepository
   ) {}
 
   /**
@@ -80,7 +83,7 @@ export class UserService {
         description: portfolio.description,
         lastUpdated: portfolio.lastUpdated.toDateString(),
         name: portfolio.name,
-        user: null, // TODO: Figure out how to load the user in one db call
+        user: null, // TODO: Figure out how to load the user as well in one db call
         stocks: null, // not currently needed for this endpoint
       };
 
@@ -88,5 +91,15 @@ export class UserService {
     });
 
     return savedPortfolioDtos;
+  }
+
+  /**
+   * Gets the stocks a user is following.
+   * @param userAccount The userAccount object of the logged-in user.
+   * @returns The list of stocks the logged-in user is following.
+   */
+  async getSavedStocksForUser(userAccount: UserAccount): Promise<any[]> {
+    const followedStocks = await this.stockFollowerRepository.getFollowedStocksByUser(userAccount);
+    return followedStocks;
   }
 }

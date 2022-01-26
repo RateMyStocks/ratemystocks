@@ -195,7 +195,7 @@
             <td>
               <span class="p-column-title">Market Cap</span>
               <small *ngIf="iexStockDataMap">
-                ${{ MoneyFormatter.formatCash(iexStockDataMap[stock.ticker]?.stats?.marketcap) }}
+                ${{ iexStockDataMap[stock.ticker]?.stats?.marketcap | abbreviatedCurrencyFormatterPipe }}
               </small>
             </td>
             <!-- <td style="text-align: center">

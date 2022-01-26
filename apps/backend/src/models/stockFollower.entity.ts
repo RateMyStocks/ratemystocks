@@ -10,6 +10,9 @@ import {
 } from 'typeorm';
 import { UserAccount } from './userAccount.entity';
 
+/**
+ * Entity representing a record of when a user followed/saved a certain stock.
+ */
 @Entity({ name: 'stock_follower' })
 @Index(['ticker', 'userAccount'], { unique: true })
 export class StockFollower extends BaseEntity {

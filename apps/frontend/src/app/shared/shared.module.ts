@@ -6,9 +6,11 @@ import { PasswordFormFieldValidatorPipe } from './pipes/password-form-field-vali
 import { PasswordReenterFormFieldValidatorPipe } from './pipes/password-reenter-form-field-validator.pipe';
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { RoundingPipe } from './pipes/rounding.pipe';
+import { AbbreviatedCurrencyFormatterPipe } from './pipes/abbreviated-currency-formatter.pipe';
 
 @NgModule({
   declarations: [
+    AbbreviatedCurrencyFormatterPipe,
     UsernameFormFieldValidatorPipe,
     EmailFormFieldValidatorPipe,
     PasswordFormFieldValidatorPipe,
@@ -18,6 +20,7 @@ import { RoundingPipe } from './pipes/rounding.pipe';
   ],
   imports: [CommonModule],
   exports: [
+    AbbreviatedCurrencyFormatterPipe,
     UsernameFormFieldValidatorPipe,
     EmailFormFieldValidatorPipe,
     PasswordFormFieldValidatorPipe,

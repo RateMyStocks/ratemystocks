@@ -1,0 +1,44 @@
+.stock-logo {
+  width: 40px !important;
+  height: auto;
+  margin: 10px;
+}
+
+.stock-type-badge {
+  border-radius: 2px;
+  padding: 0.25em 0.5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+
+  &.status-cs {
+    background: #c8e6c9;
+    color: #256029;
+  }
+
+  &.status-ad {
+    background: #ffcdd2;
+    color: #c63737;
+  }
+
+  &.status-et {
+    background: #feedaf;
+    color: #8a5340;
+  }
+
+  &.status-ps {
+    background: #b3e5fc;
+    color: #23547b;
+  }
+
+  &.status-rt {
+    background: #eccfff;
+    color: #694382;
+  }
+
+  &.status-struct {
+    background: #ffd8b2;
+    color: #805b36;
+  }
+}

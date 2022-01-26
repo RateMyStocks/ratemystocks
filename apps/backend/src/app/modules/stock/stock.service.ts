@@ -247,6 +247,7 @@ export class StockService {
   }
 
   /**
+   * TODO: Move this to UserService.ts?
    * Creating an entry in the stock_follower table, thus tying a logged-in user to a given ticker symbol so they
    * can be notified of updates and news events later on.
    * @param userAccount The logged-in user following the stock.
@@ -258,6 +259,7 @@ export class StockService {
   }
 
   /**
+   * TODO: Move this to UserService.ts?
    * Deletes the entry in the stock_follower table, so the specified user
    * will unfollow a stock if it is already following it.
    * @param userAccount The account object of the logged-in user.
@@ -272,6 +274,7 @@ export class StockService {
   }
 
   /**
+   * TODO: Move this to UserService.ts?
    * Returns true if the logged-in user is following a given stock, false otherwise.
    * @param userAccount The UserAccount object of the logged-in user.
    * @param ticker The ticker symbol of the stock to check against.

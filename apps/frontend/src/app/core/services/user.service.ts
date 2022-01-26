@@ -46,4 +46,14 @@ export class UserService {
     const endpoint = `${environment.apiUrl}/users/saved/portfolios`;
     return this.http.get<PortfolioDto[]>(endpoint, { withCredentials: true });
   }
+
+  /**
+   * Gets the stocks a user is following.
+   * @param userAccount The userAccount object of the logged-in user.
+   * @returns The list of stocks the logged-in user is following.
+   */
+  getSavedStocksForUser(): Observable<any[]> {
+    const endpoint = `${environment.apiUrl}/users/saved/stocks`;
+    return this.http.get<any[]>(endpoint, { withCredentials: true });
+  }
 }

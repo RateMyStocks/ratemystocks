@@ -1,0 +1,17 @@
+<p-table [value]="portfolios" responsiveLayout="scroll" styleClass="p-datatable-gridlines p-datatable-striped">
+  <ng-template pTemplate="header">
+      <tr>
+          <th>Name</th>
+          <!-- TODO Add Creator column -->
+          <!-- <th>Creator</th> -->
+          <th>Description</th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-portfolio>
+      <tr>
+          <td><a [routerLink]="['/portfolios', portfolio.id]" routerLinkActive="router-link-active"><b>{{ portfolio.name }}</b></a></td>
+          <!-- <td></td> -->
+          <td>{{portfolio.description | truncate:[15, '...'] }}</td>
+      </tr>
+  </ng-template>
+</p-table>

@@ -10,9 +10,11 @@ import { PrimeNGModule } from '../../primeng.module';
 import { SharedModule } from '../../shared/shared.module';
 import { AccountInfoSettingsComponent } from './components/account-info-settings/account-info-settings.component';
 import { AccountSecuritySettingsComponent } from './components/account-security-settings/account-security-settings.component';
+import { SavedPortfoliosTableComponent } from './components/saved-portfolios-table/saved-portfolios-table.component';
+import { SavedStocksTableComponent } from './components/saved-stocks-table/saved-stocks-table.component';
 
 @NgModule({
-  declarations: [FavoritesComponent, UserProfileComponent, SettingsComponent, AccountInfoSettingsComponent, AccountSecuritySettingsComponent],
+  declarations: [FavoritesComponent, UserProfileComponent, SettingsComponent, AccountInfoSettingsComponent, AccountSecuritySettingsComponent, SavedPortfoliosTableComponent, SavedStocksTableComponent],
   imports: [
     AppCodeModule,
     CommonModule,

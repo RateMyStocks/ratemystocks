@@ -145,8 +145,6 @@ export class StocksComponent implements OnInit, OnDestroy {
       .subscribe((result: any) => {
         this.iexStockDataMap = result;
 
-        console.log('IEX CLOUD RESULTS: ', this.iexStockDataMap);
-
         // Populate list to populate Country Filter dropdown
         this.stocks.forEach((stock: any) => {
           this.countryList.add(this.iexStockDataMap[stock.ticker]?.company?.country);

@@ -81,7 +81,7 @@
                         <div class="card-header">
                             <h6>Visits</h6>
                             <div class="header-buttons">
-                                <a><i class="pi pi-users"></i></a>
+                                <a><i class="pi pi-eye"></i></a>
                             </div>
                         </div>
                         <div class="overview-content">
@@ -259,7 +259,7 @@
                   <div class="p-col-6">
                     <div class="p-mb-2"><small><b>Volume:</b> {{ stock.data.quote.volume?.toLocaleString() }}</small></div>
                     <div class="p-mb-2"><small><b>Avg. Total Volume:</b> {{ stock.data.quote.avgTotalVolume?.toLocaleString() }}</small></div>
-                    <div class="p-mb-2"><small><b>Market Cap:</b> {{ MoneyFormatter.formatCash(stock.data.stats.marketcap) }}</small></div>
+                    <div class="p-mb-2"><small><b>Market Cap:</b> {{ stock.data.stats.marketcap | abbreviatedCurrencyFormatterPipe }}</small></div>
                     <div class="p-mb-2"><small><b>P/E Ratio:</b> {{ stock.data.stats.peRatio.toFixed(2) }}</small></div>
                     <div class="p-mb-2"><small><b>Beta:</b> {{ stock.data.stats.beta.toFixed(2) }}</small></div>
                     <div class="p-mb-2"><small><b>Dividend Yield:</b> {{ (stock.data.stats.dividendYield * 100).toFixed(2) }}</small></div>

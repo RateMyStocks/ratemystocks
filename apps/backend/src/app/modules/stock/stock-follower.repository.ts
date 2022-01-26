@@ -49,4 +49,13 @@ export class StockFollowerRepository extends Repository<StockFollower> {
 
     return stockFollowers;
   }
+
+  /**
+   * Gets the stocks a user is following.
+   * @param userAccount The userAccount object of the logged-in user.
+   * @returns The list of stocks the logged-in user is following.
+   */
+  async getFollowedStocksByUser(userAccount: UserAccount): Promise<any[]> {
+    return await this.find({ where: { userId: userAccount.id } });
+  }
 }

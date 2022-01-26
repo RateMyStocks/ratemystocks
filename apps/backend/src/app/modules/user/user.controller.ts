@@ -70,4 +70,15 @@ export class UserController {
   getSavedPortfoliosForUser(@GetUser() userAccount: UserAccount): Promise<PortfolioDto[]> {
     return this.userService.getSavedPortfoliosForUser(userAccount);
   }
+
+  /**
+   * Gets the stocks a user is following.
+   * @param userAccount The userAccount object of the logged-in user.
+   * @returns The list of stocks the logged-in user is following.
+   */
+  @Get('/saved/stocks')
+  @UseGuards(AuthGuard())
+  getSavedStocksForUser(@GetUser() userAccount: UserAccount): Promise<any[]> {
+    return this.userService.getSavedStocksForUser(userAccount);
+  }
 }
