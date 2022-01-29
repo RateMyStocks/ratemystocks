@@ -37,7 +37,9 @@ export class AccountInfoSettingsComponent implements OnInit, OnDestroy {
         this.emailVerified = settings.emailVerified;
       });
     } else {
-      this.router.navigate(['/auth/signin']);
+      // TODO: When using the Angular router to go to the loading page, for some reason some HTML & CSS isn't loading/displaying
+      // this.router.navigate(['/login']);
+      window.location.assign('/login');
     }
 
     this.authStatusSub = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
@@ -50,7 +52,9 @@ export class AccountInfoSettingsComponent implements OnInit, OnDestroy {
           this.emailVerified = settings.emailVerified;
         });
       } else {
-        this.router.navigate(['/auth/signin']);
+        // TODO: When using the Angular router to go to the loading page, for some reason some HTML & CSS isn't loading/displaying
+        // this.router.navigate(['/login']);
+        window.location.assign('/login');
       }
     });
   }

@@ -88,7 +88,9 @@ export class AppResetPasswordComponent {
 
         this.authService.resetPassword(userId, token, changePasswordDto).subscribe(
           () => {
-            this.router.navigate(['/login']);
+            // TODO: When using the Angular router to go to the loading page, for some reason some HTML & CSS isn't loading/displaying
+            // this.router.navigate(['/login']);
+            window.location.assign('/login');
             // this.matSnackBar.open('Your password has been successfully reset!', 'OK', {
             //   duration: 2000,
             //   panelClass: 'success-snackbar',

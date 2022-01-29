@@ -1,101 +1,73 @@
-// import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
-// import { MatPaginator } from '@angular/material/paginator';
-// import { MatSort } from '@angular/material/sort';
-// import { SortDirection } from '../../../../shared/models/enums/sort-direction';
-// import * as moment from 'moment';
-// import { fromEvent, merge, of as observableOf } from 'rxjs';
-// import { catchError, debounceTime, delay, distinctUntilChanged, map, startWith, switchMap, tap } from 'rxjs/operators';
-// import { ListPortfoliosDto } from '@ratemystocks/api-interface';
-// import { PortfolioService } from '../../../../core/services/portfolio.service';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ListPortfoliosDto } from '@ratemystocks/api-interface';
+import * as moment from 'moment';
+import { ConfirmationService, LazyLoadEvent } from 'primeng/api';
+import { AuthService } from '../../../../core/services/auth.service';
+import { PortfolioService } from '../../../../core/services/portfolio.service';
+import { SortDirection } from '../../../../shared/models/enums/sort-direction';
 
-// /**
-//  * Displays all portfolios in the system in a single paginated/sortable table.
-//  * Use an Angular Material HTTP table and re-fetches data on table events (sorting, paging, filtering, etc.)
-//  */
-// @Component({
-//   selector: 'app-portfolios-table',
-//   templateUrl: './portfolios-table.component.html',
-//   styleUrls: ['./portfolios-table.component.scss'],
-// })
-// export class PortfoliosTableComponent implements AfterViewInit {
-//   displayedColumns: string[] = [
-//     'name',
-//     'username',
-//     'num_likes',
-//     'num_dislikes',
-//     'num_holdings',
-//     'largest_holding',
-//     'last_updated',
-//   ];
-//   data: ListPortfoliosDto = null;
+@Component({
+  selector: 'app-portfolios-table',
+  templateUrl: './portfolios-table.component.html',
+  styleUrls: ['./portfolios-table.component.scss'],
+})
+export class PortfoliosTableComponent implements OnInit {
+  // TODO: Add type for this
+  portfolios = [];
+  totalRecords: number;
 
-//   moment = moment;
+  moment = moment;
 
-//   resultsLength = 0;
-//   isLoadingResults = true;
-//   errorOccurred = false;
+  loading = true;
 
-//   @ViewChild(MatPaginator) paginator: MatPaginator;
-//   @ViewChild(MatSort) sort: MatSort;
-//   @ViewChild('input') input: ElementRef;
+  displayCreatePortfolioDialog: boolean = false;
 
-//   constructor(private portfolioService: PortfolioService) {}
+  constructor(
+    private portfolioService: PortfolioService,
+    private authService: AuthService,
+    private router: Router,
+    private confirmationService: ConfirmationService
+  ) {}
 
-//   ngAfterViewInit() {
-//     // Server-side search
-//     fromEvent(this.input.nativeElement, 'keyup')
-//       .pipe(
-//         debounceTime(150),
-//         distinctUntilChanged(),
-//         tap(() => {
-//           this.paginator.pageIndex = 0;
+  ngOnInit() {}
 
-//           this.updateTable();
-//         })
-//       )
-//       .subscribe();
+  loadPortfolios(event: LazyLoadEvent) {
+    this.loading = true;
 
-//     // If the user changes the sort order, reset back to the first page.
-//     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+    this.portfolioService.getPortfolios(50, event.first, 'num_likes', SortDirection.DESC, '').subscribe(
+      (listPortfolioDto: ListPortfoliosDto) => {
+        this.portfolios = listPortfolioDto.items;
+        this.totalRecords = listPortfolioDto.totalCount;
 
-//     this.updateTable();
-//   }
+        this.loading = false;
+      },
+      () => {
+        this.loading = false;
+      }
+    );
+  }
 
-//   /** Makes a server-side request to sort, paginate, and filter the portfolios and update the table */
-//   updateTable() {
-//     // On sort or paginate events, load a new page
-//     merge(this.sort.sortChange, this.paginator.page)
-//       .pipe(
-//         startWith({}),
-//         delay(0),
-//         switchMap(() => {
-//           const matSortDirection: SortDirection = this.sort.direction.toUpperCase() as SortDirection;
+  confirmLogin(event: Event) {
+    if (this.authService.isAuthorized()) {
+      this.showDialog();
+    } else {
+      this.confirmationService.confirm({
+        target: event.target,
+        message: 'You must have an account. Would you like to login?',
+        accept: () => {
+          // TODO: When using the Angular router to go to the loading page, for some reason some HTML & CSS isn't loading/displaying
+          // this.router.navigate(['/login']);
+          window.location.assign('/login');
+        },
+        reject: () => {
+          // this.displayCreatePortfolioDialog = false;
+        },
+      });
+    }
+  }
 
-//           this.isLoadingResults = true;
-
-//           return this.portfolioService.getPortfolios(
-//             this.paginator.pageSize,
-//             this.paginator.pageIndex * this.paginator.pageSize,
-//             this.sort.active,
-//             matSortDirection,
-//             this.input.nativeElement.value
-//           );
-//         }),
-//         map((data: ListPortfoliosDto) => {
-//           // Flip flag to show that loading has finished.
-//           this.isLoadingResults = false;
-//           this.errorOccurred = false;
-//           this.resultsLength = data.totalCount;
-
-//           return data.items;
-//         }),
-//         catchError(() => {
-//           this.isLoadingResults = false;
-//           // Catch if the API has reached its rate limit. Return empty data.
-//           this.errorOccurred = true;
-//           return observableOf([]);
-//         })
-//       )
-//       .subscribe((data: any) => (this.data = data));
-//   }
-// }
+  showDialog() {
+    this.displayCreatePortfolioDialog = true;
+  }
+}

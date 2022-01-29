@@ -7,26 +7,29 @@ import { PasswordReenterFormFieldValidatorPipe } from './pipes/password-reenter-
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { RoundingPipe } from './pipes/rounding.pipe';
 import { AbbreviatedCurrencyFormatterPipe } from './pipes/abbreviated-currency-formatter.pipe';
+import { MomentFromNowDatePipe } from './pipes/moment-from-now-date.pipe';
 
 @NgModule({
   declarations: [
     AbbreviatedCurrencyFormatterPipe,
-    UsernameFormFieldValidatorPipe,
     EmailFormFieldValidatorPipe,
+    MomentFromNowDatePipe,
     PasswordFormFieldValidatorPipe,
     PasswordReenterFormFieldValidatorPipe,
     RoundingPipe,
     TruncatePipe,
+    UsernameFormFieldValidatorPipe,
   ],
   imports: [CommonModule],
   exports: [
     AbbreviatedCurrencyFormatterPipe,
-    UsernameFormFieldValidatorPipe,
     EmailFormFieldValidatorPipe,
+    MomentFromNowDatePipe,
     PasswordFormFieldValidatorPipe,
     PasswordReenterFormFieldValidatorPipe,
     RoundingPipe,
     TruncatePipe,
+    UsernameFormFieldValidatorPipe,
   ],
 })
 export class SharedModule {}

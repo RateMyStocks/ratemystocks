@@ -370,7 +370,7 @@
                           <label for="username">Username or Email</label>
                           <span class="p-input-icon-left">
                             <i class="pi pi-user"></i>
-                            <input formControlName="usernameOrEmail" type="text" pInputText id="username" type="text"/>
+                            <input formControlName="usernameOrEmail" type="text" pInputText id="username" type="text" [ngClass]="{'ng-invalid': loginForm.controls['usernameOrEmail'].invalid, 'ng-dirty': loginForm.controls['usernameOrEmail'].touched}" />
                           </span>
                           <small *ngIf="!loginForm.controls['usernameOrEmail'].valid && loginForm.controls['usernameOrEmail'].touched" class="p-invalid">Please enter your username or email.</small>
                       </div>
@@ -378,7 +378,7 @@
                           <label for="password">Password</label>
                           <span class="p-input-icon-left">
                             <i class="pi pi-unlock"></i>
-                            <input formControlName="password" type="password" pInputText id="password" type="password" />
+                            <input formControlName="password" type="password" pInputText id="password" type="password" [ngClass]="{'ng-invalid': loginForm.controls['password'].invalid, 'ng-dirty': loginForm.controls['password'].touched}" />
                           </span>
                           <small *ngIf="!loginForm.controls['password'].valid && loginForm.controls['password'].touched" class="p-invalid">Please enter your password.</small>
                       </div>
@@ -413,7 +413,7 @@
                           <label for="username">Username</label>
                           <span class="p-input-icon-left">
                             <i class="pi pi-user"></i>
-                            <input formControlName="username" type="text" pInputText id="username" type="text" maxlength="30"/>
+                            <input formControlName="username" type="text" pInputText id="username" type="text" maxlength="30" [ngClass]="{'ng-invalid': signupForm.controls['username'].invalid, 'ng-dirty': signupForm.controls['username'].touched}"/>
                           </span>
                           <small *ngIf="!signupForm.controls['username'].valid && signupForm.controls['username'].touched" class="p-invalid">{{ signupForm.controls['username'] | usernameFormFieldValidator }}</small>
                       </div>
@@ -421,7 +421,7 @@
                         <label for="email">Email</label>
                         <span class="p-input-icon-left">
                           <i class="pi pi-envelope"></i>
-                          <input formControlName="email" type="text" pInputText id="email" type="email"/>
+                          <input formControlName="email" type="text" pInputText id="email" type="email" [ngClass]="{'ng-invalid': signupForm.controls['email'].invalid, 'ng-dirty': signupForm.controls['email'].touched}"/>
                         </span>
                         <small *ngIf="!signupForm.controls['email'].valid && signupForm.controls['email'].touched" class="p-invalid">{{ signupForm.controls['email'] | emailFormFieldValidator }}</small>
                     </div>
@@ -429,7 +429,7 @@
                           <label for="password">Password</label>
                           <span class="p-input-icon-left">
                             <i class="pi pi-unlock"></i>
-                            <input formControlName="password" type="password" pInputText id="password" type="password"/>
+                            <input formControlName="password" type="password" pInputText id="password" type="password" [ngClass]="{'ng-invalid': signupForm.controls['password'].invalid, 'ng-dirty': signupForm.controls['password'].touched}"/>
                           </span>
                           <!-- <small *ngIf="!signupForm.controls['password'].valid && signupForm.controls['password'].touched" class="p-invalid">{{ signupForm.controls['password'] | passwordFormFieldValidator }}</small> -->
                           <small *ngIf="!signupForm.controls['password'].valid && signupForm.controls['password'].touched" class="p-invalid">{{ getErrorPassword() }}</small>
@@ -438,7 +438,7 @@
                         <label for="passwordReenter">Re-enter Password</label>
                         <span class="p-input-icon-left">
                           <i class="pi pi-unlock"></i>
-                          <input formControlName="passwordReenter" type="password" pInputText id="passwordReenter" type="password" (input)="onPasswordInput()"/>
+                          <input formControlName="passwordReenter" type="password" pInputText id="passwordReenter" type="password" (input)="onPasswordInput()" [ngClass]="{'ng-invalid': signupForm.controls['passwordReenter'].invalid, 'ng-dirty': signupForm.controls['passwordReenter'].touched}" />
                         </span>
                         <!-- <small  class="p-invalid">{{ signupForm.controls['passwordReenter'] | passwordReenterFormFieldValidator }}</small> -->
                         <small *ngIf="!signupForm.controls['passwordReenter'].valid && signupForm.controls['passwordReenter'].touched" class="p-invalid">{{ getErrorPasswordReenter() }}</small>
@@ -475,7 +475,7 @@
                         <label for="email">Email</label>
                         <span class="p-input-icon-left">
                           <i class="pi pi-envelope"></i>
-                          <input formControlName="email" type="text" pInputText id="email" type="email"/>
+                          <input formControlName="email" type="text" pInputText id="email" type="email" [ngClass]="{'ng-invalid': forgotPasswordForm.controls['email'].invalid, 'ng-dirty': forgotPasswordForm.controls['email'].touched}" />
                         </span>
                         <small *ngIf="!forgotPasswordForm.controls['email'].valid && forgotPasswordForm.controls['email'].touched" class="p-invalid">{{ forgotPasswordForm.controls['email'] | emailFormFieldValidator }}</small>
                       </div>
