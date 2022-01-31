@@ -1,33 +1,39 @@
-@use './variables' as variables;
-
-@import '@angular/material/theming';
-
 /* You can add global styles to this file, and also import other style files */
-html,
-body {
-  width: 100%;
-  height: 100%;
-  margin: 0px;
-  padding: 0px;
+$gutter: 1rem; //for primeflex grid system
+
+@use './assets/sass/variables/_variables' as variables;
+
+@import 'primeng/resources/primeng.min.css';
+@import 'primeflex/primeflex.scss';
+@import 'primeicons/primeicons.css';
+@import 'prismjs/themes/prism-coy.css';
+@import '@fullcalendar/daygrid/main.min.css';
+@import '@fullcalendar/timegrid/main.min.css';
+@import 'assets/demo/flags/flags.css';
+
+/** Global Styles */
+::-webkit-scrollbar {
+  width: 10px;
 }
 
-body {
-  margin: 0;
-  font-family: variables.$primary-font-family;
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
 }
 
-img:hover {
-  cursor: pointer;
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: lightslategray;
+  border-radius: 10px;
 }
 
-a {
-  color: #0060b6;
-  font-weight: bold;
-  text-decoration: none;
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: darkslategray;
 }
 
 a:hover {
-  color: #00a0c6;
   text-decoration: none;
   cursor: pointer;
 }
@@ -35,86 +41,16 @@ a:hover {
 mark {
   background-color: white !important;
   color: variables.$rms-green !important;
+  // margin: 0px !important;
 }
 
-small {
-  color: variables.$primary-text-color;
-}
-
-table {
-  width: 100%;
-  border: 0.5px solid rgba(0, 0, 0, 0.12) !important;
-}
-
-td,
-th {
-  color: black !important;
-
-  a {
-    color: #0060b6;
-    font-weight: bold;
-    text-decoration: none;
-  }
-
-  a:hover {
-    color: #00a0c6;
-    text-decoration: none;
-    cursor: pointer;
-  }
-}
-
-/** Global Classes */
-.page-header {
-  display: inline-block;
-  border-bottom: 4px solid variables.$rms-green;
-  padding-bottom: 2px;
-}
-
-.page-container {
-  margin-bottom: 100px;
-}
-
-.centered-container {
-  margin: auto;
-  display: flex;
-  justify-content: center;
-}
-
-.primary-rms-btn {
-  background-color: variables.$rms-green;
-  color: white;
-}
-
-.success-snackbar {
-  .mat-simple-snackbar-action {
-    color: #24d660 !important;
-  }
-}
-
-.warn-snackbar {
-  .mat-simple-snackbar-action {
-    color: #fc7208 !important;
-  }
-}
-
-.error-snackbar {
-  .mat-simple-snackbar-action {
-    color: #eb0505 !important;
-  }
-}
-
-.inactive-breadcrumb {
-  color: variables.$primary-text-color;
-}
-
-.inactive-breadcrumb:hover {
-  cursor: pointer;
-  color: black;
-}
-
-.centered-content {
-  display: flex !important;
-  align-items: center !important;
+/** Custom Generic Classes */
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 .vertically-and-horizontally-centered {
@@ -125,28 +61,40 @@ th {
   transform: translate(-50%, -50%);
 }
 
-.error-page {
-  position: absolute;
-  left: 50%;
-  top: 30%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  text-align: center;
+.centered-content {
+  display: flex !important;
+  align-items: center !important;
 }
 
-/** Angular Material Overrides */
-mat-paginator {
-  border-left: 0.5px solid rgba(0, 0, 0, 0.12);
-  border-right: 0.5px solid rgba(0, 0, 0, 0.12);
-  border-bottom: 0.5px solid rgba(0, 0, 0, 0.12);
+.page-header {
+  display: inline-block;
+  border-bottom: 4px solid variables.$rms-green;
+  padding-bottom: 2px;
 }
 
-.mat-progress-spinner circle,
-.mat-spinner circle {
-  stroke: #3fb53f;
+/** PrimeNG Overrides */
+.p-invalid {
+  color: red !important;
 }
 
-.form-element {
-  padding: 5px 0px 25px 2px;
-  width: 100%;
+:host ::ng-deep .custom-spinner .p-progress-spinner-circle {
+  animation: custom-progress-spinner-dash 1.5s ease-in-out infinite,
+    custom-progress-spinner-color 6s ease-in-out infinite;
+}
+
+@keyframes p-progress-spinner-color {
+  100%,
+  0% {
+    stroke: variables.$rms-green;
+  }
+  40% {
+    stroke: variables.$rms-orange;
+  }
+  66% {
+    stroke: variables.$rms-blue;
+  }
+  80%,
+  90% {
+    stroke: variables.$rms-green;
+  }
 }

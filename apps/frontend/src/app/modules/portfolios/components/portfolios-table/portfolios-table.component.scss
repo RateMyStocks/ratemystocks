@@ -1,0 +1,30 @@
+// @use '../../../../../variables' as variables;
+
+td,
+th {
+  color: black;
+
+  .profile-picture {
+    margin-right: 10px;
+    width: 30px !important;
+    height: auto;
+  }
+
+  a {
+    color: #0060b6;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #00a0c6;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .stock-logo {
+    margin-right: 10px;
+    width: 30px !important;
+    height: auto;
+  }
+}

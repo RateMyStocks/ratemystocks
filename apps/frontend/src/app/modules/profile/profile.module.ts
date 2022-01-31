@@ -1,40 +1,28 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FavoritesComponent } from './pages/favorites/favorites.component';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 import { SettingsComponent } from './pages/settings/settings.component';
-import { UserPortfoliosTableComponent } from './components/user-portfolios-table/user-portfolios-table.component';
-import { UserProfileHeaderComponent } from './components/user-profile-header/user-profile-header.component';
-import { RouterModule } from '@angular/router';
-import { SharedModule } from '../../shared/shared.module';
-import { FavoritesComponent } from './pages/favorites/favorites.component';
-import { SavedPortfoliosTableComponent } from './components/saved-portfolios-table/saved-portfolios-table.component';
-import { UserStockRatingsTableComponent } from './components/user-stock-ratings-table/user-stock-ratings-table.component';
 import { ProfileRoutingModule } from './profile-routing.module';
-import { AngularMaterialModule } from '../../angular-material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ChangePasswordFormComponent } from './components/change-password-form/change-password-form.component';
-import { ChangeEmailFormComponent } from './components/change-email-form/change-email-form.component';
+import { AppCodeModule } from '../../app.code.component';
+import { PrimeNGModule } from '../../primeng.module';
+import { SharedModule } from '../../shared/shared.module';
+import { AccountInfoSettingsComponent } from './components/account-info-settings/account-info-settings.component';
+import { AccountSecuritySettingsComponent } from './components/account-security-settings/account-security-settings.component';
+import { SavedPortfoliosTableComponent } from './components/saved-portfolios-table/saved-portfolios-table.component';
+import { SavedStocksTableComponent } from './components/saved-stocks-table/saved-stocks-table.component';
 
 @NgModule({
-  declarations: [
-    UserProfileComponent,
-    SettingsComponent,
-    UserPortfoliosTableComponent,
-    UserProfileHeaderComponent,
-    FavoritesComponent,
-    SavedPortfoliosTableComponent,
-    UserStockRatingsTableComponent,
-    ChangePasswordFormComponent,
-    ChangeEmailFormComponent,
-  ],
+  declarations: [FavoritesComponent, UserProfileComponent, SettingsComponent, AccountInfoSettingsComponent, AccountSecuritySettingsComponent, SavedPortfoliosTableComponent, SavedStocksTableComponent],
   imports: [
-    AngularMaterialModule,
+    AppCodeModule,
     CommonModule,
     FormsModule,
-    ProfileRoutingModule,
     ReactiveFormsModule,
-    RouterModule,
+    PrimeNGModule,
     SharedModule,
+    ProfileRoutingModule,
   ],
 })
 export class ProfileModule {}

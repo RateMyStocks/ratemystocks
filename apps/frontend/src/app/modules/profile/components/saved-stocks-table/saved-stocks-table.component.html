@@ -1,0 +1,65 @@
+<p-table [value]="stocks" responsiveLayout="scroll" styleClass="p-datatable-gridlines p-datatable-striped">
+  <ng-template pTemplate="header">
+      <tr>
+          <th>Ticker/Name</th>
+          <th>Price</th>
+          <th>Gain/Loss (Today)</th>
+          <th>Market Cap</th>
+          <th>Div. Yield</th>
+          <th>Type</th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-stock>
+      <tr>
+        <td>
+          <div class="centered-content">
+            <img
+              *ngIf="stock.ticker"
+              class="stock-logo"
+              src="https://storage.googleapis.com/iex/api/logos/{{ stock.ticker }}.png"
+              onerror="this.onerror=null; this.src=''"
+            />
+            <a routerLink="/stocks/{{ stock.ticker }}">
+              <b>{{ stock.ticker }}</b>
+              <br />
+              <small *ngIf="iexStockDataMap">{{ iexStockDataMap[stock.ticker]?.stats?.companyName }}</small>
+            </a>
+          </div>
+        </td>
+        <td>
+          <span
+            [ngStyle]="{ color: iexStockDataMap[stock.ticker]?.quote?.change >= 0 ? 'green' : 'red' }"
+            *ngIf="iexStockDataMap"
+          >
+            ${{ iexStockDataMap[stock.ticker]?.quote?.latestPrice?.toLocaleString() }}
+          </span>
+        </td>
+        <td>
+          <span
+            [ngStyle]="{ color: iexStockDataMap[stock.ticker]?.quote?.change >= 0 ? 'green' : 'red' }"
+            *ngIf="iexStockDataMap"
+          >
+            <small [ngStyle]="{ color: iexStockDataMap[stock.ticker]?.quote?.change >= 0 ? 'green' : 'red' }"
+              ><span *ngIf="iexStockDataMap[stock.ticker]?.quote.change >= 0">+</span
+              >{{ iexStockDataMap[stock.ticker]?.quote.change }} ({{
+                (iexStockDataMap[stock.ticker]?.quote.changePercent * 100).toFixed(2)
+              }}%)</small>
+          </span>
+        </td>
+        <td>
+          <small *ngIf="iexStockDataMap">
+            ${{ iexStockDataMap[stock.ticker]?.stats?.marketcap | abbreviatedCurrencyFormatterPipe }}
+          </small>
+        </td>
+        <td>
+          <span class="p-column-title">Dividend Yield</span>
+          <span *ngIf="iexStockDataMap"
+            >{{ (iexStockDataMap[stock.ticker]?.stats?.dividendYield * 100)?.toFixed(2) }}%</span
+          >
+        </td>
+        <td>
+          <span *ngIf="iexStockDataMap" [class]="'stock-type-badge status-' + iexStockDataMap[stock.ticker]?.company?.issueType ">{{IexCloudSecurityType[iexStockDataMap[stock.ticker]?.company?.issueType] }}</span>
+        </td>
+      </tr>
+  </ng-template>
+</p-table>

@@ -1,0 +1,211 @@
+:host ::ng-deep {
+  .p-paginator {
+    .p-paginator-current {
+      margin-left: auto;
+    }
+  }
+
+  .p-progressbar {
+    height: 0.5rem;
+    background-color: #d8dadc;
+
+    .p-progressbar-value {
+      background-color: #607d8b;
+    }
+  }
+
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .p-calendar .p-datepicker {
+    min-width: 25rem;
+
+    td {
+      font-weight: 400;
+    }
+  }
+
+  .p-datatable.p-datatable-customers {
+    .p-datatable-header {
+      padding: 1rem;
+      text-align: left;
+      font-size: 1.5rem;
+    }
+
+    .p-paginator {
+      padding: 1rem;
+    }
+
+    .p-datatable-thead > tr > th {
+      text-align: left;
+    }
+
+    .p-dropdown-label:not(.p-placeholder) {
+      text-transform: uppercase;
+    }
+  }
+
+  .p-datatable.p-datatable-customers:not(.p-datatable-gridlines) {
+    .p-datatable-tbody > tr > td {
+      cursor: auto;
+    }
+  }
+
+  /* Responsive */
+  .p-datatable-customers .p-datatable-tbody > tr > td .p-column-title {
+    display: none;
+  }
+}
+
+.customer-badge {
+  border-radius: 2px;
+  padding: 0.25em 0.5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+
+  &.status-qualified {
+    background: #c8e6c9;
+    color: #256029;
+  }
+
+  &.status-unqualified {
+    background: #ffcdd2;
+    color: #c63737;
+  }
+
+  &.status-negotiation {
+    background: #feedaf;
+    color: #8a5340;
+  }
+
+  &.status-new {
+    background: #b3e5fc;
+    color: #23547b;
+  }
+
+  &.status-renewal {
+    background: #eccfff;
+    color: #694382;
+  }
+
+  &.status-proposal {
+    background: #ffd8b2;
+    color: #805b36;
+  }
+}
+
+.product-badge {
+  border-radius: 2px;
+  padding: 0.25em 0.5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+
+  &.status-instock {
+    background: #c8e6c9;
+    color: #256029;
+  }
+
+  &.status-outofstock {
+    background: #ffcdd2;
+    color: #c63737;
+  }
+
+  &.status-lowstock {
+    background: #feedaf;
+    color: #8a5340;
+  }
+}
+
+.order-badge {
+  border-radius: 2px;
+  padding: 0.25em 0.5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+
+  &.order-delivered {
+    background: #c8e6c9;
+    color: #256029;
+  }
+
+  &.order-cancelled {
+    background: #ffcdd2;
+    color: #c63737;
+  }
+
+  &.order-pending {
+    background: #feedaf;
+    color: #8a5340;
+  }
+
+  &.order-returned {
+    background: #eccfff;
+    color: #694382;
+  }
+}
+
+.social-media-icons-container {
+  margin-top: 10px;
+  // margin-bottom: 10px;
+
+  img {
+    // margin-left: 10px;
+    width: 30px !important;
+    height: auto;
+  }
+
+  img:hover {
+    cursor: pointer;
+    filter: brightness(75%);
+  }
+}
+
+@media screen and (max-width: 960px) {
+  :host ::ng-deep {
+    .p-datatable {
+      &.p-datatable-customers {
+        .p-datatable-thead > tr > th,
+        .p-datatable-tfoot > tr > td {
+          display: none !important;
+        }
+
+        .p-datatable-tbody > tr {
+          border-bottom: 1px solid var(--surface-d);
+
+          > td {
+            text-align: left;
+            display: block;
+            border: 0 none !important;
+            width: 100% !important;
+            float: left;
+            clear: left;
+            border: 0 none;
+
+            .p-column-title {
+              padding: 0.4rem;
+              min-width: 30%;
+              display: inline-block;
+              margin: -0.4rem 1rem -0.4rem -0.4rem;
+              font-weight: bold;
+            }
+
+            .p-progressbar {
+              margin-top: 0.5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+#copy-page-link-button {
+  z-index: 1;
+}

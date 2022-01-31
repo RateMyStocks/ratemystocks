@@ -147,6 +147,9 @@ export interface UserProfileDto {
   username: string;
   email: string;
   spiritAnimal: SpiritAnimal;
+  dateJoined: Date;
+  lastLogin: Date;
+  bio: string;
 }
 
 export interface UserSettingsDto {

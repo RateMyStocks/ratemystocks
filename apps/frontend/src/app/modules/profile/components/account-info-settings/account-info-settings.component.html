@@ -1,0 +1,17 @@
+
+  <form [formGroup]="form" (ngSubmit)="submitForm()">
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="email">Email</label>
+        <input formControlName="email" type="email" pInputText>
+        <small *ngIf="!email.valid && email.touched" class="p-invalid">{{ email | emailFormFieldValidator }}</small>
+      </div>
+      <p-chip label="Verified" [style]="{ 'background-color': '#549e58', 'color': 'white', 'font-weight': 'bold' }" selected *ngIf="emailVerified" icon="pi pi-check-circle"></p-chip>
+      <p-chip label="Not Verified" [style]="{ 'background-color': '#eb3434', 'color': 'white', 'font-weight': 'bold' }" selected *ngIf="!emailVerified" icon="pi pi-times"></p-chip>
+    </div>
+    <div class="p-mt-3">
+      <p-button label="Update" type="submit" [disabled]="!form.valid" styleClass="p-mb-3 p-mr-2"></p-button>
+      <p-button label="Resend Verification Email" [disabled]="!form.valid" styleClass="p-mb-3"></p-button>
+    </div>
+  </form>
+

@@ -2,9 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable, Subject } from 'rxjs';
-import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { StatusCodes } from '../../shared/utilities/status-codes.enum';
 import {
   AuthCredentialDto,
   SignUpDto,
@@ -14,8 +11,8 @@ import {
   UserSettingsDto,
 } from '@ratemystocks/api-interface';
 import { LocalStorageService } from './local-storage.service';
-import { MatDialog } from '@angular/material/dialog';
-import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog.component';
+import { StatusCodes } from '../../shared/utilities/status-codes.enum';
+import { MessageService } from 'primeng/api';
 
 const BACKEND_URL: string = environment.apiUrl + '/auth';
 
@@ -24,19 +21,19 @@ const BACKEND_URL: string = environment.apiUrl + '/auth';
 })
 export class AuthService {
   private isAuthenticated = false;
-  private token: string;
+  private token = '';
   private tokenTimer: any;
-  private userId: string;
-  private username: string;
-  private spiritAnimal: string;
+  private userId = '';
+  private username = '';
+  private email = '';
+  private spiritAnimal = '';
+  // TODO: Should this Subject emit the error too?
   private authStatusListener: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private httpClient: HttpClient,
-    private router: Router,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private messageService: MessageService
   ) {}
 
   /**
@@ -61,6 +58,14 @@ export class AuthService {
    */
   getUsername(): string {
     return this.username;
+  }
+
+  /**
+   * Gets the email of the logged-in user.
+   * @returns The email of the logged-in user.
+   */
+  getEmail(): string {
+    return this.email;
   }
 
   /**
@@ -104,19 +109,19 @@ export class AuthService {
       (error: any) => {
         this.authStatusListener.next(false);
 
-        if (error.status && error.status === StatusCodes.BAD_REQUEST) {
-          this.snackBar.open(
-            'Please make sure you register your credentials with the proper format.',
-            'Registration Error',
-            {
-              duration: 8000,
-            }
-          );
-        } else if (error.status && error.status === StatusCodes.CONFLICT) {
-          this.snackBar.open('Username or email has already been taken.', 'Registration Error', {
-            duration: 8000,
-          });
-        }
+        // if (error.status && error.status === StatusCodes.BAD_REQUEST) {
+        //   this.snackBar.open(
+        //     'Please make sure you register your credentials with the proper format.',
+        //     'Registration Error',
+        //     {
+        //       duration: 8000,
+        //     }
+        //   );
+        // } else if (error.status && error.status === StatusCodes.CONFLICT) {
+        //   this.snackBar.open('Username or email has already been taken.', 'Registration Error', {
+        //     duration: 8000,
+        //   });
+        // }
       }
     );
   }
@@ -138,42 +143,43 @@ export class AuthService {
           this.isAuthenticated = true;
           this.userId = response.userId;
           this.username = response.username;
+          this.email = response.email;
           this.spiritAnimal = response.spiritAnimal;
           this.authStatusListener.next(true);
 
           const now = new Date();
           const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
 
-          this.saveAuthData(token, expirationDate, this.userId, this.username, this.spiritAnimal);
-          this.router.navigate(['/']);
+          this.saveAuthData(token, expirationDate, this.userId, this.username, this.email, this.spiritAnimal);
 
           if (isNewUser) {
-            this.dialog.open(WelcomeDialogComponent, {
-              data: {
-                user: response,
-              },
+            this.messageService.add({
+              severity: 'success',
+              // summary: `Welcome ${authCredentials.username}!`,
+              summary: `Welcome to ratemystocks.com ${authCredentials.username ? authCredentials.username : ''}!`,
+              detail: `We have sent an email to ${authCredentials.email}. Please verify your account by clicking the link in the email`,
             });
           } else {
-            this.snackBar.open(`You have successfully signed in.`, 'OK', {
-              duration: 3000,
-              panelClass: 'success-snackbar',
+            this.messageService.add({
+              severity: 'success',
+              // summary: `Welcome ${authCredentials.username}!`,
+              summary: `Welcome ${authCredentials.username ? authCredentials.username : ''}!`,
+              detail: 'You have logged in successfully.',
             });
           }
         }
       },
       (error: any) => {
         this.authStatusListener.next(false);
-        if (error.status && error.status === StatusCodes.UNAUTHORIZED) {
-          this.snackBar.open(
-            `Login failed. Please ensure your username & password are correct.`,
-            'Authorization Error',
-            {
-              duration: 3000,
-            }
-          );
-        } else {
-          throw error;
-        }
+        // if (error.status && error.status === StatusCodes.UNAUTHORIZED) {
+        //   this.messageService.add({
+        //     severity: 'error',
+        //     summary: `Authorization Error`,
+        //     detail: 'Login failed. Please ensure your username & password are correct.',
+        //   });
+        // } else {
+        //   throw error;
+        // }
       }
     );
   }
@@ -189,14 +195,16 @@ export class AuthService {
     this.clearAuthData();
     this.userId = null;
     this.username = null;
+    this.email = null;
     this.spiritAnimal = null;
 
-    this.snackBar.open(`You have logged out.`, 'OK', {
-      duration: 3000,
-      panelClass: 'success-snackbar',
+    this.messageService.add({
+      severity: 'success',
+      summary: `Cya!`,
+      detail: 'You have logged out in successfully.',
     });
 
-    this.router.navigate(['/auth/signin']);
+    // this.router.navigate(['/auth/signin']);
   }
 
   /**
@@ -217,6 +225,7 @@ export class AuthService {
       this.isAuthenticated = true;
       this.userId = authInformation.userId;
       this.username = authInformation.username;
+      this.email = authInformation.email;
       this.spiritAnimal = authInformation.spiritAnimal;
       this.setAuthTimer(expiresIn / 1000);
       this.authStatusListener.next(true);
@@ -239,6 +248,7 @@ export class AuthService {
    * @param expirationDate The expiration date of the JWT
    * @param userId The UUID of the logged-in user.
    * @param username The username of the logged-in user.
+   * @param email The email of the logged-in user.
    * @param spiritAnimal The SpiritAnimal enum representing the avatar of the logged-in user.
    */
   private saveAuthData(
@@ -246,6 +256,7 @@ export class AuthService {
     expirationDate: Date,
     userId: string,
     username: string,
+    email: string,
     spiritAnimal: string
   ): void {
     // Note: LocalStorageService is used instead of regular localStorage for Angular Universal purposes
@@ -253,6 +264,7 @@ export class AuthService {
     this.localStorageService.setItem('expiration', expirationDate.toISOString());
     this.localStorageService.setItem('userId', userId);
     this.localStorageService.setItem('username', username);
+    this.localStorageService.setItem('email', email);
     this.localStorageService.setItem('spiritAnimal', spiritAnimal);
   }
 
@@ -264,6 +276,7 @@ export class AuthService {
     this.localStorageService.removeItem('expiration');
     this.localStorageService.removeItem('userId');
     this.localStorageService.removeItem('username');
+    this.localStorageService.removeItem('email');
     this.localStorageService.removeItem('spiritAnimal');
   }
 
@@ -276,6 +289,7 @@ export class AuthService {
     const expirationDate = this.localStorageService.getItem('expiration');
     const userId = this.localStorageService.getItem('userId');
     const username = this.localStorageService.getItem('username');
+    const email = this.localStorageService.getItem('email');
     const spiritAnimal = this.localStorageService.getItem('spiritAnimal');
 
     if (!token || !expirationDate) {
@@ -287,6 +301,7 @@ export class AuthService {
       expirationDate: new Date(expirationDate),
       userId: userId,
       username: username,
+      email: email,
       spiritAnimal: spiritAnimal,
     };
   }

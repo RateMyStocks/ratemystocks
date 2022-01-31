@@ -1,49 +1,35 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { MatDividerModule } from '@angular/material/divider';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { RouterModule } from '@angular/router';
-import { StockSearchComponent } from './components/stock-search/stock-search.component';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { MatCardModule } from '@angular/material/card';
-import { NgxPieChartComponent } from './components/ngx-pie-chart/ngx-pie-chart.component';
-import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { UsernameFormFieldValidatorPipe } from './pipes/username-form-field-validator.pipe';
+import { EmailFormFieldValidatorPipe } from './pipes/email-form-field-validator.pipe';
+import { PasswordFormFieldValidatorPipe } from './pipes/password-form-field-validator.pipe';
+import { PasswordReenterFormFieldValidatorPipe } from './pipes/password-reenter-form-field-validator.pipe';
+import { TruncatePipe } from './pipes/truncate.pipe';
+import { RoundingPipe } from './pipes/rounding.pipe';
+import { AbbreviatedCurrencyFormatterPipe } from './pipes/abbreviated-currency-formatter.pipe';
+import { MomentFromNowDatePipe } from './pipes/moment-from-now-date.pipe';
 
 @NgModule({
-  declarations: [StockSearchComponent, NgxPieChartComponent, ConfirmDialogComponent],
-  imports: [
-    CommonModule,
-    MatDividerModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatCardModule,
-    MatMenuModule,
-    MatListModule,
-    MatSidenavModule,
-    MatAutocompleteModule,
-    MatFormFieldModule,
-    NgxChartsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    RouterModule,
-    FlexLayoutModule,
-    MatProgressBarModule,
+  declarations: [
+    AbbreviatedCurrencyFormatterPipe,
+    EmailFormFieldValidatorPipe,
+    MomentFromNowDatePipe,
+    PasswordFormFieldValidatorPipe,
+    PasswordReenterFormFieldValidatorPipe,
+    RoundingPipe,
+    TruncatePipe,
+    UsernameFormFieldValidatorPipe,
   ],
-  exports: [StockSearchComponent, NgxPieChartComponent],
-  entryComponents: [ConfirmDialogComponent],
+  imports: [CommonModule],
+  exports: [
+    AbbreviatedCurrencyFormatterPipe,
+    EmailFormFieldValidatorPipe,
+    MomentFromNowDatePipe,
+    PasswordFormFieldValidatorPipe,
+    PasswordReenterFormFieldValidatorPipe,
+    RoundingPipe,
+    TruncatePipe,
+    UsernameFormFieldValidatorPipe,
+  ],
 })
 export class SharedModule {}

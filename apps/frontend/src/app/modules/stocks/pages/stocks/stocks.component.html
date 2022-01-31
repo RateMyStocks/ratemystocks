@@ -1,0 +1,219 @@
+<div class="p-grid table-demo">
+  <div class="p-col-12">
+    <div class="card">
+      <h5><span class="page-header">Stocks</span></h5>
+      <p>See what stocks are trending on ratemystocks.com!</p>
+      <!-- TODO: figure out what is setting responsiveLayout to "stacked" on mobile screen sizes even when it is explicitly set to scroll -->
+      <p-table #dt [value]="stocks" dataKey="id"
+           styleClass="p-datatable-customers" [rowHover]="true" [rows]="100" [paginator]="true"
+           [filterDelay]="0" [globalFilterFields]="['ticker']" (sortFunction)="customSort($event)" [customSort]="true">
+        <ng-template pTemplate="caption">
+          <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+            <span>
+              <p-dropdown [options]="listTypes" [(ngModel)]="selectedListType" optionLabel="name" class="p-mr-4" (onChange)="onSelectListType($event)" #stockListTypeDropdown></p-dropdown>
+              <p-dropdown [options]="timeframes" [(ngModel)]="selectedTimeFrame" optionLabel="name" (onChange)="onSelectListType($event)" #stockTimeframeDropdown></p-dropdown>
+            </span>
+            <span class="p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search"/>
+            </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="rank">
+              <div class="p-d-flex p-jc-between p-ai-center">
+                Rank
+                <p-sortIcon field="rank"></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="ticker">
+              <div class="p-d-flex p-jc-between p-ai-center">
+                Name
+                <p-sortIcon field="ticker"></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="price">
+              <div class="p-d-flex p-jc-between p-ai-center">
+                Price
+                <p-sortIcon field="price"></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="buy_count">
+              <div class="p-d-flex p-jc-between p-ai-center">
+                Buy Ratings
+                <p-sortIcon field="buy_count"></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="hold_count">
+              <div class="p-d-flex p-jc-between p-ai-center">
+                Hold Ratings
+                <p-sortIcon field="hold_count"></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="sell_count">
+              <div class="p-d-flex p-jc-between p-ai-center">
+                Sell Ratings
+                <p-sortIcon field="sell_count"></p-sortIcon>
+              </div>
+            </th>
+            <!-- <th pSortableColumn="country">
+              <div class="p-d-flex p-jc-between p-ai-center">
+                Country
+                <p-sortIcon field="country"></p-sortIcon>
+                <p-columnFilter field="type" matchMode="equals" display="menu">
+                  <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                    <p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)" placeholder="Any">
+                      <ng-template let-option pTemplate="item">
+                        <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                      </ng-template>
+                    </p-dropdown>
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+            </th> -->
+            <th pSortableColumn="sector">
+              <div class="p-d-flex p-jc-between p-ai-center">
+                Sector
+                <p-sortIcon field="sector"></p-sortIcon>
+                <p-columnFilter field="type" matchMode="equals" display="menu">
+                  <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                    <p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)" placeholder="Any">
+                      <ng-template let-option pTemplate="item">
+                        <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                      </ng-template>
+                    </p-dropdown>
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+            </th>
+            <th pSortableColumn="type">
+              <div class="p-d-flex p-jc-between p-ai-center">
+                Type
+                <p-columnFilter field="type" matchMode="equals" display="menu">
+                  <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                    <p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)" placeholder="Any">
+                      <ng-template let-option pTemplate="item">
+                        <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                      </ng-template>
+                    </p-dropdown>
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+            </th>
+            <!-- <th pSortableColumn="dividend">
+              <div class="p-d-flex p-jc-between p-ai-center">
+                Dividend Yield
+                <p-sortIcon field="dividend"></p-sortIcon>
+              </div>
+            </th> -->
+            <th pSortableColumn="marketcap">
+              <div class="p-d-flex p-jc-between p-ai-center">
+                Market Cap
+                <p-sortIcon field="marketcap"></p-sortIcon>
+                <p-columnFilter type="text" field="name" display="menu" class="p-ml-auto"></p-columnFilter>
+              </div>
+            </th>
+            <!-- <th style="width: 8rem"></th> -->
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-stock>
+          <tr class="p-selectable-row">
+            <td>
+              <span class="p-column-title">Rank</span>
+              <span style="margin-left: .5em;vertical-align: middle; font-weight: bold; color: #515C66 !important">#{{ stock.rank }}</span>
+            </td>
+            <td>
+              <span class="p-column-title">Name</span>
+              <div class="centered-content">
+                <img
+                  *ngIf="stock.ticker"
+                  class="stock-logo"
+                  src="https://storage.googleapis.com/iex/api/logos/{{ stock.ticker }}.png"
+                  onerror="this.onerror=null; this.src=''"
+                />
+                <a routerLink="/stocks/{{ stock.ticker }}">
+                  <b>{{ stock.ticker }}</b>
+                  <br />
+                  <small *ngIf="iexStockDataMap">{{ iexStockDataMap[stock.ticker]?.stats?.companyName }}</small>
+                </a>
+              </div>
+            </td>
+            <td>
+              <span class="p-column-title">Name</span>
+              <div class="centered-content">
+                <span
+                  [ngStyle]="{ color: iexStockDataMap[stock.ticker]?.quote?.change >= 0 ? 'green' : 'red' }"
+                  *ngIf="iexStockDataMap"
+                >
+                  ${{ iexStockDataMap[stock.ticker]?.quote?.latestPrice?.toLocaleString() }}
+                  <br />
+                  <small [ngStyle]="{ color: iexStockDataMap[stock.ticker]?.quote?.change >= 0 ? 'green' : 'red' }"
+                    ><span *ngIf="iexStockDataMap[stock.ticker]?.quote.change >= 0">+</span
+                    >{{ iexStockDataMap[stock.ticker]?.quote.change }} ({{
+                      (iexStockDataMap[stock.ticker]?.quote.changePercent * 100).toFixed(2)
+                    }}%)</small
+                  >
+                </span>
+              </div>
+            </td>
+            <td>
+              <span class="p-column-title">Buy Ratings</span>
+              <span style="margin-left: .5em;vertical-align: middle">{{ stock.buy_count }}</span>
+            </td>
+            <td>
+              <span class="p-column-title">Hold Ratings</span>
+              <span style="margin-left: .5em;vertical-align: middle">{{ stock.hold_count }}</span>
+            </td>
+            <td>
+              <span class="p-column-title">Sell Ratings</span>
+              <span style="margin-left: .5em;vertical-align: middle">{{ stock.sell_count }}</span>
+            </td>
+            <!-- <td>
+              <span class="p-column-title">Country</span>
+              <img *ngIf="iexStockDataMap" src="assets/demo/flags/flag_placeholder.png" class="p-mr-2" [class]="'flag flag-' + IexCloudCountryToIsoCode.convertIexCloudCountryValueToISOCode(iexStockDataMap[stock.ticker]?.company?.country)" width="30">
+              <small *ngIf="iexStockDataMap">{{
+                iexStockDataMap[stock.ticker]?.company?.country === 'US'
+                  ? 'United States'
+                  : iexStockDataMap[stock.ticker]?.company?.country
+              }}</small>
+            </td> -->
+            <td>
+              <span class="p-column-title">Sector</span>
+              <small *ngIf="iexStockDataMap">{{ iexStockDataMap[stock.ticker]?.company?.sector }}</small>
+            </td>
+            <td>
+              <span class="p-column-title">Type</span>
+              <span *ngIf="iexStockDataMap" [class]="'customer-badge status-' + iexStockDataMap[stock.ticker]?.company?.issueType ">{{IexCloudSecurityType[iexStockDataMap[stock.ticker]?.company?.issueType] }}</span>
+            </td>
+            <!-- <td>
+              <span class="p-column-title">Dividend Yield</span>
+              <span *ngIf="iexStockDataMap"
+                >{{ (iexStockDataMap[stock.ticker]?.stats?.dividendYield * 100)?.toFixed(2) }}%</span
+              >
+            </td> -->
+            <td>
+              <span class="p-column-title">Market Cap</span>
+              <small *ngIf="iexStockDataMap">
+                ${{ iexStockDataMap[stock.ticker]?.stats?.marketcap | abbreviatedCurrencyFormatterPipe }}
+              </small>
+            </td>
+            <!-- <td style="text-align: center">
+              <button pButton type="button" class="p-button-secondary" icon="pi pi-cog"></button>
+            </td> -->
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <!-- <tr>
+            <td colspan="8">
+              <p-progressBar mode="indeterminate"></p-progressBar>
+            </td>
+          </tr> -->
+          <tr *ngIf="stocks.length === 0">
+            <td colspan="8">No stocks found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,316 @@
+<p-toast key="stockPageToast" position="top-center"></p-toast>
+
+
+<div style="z-index: 999; position: fixed; padding: 0; top: 40%; right: 0; width: 60px; height: 100%;">
+  <p-speedDial [model]="socialMediaItems" showIcon="pi pi-share-alt" direction="down"></p-speedDial>
+</div>
+
+
+<div class="layout-dashboard" *ngIf="stock; else stockNotLoaded">
+    <div class="p-grid">
+        <div class="p-col-12 p-md-12 p-xl-9">
+            <div class="p-grid">
+                <div class="p-col-12 p-md-12 p-xl-4">
+                    <div class="card overview-box-1 blue">
+                        <div class="card-header">
+                            <h6>{{ stock.data.stats.companyName | truncate:[15, '...'] }} | {{ stock.data.company?.exchange === 'NEW YORK STOCK EXCHANGE INC.' ? 'NYSE' : stock.data.company?.exchange }}</h6>
+                            <div class="header-buttons">
+                                <a href="#"><i class="pi pi-chart-line"></i></a>
+                            </div>
+                        </div>
+                        <div class="overview-content">
+                            <h3 style="display: flex; align-items: center;">
+                              <img
+                                class="stock-logo p-mr-4"
+                                src="https://storage.googleapis.com/iex/api/logos/{{ ticker }}.png"
+                                onerror="this.onerror=null; this.src=''"
+                                style="width:40px;height: auto;"
+                              />
+                              <b>{{ ticker }}</b>
+                            </h3>
+                            <div>
+                              <h4 class="p-mb-0" [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }">
+                                ${{ stock.data.quote.latestPrice?.toLocaleString(undefined, {minimumFractionDigits: 2}) }}
+                              </h4>
+                              <small [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }"
+                                ><span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote?.change?.toLocaleString(undefined, {minimumFractionDigits: 2}) }} ({{
+                                  (stock.data.quote.changePercent * 100)?.toFixed(2)
+                                }}%)</small
+                              >
+                          </div>
+                        </div>
+                        <div class="overview-footer">
+                            <span *ngIf="stock.data.quote.extendedPrice">
+                              <small class="p-ml-2">After Hours: </small>
+                              <small [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }">
+                                ${{ stock.data.quote?.extendedPrice }}
+                                <span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote?.extendedChange?.toLocaleString(undefined, {minimumFractionDigits: 2}) }} ({{
+                                  (stock.data.quote?.extendedChangePercent * 100)?.toFixed(2)
+                                }}%)
+                              </small>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-col-12 p-md-12 p-xl-4">
+                    <div class="card overview-box-1 teal">
+                        <div class="card-header">
+                            <h6>Followers</h6>
+                            <div class="header-buttons">
+                              <a *ngIf="!isLoggedInUserFollowing" (click)="followStock()"><i class="pi pi-plus-circle"></i></a>
+                              <a *ngIf="isLoggedInUserFollowing" (click)="unfollowStock()" class="header-button-active"><i class="pi pi-check-circle"></i></a>
+                            </div>
+                        </div>
+                        <div class="overview-content">
+                            <h3>{{followers}}</h3>
+                            <div class="overview-graph">
+                              <span *ngFor="let followerCountByDay of followerCountsByDay" [ngStyle]="{'height': followerCountByDay.pixelCount, 'margin-top': noNewFollowers ? '52px' : '0px'}"><span class="graph-tooltip">{{followerCountByDay.followerCount}}</span></span>
+                            </div>
+                        </div>
+                        <div class="overview-footer" [ngClass]="{'down': followerPercentChangeToday < 0, 'up': followerPercentChangeToday >= 0}">
+                          <span *ngIf="followerPercentChangeToday != Infinity && followerPercentChangeToday !== 0">
+                            <i [ngClass]="{'pi': true, 'p-mr-2': true, 'pi-arrow-down': followerPercentChangeToday < 0, 'pi-arrow-up': followerPercentChangeToday > 0}"></i>
+                            <span class="p-mr-1">{{ followerPercentChangeToday.toFixed(0) }}%</span>
+                            <span><span *ngIf="followerPercentChangeToday >= 0">increase</span> <span *ngIf="followerPercentChangeToday < 0">decrease</span> in followers today.</span>
+                          </span>
+                      </div>
+                    </div>
+                </div>
+                <div class="p-col-12 p-md-12 p-xl-4">
+                    <div class="card  overview-box-1 orange">
+                        <div class="card-header">
+                            <h6>Visits</h6>
+                            <div class="header-buttons">
+                                <a><i class="pi pi-eye"></i></a>
+                            </div>
+                        </div>
+                        <div class="overview-content">
+                            <h3>{{ visitors }}</h3>
+                            <div class="overview-graph">
+                              <span *ngFor="let visitCount of visitCountsByDay" [ngStyle]="{'height': visitCount.pixelCount}"><span class="graph-tooltip">{{visitCount.visitCount}}</span></span>
+                            </div>
+                        </div>
+                        <div class="overview-footer" [ngClass]="{'down': visitPercentChangeToday < 0, 'up': visitPercentChangeToday >= 0}">
+                            <span *ngIf="visitPercentChangeToday != Infinity && visitPercentChangeToday !== 0">
+                              <i [ngClass]="{'pi': true, 'p-mr-2': true, 'pi-arrow-down': visitPercentChangeToday < 0, 'pi-arrow-up': visitPercentChangeToday > 0}"></i>
+                              <span class="p-mr-1">{{ visitPercentChangeToday.toFixed(0) }}%</span>
+                              <span><span *ngIf="visitPercentChangeToday >= 0">increase</span> <span *ngIf="visitPercentChangeToday < 0">decrease</span> in visits today.</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-col-12">
+                    <div class="card sale-graph">
+                        <div class="card-header">
+                            <h6>Performance</h6>
+                        </div>
+                        <div class="overview-chart">
+                            <!-- <app-stock-performance-chart [ticker]="ticker"></app-stock-performance-chart> -->
+                            <app-trading-view-stock-chart [ticker]="ticker" [exchange]="stock.data.company?.exchange"></app-trading-view-stock-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-col-12 p-md-12 p-xl-3">
+            <div class="p-grid">
+              <div class="p-col-12 p-md-6 p-xl-12">
+                <div class="card overview-box-1">
+                  <div class="card-header">
+                      <h6>Share</h6>
+                      <div class="header-buttons">
+                        <a><i class="pi pi-share-alt"></i></a>
+                    </div>
+                  </div>
+                  <div>
+                    <span class="p-input-icon-right" style="width: 100%;">
+                      <i id="copy-page-link-button" class="pi pi-copy" style="cursor: pointer !important;" title="Copy Link" (click)="onCopyPageLink()"></i>
+                      <input type="text" pInputText [disabled]="true" [(ngModel)]="pageLink" style="width: 100%;" />
+                    </span>
+                    <!-- <input type="text" pInputText [disabled]="true" [(ngModel)]="pageLink" class="p-mr-2" />
+                    <button pButton type="button" label="COPY" class="p-button-outlined" icon="pi pi-copy" iconPos="right"></button> -->
+                  </div>
+                  <!-- <div class="social-media-icons-container" style="text-align: center;">
+                    <img
+                      src="../../../../../assets/layout/images/social-media/reddit.png"
+                      (click)="shareOnSocialMedia('http://www.reddit.com/submit?url=')"
+                      title="Share on Reddit"
+                      class="p-mr-3"
+                    />
+                    <img
+                      src="../../../../../assets/layout/images/social-media/facebook.png"
+                      (click)="shareOnSocialMedia('https://www.facebook.com/sharer/sharer.php?u=')"
+                      title="Share on Facebook"
+                      class="p-mr-3"
+                    />
+                    <img
+                      src="../../../../../assets/layout/images/social-media/twitter.png"
+                      (click)="shareOnSocialMedia('http://twitter.com/share?text=Check out my portfolio!&url=')"
+                      title="Share on Twitter"
+                      class="p-mr-3"
+                    />
+                    <img
+                      src="../../../../../assets/layout/images/social-media/linkedin.png"
+                      (click)="shareOnSocialMedia('https://www.linkedin.com/sharing/share-offsite/?url=')"
+                      title="Share on LinkedIn"
+                      class="p-mr-3"
+                    />
+                    <img
+                      src="../../../../../assets/layout/images/social-media/link.png"
+                      title="Copy Link"
+                      [cdkCopyToClipboard]="copiedPortfolioLink"
+                      (click)="onCopyPageLink()"
+                      class="p-mr-3"
+                    />
+                  </div> -->
+                </div>
+              </div>
+              <div class="p-col-12 p-md-6 p-xl-12">
+                <div class="card traffic">
+                  <div class="card-header">
+                    <h6>User Ratings</h6>
+                  </div>
+                  <div class="traffic-chart">
+                    <!-- <p-chart #traffic type="doughnut" [data]="stockRatingsPieChart" [options]="stockRatingChartOptions" [responsive]="true" width="210px" height="210px"></p-chart> -->
+                    <p-chart #traffic  type="bar" [data]="stockRatingsPieChart" [options]="stockRatingChartOptions" [responsive]="true" width="250px" height="auto"></p-chart>
+                  </div>
+                  <!-- <div style="text-align: center;">
+                    <p *ngIf="stock.rating.buy === 0 && stock.rating.hold === 0 && stock.rating.sell === 0; else noStockRatings">This stock has not been rated yet.</p>
+                  </div> -->
+                  <div id="traffic-tabs-container" class="traffic-tabs">
+                    <p-confirmPopup></p-confirmPopup>
+                    <div class="traffic-tab" [ngClass]="{'traffic-tab-active':activeStockRatingIndex===0}"
+                          (click)="toggleStockRating($event, 'buy'); traffic.refresh()"
+                          data-label="New Sales" data-index="0"  >
+                      <h6>{{stockRatingBuyPercent | round}}%</h6>
+                      <!-- <i class="pi pi-facebook"></i> -->
+                      <!-- <h6>Buy <span style="color: #3ac961; font-size: 32px;">&#8226;</span></h6> -->
+                      <h6 style="text-decoration: 3px underline #3ac961; text-underline-offset: 5px;">Buy</h6>
+                    </div>
+                      <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeStockRatingIndex===1}"
+                            (click)="toggleStockRating($event, 'hold'); traffic.refresh()"
+                            data-label="Previous Sales" data-index="1">
+                        <h6>{{stockRatingHoldPercent | round}}%</h6>
+                        <h6 style="text-decoration: 3px underline #c98b3a; text-underline-offset: 5px;">Hold</h6>
+                      </div>
+                      <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeStockRatingIndex===2}"
+                            (click)="toggleStockRating($event, 'sell'); traffic.refresh()"
+                            data-label="Previous Sales" data-index="2">
+                        <h6>{{stockRatingSellPercent | round}}%</h6>
+                        <!-- <i class="pi pi-github"></i> -->
+                        <h6 style="text-decoration: 3px underline red; text-underline-offset: 5px;">Sell</h6>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <div class="p-col-12 p-md-6 p-xl-12">
+                  <div class="card">
+                      <div class="card-header">
+                          <h6>Company Info</h6>
+                      </div>
+                      <div class="p-mb-2"><small><b>CEO:</b> {{ stock.data.company.CEO }}</small></div>
+                      <div class="p-mb-2">
+                        <small>
+                          <b>Headquarters:</b> {{ stock.data.company.city }},
+                          {{ stock.data.company.state }}
+                          {{ stock.data.company.country }}
+                        </small>
+                      </div>
+                      <div class="p-mb-2"><small><b>Employees:</b> {{ stock.data.company.employees?.toLocaleString() }}</small></div>
+                      <div class="p-mb-2"><small><b>Industry:</b> {{ stock.data.company?.industry }}</small></div>
+                      <div class="p-mb-2"><small><b>Sector:</b> {{ stock.data.company?.sector }}</small></div>
+                      <div class="p-mb-2"><small><b>Website:</b> <a href="https://{{stock.data.company?.website}}" target="_blank"> {{ stock.data.company?.website }}</a></small></div>
+                  </div>
+              </div>
+            </div>
+        </div>
+
+        <!-- TODO: Apply Shorten Pipe or set a max-height and make scrollable -->
+        <div class="p-col-12 p-md-6 p-xl-4">
+          <div class="card sellers">
+              <div class="card-header">
+                  <h6>About</h6>
+              </div>
+              <p>{{ stock.data.company?.description | truncate:[1000, '...'] }}</p>
+          </div>
+        </div>
+
+        <div class="p-col-12 p-md-6 p-xl-4">
+            <div class="card leaderboard">
+                <div class="card-header">
+                    <h6>Stats</h6>
+                </div>
+                <div class="p-grid">
+                  <div class="p-col-6">
+                    <div class="p-mb-2"><small><b>Open:</b> ${{ stock.data.quote.open?.toFixed(2) }}</small></div>
+                    <div class="p-mb-2"><small><b>Close:</b> ${{ stock.data.quote.close?.toFixed(2) }}</small></div>
+                    <div class="p-mb-2"><small><b>Today's High:</b> ${{ stock.data.quote.high }}</small></div>
+                    <div class="p-mb-2"><small><b>Today's Low:</b> ${{ stock.data.quote.low }}</small></div>
+                    <div class="p-mb-2"><small><b>52 Week High:</b> ${{ stock.data.stats.week52high}}</small></div>
+                    <div class="p-mb-2"><small><b>52 Week Low:</b> ${{ stock.data.stats.week52low}}</small></div>
+                    <div class="p-mb-2"><small><b>YTD Change:</b> {{ (stock.data.stats.ytdChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>1m Change: </b> {{ (stock.data.stats.month1ChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>3m Change: </b> {{ (stock.data.stats.month3ChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>6m Change: </b> {{ (stock.data.stats.month6ChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>1y Change: </b> {{ (stock.data.stats.year1ChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>5y Change: </b> {{ (stock.data.stats.year5ChangePercent * 100).toFixed(2) }}%</small></div>
+                  </div>
+                  <div class="p-col-6">
+                    <div class="p-mb-2"><small><b>Volume:</b> {{ stock.data.quote.volume?.toLocaleString() }}</small></div>
+                    <div class="p-mb-2"><small><b>Avg. Total Volume:</b> {{ stock.data.quote.avgTotalVolume?.toLocaleString() }}</small></div>
+                    <div class="p-mb-2"><small><b>Market Cap:</b> {{ stock.data.stats.marketcap | abbreviatedCurrencyFormatterPipe }}</small></div>
+                    <div class="p-mb-2"><small><b>P/E Ratio:</b> {{ stock.data.stats.peRatio.toFixed(2) }}</small></div>
+                    <div class="p-mb-2"><small><b>Beta:</b> {{ stock.data.stats.beta.toFixed(2) }}</small></div>
+                    <div class="p-mb-2"><small><b>Dividend Yield:</b> {{ (stock.data.stats.dividendYield * 100).toFixed(2) }}</small></div>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-col-12 p-md-6 p-xl-4">
+            <div class="card product-list">
+                <div class="card-header">
+                    <h6>News</h6>
+                </div>
+                <ul style="max-height:300px;margin:0;overflow:auto;">
+                    <li *ngFor="let article of stock.data.news">
+                      <a href="{{article?.url}}" target="_blank">
+                        <div class="product">
+                          <img src="{{article?.image}}" />
+                          <div class="product-info">
+                              <p><b>{{article?.headline | truncate:[50, '...'] }}</b></p>
+                              <small>{{article?.source}}</small>
+                              &#8226;
+                              <small>{{ moment(article?.datetime).fromNow() }}</small>
+                          </div>
+                        </div>
+                      </a>
+                      <!-- <i class="pi pi-arrow-up"></i> -->
+                    </li>
+                    <p-scrollTop target="parent"></p-scrollTop>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- <div class="p-col-12">
+          <p-tabView>
+            <p-tabPanel header="Header 1">
+               Content 1
+            </p-tabPanel>
+            <p-tabPanel header="Header 2">
+                Content 2
+            </p-tabPanel>
+            <p-tabPanel header="Header 3">
+                Content 3
+            </p-tabPanel>
+          </p-tabView>
+        </div> -->
+    </div>
+</div>
+<ng-template #stockNotLoaded>
+    <div class="vertically-and-horizontally-centered">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
+</ng-template>

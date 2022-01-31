@@ -1,9 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PortfolioDto, UserPortfolioDto } from '@ratemystocks/api-interface';
-import { UserService } from '../../../../core/services/user.service';
-import moment = require('moment');
 import { Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { PortfolioDto, UserPortfolioDto } from '@ratemystocks/api-interface';
+import * as moment from 'moment';
+import { UserService } from '../../../../core/services/user.service';
 
 @Component({
   selector: 'app-saved-portfolios-table',
@@ -14,10 +13,7 @@ export class SavedPortfoliosTableComponent implements OnInit {
   getPortfoliosSub: Subscription;
   loggedInUserId: string;
 
-  @Input() user: UserPortfolioDto;
-
-  displayedColumns: string[] = ['name', 'description'];
-  dataSource = null;
+  portfolios = [];
 
   moment = moment;
 
@@ -26,16 +22,11 @@ export class SavedPortfoliosTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPortfoliosSub = this.userService.getSavedPortfoliosForUser().subscribe((response: PortfolioDto[]) => {
-      this.dataSource = response;
+      this.portfolios = response;
     });
   }
 
   ngOnDestroy(): void {
     this.getPortfoliosSub.unsubscribe();
-  }
-
-  trimDescription(description: string): string {
-    const maxDisplayLength = 200;
-    return description.length > maxDisplayLength ? description.substring(0, maxDisplayLength) + '...' : description;
   }
 }

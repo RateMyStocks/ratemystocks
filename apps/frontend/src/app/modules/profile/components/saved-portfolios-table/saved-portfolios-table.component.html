@@ -1,23 +1,17 @@
-<table mat-table [dataSource]="dataSource">
-  <!--- Note that these columns can be defined in any order.
-        The actual rendered columns are set as a property on the row definition" -->
-
-  <!-- Name Column -->
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let portfolio">
-      <a [routerLink]="['/portfolios', portfolio.id]" routerLinkActive="router-link-active">{{ portfolio.name }}</a>
-    </td>
-  </ng-container>
-
-  <!-- Description -->
-  <ng-container matColumnDef="description">
-    <th mat-header-cell *matHeaderCellDef>Description</th>
-    <td mat-cell *matCellDef="let portfolio">
-      <small>{{ trimDescription(portfolio.description) }}</small>
-    </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-</table>
+<p-table [value]="portfolios" responsiveLayout="scroll" styleClass="p-datatable-gridlines p-datatable-striped">
+  <ng-template pTemplate="header">
+      <tr>
+          <th>Name</th>
+          <!-- TODO Add Creator column -->
+          <!-- <th>Creator</th> -->
+          <th>Description</th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-portfolio>
+      <tr>
+          <td><a [routerLink]="['/portfolios', portfolio.id]" routerLinkActive="router-link-active"><b>{{ portfolio.name }}</b></a></td>
+          <!-- <td></td> -->
+          <td>{{portfolio.description | truncate:[15, '...'] }}</td>
+      </tr>
+  </ng-template>
+</p-table>

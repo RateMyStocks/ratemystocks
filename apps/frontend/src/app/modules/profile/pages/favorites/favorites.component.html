@@ -1,10 +1,17 @@
-<div class="page-container">
-  <h1>
-    <span class="page-header"><b>Favorites</b></span>
-  </h1>
+<div class="p-grid table-demo">
+	<div class="p-col-12">
+		<div class="card">
+			<h5>Stocks</h5>
+			<p>This is your watchlist of stocks you are following.</p>
+      <app-saved-stocks-table></app-saved-stocks-table>
+		</div>
+	</div>
 
-  <br />
-  <mat-tab-group animationDuration="0ms" mat-stretch-tabs class="example-stretched-tabs mat-elevation-z4">
-    <mat-tab label="Portfolios"><app-saved-portfolios-table></app-saved-portfolios-table></mat-tab>
-  </mat-tab-group>
+  <div class="p-col-12">
+		<div class="card">
+			<h5>Portfilios</h5>
+			<p>This is your list of stock portfolios you have favorited that have been created by other users.</p>
+      <app-saved-portfolios-table></app-saved-portfolios-table>
+		</div>
+	</div>
 </div>

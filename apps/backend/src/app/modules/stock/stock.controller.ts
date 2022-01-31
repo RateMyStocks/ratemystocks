@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
   IexCloudStockDataDto,
@@ -98,5 +98,96 @@ export class StockController {
   @Get('/ratings/most-disliked')
   getMostDislikedStocks(@Query('lastNDays') lastNDays?: number): Promise<StockRatingListItem[]> {
     return this.stockService.getMostDislikedStocks(lastNDays);
+  }
+
+  /**
+   * Adds a visit to the stock_visit table indicating a page visit on a given stock page.
+   * @param ticker The ticker symbol of the stock page being visited.
+   * @param userId (Optional) If a logged-in user visits the stock page, this query parameter will be supplied.
+   * @returns The number of page visits for a given stock ticker symbol.
+   */
+  @Post('/visit-count/:ticker')
+  addStockPageVisit(@Param('ticker') ticker: string, @Query('userId') userId?: string): Promise<number> {
+    return this.stockService.addStockPageVisit(ticker, userId);
+  }
+
+  /**
+   * Returns a list of the stock page visit counts for the last N days (defaults to 6).
+   * @param ticker The ticker symbol of the stock to get the visit count sfor.
+   * @param lastNDays Query param indicating the number of days from the current day to get visit counts for.
+   * @returns A list of the stock page visit counts for the last N days.
+   */
+  @Get('/visit-counts/:ticker')
+  getVisitCounts(@Param('ticker') ticker: string, @Query('lastNDays') lastNDays = 6): Promise<any[]> {
+    return this.stockService.getVisitCounts(ticker, lastNDays);
+  }
+
+  /**
+   * Creating an entry in the stock_follower table, thus tying a logged-in user to a given ticker symbol so they
+   * can be notified of updates and news events later on.
+   * @param userAccount The logged-in user following the stock.
+   * @param ticker The ticker symbol of the stock page being followed.
+   * @returns The number of page visits for a given stock ticker symbol.
+   */
+  @Post('/follow/:ticker')
+  @UseGuards(AuthGuard())
+  followStock(@GetUser() userAccount: UserAccount, @Param('ticker') ticker: string): Promise<void> {
+    return this.stockService.followStock(userAccount, ticker);
+  }
+
+  /**
+   * Deletes the entry in the stock_follower table, so the specified user
+   * will unfollow a stock if it is already following it.
+   * @param userAccount The account object of the logged-in user.
+   * @param ticker The ticker symbol of the stock the user is following.
+   * @throws NotFoundException If the user specified isn't actually following the stock.
+   */
+  @Delete('/unfollow/:ticker')
+  @UseGuards(AuthGuard())
+  unfollowStock(@GetUser() userAccount: UserAccount, @Param('ticker') ticker: string): Promise<void> {
+    return this.stockService.unfollowStock(userAccount, ticker);
+  }
+
+  /**
+   * Gets the number of followers for a given stock.
+   * @param ticker The ticker symbol of the stock to get the number of followers for.
+   * @return The number of followers for a given stock ticker symbol.
+   */
+  @Get('/follower-count/:ticker')
+  getTotalFollowerCounts(@Param('ticker') ticker: string): Promise<number> {
+    return this.stockService.getTotalFollowerCounts(ticker);
+  }
+
+  /**
+   * Gets the number of followers by day for a given stock over a given time period.
+   * @param ticker The ticker symbol of the stock to get the number of followers for.
+   * @param lastNDays Optional query parameter indicating the past number of days to get counts for.
+   * @return The number of followers by day for a given stock over a given time period.
+   */
+  @Get('/follower-counts/:ticker')
+  getFollowerCountsLastNDays(@Param('ticker') ticker: string, @Query('lastNDays') lastNDays = 6): Promise<any[]> {
+    return this.stockService.getFollowerCountsLastNDays(ticker, lastNDays);
+  }
+
+  /**
+   * Returns true if the logged-in user is following a given stock, false otherwise.
+   * @param userAccount The UserAccount object of the logged-in user.
+   * @param ticker The ticker symbol of the stock to check against.
+   * @returns true if the logged-in user is following a given stock, false otherwise.
+   */
+  @Get('/isfollowing/:ticker')
+  @UseGuards(AuthGuard())
+  isFollowingStock(@GetUser() userAccount: UserAccount, @Param('ticker') ticker: string): Promise<boolean> {
+    return this.stockService.isFollowingStock(userAccount, ticker);
+  }
+
+  /**
+   * Gets the most viewed stock tickers today.
+   * @param numStocks The limit of stocks to get e.g. top 20 most viewed, top 10, etc.
+   * @returns The most viewed stocks in the system in descending order.
+   */
+  @Get('/trending/today')
+  getMostViewedStocksToday(@Query() numStocks?: number): Promise<any> {
+    return this.stockService.getMostViewedStocksToday(numStocks);
   }
 }

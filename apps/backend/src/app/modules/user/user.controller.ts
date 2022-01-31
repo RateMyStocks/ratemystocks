@@ -18,12 +18,15 @@ export class UserController {
    */
   @Get('/:username')
   async getUserByUsername(@Param('username') username: string): Promise<UserProfileDto> {
-    const userEntity = await this.userService.getUserByUsername(username);
+    const userEntity: UserAccount = await this.userService.getUserByUsername(username);
     const userDto: UserProfileDto = {
       id: userEntity.id,
       username: userEntity.username,
       email: userEntity.email,
       spiritAnimal: userEntity.spiritAnimal,
+      dateJoined: userEntity.dateJoined,
+      lastLogin: userEntity.lastLogin,
+      bio: userEntity.bio,
     };
 
     return userDto;
@@ -66,5 +69,16 @@ export class UserController {
   @UseGuards(AuthGuard())
   getSavedPortfoliosForUser(@GetUser() userAccount: UserAccount): Promise<PortfolioDto[]> {
     return this.userService.getSavedPortfoliosForUser(userAccount);
+  }
+
+  /**
+   * Gets the stocks a user is following.
+   * @param userAccount The userAccount object of the logged-in user.
+   * @returns The list of stocks the logged-in user is following.
+   */
+  @Get('/saved/stocks')
+  @UseGuards(AuthGuard())
+  getSavedStocksForUser(@GetUser() userAccount: UserAccount): Promise<any[]> {
+    return this.userService.getSavedStocksForUser(userAccount);
   }
 }

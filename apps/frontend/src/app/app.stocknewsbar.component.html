@@ -1,0 +1,25 @@
+<!-- TODO: MOVE INLINE CSS TO COMPONENT SCSS FILE -->
+<!-- <div style="background-color: black; color: white; font-weight: bold; padding: 8px; white-space: nowrap; overflow: hidden;"> -->
+  <!-- <small class="p-mr-4">DOW <span style="color: #39fc03">0.62%</span></small>
+  <small class="p-mr-4">S&P 500 <span style="color: #39fc03">0.65%</span></small>
+  <small class="p-mr-4">NASDAQ <span style="color: #39fc03">0.78%</span></small>
+
+  <small class="p-mr-4" style="font-weight: bold;"> | </small> -->
+
+  <!-- <small class="p-mr-3" >Trending Stonkz:</small> -->
+
+  <div class="slider" style="background-color: black; color: white; font-weight: bold; padding: 8px;">
+    <div class="slide-track">
+      <div *ngFor="let stock of trendingStocks" routerLink="/stocks/{{ stock.ticker }}" style="cursor: pointer;" class="slide">
+        <small>
+          <span class="p-mr-1">{{ stock.ticker }}</span>
+          <span [ngStyle]="{ color: stock.changePercent >= 0 ? '#39fc03' : 'red' }">
+            ${{ stock.price.toFixed(2) }} (<span *ngIf="stock.changePercent >= 0">+</span>{{ (stock.changePercent * 100).toFixed(2) }}%)
+          </span>
+        </small>
+      </div>
+    </div>
+  </div>
+
+
+<!-- </div> -->

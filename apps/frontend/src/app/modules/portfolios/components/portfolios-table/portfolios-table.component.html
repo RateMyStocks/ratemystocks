@@ -1,0 +1,58 @@
+<p-table [value]="portfolios" [lazy]="true" (onLazyLoad)="loadPortfolios($event)" responsiveLayout="scroll"
+    [paginator]="true" [rows]="10" [totalRecords]="totalRecords" [loading]="loading" [globalFilterFields]="['name','country.name', 'company', 'representative.name']">
+    <ng-template pTemplate="caption">
+      <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+        <button pButton type="button" (click)="confirmLogin($event)" label="New" class="p-button-success" icon="pi pi-plus" iconPos="right"></button>
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Search"/>
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="name">Portfolio Name <p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="username">Creator <p-sortIcon field="username"></p-sortIcon></th>
+            <th pSortableColumn="num_likes">Likes <p-sortIcon field="num_likes"></p-sortIcon></th>
+            <th pSortableColumn="num_likes">Dislikes <p-sortIcon field="num_dislikes"></p-sortIcon></th>
+            <th pSortableColumn="num_holdings"># of Holdings <p-sortIcon field="num_holdings"></p-sortIcon></th>
+            <th pSortableColumn="largest_holdings">Largest Holding <p-sortIcon field="largest_holdings"></p-sortIcon></th>
+            <th pSortableColumn="last_updated">Last Updated <p-sortIcon field="last_updated"></p-sortIcon></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-portfolio>
+        <tr>
+            <td>
+              <a routerLink="/portfolios/{{ portfolio.id }}">
+                {{portfolio.name}}
+              </a>
+            </td>
+            <td>
+              <div class="centered-content">
+                <img src="../../../../../assets/layout/images/avatars/{{portfolio.spirit_animal}}.png" class="profile-picture" />
+                <a routerLink="/profile/users/{{ portfolio.username}}">{{ portfolio.username }}</a>
+              </div>
+            </td>
+            <td>{{portfolio.num_likes}}</td>
+            <td>{{portfolio.num_dislikes}}</td>
+            <td>{{portfolio.num_holdings}}</td>
+            <td>
+              <div class="centered-content">
+                <img
+                  *ngIf="portfolio.largest_holding"
+                  class="stock-logo"
+                  src="https://storage.googleapis.com/iex/api/logos/{{ portfolio.largest_holding }}.png"
+                />
+                <a routerLink="/stocks/{{ portfolio.largest_holding }}">{{ portfolio.largest_holding }}</a>
+              </div>
+            </td>
+            <td><small>{{ portfolio.last_updated | momentFromNowDatePipe }}</small></td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-confirmPopup></p-confirmPopup>
+<p-dialog header="Create Portfolio" [(visible)]="displayCreatePortfolioDialog" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '100vw'}"  [style]="{width: '22vw', height: '100%'}" [draggable]="false" [resizable]="false">
+  <app-create-portfolio-dialog></app-create-portfolio-dialog>
+</p-dialog>
+<!-- <app-create-portfolio-dialog [display]="displayCreatePortfolioDialog"></app-create-portfolio-dialog> -->

@@ -15,7 +15,7 @@ services:
 
     volumes:
       - ./postgresql_database_data/:/var/lib/postgresql/data/
-  
+
   pgadmin:
     container_name: pgadmin4_container
     image: dpage/pgadmin4

@@ -1,8 +1,8 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ProfileModule } from '../../profile.module';
 
 import { SavedPortfoliosTableComponent } from './saved-portfolios-table.component';
-import { ProfileModule } from '../../profile.module';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SavedPortfoliosTableComponent', () => {
   let component: SavedPortfoliosTableComponent;

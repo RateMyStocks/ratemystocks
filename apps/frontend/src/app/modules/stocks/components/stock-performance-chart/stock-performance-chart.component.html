@@ -1,0 +1,9 @@
+<highcharts-chart
+  *ngIf="isHighcharts && chartOptions"
+  [Highcharts]="Highcharts"
+  [constructorType]="'stockChart'"
+  [options]="chartOptions"
+  style="width: 100%; height: 100%; display: block"
+>
+</highcharts-chart>
+<p-progressSpinner *ngIf="!chartOptions"></p-progressSpinner>
