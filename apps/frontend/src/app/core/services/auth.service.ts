@@ -21,7 +21,7 @@ const BACKEND_URL: string = environment.apiUrl + '/auth';
 })
 export class AuthService {
   private isAuthenticated = false;
-  private token: string = '';
+  private token = '';
   private tokenTimer: any;
   private userId = '';
   private username = '';

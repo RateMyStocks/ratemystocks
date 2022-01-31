@@ -247,7 +247,7 @@ export class AppConfigComponent implements OnInit {
     this.replaceLink(layoutLink, layoutHref);
 
     const themeLink = this.document.getElementById('theme-css');
-    const urlTokens = themeLink!.getAttribute('href')!.split('/');
+    const urlTokens = themeLink?.getAttribute('href')?.split('/');
     urlTokens[urlTokens.length - 1] = 'theme-' + this.app.layoutMode + '.css';
     const newURL = urlTokens.join('/');
 
@@ -279,7 +279,7 @@ export class AppConfigComponent implements OnInit {
       (<Element>cloneLinkElement).setAttribute('href', href);
       (<Element>cloneLinkElement).setAttribute('id', id + '-clone');
 
-      linkElement!.parentNode!.insertBefore(cloneLinkElement, linkElement.nextSibling);
+      linkElement?.parentNode?.insertBefore(cloneLinkElement, linkElement.nextSibling);
 
       cloneLinkElement.addEventListener('load', () => {
         linkElement.remove();

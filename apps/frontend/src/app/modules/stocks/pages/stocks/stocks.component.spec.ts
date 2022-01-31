@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppBreadcrumbService } from '../../../../app.breadcrumb.service';
+import { StocksModule } from '../../stocks.module';
 
 import { StocksComponent } from './stocks.component';
 
@@ -8,9 +10,15 @@ describe('StocksComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StocksComponent ]
-    })
-    .compileComponents();
+      declarations: [StocksComponent],
+      imports: [StocksModule],
+      providers: [
+        {
+          provide: AppBreadcrumbService,
+          useValue: new AppBreadcrumbService(),
+        },
+      ],
+    }).compileComponents();
   });
 
   beforeEach(() => {

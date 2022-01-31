@@ -310,7 +310,7 @@ export class StockService {
    * @param numStocks The limit of stocks to get e.g. top 20 most viewed, top 10, etc.
    * @returns The most viewed stocks in the system in descending order.
    */
-  async getMostViewedStocksToday(numStocks: number = 20): Promise<any> {
+  async getMostViewedStocksToday(numStocks = 20): Promise<any> {
     // Gets the most viewed stocks today
     // If there are less than 20 stocks returned, return a curated list of generally popular stocks
     const stocks = await this.stockVisitRepo.getMostViewedStocksToday(numStocks);

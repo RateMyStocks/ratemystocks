@@ -1,4 +1,6 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ProfileModule } from '../../profile.module';
 
 import { SavedStocksTableComponent } from './saved-stocks-table.component';
 
@@ -8,9 +10,9 @@ describe('SavedStocksTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SavedStocksTableComponent ]
-    })
-    .compileComponents();
+      declarations: [SavedStocksTableComponent],
+      imports: [ProfileModule, HttpClientTestingModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {

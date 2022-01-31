@@ -1,7 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { AppBreadcrumbService } from '../../../../app.breadcrumb.service';
-import { AppMainComponent } from '../../../../app.main.component';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { IexCloudStockDataDto, StockRatingCountDto } from '@ratemystocks/api-interface';
@@ -52,7 +51,7 @@ export class StockComponent implements OnInit, OnDestroy {
 
   constructor(
     private breadcrumbService: AppBreadcrumbService,
-    private appMain: AppMainComponent,
+    // private appMain: AppMainComponent,
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,

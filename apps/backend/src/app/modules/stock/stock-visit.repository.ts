@@ -55,7 +55,7 @@ export class StockVisitRepository extends Repository<StockVisit> {
    * @param numStocks The limit of stocks to get e.g. top 20 most viewed, top 10, etc.
    * @returns The most viewed stocks in the system in descending order.
    */
-  async getMostViewedStocksToday(numStocks: number = 20): Promise<any[]> {
+  async getMostViewedStocksToday(numStocks = 20): Promise<any[]> {
     const results: any[] = await this.createQueryBuilder('stock_visit')
       .select('ticker, COUNT(visit_date) as num_visits')
       .where(`DATE_TRUNC('day', visit_date) = CURRENT_DATE`)

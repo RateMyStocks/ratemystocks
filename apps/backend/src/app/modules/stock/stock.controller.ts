@@ -118,7 +118,7 @@ export class StockController {
    * @returns A list of the stock page visit counts for the last N days.
    */
   @Get('/visit-counts/:ticker')
-  getVisitCounts(@Param('ticker') ticker: string, @Query('lastNDays') lastNDays: number = 6): Promise<any[]> {
+  getVisitCounts(@Param('ticker') ticker: string, @Query('lastNDays') lastNDays = 6): Promise<any[]> {
     return this.stockService.getVisitCounts(ticker, lastNDays);
   }
 
@@ -165,10 +165,7 @@ export class StockController {
    * @return The number of followers by day for a given stock over a given time period.
    */
   @Get('/follower-counts/:ticker')
-  getFollowerCountsLastNDays(
-    @Param('ticker') ticker: string,
-    @Query('lastNDays') lastNDays: number = 6
-  ): Promise<any[]> {
+  getFollowerCountsLastNDays(@Param('ticker') ticker: string, @Query('lastNDays') lastNDays = 6): Promise<any[]> {
     return this.stockService.getFollowerCountsLastNDays(ticker, lastNDays);
   }
 

@@ -3,7 +3,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Observable, Subscription } from 'rxjs';
 import { AppBreadcrumbService } from '../../../../app.breadcrumb.service';
-import { AppMainComponent } from '../../../../app.main.component';
+// import { AppMainComponent } from '../../../../app.main.component';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ProductService } from '../../../../core/services/productservice';
 import { UserService } from '../../../../core/services/user.service';
@@ -69,7 +69,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     private router: Router,
     private productService: ProductService,
     private breadcrumbService: AppBreadcrumbService,
-    private appMain: AppMainComponent,
+    // private appMain: AppMainComponent,
     @Inject(DOCUMENT) private document: Document
   ) {}
 
@@ -177,9 +177,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       cutout: 70,
     };
 
-    this.appMain['refreshTrafficChart'] = () => {
-      this.trafficChart = this.getTrafficChartData();
-    };
+    // this.appMain['refreshTrafficChart'] = () => {
+    //   this.trafficChart = this.getTrafficChartData();
+    // };
 
     this.goalChart = {
       labels: ['Complete', 'Not Complete', 'Extra Tasks'],

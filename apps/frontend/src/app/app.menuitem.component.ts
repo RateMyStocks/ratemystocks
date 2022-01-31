@@ -6,6 +6,8 @@ import { filter } from 'rxjs/operators';
 import { MenuService } from './app.menu.service';
 import { AppMainComponent } from './app.main.component';
 
+/* eslint-disable @angular-eslint/component-selector */
+/* eslint-disable @angular-eslint/no-host-metadata-property */
 @Component({
   selector: '[app-menuitem]',
   template: `

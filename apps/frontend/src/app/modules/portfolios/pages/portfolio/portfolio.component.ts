@@ -3,7 +3,7 @@ import { MenuItem } from 'primeng/api';
 import { ProductService } from '../../../../core/services/productservice';
 import { Product } from '../../../../shared/models/product';
 import { AppBreadcrumbService } from '../../../../app.breadcrumb.service';
-import { AppMainComponent } from '../../../../app.main.component';
+// import { AppMainComponent } from '../../../../app.main.component';
 import { DOCUMENT } from '@angular/common';
 
 @Component({
@@ -46,7 +46,7 @@ export class PortfolioComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private breadcrumbService: AppBreadcrumbService,
-    private appMain: AppMainComponent,
+    // private appMain: AppMainComponent,
     @Inject(DOCUMENT) private document: Document
   ) {
     this.breadcrumbService.setItems([{ label: 'Home' }, { label: 'Portfolios', routerLink: ['/portfolios'] }]);
@@ -127,9 +127,9 @@ export class PortfolioComponent implements OnInit {
       cutout: 70,
     };
 
-    this.appMain['refreshTrafficChart'] = () => {
-      this.trafficChart = this.getTrafficChartData();
-    };
+    // this.appMain['refreshTrafficChart'] = () => {
+    //   this.trafficChart = this.getTrafficChartData();
+    // };
 
     this.goalChart = {
       labels: ['Complete', 'Not Complete', 'Extra Tasks'],

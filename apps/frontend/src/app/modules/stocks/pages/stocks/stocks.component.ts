@@ -224,8 +224,8 @@ export class StocksComponent implements OnInit, OnDestroy {
   }
 
   private sortCompare(event, data1, data2) {
-    let value1 = data1;
-    let value2 = data2;
+    const value1 = data1;
+    const value2 = data2;
     let result = null;
 
     if (value1 == null && value2 != null) result = -1;

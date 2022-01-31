@@ -21,7 +21,7 @@ export class PortfoliosTableComponent implements OnInit {
 
   loading = true;
 
-  displayCreatePortfolioDialog: boolean = false;
+  displayCreatePortfolioDialog = false;
 
   constructor(
     private portfolioService: PortfolioService,
@@ -30,7 +30,9 @@ export class PortfoliosTableComponent implements OnInit {
     private confirmationService: ConfirmationService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('TEST');
+  }
 
   loadPortfolios(event: LazyLoadEvent) {
     this.loading = true;

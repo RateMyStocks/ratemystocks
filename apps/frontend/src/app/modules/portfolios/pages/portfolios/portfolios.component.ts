@@ -59,7 +59,7 @@ import { AuthService } from '../../../../core/services/auth.service';
     `,
   ],
 })
-export class PortfoliosComponent implements OnInit {
+export class PortfoliosComponent {
   constructor(
     private authService: AuthService,
     private portfolioService: PortfolioService,
@@ -85,6 +85,4 @@ export class PortfoliosComponent implements OnInit {
 
     this.breadcrumbService.setItems([{ label: 'Home' }, { label: 'Portfolios', routerLink: ['/uikit/table'] }]);
   }
-
-  ngOnInit() {}
 }

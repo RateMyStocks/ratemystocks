@@ -43,6 +43,7 @@ export class CreatePortfolioDialogComponent implements OnInit, OnDestroy {
     //   description: new FormControl('', { validators: [Validators.maxLength(500)] }),
     //   holdings: new FormArray([]),
     // });
+    console.log('TEST');
   }
 
   ngOnDestroy(): void {

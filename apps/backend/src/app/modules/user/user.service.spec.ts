@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PortfolioRepository } from '../portfolio/portfolio.repository';
+import { StockFollowerRepository } from '../stock/stock-follower.repository';
 import { UserRepository } from './user.repository';
 import { UserService } from './user.service';
 
@@ -9,6 +10,10 @@ const mockUserRepository = () => ({
 
 const mockPortfolioRepository = () => ({
   findOne: jest.fn(),
+});
+
+const mockStockFollowerRepository = () => ({
+  getFollowedStocksByUser: jest.fn(),
 });
 
 describe('UserService', () => {
@@ -21,6 +26,7 @@ describe('UserService', () => {
         UserService,
         { provide: UserRepository, useFactory: mockUserRepository },
         { provide: PortfolioRepository, useFactory: mockUserRepository },
+        { provide: StockFollowerRepository, useFactory: mockStockFollowerRepository },
       ],
     }).compile();
 
