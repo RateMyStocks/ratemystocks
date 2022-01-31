@@ -263,9 +263,7 @@ export class StockComponent implements OnInit, OnDestroy {
         message: 'You must be logged-in to rate this stock. Would you like to login?',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-          // TODO: When using the Angular router to go to the loading page, for some reason some HTML & CSS isn't loading/displaying
-          // this.router.navigate(['/login']);
-          window.location.assign('/login');
+          this.router.navigate(['/login']);
         },
         reject: () => {
           //reject action

@@ -56,9 +56,7 @@ export class PortfoliosTableComponent implements OnInit {
         target: event.target,
         message: 'You must have an account. Would you like to login?',
         accept: () => {
-          // TODO: When using the Angular router to go to the loading page, for some reason some HTML & CSS isn't loading/displaying
-          // this.router.navigate(['/login']);
-          window.location.assign('/login');
+          this.router.navigate(['/login']);
         },
         reject: () => {
           // this.displayCreatePortfolioDialog = false;
