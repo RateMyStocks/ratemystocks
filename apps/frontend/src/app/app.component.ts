@@ -41,6 +41,7 @@ export class AppComponent implements OnInit {
 
     this.authService.setUpAuthStatus();
 
+    // If the token stored in local storage expires, ensure the user is logged-out in al ltabs
     if (isPlatformBrowser(this.platformId)) {
       this.windowService.nativeWindow.addEventListener('storage', (event) => {
         if (event.storageArea == localStorage) {

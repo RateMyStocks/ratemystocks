@@ -103,15 +103,18 @@
         >
           <a href="#" (click)="appMain.onTopbarItemClick($event, notifications)">
             <span class="p-overlay-badge topbar-icon">
-              <i class="pi pi-bell" pBadge value="2" severity="danger"></i>
+              <!-- TODO: Update with real number of notifications-->
+              <i *ngIf="false" class="pi pi-bell" pBadge value="0" severity="danger"></i>
+              <i *ngIf="true" class="pi pi-bell"></i>
             </span>
           </a>
           <ul class="fadeInDown">
             <li class="layout-submenu-header">
               <h6 class="header-text">Notifications</h6>
-              <span class="p-badge">3</span>
+              <!-- TODO: Update with real number of notifications-->
+              <span class="p-badge">0</span>
             </li>
-            <li role="menuitem">
+            <!-- <li role="menuitem">
               <a href="#" (click)="appMain.onTopbarSubItemClick($event)">
                 <i class="pi pi-shopping-cart"></i>
                 <div class="notifications-item">
@@ -149,7 +152,7 @@
                   <span>Total Amount of <span>$40.45</span></span>
                 </div>
               </a>
-            </li>
+            </li> -->
           </ul>
         </li>
         <!-- <li

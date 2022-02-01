@@ -47,7 +47,7 @@ For more info on our development processes, visit our [wiki](https://github.com/
 ## Heroku
 
 1. Login to Heroku to use the CLI: `heroku login`
-2. Heroku Exec (SSH Tunneling) - Remotely connect to Heroku web dyno: `heroku ps:exec <heroku-environment-name>`
+2. Heroku Exec (SSH Tunneling) - Remotely connect to Heroku web dyno: `heroku ps:exec -a <heroku-environment-name>`
 3. Tail Heroku Logs in Real-Time: `heroku logs --tail -a <heroku-environment-name>`
 4. Remotely connect to Heroku Postgres database: `heroku pg:psql -a <heroku-environment-name>`
 5. See Heroku config vars: `heroku config -a <heroku-environment-name>`
