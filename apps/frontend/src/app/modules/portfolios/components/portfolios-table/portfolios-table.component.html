@@ -52,7 +52,11 @@
 </p-table>
 
 <p-confirmPopup></p-confirmPopup>
-<p-dialog header="Create Portfolio" [(visible)]="displayCreatePortfolioDialog" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '100vw'}"  [style]="{width: '22vw', height: '100%'}" [draggable]="false" [resizable]="false">
+
+<p-dialog header="Create Portfolio" [(visible)]="displayCreatePortfolioDialog" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '100vw'}"  [style]="{width: '30vw', height: '100%'}" [draggable]="false" [resizable]="false">
   <app-create-portfolio-dialog></app-create-portfolio-dialog>
+  <ng-template pTemplate="footer">
+    <p-button label="Create" class="p-button-text"></p-button>
+  </ng-template>
 </p-dialog>
 <!-- <app-create-portfolio-dialog [display]="displayCreatePortfolioDialog"></app-create-portfolio-dialog> -->

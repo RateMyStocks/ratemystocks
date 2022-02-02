@@ -1,12 +1,11 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IexCloudSearchDto, PortfolioDto } from '@ratemystocks/api-interface';
+import { IexCloudCompanyDto, IexCloudSearchDto, PortfolioDto, PortfolioStockDto } from '@ratemystocks/api-interface';
 import { PortfolioService } from '../../../../core/services/portfolio.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { StockSearchService } from '../../../../core/services/stock-search.service';
-// import { PortfolioHoldingsTableComponent } from '../portfolio-holdings-table/portfolio-holdings-table.component';
 
 @Component({
   selector: 'app-create-portfolio-dialog',
@@ -18,6 +17,8 @@ export class CreatePortfolioDialogComponent implements OnInit, OnDestroy {
 
   filteredStocks: IexCloudSearchDto[];
   selectedStock: IexCloudSearchDto;
+
+  portfolioStocks: PortfolioStockDto[] = [];
 
   portfolioForm: FormGroup = new FormGroup({
     name: new FormControl('', { validators: [Validators.required, Validators.maxLength(40)] }),
@@ -128,8 +129,25 @@ export class CreatePortfolioDialogComponent implements OnInit, OnDestroy {
    * @param selectStock
    */
   onSelectStock(selectStock: IexCloudSearchDto): void {
-    const tickerSymbol: string = selectStock.symbol;
+    const portfolioStock: PortfolioStockDto = {
+      ticker: selectStock.symbol,
+      weighting: 0,
+      id: null,
+      portfolioId: null,
+    }
 
-    // this.router.navigate(['/stocks', tickerSymbol]);
+    this.portfolioStocks.push(portfolioStock);
+  }
+
+  onRemoveStock(selectStock: IexCloudCompanyDto): void {
+    console.log('REMOVE')
+    this.portfolioStocks.splice(this.portfolioStocks.findIndex(item => item.ticker === selectStock.symbol), 1)
+  }
+
+  /** Gets the total cost of all transactions. */
+  getTotalWeighting(): number {
+    // const total = this.dataSource.data.reduce((sum: number, v: PortfolioStockDto) => (sum += Number(v.weighting)), 0);
+    // return total;
+    return 0;
   }
 }

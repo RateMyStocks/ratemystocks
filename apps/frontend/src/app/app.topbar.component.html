@@ -38,7 +38,7 @@
             <span class="p-input-icon-left">
               <i class="pi pi-search"></i>
               <p-autoComplete [(ngModel)]="selectedStock" [suggestions]="filteredStocks"
-                (completeMethod)="searchStocks($event)" (onSelect)="onSelectStock($event)" field="name" placeholder="Search stocks">
+                (completeMethod)="searchStocks($event)" (onSelect)="onSelectStock($event)" field="symbol" placeholder="Search stocks">
                 <ng-template let-stock pTemplate="item">
                   <div style="display: flex; align-items: center;">
                     <img
