@@ -2,6 +2,7 @@
   <div class="layout-topbar-wrapper">
     <div class="layout-topbar-left">
       <div class="layout-topbar-logo" id="logolink" style="cursor: pointer; outline: none;" routerLink="/">
+        <!-- Inline styling is needed so the logo doesn't appear huge for a split second. Angular Universal has a slight delay when loading CSS from stylesheets -->
         <img
           id="app-logo"
           [src]="
@@ -9,6 +10,7 @@
             (app.topbarTheme === 'light' ? 'ratemystocks' : 'ratemystocks-dark-theme') +
             '.png'
           "
+          [style]="{ height: '32px', width: 'auto' }"
         />
         <!-- <img
           id="app-logo"
