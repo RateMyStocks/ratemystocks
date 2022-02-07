@@ -317,7 +317,6 @@ export class StockComponent implements OnInit, OnDestroy {
         message: 'You must be logged-in to follow this stock. Would you like to login?',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-          // TODO: Instead of redirecting to the login page, display the login dialog as an overlay over the current page
           this.router.navigate(['/login']);
         },
         reject: () => {
@@ -414,7 +413,6 @@ export class StockComponent implements OnInit, OnDestroy {
           : 0;
 
       this.noNewFollowers = counts.map((countObj: any) => countObj.follower_count).every((num) => num === 0);
-      console.log(this.noNewFollowers);
     });
   }
 }

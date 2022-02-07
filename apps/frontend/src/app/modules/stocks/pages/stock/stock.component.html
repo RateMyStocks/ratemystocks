@@ -205,23 +205,15 @@
                 </div>
               </div>
               <div class="p-col-12 p-md-6 p-xl-12">
-                  <div class="card">
-                      <div class="card-header">
-                          <h6>Company Info</h6>
-                      </div>
-                      <div class="p-mb-2"><small><b>CEO:</b> {{ stock.data.company.CEO }}</small></div>
-                      <div class="p-mb-2">
-                        <small>
-                          <b>Headquarters:</b> {{ stock.data.company.city }},
-                          {{ stock.data.company.state }}
-                          {{ stock.data.company.country }}
-                        </small>
-                      </div>
-                      <div class="p-mb-2"><small><b>Employees:</b> {{ stock.data.company.employees?.toLocaleString() }}</small></div>
-                      <div class="p-mb-2"><small><b>Industry:</b> {{ stock.data.company?.industry }}</small></div>
-                      <div class="p-mb-2"><small><b>Sector:</b> {{ stock.data.company?.sector }}</small></div>
-                      <div class="p-mb-2"><small><b>Website:</b> <a href="https://{{stock.data.company?.website}}" target="_blank"> {{ stock.data.company?.website }}</a></small></div>
+                <div class="card sellers">
+                  <div class="card-header">
+                      <h6>About</h6>
                   </div>
+                  <div style="max-height:250px;margin:0;overflow:auto;">
+                    <p>{{ stock.data.company?.description }}</p>
+                    <p-scrollTop target="parent"></p-scrollTop>
+                  </div>
+                </div>
               </div>
             </div>
         </div>
@@ -229,10 +221,21 @@
         <!-- TODO: Apply Shorten Pipe or set a max-height and make scrollable -->
         <div class="p-col-12 p-md-6 p-xl-4">
           <div class="card sellers">
-              <div class="card-header">
-                  <h6>About</h6>
-              </div>
-              <p>{{ stock.data.company?.description | truncate:[1000, '...'] }}</p>
+            <div class="card-header">
+                <h6>Company Info</h6>
+            </div>
+            <div class="p-mb-2"><small><b>CEO:</b> {{ stock.data.company.CEO }}</small></div>
+            <div class="p-mb-2">
+              <small>
+                <b>Headquarters:</b> {{ stock.data.company.city }},
+                {{ stock.data.company.state }}
+                {{ stock.data.company.country }}
+              </small>
+            </div>
+            <div class="p-mb-2"><small><b>Employees:</b> {{ stock.data.company.employees?.toLocaleString() }}</small></div>
+            <div class="p-mb-2"><small><b>Industry:</b> {{ stock.data.company?.industry }}</small></div>
+            <div class="p-mb-2"><small><b>Sector:</b> {{ stock.data.company?.sector }}</small></div>
+            <div class="p-mb-2"><small><b>Website:</b> <a href="https://{{stock.data.company?.website}}" target="_blank"> {{ stock.data.company?.website }}</a></small></div>
           </div>
         </div>
 

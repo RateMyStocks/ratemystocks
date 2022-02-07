@@ -8,23 +8,27 @@ import { TruncatePipe } from './pipes/truncate.pipe';
 import { RoundingPipe } from './pipes/rounding.pipe';
 import { AbbreviatedCurrencyFormatterPipe } from './pipes/abbreviated-currency-formatter.pipe';
 import { MomentFromNowDatePipe } from './pipes/moment-from-now-date.pipe';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxPieChartComponent } from './components/ngx-pie-chart/ngx-pie-chart.component';
 
 @NgModule({
   declarations: [
     AbbreviatedCurrencyFormatterPipe,
     EmailFormFieldValidatorPipe,
     MomentFromNowDatePipe,
+    NgxPieChartComponent,
     PasswordFormFieldValidatorPipe,
     PasswordReenterFormFieldValidatorPipe,
     RoundingPipe,
     TruncatePipe,
     UsernameFormFieldValidatorPipe,
   ],
-  imports: [CommonModule],
+  imports: [CommonModule, NgxChartsModule],
   exports: [
     AbbreviatedCurrencyFormatterPipe,
     EmailFormFieldValidatorPipe,
     MomentFromNowDatePipe,
+    NgxPieChartComponent,
     PasswordFormFieldValidatorPipe,
     PasswordReenterFormFieldValidatorPipe,
     RoundingPipe,

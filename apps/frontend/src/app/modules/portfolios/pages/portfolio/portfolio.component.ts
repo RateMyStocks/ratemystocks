@@ -5,12 +5,54 @@ import { Product } from '../../../../shared/models/product';
 import { AppBreadcrumbService } from '../../../../app.breadcrumb.service';
 // import { AppMainComponent } from '../../../../app.main.component';
 import { DOCUMENT } from '@angular/common';
+import { MoneyFormatter } from '../../../../shared/utilities/money-formatter';
+import * as moment from 'moment';
+import * as _ from 'lodash';
+import { PortfolioDto, PortfolioRatingDto, PortfolioStockDto } from '@ratemystocks/api-interface';
+import { Subject } from 'rxjs';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { UserService } from '../../../../core/services/user.service';
+import { IexCloudService } from '../../../../core/services/iex-cloud.service';
+import { PortfolioService } from '../../../../core/services/portfolio.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   templateUrl: './portfolio.component.html',
   styleUrls: ['./portfolio.component.scss'],
 })
 export class PortfolioComponent implements OnInit {
+  MoneyFormatter = MoneyFormatter;
+
+  moment = moment;
+
+  portfolio: PortfolioDto;
+
+  portfolioStocks: PortfolioStockDto[];
+
+  portfolioRating: PortfolioRatingDto;
+
+  selectedBreakdownCategory = 'company';
+  pieChartItems: any[] = [];
+
+  isAuth: boolean;
+  loggedInUserId: string;
+  numLikes = 0;
+  numDislikes = 0;
+
+  // Object representing the response from IEX Cloud API Batch requests (https://iexcloud.io/docs/api/#batch-requests)
+  // Maps stock ticker symbols to corresponding data. Visit IEX Cloud API docs to see example JSON response.
+  iexStockDataMap: { symbol: any };
+
+  portfolioLoaded: boolean;
+  stocksLoaded: boolean;
+
+  portfolioLiked: boolean;
+
+  copiedPortfolioLink: string = window.location.href;
+
+  private ngUnsubscribe = new Subject();
+
   ordersChart: any;
 
   ordersOptions: any;
@@ -44,6 +86,13 @@ export class PortfolioComponent implements OnInit {
   productsLastWeek: Product[];
 
   constructor(
+    private authService: AuthService,
+    private portfolioService: PortfolioService,
+    private iexCloudService: IexCloudService,
+    private userService: UserService,
+    // private snackbar: MatSnackBar,
+    private route: ActivatedRoute,
+    private router: Router,
     private productService: ProductService,
     private breadcrumbService: AppBreadcrumbService,
     // private appMain: AppMainComponent,
@@ -53,6 +102,85 @@ export class PortfolioComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isAuth = this.authService.isAuthorized();
+
+    this.loggedInUserId = this.authService.getUserId();
+    this.authService
+      .getAuthStatusListener()
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((authStatus: boolean) => {
+        if (this.authService.isAuthorized()) {
+          this.loggedInUserId = this.authService.getUserId();
+        }
+      });
+
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      const portfolioId = paramMap.get('id');
+
+      // Get the Portfolio
+      this.portfolioService
+        .getPortfolio(portfolioId)
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe(
+          (portfolio: PortfolioDto) => {
+            this.portfolio = portfolio;
+
+            this.portfolioLoaded = true;
+
+            // Check if the portfolio is already saved by the logged-in user
+            if (this.isAuth) {
+              this.userService
+                .getSavedPortfoliosForUser()
+                .pipe(takeUntil(this.ngUnsubscribe))
+                .subscribe((savedPortfolios: PortfolioDto[]) => {
+                  this.portfolioLiked =
+                    savedPortfolios.filter(function (savedPortfolio: PortfolioDto) {
+                      return savedPortfolio.id === portfolio.id;
+                    }).length > 0;
+                });
+            }
+          },
+          (error: any) => {
+            this.router.navigate(['not-found']);
+          }
+        );
+
+      // Get the Portfolio's stocks
+      this.portfolioService
+        .getPortfolioStocks(portfolioId)
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe((stocks: PortfolioStockDto[]) => {
+          this.portfolioStocks = stocks;
+
+          this.stocksLoaded = true;
+
+          if (stocks.length > 0) {
+            this.updateIexStockDataMap();
+          }
+
+          this.setStockPieChartBreakdown();
+        });
+
+      // Get the Portfolio's ratings
+      this.portfolioService
+        .getPortfolioRatingCounts(portfolioId)
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe((ratings: { likes: number; dislikes: number }) => {
+          this.numLikes = ratings.likes;
+          this.numDislikes = ratings.dislikes;
+        });
+
+      // Set the user's portfolio rating if they are logged-in.
+      if (this.isAuth) {
+        this.portfolioService
+          .getPortfolioUserRating(portfolioId)
+          .pipe(takeUntil(this.ngUnsubscribe))
+          .subscribe((rating: PortfolioRatingDto) => {
+            this.portfolioRating = rating;
+          });
+      }
+    });
+
     this.productService.getProducts().then((data) => (this.products = data));
     this.productService.getProducts().then((data) => (this.productsThisWeek = data));
     this.productService.getProductsMixed().then((data) => (this.productsLastWeek = data));
@@ -161,6 +289,43 @@ export class PortfolioComponent implements OnInit {
       { name: 'This Week', code: '0' },
       { name: 'Last Week', code: '1' },
     ];
+  }
+
+  /**
+   * Calls IEX Cloud API and updates the iexStockDataMap variable that maps ticker symbols to stock data
+   */
+  updateIexStockDataMap(): void {
+    const tickerSymbols: string[] = this.portfolioStocks.map((stock: PortfolioStockDto) => stock.ticker);
+    this.iexCloudService
+      .batchGetStocks(tickerSymbols, ['stats', 'company', 'price'])
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((result: any) => {
+        this.iexStockDataMap = result;
+      });
+  }
+
+  /**
+   * Updates the items that will be displayed in the NGX Pie Chart to show the stock weightings.
+   * Shows the top 10 largest holdings with an additional 'Other' category representing all the
+   * remaining holdings of the portfolio.
+   */
+  private setStockPieChartBreakdown(): void {
+    let topTenWeighting = 0;
+
+    this.pieChartItems = _.sortBy(this.portfolioStocks, 'weighting')
+      .reverse()
+      .slice(0, 10)
+      .map((stock: PortfolioStockDto) => {
+        topTenWeighting += stock.weighting;
+        return { name: stock.ticker, value: stock.weighting.toFixed(2) };
+      });
+
+    console.log('PIE CHART ITEMS: ', this.pieChartItems);
+
+    if (this.portfolioStocks.length > 10) {
+      const otherWeighting = 100 - topTenWeighting;
+      this.pieChartItems.push({ name: 'Other', value: otherWeighting });
+    }
   }
 
   getTrafficChartData() {
