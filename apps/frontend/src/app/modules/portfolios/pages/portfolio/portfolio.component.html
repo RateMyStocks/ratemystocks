@@ -1,9 +1,7 @@
-<!-- TODO: Get this to show social media icons -->
-<div id="layout-config" class="layout-config" [ngClass]="{'layout-config-active': false}">
-    <a style="cursor: pointer" id="layout-config-button" class="layout-config-button">
-        <i class="pi pi-check"></i>
-    </a>
+<div style="z-index: 999; position: fixed; padding: 0; top: 40%; right: 0; width: 60px; height: 100%;">
+  <p-speedDial [model]="socialMediaItems" showIcon="pi pi-share-alt" direction="down"></p-speedDial>
 </div>
+
 
 <div class="layout-dashboard" *ngIf="portfolioLoaded">
     <div class="p-grid">
@@ -12,13 +10,17 @@
                 <div class="p-col-12 p-md-12 p-xl-4">
                     <div class="card overview-box-1 blue">
                         <div class="card-header">
-                            <h6>{{ portfolio.name }}</h6>
+                            <h6>Sample Portfolio</h6>
                             <div class="header-buttons">
                                 <a href="#"><i class="pi pi-arrow-up"></i></a>
                             </div>
                         </div>
                         <div class="overview-content">
-                            <!-- <h3>87363</h3> -->
+                            <h4>{{ portfolio.name | truncate:[15, '...'] }}</h4>
+                            <div>
+                              <small>By</small>
+                            </div>
+
                             <!-- <div class="overview-graph">
                                 <span style="height: 12px;"><span class="graph-tooltip">12</span></span>
                                 <span style="height: 40px;"><span class="graph-tooltip">40</span></span>
@@ -29,7 +31,7 @@
                             </div> -->
                         </div>
                         <div class="overview-footer">
-                            <!-- <span><i class="pi pi-arrow-up"></i> <span>55%</span> increase in today sales</span> -->
+                            <span>Last Updated </span>
                         </div>
                     </div>
                 </div>
@@ -101,8 +103,9 @@
                             </div> -->
                         </div>
                         <div class="overview-chart">
+                          <app-portfolio-holdings-table-readonly [portfolioStocks]="portfolioStocks" [iexStockDataMap]="iexStockDataMap"></app-portfolio-holdings-table-readonly>
                             <!-- <p-chart #orders type="line" [data]="ordersChart" [options]="ordersOptions" [responsive]="true"></p-chart> -->
-                            <p-table [value]="products" [paginator]="true" [rows]="10" styleClass="p-datatable-customers">
+                            <!-- <p-table [value]="products" [paginator]="true" [rows]="10" styleClass="p-datatable-customers">
                               <ng-template pTemplate="header">
                                   <tr>
                                       <th pSortableColumn="id">ID
@@ -141,7 +144,7 @@
                                       </td>
                                   </tr>
                               </ng-template>
-                          </p-table>
+                          </p-table> -->
                         </div>
                     </div>
                 </div>
@@ -156,11 +159,12 @@
                             <h6>Breakdowns</h6>
                         </div>
                         <!-- <span>26 May - 27 May</span> -->
-                        <p-dropdown [options]="['Company', 'Country', 'Market Cap', 'Sector']" optionLabel="name"></p-dropdown>
+                        <!-- <p-dropdown [options]="['Company', 'Country', 'Market Cap', 'Sector']" optionLabel="name"></p-dropdown> -->
                         <div *ngIf="pieChartItems.length > 0">
                             <app-portfolio-breakdown-pie-chart [pieChartItems]="pieChartItems"></app-portfolio-breakdown-pie-chart>
                         </div>
                         <div id="traffic-tabs-container" class="traffic-tabs">
+                          <p-dropdown [options]="['Company', 'Country', 'Market Cap', 'Sector']" optionLabel="name"></p-dropdown>
                             <!-- <div class="traffic-tab" [ngClass]="{'traffic-tab-active':activeTraffic===0}"
                                  (click)="changeTrafficset($event); traffic.refresh()"
                                  data-label="New Sales" data-index="0"  >

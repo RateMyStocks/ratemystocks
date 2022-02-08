@@ -11,15 +11,16 @@ import { PrimeNGModule } from '../../primeng.module';
 import { SharedModule } from '../../shared/shared.module';
 import { PortfoliosTableComponent } from './components/portfolios-table/portfolios-table.component';
 import { PortfolioBreakdownPieChartComponent } from './components/portfolio-breakdown-pie-chart/portfolio-breakdown-pie-chart.component';
+import { PortfolioHoldingsTableReadonlyComponent } from './components/portfolio-holdings-table-readonly/portfolio-holdings-table-readonly.component';
 
 @NgModule({
   declarations: [
     PortfoliosComponent,
     PortfolioComponent,
+    PortfolioHoldingsTableReadonlyComponent,
     PortfoliosTableComponent,
     PortfolioBreakdownPieChartComponent,
     // TODO: Don't forget to declare these once they are fixed up
-    // PortfolioHoldingsTableReadonlyComponent,
     // PortfoliosTableComponent,
     // UpdatePortfolioNameDialogComponent,
     // UpdatePortfolioDescriptionDialogComponent,

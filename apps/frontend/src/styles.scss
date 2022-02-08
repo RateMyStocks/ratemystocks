@@ -44,7 +44,7 @@ mark {
   // margin: 0px !important;
 }
 
-/** Custom Generic Classes */
+/** Custom Classes */
 .vertical-center {
   margin: 0;
   position: absolute;
@@ -70,6 +70,21 @@ mark {
   display: inline-block;
   border-bottom: 4px solid variables.$rms-green;
   padding-bottom: 2px;
+}
+
+td,
+th {
+  .stock-logo {
+    width: 40px !important;
+    height: auto;
+    margin: 10px;
+  }
+
+  .stock-logo-small {
+    width: 30px !important;
+    height: auto;
+    margin: 5px;
+  }
 }
 
 /** PrimeNG Overrides */

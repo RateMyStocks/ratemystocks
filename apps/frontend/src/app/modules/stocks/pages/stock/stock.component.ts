@@ -187,7 +187,7 @@ export class StockComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'pi pi-twitter',
-        url: 'http://twitter.com/share?text=Check out my portfolio!&url=' + window.location.href,
+        url: 'http://twitter.com/share?text=Check out my this stock!&url=' + window.location.href,
         tooltipOptions: {
           tooltipLabel: 'Share on Twitter',
         },

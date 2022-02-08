@@ -51,6 +51,8 @@ export class PortfolioComponent implements OnInit {
 
   copiedPortfolioLink: string = window.location.href;
 
+  socialMediaItems = [];
+
   private ngUnsubscribe = new Subject();
 
   ordersChart: any;
@@ -181,6 +183,29 @@ export class PortfolioComponent implements OnInit {
       }
     });
 
+    this.socialMediaItems = [
+      {
+        icon: 'pi pi-facebook',
+        url: 'https://www.facebook.com/sharer/sharer.php?u=' + window.location.href,
+        tooltipOptions: {
+          tooltipLabel: 'Share on Facebook',
+        },
+      },
+      {
+        icon: 'pi pi-twitter',
+        url: 'http://twitter.com/share?text=Check out my this stock!&url=' + window.location.href,
+        tooltipOptions: {
+          tooltipLabel: 'Share on Twitter',
+        },
+      },
+      // {
+      //   icon: 'pi pi-copy',
+      //   command: () => {
+
+      //   },
+      // },
+    ];
+
     this.productService.getProducts().then((data) => (this.products = data));
     this.productService.getProducts().then((data) => (this.productsThisWeek = data));
     this.productService.getProductsMixed().then((data) => (this.productsLastWeek = data));
@@ -310,20 +335,20 @@ export class PortfolioComponent implements OnInit {
    * remaining holdings of the portfolio.
    */
   private setStockPieChartBreakdown(): void {
-    let topTenWeighting = 0;
+    let topFiveWeighting = 0;
 
     this.pieChartItems = _.sortBy(this.portfolioStocks, 'weighting')
       .reverse()
-      .slice(0, 10)
+      .slice(0, 5)
       .map((stock: PortfolioStockDto) => {
-        topTenWeighting += stock.weighting;
+        topFiveWeighting += stock.weighting;
         return { name: stock.ticker, value: stock.weighting.toFixed(2) };
       });
 
     console.log('PIE CHART ITEMS: ', this.pieChartItems);
 
-    if (this.portfolioStocks.length > 10) {
-      const otherWeighting = 100 - topTenWeighting;
+    if (this.portfolioStocks.length > 5) {
+      const otherWeighting = 100 - topFiveWeighting;
       this.pieChartItems.push({ name: 'Other', value: otherWeighting });
     }
   }
