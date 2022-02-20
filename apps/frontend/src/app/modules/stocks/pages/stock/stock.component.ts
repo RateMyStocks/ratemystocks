@@ -6,7 +6,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { IexCloudStockDataDto, StockRatingCountDto } from '@ratemystocks/api-interface';
 import { StockService } from '../../../../core/services/stock.service';
 import { takeUntil } from 'rxjs/operators';
-import { Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { AuthService } from '../../../../core/services/auth.service';
 import { MoneyFormatter } from '../../../../shared/utilities/money-formatter';
 import * as moment from 'moment';
@@ -64,49 +64,35 @@ export class StockComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.initializeStockData();
+
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.activeStockRatingIndex = null;
       this.ticker = paramMap.get('ticker');
       this.pageLink = window.location.href;
 
-      this.stockService
-        .getStock(this.ticker)
-        .pipe(takeUntil(this.ngUnsubscribe))
-        .subscribe((response: { rating: StockRatingCountDto; data: IexCloudStockDataDto }) => {
-          this.stock = response;
+      this.initializeStockData();
 
-          this.title.setTitle(
-            `${this.stock.data.company?.companyName} (${this.ticker}) Stock Price, Information, & News - ratemystocks.com`
-          );
-          this.meta.addTags([
-            {
-              name: 'description',
-              content: `Get real-time stock quote, news, performance, & other information for ${this.ticker}. Rate & discuss stonks with other investors & traders on ratemystocks.com.`,
-            },
-            {
-              name: 'keywords',
-              content: `${this.stock.data.company?.companyName}, ${this.stock.data.company?.companyName} stock price, ${this.stock.data.company?.companyName} news, ${this.ticker}, ${this.ticker} stock price, ${this.ticker} news, ${this.ticker} charting, financial forum, stock forum, stock discussion`,
-            },
-            {
-              name: 'viewport',
-              content: 'width=device-width, initial-scale=1',
-            },
-          ]);
+      this.title.setTitle(
+        `${this.stock.data.company?.companyName} (${this.ticker}) Stock Price, Information, & News - ratemystocks.com`
+      );
+      this.meta.addTags([
+        {
+          name: 'description',
+          content: `Get real-time stock quote, news, performance, & other information for ${this.ticker}. Rate & discuss stonks with other investors & traders on ratemystocks.com.`,
+        },
+        {
+          name: 'keywords',
+          content: `${this.stock.data.company?.companyName}, ${this.stock.data.company?.companyName} stock price, ${this.stock.data.company?.companyName} news, ${this.ticker}, ${this.ticker} stock price, ${this.ticker} news, ${this.ticker} charting, financial forum, stock forum, stock discussion`,
+        },
+        {
+          name: 'viewport',
+          content: 'width=device-width, initial-scale=1',
+        },
+      ]);
 
-          console.log('STOCK: ', this.stock);
-
-          this.stockLoaded = true;
-
-          this.stockRatingsPieChart = this.getStockRatingsChartData(this.stock.rating);
-
-          const totalRatingCount = this.stock.rating.buy + this.stock.rating.hold + this.stock.rating.sell;
-          this.stockRatingBuyPercent = totalRatingCount > 0 ? (this.stock.rating.buy / totalRatingCount) * 100 : 0;
-          this.stockRatingHoldPercent = totalRatingCount > 0 ? (this.stock.rating.hold / totalRatingCount) * 100 : 0;
-          this.stockRatingSellPercent = totalRatingCount > 0 ? (this.stock.rating.sell / totalRatingCount) * 100 : 0;
-
-          this.populateVisitCountsWidget(this.ticker);
-          this.populateFollowerCountsWidget(this.ticker);
-        });
+      this.populateVisitCountsWidget(this.ticker);
+      this.populateFollowerCountsWidget(this.ticker);
 
       this.breadcrumbService.setItems([
         { label: 'Home' },
@@ -204,6 +190,19 @@ export class StockComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  private initializeStockData(): void {
+    // Stock data pre-fetched from StockResolver
+    this.stock = this.route.snapshot.data.stock;
+
+    this.stockRatingsPieChart = this.getStockRatingsChartData(this.stock.rating);
+
+    const totalRatingCount = this.stock.rating.buy + this.stock.rating.hold + this.stock.rating.sell;
+    this.stockRatingBuyPercent = totalRatingCount > 0 ? (this.stock.rating.buy / totalRatingCount) * 100 : 0;
+    this.stockRatingHoldPercent = totalRatingCount > 0 ? (this.stock.rating.hold / totalRatingCount) * 100 : 0;
+    this.stockRatingSellPercent = totalRatingCount > 0 ? (this.stock.rating.sell / totalRatingCount) * 100 : 0;
+
   }
 
   /**
