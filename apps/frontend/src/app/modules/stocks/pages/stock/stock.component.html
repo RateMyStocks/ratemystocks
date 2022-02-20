@@ -19,7 +19,7 @@
                             </div>
                         </div>
                         <div class="overview-content">
-                            <h3 style="display: flex; align-items: center;">
+                            <h4 style="display: flex; align-items: center;">
                               <img
                                 class="stock-logo p-mr-4"
                                 src="https://storage.googleapis.com/iex/api/logos/{{ ticker }}.png"
@@ -27,11 +27,11 @@
                                 style="width:40px;height: auto;"
                               />
                               <b>{{ ticker }}</b>
-                            </h3>
+                            </h4>
                             <div>
-                              <h4 class="p-mb-0" [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }">
+                              <h5 class="p-mb-0" [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }">
                                 ${{ stock.data.quote.latestPrice?.toLocaleString(undefined, {minimumFractionDigits: 2}) }}
-                              </h4>
+                              </h5>
                               <small [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }"
                                 ><span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote?.change?.toLocaleString(undefined, {minimumFractionDigits: 2}) }} ({{
                                   (stock.data.quote.changePercent * 100)?.toFixed(2)
@@ -105,7 +105,6 @@
                             <h6>Performance</h6>
                         </div>
                         <div class="overview-chart">
-                            <!-- <app-stock-performance-chart [ticker]="ticker"></app-stock-performance-chart> -->
                             <app-trading-view-stock-chart [ticker]="ticker" [exchange]="stock.data.company?.exchange"></app-trading-view-stock-chart>
                         </div>
                     </div>
