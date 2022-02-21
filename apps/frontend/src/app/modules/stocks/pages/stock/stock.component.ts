@@ -45,8 +45,6 @@ export class StockComponent implements OnInit, OnDestroy {
   isAuth: boolean;
   userRating: string; // string that has the value buy, hold, or sell
   auth$: Subscription;
-  pageLink: string = window.location.href;
-  socialMediaItems = [];
   private ngUnsubscribe = new Subject();
 
   constructor(
@@ -67,7 +65,6 @@ export class StockComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.activeStockRatingIndex = null;
       this.ticker = paramMap.get('ticker');
-      this.pageLink = window.location.href;
 
       this.stockService
         .getStock(this.ticker)
@@ -92,8 +89,6 @@ export class StockComponent implements OnInit, OnDestroy {
               content: 'width=device-width, initial-scale=1',
             },
           ]);
-
-          console.log('STOCK: ', this.stock);
 
           this.stockLoaded = true;
 
@@ -176,29 +171,6 @@ export class StockComponent implements OnInit, OnDestroy {
     // this.appMain['refreshstockRatingsPieChart'] = () => {
     //   this.stockRatingsPieChart = this.getStockRatingsChartData();
     // };
-
-    this.socialMediaItems = [
-      {
-        icon: 'pi pi-facebook',
-        url: 'https://www.facebook.com/sharer/sharer.php?u=' + window.location.href,
-        tooltipOptions: {
-          tooltipLabel: 'Share on Facebook',
-        },
-      },
-      {
-        icon: 'pi pi-twitter',
-        url: 'http://twitter.com/share?text=Check out my this stock!&url=' + window.location.href,
-        tooltipOptions: {
-          tooltipLabel: 'Share on Twitter',
-        },
-      },
-      // {
-      //   icon: 'pi pi-copy',
-      //   command: () => {
-
-      //   },
-      // },
-    ];
   }
 
   ngOnDestroy(): void {
@@ -341,25 +313,6 @@ export class StockComponent implements OnInit, OnDestroy {
         this.populateFollowerCountsWidget(this.ticker);
       });
     }
-  }
-
-  /**
-   * Social media icon click event handler to share the portfolio link to the corresponding site.
-   * NOTE: When redirecting from localhost, some social media sites will block the request.
-   * @param socialMediaUrl The URL of the social media site that the portfolio will be shared on.
-   */
-  shareOnSocialMedia(socialMediaUrl: string): void {
-    window.open(socialMediaUrl + window.location.href, '_blank');
-  }
-
-  /** The click handler for the cdkCopyToClipboard directive shows a message when the link is copied. */
-  onCopyPageLink(): void {
-    this.messageService.add({
-      key: 'stockPageToast',
-      severity: 'success',
-      summary: 'Copied!',
-      detail: 'Page link copied to clipboard',
-    });
   }
 
   /**

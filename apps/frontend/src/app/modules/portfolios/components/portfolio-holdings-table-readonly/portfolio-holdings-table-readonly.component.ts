@@ -5,6 +5,7 @@ import { FormControl } from '@angular/forms';
 import { MarketCap } from '../../../../shared/models/enums/market-cap';
 import { MarketCapThresholds } from '../../../../shared/models/enums/market-cap-thresholds';
 import { PortfolioStockDto, IexCloudSecurityType } from '@ratemystocks/api-interface';
+import { SortEvent } from 'primeng/api';
 // import * as FileSaver from 'file-saver';
 enum FilterType {
   Search,
@@ -106,13 +107,14 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
   }
 
   ngAfterContentInit() {
-    this.topTenTotalWeighting = this.portfolioStocks.length
-      ? _.sortBy(this.portfolioStocks, 'weighting')
-          .reverse()
-          .slice(0, 10)
-          .map((stock: PortfolioStockDto) => stock.weighting)
-          .reduce((acc: number, currentValue: number) => acc + currentValue)
-      : 0;
+    // // TODO: Make this a pipe
+    // this.topTenTotalWeighting = this.portfolioStocks.length
+    //   ? _.sortBy(this.portfolioStocks, 'weighting')
+    //       .reverse()
+    //       .slice(0, 10)
+    //       .map((stock: PortfolioStockDto) => stock.weighting)
+    //       .reduce((acc: number, currentValue: number) => acc + currentValue)
+    //   : 0;
   }
 
   ngOnChanges() {
@@ -128,6 +130,17 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
 
     // Refresh table when datasource changes
     // this.dataSource.data = this.portfolioStocks;
+  }
+
+  calculateTopTenTotalWeighting() {
+    // TODO: Make this a pipe
+    return this.portfolioStocks.length
+      ? _.sortBy(this.portfolioStocks, 'weighting')
+          .reverse()
+          .slice(0, 10)
+          .map((stock: PortfolioStockDto) => stock.weighting)
+          .reduce((acc: number, currentValue: number) => acc + currentValue)
+      : 0;
   }
 
   /**
@@ -308,5 +321,71 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
     //     type: EXCEL_TYPE
     // });
     // FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+  }
+
+  /**
+   *
+   * @param event
+   */
+  customSort(event: SortEvent) {
+    if (event.field === 'country') {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(
+          event,
+          this.iexStockDataMap[data1.ticker]?.company?.country,
+          this.iexStockDataMap[data2.ticker]?.company?.country
+        );
+      });
+    } else if (event.field === 'price') {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(
+          event,
+          this.iexStockDataMap[data1.ticker]?.quote?.latestPrice,
+          this.iexStockDataMap[data2.ticker]?.quote?.latestPrice
+        );
+      });
+    } else if (event.field === 'sector') {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(
+          event,
+          this.iexStockDataMap[data1.ticker]?.company?.sector,
+          this.iexStockDataMap[data2.ticker]?.company?.sector
+        );
+      });
+    } else if (event.field === 'dividend') {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(
+          event,
+          this.iexStockDataMap[data1.ticker]?.stats?.dividendYield,
+          this.iexStockDataMap[data2.ticker]?.stats?.dividendYield
+        );
+      });
+    } else if (event.field === 'marketcap') {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(
+          event,
+          this.iexStockDataMap[data1.ticker]?.stats?.marketcap,
+          this.iexStockDataMap[data2.ticker]?.stats?.marketcap
+        );
+      });
+    } else {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(event, data1[event.field], data2[event.field]);
+      });
+    }
+  }
+
+  private sortCompare(event, data1, data2) {
+    const value1 = data1;
+    const value2 = data2;
+    let result = null;
+
+    if (value1 == null && value2 != null) result = -1;
+    else if (value1 != null && value2 == null) result = 1;
+    else if (value1 == null && value2 == null) result = 0;
+    else if (typeof value1 === 'string' && typeof value2 === 'string') result = value1.localeCompare(value2);
+    else result = value1 < value2 ? -1 : value1 > value2 ? 1 : 0;
+
+    return event.order * result;
   }
 }

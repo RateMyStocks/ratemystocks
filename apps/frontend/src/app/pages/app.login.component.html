@@ -12,7 +12,7 @@
                         <!-- <img alt="Card" src="assets/showcase/images/usercard.png"> -->
                     </ng-template>
                     <!-- <form (ngSubmit)="onSubmitLoginForm()" [formGroup]="loginForm" *ngSwitchCase="authModeType.LOGIN"> -->
-                    <form>
+                    <form (ngSubmit)="onSubmitLoginForm()" [formGroup]="loginForm">
                       <div class="login-form">
                         <div class="p-col-12">
                           <div class="p-grid">
@@ -23,7 +23,7 @@
                                           <label for="username">Username or Email</label>
                                           <span class="p-input-icon-left">
                                             <i class="pi pi-user"></i>
-                                            <input type="text" pInputText id="username" type="text"/>
+                                            <input formControlName="usernameOrEmail" type="text" pInputText id="username" type="text" [ngClass]="{'ng-invalid': loginForm.controls['usernameOrEmail'].invalid, 'ng-dirty': loginForm.controls['usernameOrEmail'].touched}" />
                                           </span>
                                           <!-- <small *ngIf="!loginForm.controls['usernameOrEmail'].valid && loginForm.controls['usernameOrEmail'].touched" class="p-invalid">Please enter your username or email.</small> -->
                                       </div>
@@ -31,7 +31,7 @@
                                         <label for="password">Password</label>
                                         <span class="p-input-icon-left">
                                           <i class="pi pi-lock"></i>
-                                          <input type="password" pInputText id="password" />
+                                          <input formControlName="password" type="password" pInputText id="password" type="password" [ngClass]="{'ng-invalid': loginForm.controls['password'].invalid, 'ng-dirty': loginForm.controls['password'].touched}" />
                                           <!-- <input formControlName="password" type="password" pInputText id="password" type="password" /> -->
                                         </span>
                                       </div>

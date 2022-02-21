@@ -14,7 +14,7 @@ services:
       POSTGRES_DB: ratemystocks
 
     volumes:
-      - ./postgresql_database_data/:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data/
 
   pgadmin:
     container_name: pgadmin4_container
@@ -33,4 +33,4 @@ services:
         - 6379:6379
 
 volumes:
-  postgresql_database_data:
+  postgres_data:

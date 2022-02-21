@@ -1,43 +1,84 @@
-<p-table [value]="portfolioStocks" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
-currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" styleClass="p-datatable-sm" [rowsPerPageOptions]="[10,25,50]">
-  <ng-template pTemplate="caption">
-    <div class="p-d-flex">
-      <button type="button" pButton pRipple icon="pi pi-file-o" (click)="dt.exportCSV()" class="p-mr-2" pTooltip="CSV" tooltipPosition="bottom"></button>
-      <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
-      <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdf()" class="p-button-warning p-mr-2" pTooltip="PDF" tooltipPosition="bottom"></button>
-      <button type="button" pButton pRipple icon="pi pi-filter" (click)="dt.exportCSV({selectionOnly:true})" class="p-button-info p-ml-auto" pTooltip="Selection Only" tooltipPosition="bottom"></button>
-    </div>
-  </ng-template>
-  <ng-template pTemplate="header">
+<!-- <div *ngIf="portfolioStocks"> -->
+  <p-table [value]="portfolioStocks" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" styleClass="p-datatable-sm p-datatable-striped" [rowsPerPageOptions]="[10,25,50]" (sortFunction)="customSort($event)" [customSort]="true" sortField="weighting" [sortOrder]="-1">
+    <ng-template pTemplate="caption">
+      <div class="p-d-flex">
+        <button type="button" pButton pRipple icon="pi pi-file-o" (click)="dt.exportCSV()" class="p-mr-2" pTooltip="CSV" tooltipPosition="bottom"></button>
+        <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
+        <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdf()" class="p-button-warning p-mr-2" pTooltip="PDF" tooltipPosition="bottom"></button>
+        <button type="button" pButton pRipple icon="pi pi-filter" (click)="dt.exportCSV({selectionOnly:true})" class="p-button-info p-ml-auto" pTooltip="Selection Only" tooltipPosition="bottom"></button>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="ticker">Name <p-sortIcon field="ticker"></p-sortIcon></th>
+          <th pSortableColumn="weighting" >Weighting<p-sortIcon field="weighting"></p-sortIcon></th>
+          <th>Price</th>
+          <th>Div. Yield</th>
+          <th>Market Cap</th>
+          <th>PE Ratio</th>
+          <th>Country</th>
+          <th>Sector</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-portfolioStock>
+        <tr *ngIf="portfolioStock">
+          <td>
+            <div class="centered-content">
+              <img
+                *ngIf="portfolioStock.ticker"
+                class="stock-logo-small"
+                src="https://storage.googleapis.com/iex/api/logos/{{ portfolioStock.ticker }}.png"
+                onerror="this.onerror=null; this.src=''"
+              />
+              <a routerLink="/stocks/{{ portfolioStock.ticker }}">
+                <b>{{ portfolioStock.ticker }}</b>
+                <br />
+                <small *ngIf="iexStockDataMap">{{ iexStockDataMap[portfolioStock.ticker]?.stats?.companyName }}</small>
+              </a>
+            </div>
+          </td>
+          <td>{{portfolioStock.weighting.toFixed(2)}}%</td>
+          <td>
+            <span [ngStyle]="{ color: iexStockDataMap[portfolioStock.ticker]?.quote?.change >= 0 ? 'green' : 'red' }" *ngIf="iexStockDataMap">${{ iexStockDataMap[portfolioStock.ticker]?.price?.toLocaleString() }}</span>
+          </td>
+          <td><span *ngIf="iexStockDataMap"><small>{{ (iexStockDataMap[portfolioStock.ticker]?.stats?.dividendYield * 100)?.toFixed(2) }}%</small></span></td>
+          <td><span *ngIf="iexStockDataMap"><small>${{ iexStockDataMap[portfolioStock.ticker]?.stats?.marketcap | abbreviatedCurrencyFormatterPipe }}</small></span></td>
+          <td><span *ngIf="iexStockDataMap"><small>{{ iexStockDataMap[portfolioStock.ticker]?.stats?.peRatio?.toFixed(2) }}</small></span></td>
+          <td><span *ngIf="iexStockDataMap"><small>{{ iexStockDataMap[portfolioStock.ticker]?.company?.country }}</small></span></td>
+          <td><span *ngIf="iexStockDataMap"><small>{{ iexStockDataMap[portfolioStock.ticker]?.company?.sector | truncate:[20, '...'] }}</small></span></td>
+        </tr>
+        <tr *ngIf="!portfolioStock">
+          <td><p-skeleton></p-skeleton></td>
+          <td><p-skeleton></p-skeleton></td>
+          <td><p-skeleton></p-skeleton></td>
+          <td><p-skeleton></p-skeleton></td>
+          <td><p-skeleton></p-skeleton></td>
+          <td><p-skeleton></p-skeleton></td>
+          <td><p-skeleton></p-skeleton></td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="footer">
       <tr>
-        <th>Name</th>
-        <th>Weighting</th>
+          <!-- TODO: Replace function calls with pipes-->
+          <td colspan="2"><span id="top-ten-total-weighting" *ngIf="portfolioStocks" class="portfolio-table-summary-data"><small>Total Top 10 Weighting: <strong>{{ calculateTopTenTotalWeighting() }}%</strong></small></span></td>
+          <td><span class="p-ml-2"><small>Weighted Averages: </small></span></td>
+          <td><span *ngIf="iexStockDataMap"><small>{{ (calculateWeightedAvg('dividendYield') * 100).toFixed(2) }}%</small></span></td>
+          <td>
+            <span id="weighted-avg-market-cap" class="portfolio-table-summary-data" *ngIf="iexStockDataMap">
+              <small>${{ MoneyFormatter.formatCash(calculateWeightedAvg('marketcap')) }}</small>
+            </span>
+          </td>
+          <td><span *ngIf="iexStockDataMap"><small>{{ calculateWeightedAvg('peRatio').toFixed(2) }}</small></span></td>
+          <td></td>
+          <td></td>
       </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-portfolioStock>
-      <tr>
-        <td>
-          <div class="centered-content">
-            <img
-              *ngIf="portfolioStock.ticker"
-              class="stock-logo-small"
-              src="https://storage.googleapis.com/iex/api/logos/{{ portfolioStock.ticker }}.png"
-              onerror="this.onerror=null; this.src=''"
-            />
-            <a routerLink="/stocks/{{ portfolioStock.ticker }}">
-              <b>{{ portfolioStock.ticker }}</b>
-              <br />
-              <small *ngIf="iexStockDataMap">{{ iexStockDataMap[portfolioStock.ticker]?.stats?.companyName }}</small>
-            </a>
-          </div>
-        </td>
-        <td>{{portfolioStock.weighting}}</td>
-      </tr>
-  </ng-template>
-  <ng-template pTemplate="paginatorleft">
-      <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
-  </ng-template>
-  <ng-template pTemplate="paginatorright">
-      <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
-  </ng-template>
-</p-table>
+    </ng-template>
+    <!-- <ng-template pTemplate="paginatorleft">
+        <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+        <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+    </ng-template> -->
+  </p-table>
+<!-- </div> -->

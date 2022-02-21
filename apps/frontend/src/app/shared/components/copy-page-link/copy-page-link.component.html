@@ -1,0 +1,47 @@
+<div class="card overview-box-1">
+  <div class="card-header">
+      <h6>Share</h6>
+      <div class="header-buttons">
+        <a><i class="pi pi-share-alt"></i></a>
+    </div>
+  </div>
+  <div>
+    <span class="p-input-icon-right" style="width: 100%;">
+      <i id="copy-page-link-button" class="pi pi-copy" style="cursor: pointer !important;" title="Copy Link" [cdkCopyToClipboard]="pageLink" (click)="onCopyPageLink()"></i>
+      <input type="text" pInputText [disabled]="true" [(ngModel)]="pageLink" style="width: 100%;" />
+    </span>
+  </div>
+  <!-- <div class="social-media-icons-container" style="text-align: center;">
+    <img
+      src="../../../../../assets/layout/images/social-media/reddit.png"
+      (click)="shareOnSocialMedia('http://www.reddit.com/submit?url=')"
+      title="Share on Reddit"
+      class="p-mr-3"
+    />
+    <img
+      src="../../../../../assets/layout/images/social-media/facebook.png"
+      (click)="shareOnSocialMedia('https://www.facebook.com/sharer/sharer.php?u=')"
+      title="Share on Facebook"
+      class="p-mr-3"
+    />
+    <img
+      src="../../../../../assets/layout/images/social-media/twitter.png"
+      (click)="shareOnSocialMedia('http://twitter.com/share?text=Check out my portfolio!&url=')"
+      title="Share on Twitter"
+      class="p-mr-3"
+    />
+    <img
+      src="../../../../../assets/layout/images/social-media/linkedin.png"
+      (click)="shareOnSocialMedia('https://www.linkedin.com/sharing/share-offsite/?url=')"
+      title="Share on LinkedIn"
+      class="p-mr-3"
+    />
+    <img
+      src="../../../../../assets/layout/images/social-media/link.png"
+      title="Copy Link"
+      [cdkCopyToClipboard]="copiedPortfolioLink"
+      (click)="onCopyPageLink()"
+      class="p-mr-3"
+    />
+  </div> -->
+</div>

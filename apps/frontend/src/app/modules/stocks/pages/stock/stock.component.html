@@ -1,10 +1,6 @@
 <p-toast key="stockPageToast" position="top-center"></p-toast>
 
-
-<div style="z-index: 999; position: fixed; padding: 0; top: 40%; right: 0; width: 60px; height: 100%;">
-  <p-speedDial [model]="socialMediaItems" showIcon="pi pi-share-alt" direction="down"></p-speedDial>
-</div>
-
+<app-share-on-social-media-speed-dial></app-share-on-social-media-speed-dial>
 
 <div class="layout-dashboard" *ngIf="stock; else stockNotLoaded">
     <div class="p-grid">
@@ -19,24 +15,24 @@
                             </div>
                         </div>
                         <div class="overview-content">
-                            <h3 style="display: flex; align-items: center;">
-                              <img
-                                class="stock-logo p-mr-4"
-                                src="https://storage.googleapis.com/iex/api/logos/{{ ticker }}.png"
-                                onerror="this.onerror=null; this.src=''"
-                                style="width:40px;height: auto;"
-                              />
-                              <b>{{ ticker }}</b>
-                            </h3>
-                            <div>
-                              <h4 class="p-mb-0" [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }">
-                                ${{ stock.data.quote.latestPrice?.toLocaleString(undefined, {minimumFractionDigits: 2}) }}
-                              </h4>
-                              <small [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }"
-                                ><span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote?.change?.toLocaleString(undefined, {minimumFractionDigits: 2}) }} ({{
-                                  (stock.data.quote.changePercent * 100)?.toFixed(2)
-                                }}%)</small
-                              >
+                          <h4 style="display: flex; align-items: center;">
+                            <img
+                              class="stock-logo p-mr-4"
+                              src="https://storage.googleapis.com/iex/api/logos/{{ ticker }}.png"
+                              onerror="this.onerror=null; this.src=''"
+                              style="width:40px;height: auto;"
+                            />
+                            <b>{{ ticker }}</b>
+                          </h4>
+                          <div>
+                            <h5 class="p-mb-0" [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }">
+                              ${{ stock.data.quote.latestPrice?.toLocaleString(undefined, {minimumFractionDigits: 2}) }}
+                            </h5>
+                            <small [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }"
+                              ><span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote?.change?.toLocaleString(undefined, {minimumFractionDigits: 2}) }} ({{
+                                (stock.data.quote.changePercent * 100)?.toFixed(2)
+                              }}%)</small
+                            >
                           </div>
                         </div>
                         <div class="overview-footer">
@@ -116,55 +112,7 @@
         <div class="p-col-12 p-md-12 p-xl-3">
             <div class="p-grid">
               <div class="p-col-12 p-md-6 p-xl-12">
-                <div class="card overview-box-1">
-                  <div class="card-header">
-                      <h6>Share</h6>
-                      <div class="header-buttons">
-                        <a><i class="pi pi-share-alt"></i></a>
-                    </div>
-                  </div>
-                  <div>
-                    <span class="p-input-icon-right" style="width: 100%;">
-                      <i id="copy-page-link-button" class="pi pi-copy" style="cursor: pointer !important;" title="Copy Link" (click)="onCopyPageLink()"></i>
-                      <input type="text" pInputText [disabled]="true" [(ngModel)]="pageLink" style="width: 100%;" />
-                    </span>
-                    <!-- <input type="text" pInputText [disabled]="true" [(ngModel)]="pageLink" class="p-mr-2" />
-                    <button pButton type="button" label="COPY" class="p-button-outlined" icon="pi pi-copy" iconPos="right"></button> -->
-                  </div>
-                  <!-- <div class="social-media-icons-container" style="text-align: center;">
-                    <img
-                      src="../../../../../assets/layout/images/social-media/reddit.png"
-                      (click)="shareOnSocialMedia('http://www.reddit.com/submit?url=')"
-                      title="Share on Reddit"
-                      class="p-mr-3"
-                    />
-                    <img
-                      src="../../../../../assets/layout/images/social-media/facebook.png"
-                      (click)="shareOnSocialMedia('https://www.facebook.com/sharer/sharer.php?u=')"
-                      title="Share on Facebook"
-                      class="p-mr-3"
-                    />
-                    <img
-                      src="../../../../../assets/layout/images/social-media/twitter.png"
-                      (click)="shareOnSocialMedia('http://twitter.com/share?text=Check out my portfolio!&url=')"
-                      title="Share on Twitter"
-                      class="p-mr-3"
-                    />
-                    <img
-                      src="../../../../../assets/layout/images/social-media/linkedin.png"
-                      (click)="shareOnSocialMedia('https://www.linkedin.com/sharing/share-offsite/?url=')"
-                      title="Share on LinkedIn"
-                      class="p-mr-3"
-                    />
-                    <img
-                      src="../../../../../assets/layout/images/social-media/link.png"
-                      title="Copy Link"
-                      [cdkCopyToClipboard]="copiedPortfolioLink"
-                      (click)="onCopyPageLink()"
-                      class="p-mr-3"
-                    />
-                  </div> -->
-                </div>
+                <app-copy-page-link></app-copy-page-link>
               </div>
               <div class="p-col-12 p-md-6 p-xl-12">
                 <div class="card traffic">

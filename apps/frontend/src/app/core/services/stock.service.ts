@@ -97,8 +97,8 @@ export class StockService {
    * @param lastNDays Query param indicating the number of days from the current day to get visit counts for.
    * @returns A list of the stock page visit counts for the last N days.
    */
-  getStockVisitCounts(ticker: string, lastNDays?: number): Observable<any> {
-    const url = `${this.baseApiUrl}/visit-counts/${ticker}?lastNDays=lastNDays`;
+  getStockVisitCounts(ticker: string, lastNDays = 6): Observable<any> {
+    const url = `${this.baseApiUrl}/visit-counts/${ticker}?lastNDays=${lastNDays}`;
     return this.httpClient.get<any>(url);
   }
 
@@ -149,8 +149,8 @@ export class StockService {
    * @param lastNDays Optional query parameter indicating the past number of days to get counts for.
    * @return The number of followers by day for a given stock over a given time period.
    */
-  getFollowerCountsLastNDays(ticker: string, lastNDays?: number): Observable<any> {
-    const url = `${this.baseApiUrl}/follower-counts/${ticker}?lastNDays=lastNDays`;
+  getFollowerCountsLastNDays(ticker: string, lastNDays = 6): Observable<any> {
+    const url = `${this.baseApiUrl}/follower-counts/${ticker}?lastNDays=${lastNDays}`;
     return this.httpClient.get<any>(url);
   }
 

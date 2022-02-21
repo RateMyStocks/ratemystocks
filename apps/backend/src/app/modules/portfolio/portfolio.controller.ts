@@ -160,4 +160,90 @@ export class PortfolioController {
   deletePortfolioRating(@Param('portfolioRatingId') portfolioRatingId: string): Promise<void> {
     return this.portfolioService.deletePortfolioRating(portfolioRatingId);
   }
+
+  /**
+   * Adds a visit to the portfolio_visit table indicating a page visit for some portfolio.
+   * @param portfolioId The portfolioId of the portfolio being visited.
+   * @param userId (Optional) If a logged-in user visits the portfolio page, this query parameter will be supplied.
+   * @returns The number of page visits for a given portfolio
+   */
+  @Post('/visit-count/:portfolioId')
+  addStockPageVisit(@Param('portfolioId') portfolioId: string, @Query('userId') userId?: string): Promise<number> {
+    return this.portfolioService.addPortfolioPageVisit(portfolioId, userId);
+  }
+
+  /**
+   * Returns a list of the portfolio page visit counts for the last N days (defaults to 6).
+   * @param portfolioId The id of the portfolio to get the visit count sfor.
+   * @param lastNDays Query param indicating the number of days from the current day to get visit counts for.
+   * @returns A list of the portfolio page visit counts for the last N days.
+   */
+  @Get('/visit-counts/:portfolioId')
+  getVisitCounts(@Param('portfolioId') portfolioId: string, @Query('lastNDays') lastNDays = 6): Promise<any[]> {
+    return this.portfolioService.getVisitCounts(portfolioId, lastNDays);
+  }
+
+  /**
+   * Creating an entry in the portfolio_follower table allowing a user to follow a portfolio.
+   * @param userAccount The logged-in user following the portfolio.
+   * @param portfolioId The id of the portfolio being followed.
+   * @returns The number of page visits for a given portfolio.
+   */
+  @Post('/follow/:portfolioId')
+  @UseGuards(AuthGuard())
+  followPortfolio(@GetUser() userAccount: UserAccount, @Param('portfolioId') portfolioId: string): Promise<void> {
+    return this.portfolioService.followPortfolio(userAccount, portfolioId);
+  }
+
+  /**
+   * Deletes the entry in the portfolio_follower table, so the specified user
+   * will unfollow a portfolio if it is already following it.
+   * @param userAccount The account object of the logged-in user.
+   * @param portfolioId The id of the portfolio the user is following.
+   * @throws 404 If the user specified isn't actually following the portfolio.
+   */
+  @Delete('/unfollow/:portfolioId')
+  @UseGuards(AuthGuard())
+  unfollowStock(@GetUser() userAccount: UserAccount, @Param('portfolioId') portfolioId: string): Promise<void> {
+    return this.portfolioService.unfollowPortfolio(userAccount, portfolioId);
+  }
+
+  /**
+   * Gets the number of followers for a given portfolio.
+   * @param portfolioId The id of the portfolio to get the number of followers for.
+   * @return The number of followers for a given portfolio.
+   */
+  @Get('/follower-count/:portfolioId')
+  getTotalFollowerCounts(@Param('portfolioId') portfolioId: string): Promise<number> {
+    return this.portfolioService.getTotalFollowerCounts(portfolioId);
+  }
+
+  /**
+   * Gets the number of followers by day for a given portfolio over a given time period.
+   * @param portfolioId The id of the portfolio to get the number of followers for.
+   * @param lastNDays Optional query parameter indicating the past number of days to get counts for.
+   * @return The number of followers by day for a given portfolio over a given time period.
+   */
+  @Get('/follower-counts/:portfolioId')
+  getFollowerCountsLastNDays(
+    @Param('portfolioId') portfolioId: string,
+    @Query('lastNDays') lastNDays = 6
+  ): Promise<any[]> {
+    return this.portfolioService.getFollowerCountsLastNDays(portfolioId, lastNDays);
+  }
+
+  /**
+   * Returns true if the logged-in user is following a given portfolio, false otherwise.
+   * @param userAccount The UserAccount object of the logged-in user.
+   * @param portfolioId The id of the portfolio to check against.
+   * @returns true if the logged-in user is following a given portfolio, false otherwise.
+   */
+  @Get('/isfollowing/:portfolioId')
+  @UseGuards(AuthGuard())
+  isFollowingPortfolio(
+    @GetUser() userAccount: UserAccount,
+    @Param('portfolioId') portfolioId: string
+  ): Promise<boolean> {
+    return this.portfolioService.isFollowingPortfolio(userAccount, portfolioId);
+  }
 }

@@ -1,9 +1,7 @@
-<div style="z-index: 999; position: fixed; padding: 0; top: 40%; right: 0; width: 60px; height: 100%;">
-  <p-speedDial [model]="socialMediaItems" showIcon="pi pi-share-alt" direction="down"></p-speedDial>
-</div>
+<app-share-on-social-media-speed-dial></app-share-on-social-media-speed-dial>
+<p-confirmPopup></p-confirmPopup>
 
-
-<div class="layout-dashboard" *ngIf="portfolioLoaded">
+<div class="layout-dashboard" *ngIf="portfolio">
     <div class="p-grid">
         <div class="p-col-12 p-md-12 p-xl-9">
             <div class="p-grid">
@@ -12,31 +10,44 @@
                         <div class="card-header">
                             <h6>Sample Portfolio</h6>
                             <div class="header-buttons">
-                                <a href="#"><i class="pi pi-arrow-up"></i></a>
+                                <a href="#"><i class="pi pi-chart-bar"></i></a>
                             </div>
                         </div>
                         <div class="overview-content">
-                            <h4>{{ portfolio.name | truncate:[15, '...'] }}</h4>
-                            <div>
-                              <small>By</small>
-                            </div>
-
-                            <!-- <div class="overview-graph">
-                                <span style="height: 12px;"><span class="graph-tooltip">12</span></span>
-                                <span style="height: 40px;"><span class="graph-tooltip">40</span></span>
-                                <span style="height: 26px;"><span class="graph-tooltip">26</span></span>
-                                <span style="height: 17px;"><span class="graph-tooltip">17</span></span>
-                                <span style="height: 36px;"><span class="graph-tooltip">36</span></span>
-                                <span style="height: 51px;"><span class="graph-tooltip">51</span></span>
-                            </div> -->
+                            <h5>
+                              {{ portfolio.name | truncate:[15, '...'] }}
+                              <div style="font-size: small;" class="p-mt-1"><b>By <a routerLink="/profile/users/{{ portfolio.user.username }}">{{ portfolio.user.username }}</a></b></div>
+                            </h5>
                         </div>
                         <div class="overview-footer">
-                            <span>Last Updated </span>
+                            <small>Last Updated {{ portfolio.lastUpdated | momentFromNowDatePipe }}</small>
                         </div>
                     </div>
                 </div>
                 <div class="p-col-12 p-md-12 p-xl-4">
-                    <div class="card overview-box-1 teal">
+                  <div class="card overview-box-1 teal">
+                    <div class="card-header">
+                        <h6>Followers</h6>
+                        <div class="header-buttons">
+                          <a *ngIf="!isLoggedInUserFollowing" (click)="followPortfolio()"><i class="pi pi-plus-circle"></i></a>
+                          <a *ngIf="isLoggedInUserFollowing" (click)="unfollowPortfolio()" class="header-button-active"><i class="pi pi-check-circle"></i></a>
+                        </div>
+                    </div>
+                    <div class="overview-content">
+                        <h3>{{followers}}</h3>
+                        <div class="overview-graph">
+                          <span *ngFor="let followerCountByDay of followerCountsByDay" [ngStyle]="{'height': followerCountByDay.pixelCount, 'margin-top': noNewFollowers ? '52px' : '0px'}"><span class="graph-tooltip">{{followerCountByDay.followerCount}}</span></span>
+                        </div>
+                    </div>
+                    <div class="overview-footer" [ngClass]="{'down': followerPercentChangeToday < 0, 'up': followerPercentChangeToday >= 0}">
+                      <span *ngIf="followerPercentChangeToday != Infinity && followerPercentChangeToday !== 0">
+                        <i [ngClass]="{'pi': true, 'p-mr-2': true, 'pi-arrow-down': followerPercentChangeToday < 0, 'pi-arrow-up': followerPercentChangeToday > 0}"></i>
+                        <span class="p-mr-1">{{ followerPercentChangeToday.toFixed(0) }}%</span>
+                        <span><span *ngIf="followerPercentChangeToday >= 0">increase</span> <span *ngIf="followerPercentChangeToday < 0">decrease</span> in followers today.</span>
+                      </span>
+                    </div>
+                  </div>
+                    <!-- <div class="card overview-box-1 teal">
                         <div class="card-header">
                             <h6>Followers</h6>
                             <div class="header-buttons">
@@ -57,10 +68,31 @@
                         <div class="overview-footer down">
                             <span><i class="pi pi-arrow-down"></i> <span>12%</span> decrease in today sales</span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="p-col-12 p-md-12 p-xl-4">
-                    <div class="card  overview-box-1 orange">
+                  <div class="card overview-box-1 orange">
+                    <div class="card-header">
+                        <h6>Visits</h6>
+                        <div class="header-buttons">
+                            <a><i class="pi pi-eye"></i></a>
+                        </div>
+                    </div>
+                    <div class="overview-content">
+                        <h3>{{ visitors }}</h3>
+                        <div class="overview-graph">
+                          <span *ngFor="let visitCount of visitCountsByDay" [ngStyle]="{'height': visitCount.pixelCount}"><span class="graph-tooltip">{{visitCount.visitCount}}</span></span>
+                        </div>
+                    </div>
+                    <div class="overview-footer" [ngClass]="{'down': visitPercentChangeToday < 0, 'up': visitPercentChangeToday >= 0}">
+                        <span *ngIf="visitPercentChangeToday != Infinity && visitPercentChangeToday !== 0">
+                          <i [ngClass]="{'pi': true, 'p-mr-2': true, 'pi-arrow-down': visitPercentChangeToday < 0, 'pi-arrow-up': visitPercentChangeToday > 0}"></i>
+                          <span class="p-mr-1">{{ visitPercentChangeToday.toFixed(0) }}%</span>
+                          <span><span *ngIf="visitPercentChangeToday >= 0">increase</span> <span *ngIf="visitPercentChangeToday < 0">decrease</span> in visits today.</span>
+                        </span>
+                    </div>
+                  </div>
+                    <!-- <div class="card  overview-box-1 orange">
                         <div class="card-header">
                             <h6>Visits</h6>
                             <div class="header-buttons">
@@ -81,70 +113,15 @@
                         <div class="overview-footer">
                             <span><i class="pi pi-arrow-up"></i> <span>6%</span> increase in today sales</span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="p-col-12">
                     <div class="card sale-graph">
                         <div class="card-header">
                             <h6>Holdings</h6>
                         </div>
-                        <div id="order-tabs-container" class="order-tabs">
-                            <!-- <div class="order-tab" [ngClass]="{'order-tab-active':activeOrders===0}"
-                                 (click)="changeDataset($event); orders.refresh()"
-                                 data-label="New Sales" data-index="0" data-stroke="#00acac" >
-                                <h6>Current Week</h6>
-                                <h3>$455.55</h3>
-                            </div>
-                            <div class="order-tab" [ngClass]="{'order-tab-active':activeOrders===1}"
-                                 (click)="changeDataset($event); orders.refresh()"
-                                 data-label="Previous Sales" data-index="1" data-stroke="#2f8ee5">
-                                <h6>Previous Week</h6>
-                                <h3>$244.40</h3>
-                            </div> -->
-                        </div>
-                        <div class="overview-chart">
+                        <div>
                           <app-portfolio-holdings-table-readonly [portfolioStocks]="portfolioStocks" [iexStockDataMap]="iexStockDataMap"></app-portfolio-holdings-table-readonly>
-                            <!-- <p-chart #orders type="line" [data]="ordersChart" [options]="ordersOptions" [responsive]="true"></p-chart> -->
-                            <!-- <p-table [value]="products" [paginator]="true" [rows]="10" styleClass="p-datatable-customers">
-                              <ng-template pTemplate="header">
-                                  <tr>
-                                      <th pSortableColumn="id">ID
-                                          <p-sortIcon field="id"></p-sortIcon>
-                                      </th>
-                                      <th pSortableColumn="category">Category
-                                          <p-sortIcon field="category"></p-sortIcon>
-                                      </th>
-                                      <th pSortableColumn="price">Price
-                                          <p-sortIcon field="price"></p-sortIcon>
-                                      </th>
-                                      <th pSortableColumn="inventoryStatus">Status
-                                          <p-sortIcon field="inventoryStatus"></p-sortIcon>
-                                      </th>
-                                      <th></th>
-                                  </tr>
-                              </ng-template>
-                              <ng-template pTemplate="body" let-product>
-                                  <tr>
-                                      <td>
-                                          <span class="p-column-title">Id</span>
-                                          {{product.id}}</td>
-                                      <td>
-                                          <span class="p-column-title">Category</span>
-                                          {{product.category}}</td>
-                                      <td>
-                                          <span class="p-column-title">Price</span>
-                                          {{product.price | currency:'USD'}}</td>
-                                      <td>
-                                          <span class="p-column-title">Status</span>
-                                          <span
-                                              [class]="'product-badge status-' + product.inventoryStatus.toLowerCase()">{{product.inventoryStatus}}</span>
-                                      </td>
-                                      <td style="text-align: center">
-                                          <button pButton type="button" icon="pi pi-search"></button>
-                                      </td>
-                                  </tr>
-                              </ng-template>
-                          </p-table> -->
                         </div>
                     </div>
                 </div>
@@ -153,133 +130,59 @@
 
         <div class="p-col-12 p-md-12 p-xl-3">
             <div class="p-grid">
-                <div class="p-col-12 p-md-6 p-xl-12">
-                    <div class="card traffic">
-                        <div class="card-header">
-                            <h6>Breakdowns</h6>
-                        </div>
-                        <!-- <span>26 May - 27 May</span> -->
-                        <!-- <p-dropdown [options]="['Company', 'Country', 'Market Cap', 'Sector']" optionLabel="name"></p-dropdown> -->
-                        <div *ngIf="pieChartItems.length > 0">
-                            <app-portfolio-breakdown-pie-chart [pieChartItems]="pieChartItems"></app-portfolio-breakdown-pie-chart>
-                        </div>
-                        <div id="traffic-tabs-container" class="traffic-tabs">
-                          <p-dropdown [options]="['Company', 'Country', 'Market Cap', 'Sector']" optionLabel="name"></p-dropdown>
-                            <!-- <div class="traffic-tab" [ngClass]="{'traffic-tab-active':activeTraffic===0}"
-                                 (click)="changeTrafficset($event); traffic.refresh()"
-                                 data-label="New Sales" data-index="0"  >
-                                <h6>48%</h6>
-                                <i class="pi pi-facebook"></i>
-                                <span>Facebook</span>
-                            </div>
-                            <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===1}"
-                                 (click)="changeTrafficset($event); traffic.refresh()"
-                                 data-label="Previous Sales" data-index="1">
-                                <h6>26%</h6>
-                                <i class="pi pi-twitter"></i>
-                                <span>Twitter</span>
-                            </div>
-                            <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===2}"
-                                 (click)="changeTrafficset($event); traffic.refresh()"
-                                 data-label="Previous Sales" data-index="2">
-                                <h6>17%</h6>
-                                <i class="pi pi-github"></i>
-                                <span>Github</span>
-                            </div> -->
-                        </div>
-                    </div>
-                </div>
-                <div class="p-col-12 p-md-6 p-xl-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6>Description</h6>
-                        </div>
-                        <div style="max-height:500px;margin:0;overflow:auto;">
-                          <p>{{ portfolio?.description }}</p>
-                          <p-scrollTop target="parent"></p-scrollTop>
-                        </div>
-                    </div>
-                </div>
+              <div class="p-col-12 p-md-6 p-xl-12">
+                <app-copy-page-link></app-copy-page-link>
+              </div>
+              <div class="p-col-12 p-md-6 p-xl-12">
+                  <div class="card overview-box-1">
+                      <div class="card-header">
+                          <h6>Breakdowns</h6>
+                          <div class="header-buttons">
+                            <!-- TODO this icon needs PrimeNG 13 -->
+                            <a href="#"><i class="pi pi-chart-pie"></i></a>
+                          </div>
+                          <!-- <p-dropdown [options]="portfolioBreakdownCategories" optionLabel="name" (onChange)="setPieChartItems($event)"></p-dropdown> -->
+                      </div>
+                      <div *ngIf="pieChartItems.length > 0">
+                          <app-portfolio-breakdown-pie-chart [pieChartItems]="pieChartItems"></app-portfolio-breakdown-pie-chart>
+                          <p-dropdown [options]="portfolioBreakdownCategories" optionLabel="name" (onChange)="setPieChartItems($event)"></p-dropdown>
+                      </div>
+                  </div>
+              </div>
+              <div class="p-col-12 p-md-6 p-xl-12">
+                  <div class="card">
+                      <div class="card-header">
+                          <h6>Description</h6>
+                      </div>
+                      <div style="max-height:500px;margin:0;overflow:auto;">
+                        <p>{{ portfolio?.description }}</p>
+                        <p-scrollTop target="parent"></p-scrollTop>
+                      </div>
+                  </div>
+              </div>
             </div>
         </div>
 
         <div class="p-col-12 p-md-6 p-xl-4">
-            <div class="card leaderboard">
+            <div class="card">
                 <div class="card-header">
                     <h6>Stats</h6>
                 </div>
-                <ul>
-                    <li>
-                        <div class="person">
-                            <img src="assets/layout/images/dashboard/leader-1.png" alt="poseidon-layout" />
-                            <p>Peter Taylor</p>
-                        </div>
-                        <div class="person-numbers">
-                            <h6>$224.44</h6>
-                            <i class="pi pi-arrow-up"></i>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="person">
-                            <img src="assets/layout/images/dashboard/leader-2.png" alt="poseidon-layout" />
-                            <p>Nicolina Lindholm</p>
-                        </div>
-                        <div class="person-numbers">
-                            <h6>$86.05</h6>
-                            <i class="pi pi-arrow-up"></i>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="person">
-                            <img src="assets/layout/images/dashboard/leader-3.png" alt="poseidon-layout" />
-                            <p>Su Hua</p>
-                        </div>
-                        <div class="person-numbers">
-                            <h6>$59.44</h6>
-                            <i class="pi pi-arrow-up"></i>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="person">
-                            <img src="assets/layout/images/dashboard/leader-4.png" alt="poseidon-layout" />
-                            <p>Maria Illescas</p>
-                        </div>
-                        <div class="person-numbers">
-                            <h6>$12.32</h6>
-                            <i class="pi pi-arrow-up"></i>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="person">
-                            <img src="assets/layout/images/dashboard/avatar-dengra.png" alt="poseidon-layout" />
-                            <p>Ezequiel Dengra</p>
-                        </div>
-                        <div class="person-numbers">
-                            <h6>$12.32</h6>
-                            <i class="pi pi-arrow-up"></i>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="person">
-                            <img src="assets/layout/images/dashboard/avatar-conan.png" alt="poseidon-layout" />
-                            <p>Conan Matusov</p>
-                        </div>
-                        <div class="person-numbers">
-                            <h6>$12.32</h6>
-                            <i class="pi pi-arrow-up"></i>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="person">
-                            <img src="assets/layout/images/dashboard/seller-1.png" alt="poseidon-layout" />
-                            <p>Hector Mariano</p>
-                        </div>
-                        <div class="person-numbers">
-                            <h6>$12.32</h6>
-                            <i class="pi pi-arrow-up"></i>
-                        </div>
-                    </li>
-                </ul>
+                <div class="p-grid">
+                  <div class="p-col-6">
+                    <div class="p-mb-2" *ngIf="portfolioStocks"><small><b># of Holdings:</b> {{ portfolioStocks.length }}</small></div>
+                    <div class="p-mb-2" *ngIf="iexStockDataMap"><small><b>Top 10 Weighting:</b> {{ calculateTopTenTotalWeighting().toFixed(2) }}%</small></div>
+                    <div class="p-mb-2" *ngIf="iexStockDataMap"><small><b>Top Holding: </b><a routerLink="/stocks/{{ getLargestHolding() }}">{{ getLargestHolding() }}</a></small></div>
+                    <div class="p-mb-2" *ngIf="iexStockDataMap"><small><b>Top Country: </b>{{ getHighestWeightedIexCloudValue('country') }}</small></div>
+                    <div class="p-mb-2" *ngIf="iexStockDataMap"><small><b>Top Sector: </b>{{ getHighestWeightedIexCloudValue('sector') }}</small></div>
+                  </div>
+                  <div class="p-col-6">
+                    <div class="p-mb-2" *ngIf="iexStockDataMap"><small><b>Dividend Yield:</b> {{ (calculateWeightedAvg('dividendYield') * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2" *ngIf="iexStockDataMap"><small><b>Market Cap:</b> {{ calculateWeightedAvg('marketcap') | abbreviatedCurrencyFormatterPipe }}</small></div>
+                    <div class="p-mb-2" *ngIf="iexStockDataMap"><small><b>P/E Ratio:</b> {{ calculateWeightedAvg('peRatio').toFixed(2) }}</small></div>
+                    <div class="p-mb-2" *ngIf="iexStockDataMap"><small><b>Beta:</b> {{ calculateWeightedAvg('beta').toFixed(2) }}</small></div>
+                  </div>
+                </div>
             </div>
         </div>
 
@@ -349,7 +252,7 @@
         </div>
 
         <div class="p-col-12 p-md-6 p-xl-4">
-            <div class="card sellers">
+            <!-- <div class="card sellers">
                 <div class="card-header">
                     <h6>Seller List</h6>
                 </div>
@@ -425,7 +328,7 @@
                         <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-secondary p-button-outlined" (click)="menu7.toggle($event)"></button>
                     </li>
                 </ul>
-            </div>
+            </div> -->
         </div>
 
         <!-- <div class="p-col-12 p-md-6 p-xl-4">
