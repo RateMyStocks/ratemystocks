@@ -32,4 +32,13 @@ export class IexCloudService {
     }
     return this.http.get<any[]>(endpoint);
   }
+
+  /**
+   *
+   */
+  getStockUpcomingEvents(tickers: string[]) {
+    // const endpoint = `${environment.apiUrl}/iex/stocks/${ticker}/upcoming-events`;
+    const endpoint = `${environment.apiUrl}/iex/stocks/upcoming-events?tickers=${tickers.join(',')}`;
+    return this.http.get<any>(endpoint);
+  }
 }

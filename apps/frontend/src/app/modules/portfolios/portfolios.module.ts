@@ -12,6 +12,14 @@ import { SharedModule } from '../../shared/shared.module';
 import { PortfoliosTableComponent } from './components/portfolios-table/portfolios-table.component';
 import { PortfolioBreakdownPieChartComponent } from './components/portfolio-breakdown-pie-chart/portfolio-breakdown-pie-chart.component';
 import { PortfolioHoldingsTableReadonlyComponent } from './components/portfolio-holdings-table-readonly/portfolio-holdings-table-readonly.component';
+import { PortfolioCalendarComponent } from './components/portfolio-calendar/portfolio-calendar.component';
+
+import { FullCalendarModule } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+
+FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPlugin]);
 
 @NgModule({
   declarations: [
@@ -20,6 +28,7 @@ import { PortfolioHoldingsTableReadonlyComponent } from './components/portfolio-
     PortfolioHoldingsTableReadonlyComponent,
     PortfoliosTableComponent,
     PortfolioBreakdownPieChartComponent,
+    PortfolioCalendarComponent,
     // TODO: Don't forget to declare these once they are fixed up
     // PortfoliosTableComponent,
     // UpdatePortfolioNameDialogComponent,
@@ -30,6 +39,7 @@ import { PortfolioHoldingsTableReadonlyComponent } from './components/portfolio-
     AppCodeModule,
     CommonModule,
     FormsModule,
+    FullCalendarModule,
     HttpClientModule,
     NgxChartsModule,
     PortfolioRoutingModule,

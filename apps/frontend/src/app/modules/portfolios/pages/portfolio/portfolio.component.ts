@@ -28,6 +28,8 @@ export class PortfolioComponent implements OnInit {
 
   moment = moment;
 
+  Infinity = Infinity;
+
   portfolio: PortfolioDto;
 
   portfolioStocks: PortfolioStockDto[];
@@ -48,6 +50,8 @@ export class PortfolioComponent implements OnInit {
 
   portfolioLoaded: boolean;
   stocksLoaded: boolean;
+
+  portfolioStocksNewsItems = [];
 
   portfolioLiked: boolean;
 
@@ -163,6 +167,8 @@ export class PortfolioComponent implements OnInit {
           }
 
           this.setStockPieChartBreakdown();
+
+          this.setStockNews();
         });
 
       // Get the Portfolio's ratings
@@ -497,6 +503,47 @@ export class PortfolioComponent implements OnInit {
           : 0;
 
       this.noNewFollowers = counts.map((countObj: any) => countObj.follower_count).every((num) => num === 0);
+    });
+  }
+
+  /**
+   * Sets the aggregated list of news article for the stocks of the portfolio.
+   */
+  setStockNews(): void {
+    // const top30Holdings = this.portfolioStocks.length
+    //   ? this.portfolioStocks
+    //       .sort((a: PortfolioStockDto, b: PortfolioStockDto) => (b.weighting > a.weighting ? 1 : -1))
+    //       .slice(0, 29)
+    //       .map((p) => p.ticker)
+    //   : [];
+
+    const tickers = this.portfolioStocks.map((p) => p.ticker);
+
+    // this.iexCloudService.batchGetStocks(tickers, ['news']).subscribe((tickerToNewsMap) => {
+    //   const portfolioStocksNews = [];
+    //   for (const [key, value] of Object.entries(tickerToNewsMap)) {
+    //     // For each of the top 10 stocks, add the latest news article for each stock to the portfolio's news feed.
+    //     portfolioStocksNews.push({ ticker: key, ...tickerToNewsMap[key].news[0] });
+
+    //     console.log(tickerToNewsMap);
+
+    //     this.portfolioStocksNewsItems = portfolioStocksNews.sort((a, b) => {
+    //       return b.datetime > a.datetime ? 1 : -1;
+    //     });
+    //   }
+    // });
+
+    this.iexCloudService.batchGetStocks(tickers, ['news']).subscribe((tickerToNewsMap) => {
+      const portfolioStocksNews = [];
+      for (const [key, value] of Object.entries(tickerToNewsMap)) {
+        // For each of the top 10 stocks, add the latest news article for each stock to the portfolio's news feed.
+        // portfolioStocksNews.push({ ticker: key, ...tickerToNewsMap[key].news[0] });
+        portfolioStocksNews.push(...value['news']);
+
+        this.portfolioStocksNewsItems = portfolioStocksNews.sort((a, b) => {
+          return b.datetime > a.datetime ? 1 : -1;
+        });
+      }
     });
   }
 }

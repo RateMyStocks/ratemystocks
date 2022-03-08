@@ -61,4 +61,14 @@ export class IexCloudController {
   ): Promise<IexCloudIntradayPriceDto[] | IexCloudHistoricalPriceDto[]> {
     return this.iexCloudService.getStockChartResults(ticker, range, date);
   }
+
+  /**
+   *
+   * @param ticker
+   * @returns
+   */
+  @Get('/stocks/upcoming-events')
+  getStockUpcomingEvents(@Query('tickers') tickers: string): Promise<any> {
+    return this.iexCloudService.getStockUpcomingEvents(tickers);
+  }
 }

@@ -84,4 +84,22 @@ export class IexCloudService {
     const stockChartResults = await this.httpService.get(chartEndpoint).toPromise();
     return stockChartResults.data;
   }
+
+  /**
+   *
+   * @param ticker
+   */
+  async getStockUpcomingEvents(tickers: string): Promise<any> {
+    const today = new Date();
+    // const stockUpcomingEvents = await this.httpService
+    //   .get(
+    //     `/stock/${ticker}/upcoming-events?from=${[today.getFullYear(), today.getMonth() + 1, today.getDate()].join('')}`
+    //   )
+    //   .toPromise();
+    const stockUpcomingEvents = await this.httpService
+      .get(`/stock/market/batch?symbols=${tickers}&types=upcoming-events`)
+      .toPromise();
+
+    return stockUpcomingEvents.data;
+  }
 }
