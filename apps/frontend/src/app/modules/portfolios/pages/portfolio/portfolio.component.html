@@ -117,6 +117,16 @@
                   </div>
                 </div>
               </div>
+              <div class="p-col-12">
+                <div class="card product-list">
+                  <div class="card-header">
+                      <h6>Comments</h6>
+                  </div>
+                  <div>
+                    <h6>Coming Soon!</h6>
+                  </div>
+                </div>
+              </div>
             </div>
         </div>
 
@@ -150,7 +160,9 @@
                       </div>
                       <div *ngIf="pieChartItems.length > 0">
                           <app-portfolio-breakdown-pie-chart [pieChartItems]="pieChartItems"></app-portfolio-breakdown-pie-chart>
-                          <p-dropdown [options]="portfolioBreakdownCategories" optionLabel="name" (onChange)="setPieChartItems($event)"></p-dropdown>
+                          <div class="p-mt-2" style="text-align: center;">
+                            <p-dropdown [options]="portfolioBreakdownCategories" optionLabel="name" (onChange)="setPieChartItems($event)"></p-dropdown>
+                          </div>
                       </div>
                   </div>
               </div>

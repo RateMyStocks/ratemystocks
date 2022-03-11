@@ -148,6 +148,7 @@
     </div>
   </form>
   <ng-template pTemplate="footer">
+    <p-messages [(value)]="msgs"></p-messages>
     <p-button label="Create" class="p-button-text" (click)="onSubmit()" [disabled]="portfolioForm.invalid"></p-button>
   </ng-template>
 </p-dialog>

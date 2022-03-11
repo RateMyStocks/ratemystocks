@@ -9,7 +9,7 @@ import {
   PortfolioStockDto,
 } from '@ratemystocks/api-interface';
 import * as moment from 'moment';
-import { ConfirmationService, LazyLoadEvent } from 'primeng/api';
+import { ConfirmationService, LazyLoadEvent, MessageService } from 'primeng/api';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -47,13 +47,15 @@ export class PortfoliosTableComponent {
     holdings: new FormArray([]),
   });
 
+  msgs = [];
   constructor(
     private portfolioService: PortfolioService,
     private stockSearchService: StockSearchService,
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) {}
 
   ngOnDestroy(): void {
@@ -119,8 +121,6 @@ export class PortfoliosTableComponent {
       this.portfolioStocks.length === 0 || (this.portfolioStocks.length > 0 && this.getTotalWeighting() === 100);
 
     return this.portfolioForm.valid && portfolioTableValid;
-
-    return false;
   }
 
   /** Submits the form to create a new portfolio in the database. */
@@ -133,37 +133,44 @@ export class PortfoliosTableComponent {
         .pipe(takeUntil(this.ngUnsubscribe.asObservable()))
         .subscribe(
           (portfolio: PortfolioDto) => {
-            // this.dialogRef.close();
-            // this.snackBar.open(`Portfolio successfully created!`, 'OK', {
-            //   duration: 2000,
-            //   panelClass: 'success-snackbar',
-            // });
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success!',
+              detail: `Portfolio successfully created!`,
+            });
             this.router.navigate(['/portfolios', portfolio.id]);
           },
           (error: any) => {
-            // if (error.status === 401) {
-            //   this.snackBar.open('You must login to create a portfolio.', 'OK', {
-            //     duration: 3000,
-            //     panelClass: 'warn-snackbar',
-            //   });
-            // } else if (error.status === 409) {
-            //   this.snackBar.open(error.error.message, '', {
-            //     duration: 3000,
-            //     panelClass: 'error-snackbar',
-            //   });
-            // } else {
-            //   this.snackBar.open('An error has occurred saving your portfolio.', 'OK', {
-            //     duration: 3000,
-            //     panelClass: 'error-snackbar',
-            //   });
-            // }
+            if (error.status === 401) {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Oh noes!',
+                detail: `You must login to create a portfolio.`,
+              });
+            } else if (error.status === 409) {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Oh noes!',
+                detail: `You already created a portfolio with this name.`,
+              });
+            } else {
+              this.messageService.add({
+                severity: 'error',
+                // summary: 'Oh noes!',
+                detail: `An error has occurred saving your portfolio.`,
+              });
+              // this.msgs.push({severity:'info', summary:'Info Message', detail:'PrimeNG rocks'});
+            }
           }
         );
     } else {
-      // this.snackBar.open('Please ensure your total weighting equals 100%.', 'OK', {
-      //   duration: 3000,
-      //   panelClass: 'warn-snackbar',
+      // this.messageService.add({
+      //   severity: 'error',
+      //   summary: 'Oh noes!',
+      //   detail: `Please ensure your total weighting equals 100%.`,
       // });
+      console.log('WARN')
+      this.msgs.push({severity:'warn', detail:'Please ensure your total weighting equals 100%.'});
     }
   }
 
@@ -189,17 +196,13 @@ export class PortfoliosTableComponent {
       portfolioId: null,
     };
 
-    this.portfolioStocks.push(portfolioStock);
+    const stockAlreadyAdded: boolean = this.portfolioStocks
+            .map((stock: PortfolioStockDto) => stock.ticker)
+            .includes(selectStock.symbol.toUpperCase());
 
-    // this.selectedStocks.push(selectStock);
-
-    // const portfolioHoldingFormGroup = new FormGroup({
-    //   ticker: new FormControl(portfolioStock.ticker),
-    //   weighting: new FormControl(0),
-    // });
-    // this.holdings.push(portfolioHoldingFormGroup);
-
-    // console.log(this.holdings);
+    if (!stockAlreadyAdded) {
+      this.portfolioStocks.push(portfolioStock);
+    }
   }
 
   onRemoveStock(selectStock: IexCloudCompanyDto): void {

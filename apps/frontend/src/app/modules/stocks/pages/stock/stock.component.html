@@ -172,7 +172,7 @@
             <div class="card-header">
                 <h6>Company Info</h6>
             </div>
-            <div class="p-mb-2"><small><b>CEO:</b> {{ stock.data.company.CEO }}</small></div>
+            <div class="p-mb-2"><small><b>CEO:</b> {{ stock.data.company?.CEO }}</small></div>
             <div class="p-mb-2">
               <small>
                 <b>Headquarters:</b> {{ stock.data.company.city }},
@@ -184,6 +184,8 @@
             <div class="p-mb-2"><small><b>Industry:</b> {{ stock.data.company?.industry }}</small></div>
             <div class="p-mb-2"><small><b>Sector:</b> {{ stock.data.company?.sector }}</small></div>
             <div class="p-mb-2"><small><b>Website:</b> <a href="https://{{stock.data.company?.website}}" target="_blank"> {{ stock.data.company?.website }}</a></small></div>
+            <div class="p-mb-2"><small><b>Exchange:</b> {{ stock.data.company?.exchange }}</small></div>
+            <div class="p-mb-2"><small><b>Tags:</b> &nbsp; <p-tag *ngFor="let tag of stock.data.company?.tags" [value]="tag" [rounded]="true" class="p-mr-1"></p-tag></small></div>
           </div>
         </div>
 
@@ -245,19 +247,39 @@
         </div>
 
 
-        <!-- <div class="p-col-12">
+        <div class="p-col-12 p-md-12 p-xl-8 p-l-8">
           <p-tabView>
-            <p-tabPanel header="Header 1">
-               Content 1
+            <p-tabPanel header="Financial">
+              Coming Soon!
             </p-tabPanel>
-            <p-tabPanel header="Header 2">
-                Content 2
+            <p-tabPanel header="Dividends">
+              Coming Soon!
             </p-tabPanel>
-            <p-tabPanel header="Header 3">
-                Content 3
+            <p-tabPanel header="Analysis">
+              Coming Soon!
+            </p-tabPanel>
+            <p-tabPanel header="Options">
+              Coming Soon!
+            </p-tabPanel>
+            <p-tabPanel header="Events">
+              Coming Soon!
             </p-tabPanel>
           </p-tabView>
-        </div> -->
+        </div>
+
+        <div class="p-col-12 p-md-12 p-xl-8 p-l-8">
+          <div class="card product-list">
+            <div class="card-header">
+                <h6>Comments</h6>
+            </div>
+            <div>
+              <h6>Coming Soon!</h6>
+            </div>
+          </div>
+        </div>
+
+
+
     </div>
 </div>
 <ng-template #stockNotLoaded>
