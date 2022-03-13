@@ -32,3 +32,5 @@ export {
   StockRatingListItem,
   StockRatingDto,
 } from './models';
+
+export { StockUpcomingEventDto } from './stocks/stock-upcoming-event-dto';

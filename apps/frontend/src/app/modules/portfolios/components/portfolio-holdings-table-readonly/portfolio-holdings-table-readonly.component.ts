@@ -25,19 +25,6 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
   IexCloudSecurityType = IexCloudSecurityType;
   FilterType = FilterType;
 
-  displayedColumns: string[] = [
-    'logo',
-    'ticker',
-    'weighting',
-    'price',
-    'securityType',
-    'country',
-    'sector',
-    'dividendYield',
-    'marketCap',
-    'peRatio',
-  ];
-
   // dataSource: MatTableDataSource<PortfolioStockDto>;
 
   // @ViewChild('input') textFilter: ElementRef;
@@ -118,16 +105,14 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
   }
 
   ngOnChanges() {
-    if (this.iexStockDataMap) {
-      this.countryList = new Set();
-      this.sectorList = new Set();
-
-      this.portfolioStocks.forEach((stock: PortfolioStockDto) => {
-        this.countryList.add(this.iexStockDataMap[stock.ticker]?.company?.country);
-        this.sectorList.add(this.iexStockDataMap[stock.ticker]?.company?.sector);
-      });
-    }
-
+    // if (this.iexStockDataMap) {
+    //   this.countryList = new Set();
+    //   this.sectorList = new Set();
+    //   this.portfolioStocks.forEach((stock: PortfolioStockDto) => {
+    //     this.countryList.add(this.iexStockDataMap[stock.ticker]?.company?.country);
+    //     this.sectorList.add(this.iexStockDataMap[stock.ticker]?.company?.sector);
+    //   });
+    // }
     // Refresh table when datasource changes
     // this.dataSource.data = this.portfolioStocks;
   }
@@ -370,6 +355,12 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
       });
     } else {
       event.data.sort((data1, data2) => {
+        console.log(
+          'SORTING',
+          data1[event.field],
+          data2[event.field],
+          this.sortCompare(event, data1[event.field], data2[event.field])
+        );
         return this.sortCompare(event, data1[event.field], data2[event.field]);
       });
     }

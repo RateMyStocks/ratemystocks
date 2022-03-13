@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PortfolioStockDto } from '@ratemystocks/api-interface';
+import { PortfolioStockDto, StockUpcomingEventDto } from '@ratemystocks/api-interface';
 import { IexCloudService } from '../../../../core/services/iex-cloud.service';
 
 export interface CalendarEvent {
@@ -27,36 +27,42 @@ export class PortfolioCalendarComponent implements OnInit {
   constructor(private iexCloudService: IexCloudService) {}
 
   ngOnInit() {
-    this.iexCloudService.getStockUpcomingEvents(this.portfolioStocks.map((ps) => ps.ticker)).subscribe((res) => {
-      Object.keys(res).forEach((key, index) => {
-        const earningsDatesCalendarEvents: CalendarEvent[] = res[key]['upcoming-events']['earnings'].map((event) => {
-          return {
-            title: key,
-            date: event['reportDate'],
-            color: 'orange',
+    this.iexCloudService
+      .getStockUpcomingEvents(this.portfolioStocks.map((ps: PortfolioStockDto) => ps.ticker))
+      .subscribe((res: StockUpcomingEventDto) => {
+        Object.keys(res).forEach((ticker: string, index: number) => {
+          const earningsDatesCalendarEvents: CalendarEvent[] = res[ticker]['upcoming-events'].earnings.map((event) => {
+            return {
+              title: ticker,
+              date: event.reportDate,
+              color: 'orange',
+              textColor: 'white',
+            };
+          });
+
+          const dividendDatesCalendarEvents: CalendarEvent[] = res[ticker]['upcoming-events'].dividends.map(
+            (event) => ({
+              title: ticker,
+              date: event.reportDate,
+              color: 'green',
+              textColor: 'white',
+            })
+          );
+
+          const splitDatesCalendarEvents: CalendarEvent[] = res[ticker]['upcoming-events'].splits.map((event) => ({
+            title: ticker,
+            date: event.reportDate,
+            color: 'purple',
             textColor: 'white',
-          };
+          }));
+
+          this.events.push(...earningsDatesCalendarEvents);
+          this.events.push(...dividendDatesCalendarEvents);
+          this.events.push(...splitDatesCalendarEvents);
         });
 
-        const dividendDatesCalendarEvents: CalendarEvent[] = res[key]['upcoming-events']['dividends'].map((event) => ({
-          title: key,
-          date: event['reportDate'],
-          color: 'green',
-          textColor: 'white',
-        }));
-
-        const splitDatesCalendarEvents: CalendarEvent[] = res[key]['upcoming-events']['splits'].map((event) => ({
-          title: key,
-          date: event['reportDate'],
-          color: 'purple',
-          textColor: 'white',
-        }));
-
-        this.events.push(...earningsDatesCalendarEvents);
+        this.options = { ...this.options, ...{ events: this.events } };
       });
-
-      this.options = { ...this.options, ...{ events: this.events } };
-    });
 
     this.options = {
       initialDate: new Date(),
@@ -68,6 +74,7 @@ export class PortfolioCalendarComponent implements OnInit {
       selectable: true,
       selectMirror: true,
       dayMaxEvents: true,
+      height: 400,
       validRange: {
         start: new Date(),
       },

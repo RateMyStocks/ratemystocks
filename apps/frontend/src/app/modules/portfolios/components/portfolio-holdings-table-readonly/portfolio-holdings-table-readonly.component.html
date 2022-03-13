@@ -1,28 +1,27 @@
-<!-- <div *ngIf="portfolioStocks"> -->
-  <p-table [value]="portfolioStocks" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
-  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" styleClass="p-datatable-sm p-datatable-striped" [rowsPerPageOptions]="[10,25,50]" (sortFunction)="customSort($event)" [customSort]="true" sortField="weighting" [sortOrder]="-1">
+<div *ngIf="portfolioStocks">
+  <p-table [value]="portfolioStocks" [scrollable]="true" scrollHeight="600px" responsiveLayout="scroll" styleClass="p-datatable-sm p-datatable-striped" (sortFunction)="customSort($event)" [customSort]="true" sortField="weighting">
     <ng-template pTemplate="caption">
       <div class="p-d-flex">
         <button type="button" pButton pRipple icon="pi pi-file-o" (click)="dt.exportCSV()" class="p-mr-2" pTooltip="CSV" tooltipPosition="bottom"></button>
         <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()" class="p-button-success p-mr-2"  pTooltip="XLS" tooltipPosition="bottom"></button>
         <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdf()" class="p-button-warning p-mr-2" pTooltip="PDF" tooltipPosition="bottom"></button>
-        <button type="button" pButton pRipple icon="pi pi-filter" (click)="dt.exportCSV({selectionOnly:true})" class="p-button-info p-ml-auto" pTooltip="Selection Only" tooltipPosition="bottom"></button>
+        <!-- <button type="button" pButton pRipple icon="pi pi-filter" (click)="dt.exportCSV({selectionOnly:true})" class="p-button-info p-ml-auto" pTooltip="Selection Only" tooltipPosition="bottom"></button> -->
       </div>
     </ng-template>
     <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="ticker">Company <p-sortIcon field="ticker"></p-sortIcon></th>
           <th pSortableColumn="weighting" >Weighting<p-sortIcon field="weighting"></p-sortIcon></th>
-          <th>Price</th>
-          <th>Div. Yield</th>
-          <th>Market Cap</th>
-          <th>PE Ratio</th>
-          <th>Country</th>
-          <th>Sector</th>
+          <th pSortableColumn="price">Price</th>
+          <th pSortableColumn="dividendYield">Div. Yield</th>
+          <th pSortableColumn="marketCap">Market Cap</th>
+          <th pSortableColumn="peRatio">PE Ratio</th>
+          <th pSortableColumn="country">Country</th>
+          <th pSortableColumn="sector">Sector</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-portfolioStock>
-        <tr *ngIf="portfolioStock">
+        <tr>
           <td>
             <div class="centered-content">
               <img
@@ -48,7 +47,7 @@
           <td><span *ngIf="iexStockDataMap"><small>{{ iexStockDataMap[portfolioStock.ticker]?.company?.country }}</small></span></td>
           <td><span *ngIf="iexStockDataMap"><small>{{ iexStockDataMap[portfolioStock.ticker]?.company?.sector | truncate:[20, '...'] }}</small></span></td>
         </tr>
-        <tr *ngIf="!portfolioStock">
+        <!-- <tr *ngIf="!portfolioStock">
           <td><p-skeleton></p-skeleton></td>
           <td><p-skeleton></p-skeleton></td>
           <td><p-skeleton></p-skeleton></td>
@@ -56,7 +55,7 @@
           <td><p-skeleton></p-skeleton></td>
           <td><p-skeleton></p-skeleton></td>
           <td><p-skeleton></p-skeleton></td>
-        </tr>
+        </tr> -->
     </ng-template>
     <ng-template pTemplate="footer">
       <tr>
@@ -81,4 +80,4 @@
         <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
     </ng-template> -->
   </p-table>
-<!-- </div> -->
+</div>
