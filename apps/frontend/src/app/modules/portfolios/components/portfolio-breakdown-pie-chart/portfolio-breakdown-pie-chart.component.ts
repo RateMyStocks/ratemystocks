@@ -12,19 +12,10 @@ export class PortfolioBreakdownPieChartComponent implements OnInit, OnChanges {
 
   @Input()
   pieChartItems: { name: string; value: string }[];
-  // pieChartItems: PieChartItem[];
-
-  // @Input()
-  // dataValues: number[] = [];
 
   chartOptions: any;
 
   subscription: Subscription;
-
-  // config: AppConfig;
-
-  // constructor(private configService: AppConfigService) {}
-  constructor() {}
 
   ngOnInit() {
     this.data = {

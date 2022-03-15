@@ -16,8 +16,6 @@ export class StockPageCommentsComponent implements OnInit {
   comments = [];
   totalComments = 0;
 
-  constructor() {}
-
   ngOnInit(): void {
     this.comments = [
       { username: 'gabelorenzo', comment: 'First Comment', datetime: '1/1/2022' },
@@ -37,14 +35,13 @@ export class StockPageCommentsComponent implements OnInit {
     //simulate remote connection with a timeout
     setTimeout(() => {
       //load data of required page
-      let loadedComments = this.comments.slice(event.first, event.first + event.rows);
+      const loadedComments = this.comments.slice(event.first, event.first + event.rows);
 
       //populate page of virtual cars
       Array.prototype.splice.apply(this.comments, [...[event.first, event.rows], ...loadedComments]);
 
       //trigger change detection
       this.comments = [...this.comments];
-      console.log(this.comments);
     }, 4000);
   }
 }

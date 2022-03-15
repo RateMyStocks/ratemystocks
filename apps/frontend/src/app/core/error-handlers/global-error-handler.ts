@@ -22,7 +22,6 @@ export class GlobalErrorHandler implements ErrorHandler {
       errorType = 'Unknown Client Error';
     }
     this.ngZone.run(() => {
-      console.log(error);
       this.messageService.add({
         severity: 'warn',
         summary: 'Oh noes!',

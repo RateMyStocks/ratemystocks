@@ -178,7 +178,6 @@ export class AuthService {
       },
       (error: any) => {
         this.authStatusListener.next(false);
-        console.log(error);
         // if (error.status && error.status === StatusCodes.UNAUTHORIZED) {
         //   this.messageService.add({
         //     severity: 'error',

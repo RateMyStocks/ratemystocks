@@ -76,7 +76,7 @@
                   <div class="card-header">
                     <h6>Holdings</h6>
                   </div>
-                  <div>
+                  <div *ngIf="portfolioStocks">
                     <app-portfolio-holdings-table-readonly [portfolioStocks]="portfolioStocks" [iexStockDataMap]="iexStockDataMap"></app-portfolio-holdings-table-readonly>
                   </div>
                 </div>
@@ -87,14 +87,14 @@
                   <div class="card-header">
                       <h6>News</h6>
                   </div>
-                  <ul style="max-height:400px;margin:0;overflow:auto;">
+                  <ul style="max-height:400px;margin:0;overflow:auto;" *ngIf="portfolioStocks">
                       <li *ngFor="let article of portfolioStocksNewsItems">
                         <a href="{{article?.url}}" target="_blank">
                           <div class="product">
                             <img src="{{article?.image}}" onerror="this.onerror=null; this.src=''" />
                             <div class="product-info">
-                                <!-- <small style="background-color: rgb(72, 177, 46); color: white; padding: 3px;  border-radius: 3px;"><b>{{ article.ticker }}</b></small> -->
-                                <p><b>{{article?.headline | truncate:[50, '...'] }}</b></p>
+                                <small *ngFor="let ticker of article?.tickers" class="p-mr-1" style="background-color: rgb(72, 177, 46); color: white; padding: 3px;  border-radius: 3px;"><b>{{ ticker }}</b></small>
+                                <p style="font-size: small;"><b>{{article?.headline | truncate:[50, '...'] }}</b></p>
                                 <small>{{article?.source}}</small>
                                 &#8226;
                                 <small>{{ moment(article?.datetime).fromNow() }}</small>

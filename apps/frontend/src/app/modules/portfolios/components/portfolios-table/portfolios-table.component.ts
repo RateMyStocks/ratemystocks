@@ -169,7 +169,6 @@ export class PortfoliosTableComponent {
       //   summary: 'Oh noes!',
       //   detail: `Please ensure your total weighting equals 100%.`,
       // });
-      console.log('WARN')
       this.msgs.push({severity:'warn', detail:'Please ensure your total weighting equals 100%.'});
     }
   }

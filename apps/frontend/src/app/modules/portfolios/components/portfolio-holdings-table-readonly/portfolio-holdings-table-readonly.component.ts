@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, Component, ElementRef, Input, OnChanges, ViewChild } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { MoneyFormatter } from '../../../../shared/utilities/money-formatter';
 import * as _ from 'lodash';
 import { FormControl } from '@angular/forms';
@@ -19,7 +19,7 @@ enum FilterType {
   templateUrl: './portfolio-holdings-table-readonly.component.html',
   styleUrls: ['./portfolio-holdings-table-readonly.component.scss'],
 })
-export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, AfterContentInit, OnChanges {
+export class PortfolioHoldingsTableReadonlyComponent implements OnInit, AfterViewInit, AfterContentInit, OnChanges {
   // MoneyFormatter & FilterType are needed in the HTML template, so they must be initialized like this
   MoneyFormatter = MoneyFormatter;
   IexCloudSecurityType = IexCloudSecurityType;
@@ -36,6 +36,8 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
 
   @Input()
   portfolioStocks: PortfolioStockDto[];
+
+  holdings : PortfolioStockDto[];
 
   // TODO: Need interface for this
   @Input()
@@ -66,6 +68,10 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
   constructor() {
     // Assign the data to the data source for the table to render
     // this.dataSource = new MatTableDataSource(this.portfolioStocks);
+  }
+
+  ngOnInit(): void {
+      this.holdings = [...this.portfolioStocks];
   }
 
   ngAfterViewInit() {
@@ -102,6 +108,7 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
     //       .map((stock: PortfolioStockDto) => stock.weighting)
     //       .reduce((acc: number, currentValue: number) => acc + currentValue)
     //   : 0;
+    console.log('TEST');
   }
 
   ngOnChanges() {
@@ -115,6 +122,7 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
     // }
     // Refresh table when datasource changes
     // this.dataSource.data = this.portfolioStocks;
+    console.log('TEST');
   }
 
   calculateTopTenTotalWeighting() {
@@ -312,6 +320,26 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
    *
    * @param event
    */
+  //  customSort(event: SortEvent) {
+  //   event.data.sort((data1, data2) => {
+  //       let value1 = data1[event.field];
+  //       let value2 = data2[event.field];
+  //       let result = null;
+
+  //       if (value1 == null && value2 != null)
+  //           result = -1;
+  //       else if (value1 != null && value2 == null)
+  //           result = 1;
+  //       else if (value1 == null && value2 == null)
+  //           result = 0;
+  //       else if (typeof value1 === 'string' && typeof value2 === 'string')
+  //           result = value1.localeCompare(value2);
+  //       else
+  //           result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
+
+  //       return (event.order * result);
+  //   });
+  // }
   customSort(event: SortEvent) {
     if (event.field === 'country') {
       event.data.sort((data1, data2) => {
