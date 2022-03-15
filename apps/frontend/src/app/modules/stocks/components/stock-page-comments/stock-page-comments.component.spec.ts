@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { StocksModule } from '../../stocks.module';
 
 import { StockPageCommentsComponent } from './stock-page-comments.component';
 
@@ -8,9 +9,9 @@ describe('StockPageCommentsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StockPageCommentsComponent ]
-    })
-    .compileComponents();
+      declarations: [StockPageCommentsComponent],
+      imports: [StocksModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -1,5 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { AppBreadcrumbService } from '../../../../app.breadcrumb.service';
 import { PortfoliosModule } from '../../portfolios.module';
 
@@ -12,12 +14,14 @@ describe('PortfolioComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PortfolioComponent],
-      imports: [PortfoliosModule, HttpClientTestingModule],
+      imports: [PortfoliosModule, HttpClientTestingModule, RouterTestingModule],
       providers: [
         {
           provide: AppBreadcrumbService,
           useValue: new AppBreadcrumbService(),
         },
+        MessageService,
+        ConfirmationService,
       ],
     }).compileComponents();
   });

@@ -1,4 +1,13 @@
-import { AfterContentInit, AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterContentInit,
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MoneyFormatter } from '../../../../shared/utilities/money-formatter';
 import * as _ from 'lodash';
 import { FormControl } from '@angular/forms';
@@ -37,7 +46,7 @@ export class PortfolioHoldingsTableReadonlyComponent implements OnInit, AfterVie
   @Input()
   portfolioStocks: PortfolioStockDto[];
 
-  holdings : PortfolioStockDto[];
+  holdings: PortfolioStockDto[];
 
   // TODO: Need interface for this
   @Input()
@@ -71,7 +80,7 @@ export class PortfolioHoldingsTableReadonlyComponent implements OnInit, AfterVie
   }
 
   ngOnInit(): void {
-      this.holdings = [...this.portfolioStocks];
+    this.holdings = [...this.portfolioStocks];
   }
 
   ngAfterViewInit() {
@@ -383,12 +392,6 @@ export class PortfolioHoldingsTableReadonlyComponent implements OnInit, AfterVie
       });
     } else {
       event.data.sort((data1, data2) => {
-        console.log(
-          'SORTING',
-          data1[event.field],
-          data2[event.field],
-          this.sortCompare(event, data1[event.field], data2[event.field])
-        );
         return this.sortCompare(event, data1[event.field], data2[event.field]);
       });
     }
