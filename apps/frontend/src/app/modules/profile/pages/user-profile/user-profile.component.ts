@@ -88,8 +88,6 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         (user: UserProfileDto) => {
           this.user = user;
 
-          console.log(this.user);
-
           this.userLoaded = true;
 
           this.breadcrumbService.setItems([

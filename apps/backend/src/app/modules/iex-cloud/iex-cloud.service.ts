@@ -6,6 +6,7 @@ import {
   IexCloudStockDataDto,
   IexCloudStockInfoDto,
   StockPriceRange,
+  StockUpcomingEventDto,
 } from '@ratemystocks/api-interface';
 
 require('dotenv').config();
@@ -83,5 +84,18 @@ export class IexCloudService {
     }
     const stockChartResults = await this.httpService.get(chartEndpoint).toPromise();
     return stockChartResults.data;
+  }
+
+  /**
+   * Returns the upcoming event dates for a set of stocks.
+   * @param tickers A comma delimited list of ticker symbols.
+   * @returns An object containing ticker symbols mapped to that stock's upcoming event dates.
+   */
+  async getStockUpcomingEvents(tickers: string): Promise<StockUpcomingEventDto> {
+    const stockUpcomingEvents = await this.httpService
+      .get(`/stock/market/batch?symbols=${tickers}&types=upcoming-events`)
+      .toPromise();
+
+    return stockUpcomingEvents.data;
   }
 }

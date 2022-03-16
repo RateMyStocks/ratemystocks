@@ -9,6 +9,8 @@ import { Portfolio } from '../../../models/portfolio.entity';
 import { PortfolioStock } from '../../../models/portfolioStock.entity';
 import { CreatePortfolioDto, CreatePortfolioRatingDto } from '@ratemystocks/api-interface';
 import { PortfolioRating } from '../../../models/portfolioRating.entity';
+import { PortfolioVisitRepository } from './portfolio-visit.repository';
+import { PortfolioFollowerRepository } from './portfolio-follower.repository';
 
 const mockUserAccount: UserAccount = new UserAccount();
 mockUserAccount.id = 'a800714b-ab7e-464c-aebd-d8ec17af2fd0';
@@ -36,11 +38,25 @@ const mockPortfolioStockRepository = () => ({
   find: jest.fn(),
 });
 
+const mockPortfolioVisitRepository = () => ({
+  addPortfolioPageVisit: jest.fn(),
+  getVisitCounts: jest.fn(),
+});
+
+const mockPortfolioFollowerRepository = () => ({
+  followPortfolio: jest.fn(),
+  delete: jest.fn(),
+  count: jest.fn(),
+  getFollowerCountsLastNDays: jest.fn(),
+});
+
 describe('PortfolioService', () => {
   let service: PortfolioService;
   let repository: PortfolioRepository;
   let portfolioRatingRepository: PortfolioRatingRepository;
   let portfolioStockRepository: PortfolioStockRepository;
+  let portfolioVisitRepository: PortfolioVisitRepository;
+  let portfolioFollowerRepository: PortfolioFollowerRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -49,6 +65,8 @@ describe('PortfolioService', () => {
         { provide: PortfolioRepository, useFactory: mockPortfolioRepository },
         { provide: PortfolioRatingRepository, useFactory: mockPortfolioRatingRepository },
         { provide: PortfolioStockRepository, useFactory: mockPortfolioStockRepository },
+        { provide: PortfolioVisitRepository, useFactory: mockPortfolioVisitRepository },
+        { provide: PortfolioFollowerRepository, useFactory: mockPortfolioFollowerRepository },
       ],
     }).compile();
 
@@ -56,6 +74,8 @@ describe('PortfolioService', () => {
     repository = module.get<PortfolioRepository>(PortfolioRepository);
     portfolioRatingRepository = module.get<PortfolioRatingRepository>(PortfolioRatingRepository);
     portfolioStockRepository = module.get<PortfolioStockRepository>(PortfolioStockRepository);
+    portfolioVisitRepository = module.get<PortfolioVisitRepository>(PortfolioVisitRepository);
+    portfolioFollowerRepository = module.get<PortfolioFollowerRepository>(PortfolioFollowerRepository);
   });
 
   describe('getPortfolioById', () => {

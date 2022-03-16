@@ -129,9 +129,6 @@ export class StockPerformanceChartComponent implements OnInit, OnChanges {
       .subscribe(data => {
         const highChartsData = this.mapIexCloudHistoricalPricesToHighchartsFormat(data);
 
-        console.log('HIGHCHARTS DATA: ', highChartsData)
-        console.log('CHART:', chart);
-
         chart.series[0].setData(highChartsData);
         chart.hideLoading();
       });

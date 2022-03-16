@@ -8,26 +8,39 @@ import { TruncatePipe } from './pipes/truncate.pipe';
 import { RoundingPipe } from './pipes/rounding.pipe';
 import { AbbreviatedCurrencyFormatterPipe } from './pipes/abbreviated-currency-formatter.pipe';
 import { MomentFromNowDatePipe } from './pipes/moment-from-now-date.pipe';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxPieChartComponent } from './components/ngx-pie-chart/ngx-pie-chart.component';
+import { CopyPageLinkComponent } from './components/copy-page-link/copy-page-link.component';
+import { ShareOnSocialMediaSpeedDialComponent } from './components/share-on-social-media-speed-dial/share-on-social-media-speed-dial.component';
+import { FormsModule } from '@angular/forms';
+import { PrimeNGModule } from '../primeng.module';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
   declarations: [
     AbbreviatedCurrencyFormatterPipe,
     EmailFormFieldValidatorPipe,
     MomentFromNowDatePipe,
+    NgxPieChartComponent,
     PasswordFormFieldValidatorPipe,
     PasswordReenterFormFieldValidatorPipe,
     RoundingPipe,
     TruncatePipe,
     UsernameFormFieldValidatorPipe,
+    CopyPageLinkComponent,
+    ShareOnSocialMediaSpeedDialComponent,
   ],
-  imports: [CommonModule],
+  imports: [ClipboardModule, CommonModule, FormsModule, NgxChartsModule, PrimeNGModule],
   exports: [
     AbbreviatedCurrencyFormatterPipe,
+    CopyPageLinkComponent,
     EmailFormFieldValidatorPipe,
     MomentFromNowDatePipe,
+    NgxPieChartComponent,
     PasswordFormFieldValidatorPipe,
     PasswordReenterFormFieldValidatorPipe,
     RoundingPipe,
+    ShareOnSocialMediaSpeedDialComponent,
     TruncatePipe,
     UsernameFormFieldValidatorPipe,
   ],

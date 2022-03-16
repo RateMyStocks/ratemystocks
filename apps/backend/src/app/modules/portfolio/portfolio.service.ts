@@ -15,6 +15,8 @@ import { Portfolio } from '../../../models/portfolio.entity';
 import { PortfolioStock } from '../../../models/portfolioStock.entity';
 import { UserAccount } from '../../../models/userAccount.entity';
 import { PortfolioRating } from '../../../models/portfolioRating.entity';
+import { PortfolioVisitRepository } from './portfolio-visit.repository';
+import { PortfolioFollowerRepository } from './portfolio-follower.repository';
 
 @Injectable()
 export class PortfolioService {
@@ -24,7 +26,11 @@ export class PortfolioService {
     @InjectRepository(PortfolioRatingRepository)
     private portfolioRatingRepository,
     @InjectRepository(PortfolioStockRepository)
-    private portfolioStockRepository: PortfolioStockRepository
+    private portfolioStockRepository: PortfolioStockRepository,
+    @InjectRepository(PortfolioVisitRepository)
+    private portfolioVisitRepository: PortfolioVisitRepository,
+    @InjectRepository(PortfolioFollowerRepository)
+    private portfolioFollowerRepository: PortfolioFollowerRepository
   ) {}
 
   /**
@@ -347,5 +353,80 @@ export class PortfolioService {
     if (result.affected === 0) {
       throw new NotFoundException(`Portfolio Rating with ID "${portfolioRatingId} not found`);
     }
+  }
+
+  /**
+   * Adds a visit to the portfolio_visit table indicating a page visit for some portfolio.
+   * @param portfolioId The portfolioId of the portfolio being visited.
+   * @param userId (Optional) If a logged-in user visits the portfolio page, this query parameter will be supplied.
+   * @returns The number of page visits for a given portfolio
+   */
+  async addPortfolioPageVisit(ticker: string, userId?: string): Promise<number> {
+    return this.portfolioVisitRepository.addPortfolioPageVisit(ticker, userId);
+  }
+
+  /**
+   * Returns a list of the portfolio page visit counts for the last N days (defaults to 6).
+   * @param portfolioId The id of the portfolio to get the visit count sfor.
+   * @param lastNDays Query param indicating the number of days from the current day to get visit counts for.
+   * @returns A list of the portfolio page visit counts for the last N days.
+   */
+  async getVisitCounts(ticker: string, lastNDays: number): Promise<any[]> {
+    return this.portfolioVisitRepository.getVisitCounts(ticker, lastNDays);
+  }
+
+  /**
+   * Creating an entry in the portfolio_follower table allowing a user to follow a portfolio.
+   * @param userAccount The logged-in user following the portfolio.
+   * @param portfolioId The id of the portfolio being followed.
+   * @returns The number of page visits for a given portfolio.
+   */
+  async followPortfolio(userAccount: UserAccount, portfolioId: string): Promise<void> {
+    return this.portfolioFollowerRepository.followPortfolio(userAccount, portfolioId);
+  }
+
+  /**
+   * Deletes the entry in the portfolio_follower table, so the specified user
+   * will unfollow a portfolio if it is already following it.
+   * @param userAccount The account object of the logged-in user.
+   * @param portfolioID The id of the portfolio the user is following.
+   * @throws 404 If the user specified isn't actually following the portfolio.
+   */
+  async unfollowPortfolio(userAccount: UserAccount, portfolioId: string): Promise<void> {
+    const result = await this.portfolioFollowerRepository.delete({ userId: userAccount.id, portfolioId });
+    if (result.affected === 0) {
+      throw new NotFoundException(`${userAccount.username} is not following ${portfolioId}.`);
+    }
+  }
+
+  /**
+   * Returns true if the logged-in user is following a given portfolio, false otherwise.
+   * @param userAccount The UserAccount object of the logged-in user.
+   * @param portfolioId The id of the portfolio to check against.
+   * @returns true if the logged-in user is following a given portfolio, false otherwise.
+   */
+  async isFollowingPortfolio(userAccount: UserAccount, portfolioId: string): Promise<boolean> {
+    const count: number = await this.portfolioFollowerRepository.count({ userId: userAccount.id, portfolioId });
+
+    return count === 1;
+  }
+
+  /**
+   * Gets the number of followers for a given portfolio.
+   * @param portfolioId The id of the portfolio to get the number of followers for.
+   * @return The number of followers for a given portfolio.
+   */
+  async getTotalFollowerCounts(portfolioId: string): Promise<number> {
+    return await this.portfolioFollowerRepository.count({ where: { portfolioId } });
+  }
+
+  /**
+   * Gets the number of followers by day for a given portfolio over a given time period.
+   * @param portfolioId The id of the portfolio to get the number of followers for.
+   * @param lastNDays Optional query parameter indicating the past number of days to get counts for.
+   * @return The number of followers by day for a given portfolio over a given time period.
+   */
+  async getFollowerCountsLastNDays(portfolioId: string, lastNDays: number): Promise<any> {
+    return this.portfolioFollowerRepository.getFollowerCountsLastNDays(portfolioId, lastNDays);
   }
 }

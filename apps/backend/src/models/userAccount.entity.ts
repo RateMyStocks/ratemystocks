@@ -6,6 +6,8 @@ import { StockRating } from './stockRating.entity';
 import { SpiritAnimal, UserRole } from '@ratemystocks/api-interface';
 import { StockFollower } from './stockFollower.entity';
 import { StockVisit } from './stockVisit.entity';
+import { PortfolioVisit } from './portfolioVisit.entity';
+import { PortfolioFollower } from './portfolioFollower.entity';
 
 @Entity({ name: 'user_account' })
 @Unique('uq_user_account_username', ['username'])
@@ -43,6 +45,15 @@ export class UserAccount extends BaseEntity {
   @OneToMany((type) => StockFollower, (stockFollower) => stockFollower.userAccount, { eager: false, cascade: true })
   stockFollowers: StockFollower[];
 
+  @OneToMany((type) => PortfolioVisit, (portfolioVisit) => portfolioVisit.userAccount, { eager: false, cascade: true })
+  portfolioVisits: PortfolioVisit[];
+
+  @OneToMany((type) => PortfolioFollower, (portfolioFollower) => portfolioFollower.userAccount, {
+    eager: false,
+    cascade: true,
+  })
+  portfolioFollowers: PortfolioFollower[];
+
   // @Column({
   //   type: 'enum',
   //   enum: UserRole,
@@ -67,6 +78,7 @@ export class UserAccount extends BaseEntity {
   @Column({ type: 'boolean', nullable: false, default: false })
   emailVerified: boolean;
 
+  // TODO: Get rid of this since we have portfolio followers table?
   @ManyToMany(() => Portfolio, (portfolio) => portfolio.usersSaved, {
     cascade: true,
   })

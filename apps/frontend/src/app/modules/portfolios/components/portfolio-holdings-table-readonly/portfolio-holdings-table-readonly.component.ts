@@ -1,11 +1,21 @@
-import { AfterContentInit, AfterViewInit, Component, ElementRef, Input, OnChanges, ViewChild } from '@angular/core';
+import {
+  AfterContentInit,
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MoneyFormatter } from '../../../../shared/utilities/money-formatter';
 import * as _ from 'lodash';
 import { FormControl } from '@angular/forms';
 import { MarketCap } from '../../../../shared/models/enums/market-cap';
 import { MarketCapThresholds } from '../../../../shared/models/enums/market-cap-thresholds';
 import { PortfolioStockDto, IexCloudSecurityType } from '@ratemystocks/api-interface';
-
+import { SortEvent } from 'primeng/api';
+// import * as FileSaver from 'file-saver';
 enum FilterType {
   Search,
   Country,
@@ -18,24 +28,11 @@ enum FilterType {
   templateUrl: './portfolio-holdings-table-readonly.component.html',
   styleUrls: ['./portfolio-holdings-table-readonly.component.scss'],
 })
-export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, AfterContentInit, OnChanges {
+export class PortfolioHoldingsTableReadonlyComponent implements OnInit, AfterViewInit, AfterContentInit, OnChanges {
   // MoneyFormatter & FilterType are needed in the HTML template, so they must be initialized like this
   MoneyFormatter = MoneyFormatter;
   IexCloudSecurityType = IexCloudSecurityType;
   FilterType = FilterType;
-
-  displayedColumns: string[] = [
-    'logo',
-    'ticker',
-    'weighting',
-    'price',
-    'securityType',
-    'country',
-    'sector',
-    'dividendYield',
-    'marketCap',
-    'peRatio',
-  ];
 
   // dataSource: MatTableDataSource<PortfolioStockDto>;
 
@@ -48,6 +45,8 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
 
   @Input()
   portfolioStocks: PortfolioStockDto[];
+
+  holdings: PortfolioStockDto[];
 
   // TODO: Need interface for this
   @Input()
@@ -80,6 +79,10 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
     // this.dataSource = new MatTableDataSource(this.portfolioStocks);
   }
 
+  ngOnInit(): void {
+    this.holdings = [...this.portfolioStocks];
+  }
+
   ngAfterViewInit() {
     // this.dataSource = new MatTableDataSource(this.portfolioStocks);
     // this.dataSource.paginator = this.paginator;
@@ -106,28 +109,40 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
   }
 
   ngAfterContentInit() {
-    this.topTenTotalWeighting = this.portfolioStocks.length
+    // // TODO: Make this a pipe
+    // this.topTenTotalWeighting = this.portfolioStocks.length
+    //   ? _.sortBy(this.portfolioStocks, 'weighting')
+    //       .reverse()
+    //       .slice(0, 10)
+    //       .map((stock: PortfolioStockDto) => stock.weighting)
+    //       .reduce((acc: number, currentValue: number) => acc + currentValue)
+    //   : 0;
+    console.log('TEST');
+  }
+
+  ngOnChanges() {
+    // if (this.iexStockDataMap) {
+    //   this.countryList = new Set();
+    //   this.sectorList = new Set();
+    //   this.portfolioStocks.forEach((stock: PortfolioStockDto) => {
+    //     this.countryList.add(this.iexStockDataMap[stock.ticker]?.company?.country);
+    //     this.sectorList.add(this.iexStockDataMap[stock.ticker]?.company?.sector);
+    //   });
+    // }
+    // Refresh table when datasource changes
+    // this.dataSource.data = this.portfolioStocks;
+    console.log('TEST');
+  }
+
+  calculateTopTenTotalWeighting() {
+    // TODO: Make this a pipe
+    return this.portfolioStocks.length
       ? _.sortBy(this.portfolioStocks, 'weighting')
           .reverse()
           .slice(0, 10)
           .map((stock: PortfolioStockDto) => stock.weighting)
           .reduce((acc: number, currentValue: number) => acc + currentValue)
       : 0;
-  }
-
-  ngOnChanges() {
-    if (this.iexStockDataMap) {
-      this.countryList = new Set();
-      this.sectorList = new Set();
-
-      this.portfolioStocks.forEach((stock: PortfolioStockDto) => {
-        this.countryList.add(this.iexStockDataMap[stock.ticker]?.company?.country);
-        this.sectorList.add(this.iexStockDataMap[stock.ticker]?.company?.sector);
-      });
-    }
-
-    // Refresh table when datasource changes
-    // this.dataSource.data = this.portfolioStocks;
   }
 
   /**
@@ -280,5 +295,119 @@ export class PortfolioHoldingsTableReadonlyComponent implements AfterViewInit, A
     // this.marketCapFilterDropdown.options.forEach((data: MatOption) => data.deselect());
     // // triggers the filterPredicate, so must be called at the end
     // this.dataSource.filter = '';
+  }
+
+  exportPdf() {
+    // import("jspdf").then(jsPDF => {
+    //     import("jspdf-autotable").then(x => {
+    //         const doc = new jsPDF.default(0,0);
+    //         doc.autoTable(this.exportColumns, this.products);
+    //         doc.save('products.pdf');
+    //     })
+    // })
+  }
+
+  exportExcel() {
+    // import("xlsx").then(xlsx => {
+    //     const worksheet = xlsx.utils.json_to_sheet(this.products);
+    //     const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    //     const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+    //     this.saveAsExcelFile(excelBuffer, "products");
+    // });
+  }
+
+  saveAsExcelFile(buffer: any, fileName: string): void {
+    // const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    // const EXCEL_EXTENSION = '.xlsx';
+    // const data: Blob = new Blob([buffer], {
+    //     type: EXCEL_TYPE
+    // });
+    // FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+  }
+
+  /**
+   *
+   * @param event
+   */
+  //  customSort(event: SortEvent) {
+  //   event.data.sort((data1, data2) => {
+  //       let value1 = data1[event.field];
+  //       let value2 = data2[event.field];
+  //       let result = null;
+
+  //       if (value1 == null && value2 != null)
+  //           result = -1;
+  //       else if (value1 != null && value2 == null)
+  //           result = 1;
+  //       else if (value1 == null && value2 == null)
+  //           result = 0;
+  //       else if (typeof value1 === 'string' && typeof value2 === 'string')
+  //           result = value1.localeCompare(value2);
+  //       else
+  //           result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
+
+  //       return (event.order * result);
+  //   });
+  // }
+  customSort(event: SortEvent) {
+    if (event.field === 'country') {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(
+          event,
+          this.iexStockDataMap[data1.ticker]?.company?.country,
+          this.iexStockDataMap[data2.ticker]?.company?.country
+        );
+      });
+    } else if (event.field === 'price') {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(
+          event,
+          this.iexStockDataMap[data1.ticker]?.quote?.latestPrice,
+          this.iexStockDataMap[data2.ticker]?.quote?.latestPrice
+        );
+      });
+    } else if (event.field === 'sector') {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(
+          event,
+          this.iexStockDataMap[data1.ticker]?.company?.sector,
+          this.iexStockDataMap[data2.ticker]?.company?.sector
+        );
+      });
+    } else if (event.field === 'dividend') {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(
+          event,
+          this.iexStockDataMap[data1.ticker]?.stats?.dividendYield,
+          this.iexStockDataMap[data2.ticker]?.stats?.dividendYield
+        );
+      });
+    } else if (event.field === 'marketcap') {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(
+          event,
+          this.iexStockDataMap[data1.ticker]?.stats?.marketcap,
+          this.iexStockDataMap[data2.ticker]?.stats?.marketcap
+        );
+      });
+    } else {
+      event.data.sort((data1, data2) => {
+        return this.sortCompare(event, data1[event.field], data2[event.field]);
+      });
+    }
+  }
+
+  private sortCompare(event, data1, data2) {
+    const value1 = data1;
+    const value2 = data2;
+    let result = null;
+
+    if (value1 == null && value2 != null) result = -1;
+    else if (value1 != null && value2 == null) result = 1;
+    else if (value1 == null && value2 == null) result = 0;
+    else if (typeof value1 === 'string' && typeof value2 === 'string') result = value1.localeCompare(value2);
+    else result = value1 < value2 ? -1 : value1 > value2 ? 1 : 0;
+
+    return event.order * result;
   }
 }

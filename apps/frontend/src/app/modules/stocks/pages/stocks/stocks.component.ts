@@ -150,9 +150,6 @@ export class StocksComponent implements OnInit, OnDestroy {
           this.countryList.add(this.iexStockDataMap[stock.ticker]?.company?.country);
           this.sectorList.add(this.iexStockDataMap[stock.ticker]?.company?.sector);
         });
-
-        console.log(this.countryList);
-        console.log(this.sectorList);
       });
   }
 

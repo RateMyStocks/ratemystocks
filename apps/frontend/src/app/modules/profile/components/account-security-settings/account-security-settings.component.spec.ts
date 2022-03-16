@@ -1,5 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { MessageService } from 'primeng/api';
 import { ProfileModule } from '../../profile.module';
 
@@ -12,7 +13,7 @@ describe('AccountSecuritySettingsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [AccountSecuritySettingsComponent],
-      imports: [ProfileModule, HttpClientTestingModule],
+      imports: [ProfileModule, HttpClientTestingModule, RouterTestingModule],
       providers: [{ provide: MessageService }],
     }).compileComponents();
   });

@@ -16,7 +16,7 @@ export class StockVisit extends BaseEntity {
   @JoinColumn({ name: 'user_account_id' })
   userAccount: UserAccount;
 
-  @Column({ name: 'user_account_id', type: 'uuid' })
+  @Column({ name: 'user_account_id', type: 'uuid', nullable: true })
   userId: string;
 
   @Column({ name: 'visit_date', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', nullable: false })

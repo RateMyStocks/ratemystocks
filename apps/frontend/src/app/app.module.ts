@@ -37,6 +37,12 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { ErrorInterceptor } from './core/interceptors/error-interceptor';
 import { GlobalErrorHandler } from './core/error-handlers/global-error-handler';
 import { AppStockNewsBarComponent } from './app.stocknewsbar.component';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+
+FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPlugin]);
 
 @NgModule({
   imports: [
@@ -46,6 +52,7 @@ import { AppStockNewsBarComponent } from './app.stocknewsbar.component';
     BrowserAnimationsModule,
     CoreModule,
     FormsModule,
+    FullCalendarModule,
     HighchartsChartModule,
     HttpClientModule,
     PrimeNGModule,

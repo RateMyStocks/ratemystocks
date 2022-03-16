@@ -22,9 +22,22 @@ th {
     cursor: pointer;
   }
 
+  // TODO: move this to global styles
   .stock-logo {
     margin-right: 10px;
     width: 30px !important;
     height: auto;
   }
+}
+
+.invalid-total-weighting {
+  color: #e61010;
+}
+
+.valid-total-weighting {
+  color: #36d98d !important;
+}
+
+.delete-stock-row-btn:hover {
+  color: #e61010;
 }

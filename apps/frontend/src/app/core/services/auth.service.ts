@@ -13,6 +13,7 @@ import {
 import { LocalStorageService } from './local-storage.service';
 import { StatusCodes } from '../../shared/utilities/status-codes.enum';
 import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 
 const BACKEND_URL: string = environment.apiUrl + '/auth';
 
@@ -33,7 +34,8 @@ export class AuthService {
   constructor(
     private httpClient: HttpClient,
     private localStorageService: LocalStorageService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {}
 
   /**
@@ -130,8 +132,9 @@ export class AuthService {
    * Signs in using a username + password
    * @param authCredentials DTO containing attempted login info i.e. username and password.
    * @param isNewUser True if the user signing in has just signed up, false if they are an existing user (defaults to false).
+   * @param redirectAfterSignin True if the user should be redirected after a successful login, false otherwise (defaults to false).
    */
-  signin(authCredentials: AuthCredentialDto, isNewUser: boolean = false): void {
+  signin(authCredentials: AuthCredentialDto, isNewUser: boolean = false, redirectAfterSignin: boolean = false): void {
     this.httpClient.post(`${BACKEND_URL}/signin`, authCredentials, { withCredentials: true }).subscribe(
       (response: SignInResponseDto) => {
         const token = response.accessToken;
@@ -160,12 +163,16 @@ export class AuthService {
               detail: `We have sent an email to ${authCredentials.email}. Please verify your account by clicking the link in the email`,
             });
           } else {
-            this.messageService.add({
-              severity: 'success',
-              // summary: `Welcome ${authCredentials.username}!`,
-              summary: `Welcome ${authCredentials.username ? authCredentials.username : ''}!`,
-              detail: 'You have logged in successfully.',
-            });
+            if (redirectAfterSignin) {
+              this.router.navigate(['/']);
+            } else {
+              this.messageService.add({
+                severity: 'success',
+                // summary: `Welcome ${authCredentials.username}!`,
+                summary: `Welcome ${authCredentials.username ? authCredentials.username : ''}!`,
+                detail: 'You have logged in successfully.',
+              });
+            }
           }
         }
       },

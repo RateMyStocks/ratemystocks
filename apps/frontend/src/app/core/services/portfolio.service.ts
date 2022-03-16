@@ -175,4 +175,84 @@ export class PortfolioService {
     const endpoint = `${environment.apiUrl}/portfolio/${portfolioRatingId}/ratings/user`;
     return this.http.delete<void>(endpoint, { withCredentials: true });
   }
+
+  /**
+   * Adds a visit to the portfolio_visit table indicating a page visit for some portfolio.
+   * @param portfolioId The portfolioId of the portfolio being visited.
+   * @param userId (Optional) If a logged-in user visits the portfolio page, this query parameter will be supplied.
+   * @returns The number of page visits for a given portfolio
+   */
+  addPortfolioPageVisit(portfolioId: string, userId?: string): Observable<number> {
+    // return this.httpClient.post<any>(`${this.baseApiUrl}/visit-count/${ticker}?userId=${userId}`, null);
+    const url = userId
+      ? `${environment.apiUrl}/portfolio/visit-count/${portfolioId}?userId=${userId}`
+      : `${environment.apiUrl}/portfolio/visit-count/${portfolioId}`;
+    return this.http.post<any>(url, null);
+  }
+
+  /**
+   * Returns a list of the portfolio page visit counts for the last N days (defaults to 6).
+   * @param portfolioId The id of the portfolio to get the visit count sfor.
+   * @param lastNDays Query param indicating the number of days from the current day to get visit counts for.
+   * @returns A list of the portfolio page visit counts for the last N days.
+   */
+  getPortfolioVisitCounts(portfolioId: string, lastNDays = 6): Observable<any> {
+    const url = `${environment.apiUrl}/portfolio/visit-counts/${portfolioId}?lastNDays=${lastNDays}`;
+    return this.http.get<any>(url);
+  }
+
+  /**
+   * Creating an entry in the portfolio_follower table allowing a user to follow a portfolio.
+   * @param userAccount The logged-in user following the portfolio.
+   * @param portfolioId The id of the portfolio being followed.
+   * @returns The number of page visits for a given portfolio.
+   */
+  followPortfolio(portfolioId: string): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/portfolio/follow/${portfolioId}`, null, {
+      withCredentials: true,
+    });
+  }
+
+  /**
+   * Deletes the entry in the portfolio_follower table, so the specified user
+   * will unfollow a portfolio if it is already following it.
+   * @param userAccount The account object of the logged-in user.
+   * @param portfolioId The id of the portfolio the user is following.
+   * @throws 404 If the user specified isn't actually following the portfolio.
+   */
+  unfollowPortfolio(portfolioId: string): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/portfolio/unfollow/${portfolioId}`, { withCredentials: true });
+  }
+
+  /**
+   * Returns true if the logged-in user is following a given portfolio, false otherwise.
+   * @param userAccount The UserAccount object of the logged-in user.
+   * @param portfolioId The id of the portfolio to check against.
+   * @returns true if the logged-in user is following a given portfolio, false otherwise.
+   */
+  isFollowingPortfolio(portfolioId: string): Observable<boolean> {
+    return this.http.get<boolean>(`${environment.apiUrl}/portfolio/isfollowing/${portfolioId}`, {
+      withCredentials: true,
+    });
+  }
+
+  /**
+   * Gets the number of followers for a given portfolio.
+   * @param portfolioId The id of the portfolio to get the number of followers for.
+   * @return The number of followers for a given portfolio.
+   */
+  getTotalFollowerCounts(ticker: string): Observable<number> {
+    return this.http.get<number>(`${environment.apiUrl}/portfolio/follower-count/${ticker}`);
+  }
+
+  /**
+   * Gets the number of followers by day for a given portfolio over a given time period.
+   * @param portfolioId The id of the portfolio to get the number of followers for.
+   * @param lastNDays Optional query parameter indicating the past number of days to get counts for.
+   * @return The number of followers by day for a given portfolio over a given time period.
+   */
+  getFollowerCountsLastNDays(ticker: string, lastNDays = 6): Observable<any> {
+    const url = `${environment.apiUrl}/portfolio/follower-counts/${ticker}?lastNDays=${lastNDays}`;
+    return this.http.get<any>(url);
+  }
 }

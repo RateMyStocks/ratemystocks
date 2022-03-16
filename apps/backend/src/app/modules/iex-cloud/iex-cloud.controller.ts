@@ -6,9 +6,11 @@ import type {
   IexCloudIntradayPriceDto,
   IexCloudSearchDto,
   StockPriceRange,
+  StockUpcomingEventDto,
 } from '@ratemystocks/api-interface';
 
 /**
+ * TODO: Rename this to something generic (like StockDataController) and have IEXCloudService implement an interface
  * This controller will forward requests to the IEX Cloud API & return the response back to the client.
  * {@link https://iexcloud.io/docs/api}
  */
@@ -60,5 +62,15 @@ export class IexCloudController {
     @Query('date') date: string
   ): Promise<IexCloudIntradayPriceDto[] | IexCloudHistoricalPriceDto[]> {
     return this.iexCloudService.getStockChartResults(ticker, range, date);
+  }
+
+  /**
+   * Returns the upcoming event dates for a set of stocks.
+   * @param tickers A comma delimited list of ticker symbols that comes in as a query param.
+   * @returns An object containing ticker symbols mapped to that stock's upcoming event dates.
+   */
+  @Get('/stocks/upcoming-events')
+  getStockUpcomingEvents(@Query('tickers') tickers: string): Promise<StockUpcomingEventDto> {
+    return this.iexCloudService.getStockUpcomingEvents(tickers);
   }
 }

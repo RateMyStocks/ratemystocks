@@ -9,8 +9,10 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { PortfolioFollower } from './portfolioFollower.entity';
 import { PortfolioRating } from './portfolioRating.entity';
 import { PortfolioStock } from './portfolioStock.entity';
+import { PortfolioVisit } from './portfolioVisit.entity';
 import { UserAccount } from './userAccount.entity';
 
 @Entity()
@@ -40,6 +42,12 @@ export class Portfolio extends BaseEntity {
 
   @OneToMany((type) => PortfolioRating, (portfolioRating) => portfolioRating.portfolio, { eager: false })
   ratings: PortfolioRating[];
+
+  @OneToMany((type) => PortfolioVisit, (portfolioVisit) => portfolioVisit.portfolio, { eager: false })
+  visits: PortfolioVisit[];
+
+  @OneToMany((type) => PortfolioFollower, (portfolioFollower) => portfolioFollower.portfolio, { eager: false })
+  followers: PortfolioFollower[];
 
   @OneToMany((type) => PortfolioStock, (portfolioStock) => portfolioStock.portfolio, {
     eager: false,

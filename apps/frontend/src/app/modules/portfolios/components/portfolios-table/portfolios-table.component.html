@@ -52,7 +52,103 @@
 </p-table>
 
 <p-confirmPopup></p-confirmPopup>
-<p-dialog header="Create Portfolio" [(visible)]="displayCreatePortfolioDialog" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '100vw'}"  [style]="{width: '22vw', height: '100%'}" [draggable]="false" [resizable]="false">
-  <app-create-portfolio-dialog></app-create-portfolio-dialog>
+
+<p-dialog header="Create Portfolio" [(visible)]="displayCreatePortfolioDialog" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '100vw'}"  [style]="{width: '30vw', height: '100%'}" [draggable]="false" [resizable]="false">
+  <form [formGroup]="portfolioForm" (ngSubmit)="onSubmit()">
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="portfolio-name-field">Name*</label>
+        <input placeholder="Enter a name for your portfolio" formControlName="name" id="portfolio-name-field" pInputText [ngClass]="{'ng-invalid': name.invalid, 'ng-dirty': name.touched}" required />
+        <small *ngIf="name.invalid && name.touched" class="p-invalid">This field is required.</small>
+      </div>
+      <div class="p-field">
+        <label for="portfolio-description-field">Description</label>
+        <textarea
+          formControlName="description"
+          placeholder="Write a description for your portfolio"
+          maxlength="500"
+          id="portfolio-description-field"
+          pInputText
+          [ngClass]="{'ng-invalid': description.invalid, 'ng-dirty': description.touched}"
+        ></textarea>
+        <small *ngIf="description.invalid && description.touched" class="p-invalid">This field is required.</small>
+      </div>
+      <div class="p-field">
+        <label for="holdings">Holdings</label>
+        <div class="search-input-wrapper">
+          <span class="p-input-icon-left">
+            <!-- <i class="pi pi-search"></i> -->
+            <p-autoComplete [(ngModel)]="selectedStocks" [ngModelOptions]="{standalone: true}" [multiple]="true" [forceSelection]="true" [suggestions]="filteredStocks"
+              (completeMethod)="searchStocks($event)" (onSelect)="onSelectStock($event)" (onUnselect)="onRemoveStock($event)" field="symbol" placeholder="Search stocks">
+              <ng-template let-stock pTemplate="item">
+                <div style="display: flex; align-items: center;">
+                  <img
+                    class="stock-logo p-mr-2"
+                    src="https://storage.googleapis.com/iex/api/logos/{{ stock.symbol }}.png"
+                    onerror="this.onerror=null; this.src=''"
+                    style="width:24px;height: auto;"
+                  />
+                  <small>
+                    <b>{{stock.symbol}}</b>
+                  </small>
+                  |
+                  <small>
+                    {{ stock.securityName }}
+                  </small>
+                </div>
+              </ng-template>
+            </p-autoComplete>
+
+            <br>
+            <br>
+
+            <div formArrayName="holdings">
+              <p-table [value]="portfolioStocks" dataKey="id" styleClass="p-datatable-sm" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Ticker</th>
+                        <th>Weighting</th>
+                        <th style="width:8rem"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-stock>
+                    <tr>
+                      <td><b>{{stock.ticker}}</b></td>
+                      <td pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText  type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="stock.weighting" step="0.01" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" required>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{stock.weighting.toFixed(2)}}%
+                            </ng-template>
+                        </p-cellEditor>
+                      </td>
+                      <td style="text-align:center">
+                        <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-text p-button-danger" (click)="onRemoveStock(stock)"></button>
+                        <!-- <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"" (click)="onRowEditSave(product)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                        <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(product, ri)" class="p-button-rounded p-button-text p-button-danger"></button> -->
+                      </td>
+                    </tr>
+                </ng-template>
+                <!-- TODO: Replace getTotalWeighting function call with a pipe -->
+                <ng-template pTemplate="summary">
+                  <div class="flex align-items-center justify-content-between" [ngClass]="{
+                    'invalid-total-weighting': getTotalWeighting() !== 100 && portfolioStocks.length > 0,
+                    'valid-total-weighting': getTotalWeighting() === 100
+                  }">
+                      Total Weighting: {{ getTotalWeighting().toFixed(2) }}%
+                  </div>
+                </ng-template>
+              </p-table>
+            </div>
+          </span>
+        </div>
+      </div>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <p-messages [(value)]="msgs"></p-messages>
+    <p-button label="Create" class="p-button-text" (click)="onSubmit()" [disabled]="portfolioForm.invalid"></p-button>
+  </ng-template>
 </p-dialog>
-<!-- <app-create-portfolio-dialog [display]="displayCreatePortfolioDialog"></app-create-portfolio-dialog> -->
