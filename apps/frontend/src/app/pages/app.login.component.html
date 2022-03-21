@@ -11,7 +11,6 @@
                     <ng-template pTemplate="header">
                         <!-- <img alt="Card" src="assets/showcase/images/usercard.png"> -->
                     </ng-template>
-                    <!-- <form (ngSubmit)="onSubmitLoginForm()" [formGroup]="loginForm" *ngSwitchCase="authModeType.LOGIN"> -->
                     <form (ngSubmit)="onSubmitLoginForm()" [formGroup]="loginForm">
                       <div class="login-form">
                         <div class="p-col-12">
@@ -39,7 +38,7 @@
 
                                       <p>Don't have an account? <a (click)="setAuthMode(authModeType.SIGN_UP)"> Sign up</a></p>
                                       <p><a (click)="setAuthMode(authModeType.FORGOT_PASSWORD)">Forgot Password?</a></p> -->
-                                      <p-button label="Login" type="submit" styleClass="p-mb-3"></p-button>
+                                      <p-button label="Login" type="submit" [disabled]="!loginForm.valid" styleClass="p-mb-3"></p-button>
                                   </div>
                               </div>
                               <!-- <div class="p-col-1">
@@ -57,10 +56,8 @@
                       </div>
                     </form>
                     <ng-template pTemplate="footer">
-                        <!-- <p-button label="Save" icon="pi pi-check"></p-button>
-                        <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-secondary" [style]="{'margin-left': '.5em'}"></p-button> -->
-                        <p>Don't have an account? <a> Sign up</a></p>
-                        <p><a>Forgot Password?</a></p>
+                        <p class="p-mb-2">Don't have an account? <a routerLink="/signup"> Sign up</a></p>
+                        <p><a routerLink="/forgotpassword">Forgot Password?</a></p>
                     </ng-template>
                   </p-card>
                 </div>

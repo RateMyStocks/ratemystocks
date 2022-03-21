@@ -2,7 +2,7 @@
   <div class="layout-topbar-wrapper">
     <div class="layout-topbar-left">
       <div class="layout-topbar-logo" id="logolink" style="cursor: pointer; outline: none;" routerLink="/">
-        <!-- Inline styling is needed so the logo doesn't appear huge for a split second. Angular Universal has a slight delay when loading CSS from stylesheets -->
+        <!-- Inline styling is needed so the logo doesn't appear huge for a split second on page load. Angular Universal has a slight delay when loading CSS from stylesheets -->
         <img
           id="app-logo"
           [src]="
@@ -12,14 +12,6 @@
           "
           [style]="{ height: '32px', width: 'auto' }"
         />
-        <!-- <img
-          id="app-logo"
-          [src]="
-            'assets/layout/images/' +
-            (app.topbarTheme === 'light' ? 'stonkzilla-logo' : 'stonkzilla-logo-dark-theme') +
-            '.png'
-          "
-        /> -->
       </div>
     </div>
 
@@ -429,7 +421,7 @@
                           <input formControlName="email" type="text" pInputText id="email" type="email" [ngClass]="{'ng-invalid': signupForm.controls['email'].invalid, 'ng-dirty': signupForm.controls['email'].touched}"/>
                         </span>
                         <small *ngIf="!signupForm.controls['email'].valid && signupForm.controls['email'].touched" class="p-invalid">{{ signupForm.controls['email'] | emailFormFieldValidator }}</small>
-                    </div>
+                      </div>
                       <div class="p-field">
                           <label for="password">Password</label>
                           <span class="p-input-icon-left">
@@ -447,7 +439,7 @@
                         </span>
                         <!-- <small  class="p-invalid">{{ signupForm.controls['passwordReenter'] | passwordReenterFormFieldValidator }}</small> -->
                         <small *ngIf="!signupForm.controls['passwordReenter'].valid && signupForm.controls['passwordReenter'].touched" class="p-invalid">{{ getErrorPasswordReenter() }}</small>
-                    </div>
+                      </div>
                       <p-button label="Sign Up" type="submit" [disabled]="!signupForm.valid" styleClass="p-mb-3"></p-button>
 
                       <small class="p-mb-2"

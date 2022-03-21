@@ -1,0 +1,83 @@
+<div class="login-body">
+  <div class="login-wrapper">
+      <div class="login-panel">
+          <a [routerLink]="['/']" class="logo">
+              <img src="assets/layout/images/logo-ratemystocks.png" />
+          </a>
+          <div>
+              <div class="p-col-12">
+
+                <p-card header="Signup" [style]="{width: '360px'}" styleClass="p-card-shadow">
+                  <ng-template pTemplate="header">
+                      <!-- <img alt="Card" src="assets/showcase/images/usercard.png"> -->
+                  </ng-template>
+                  <form (ngSubmit)="onSubmitSignupForm()" [formGroup]="signupForm">
+                    <div class="login-form">
+                      <div class="p-col-12">
+                        <div class="p-grid">
+                            <!-- <div class="p-col-5 p-d-flex p-ai-center p-jc-center"> -->
+                              <div class="p-col-12 p-d-flex p-ai-center p-jc-center">
+                                <div class="p-fluid">
+                                  <div class="p-field">
+                                    <label for="username">Username</label>
+                                    <span class="p-input-icon-left">
+                                      <i class="pi pi-user"></i>
+                                      <input formControlName="username" type="text" pInputText id="username" type="text" maxlength="30" [ngClass]="{'ng-invalid': signupForm.controls['username'].invalid, 'ng-dirty': signupForm.controls['username'].touched}"/>
+                                    </span>
+                                    <small *ngIf="!signupForm.controls['username'].valid && signupForm.controls['username'].touched" class="p-invalid">{{ signupForm.controls['username'] | usernameFormFieldValidator }}</small>
+                                  </div>
+                                  <div class="p-field">
+                                    <label for="email">Email</label>
+                                    <span class="p-input-icon-left">
+                                      <i class="pi pi-envelope"></i>
+                                      <input formControlName="email" type="text" pInputText id="email" type="email" [ngClass]="{'ng-invalid': signupForm.controls['email'].invalid, 'ng-dirty': signupForm.controls['email'].touched}"/>
+                                    </span>
+                                    <small *ngIf="!signupForm.controls['email'].valid && signupForm.controls['email'].touched" class="p-invalid">{{ signupForm.controls['email'] | emailFormFieldValidator }}</small>
+                                  </div>
+                                  <div class="p-field">
+                                    <label for="password">Password</label>
+                                    <span class="p-input-icon-left">
+                                      <i class="pi pi-unlock"></i>
+                                      <input formControlName="password" type="password" pInputText id="password" type="password" [ngClass]="{'ng-invalid': signupForm.controls['password'].invalid, 'ng-dirty': signupForm.controls['password'].touched}"/>
+                                    </span>
+                                    <!-- <small *ngIf="!signupForm.controls['password'].valid && signupForm.controls['password'].touched" class="p-invalid">{{ signupForm.controls['password'] | passwordFormFieldValidator }}</small> -->
+                                    <small *ngIf="!signupForm.controls['password'].valid && signupForm.controls['password'].touched" class="p-invalid">{{ getErrorPassword() }}</small>
+                                  </div>
+                                  <div class="p-field">
+                                    <label for="passwordReenter">Re-enter Password</label>
+                                    <span class="p-input-icon-left">
+                                      <i class="pi pi-unlock"></i>
+                                      <input formControlName="passwordReenter" type="password" pInputText id="passwordReenter" type="password" (input)="onPasswordInput()" [ngClass]="{'ng-invalid': signupForm.controls['passwordReenter'].invalid, 'ng-dirty': signupForm.controls['passwordReenter'].touched}" />
+                                    </span>
+                                    <!-- <small  class="p-invalid">{{ signupForm.controls['passwordReenter'] | passwordReenterFormFieldValidator }}</small> -->
+                                    <small *ngIf="!signupForm.controls['passwordReenter'].valid && signupForm.controls['passwordReenter'].touched" class="p-invalid">{{ getErrorPasswordReenter() }}</small>
+                                  </div>
+                                  <p-button label="Sign Up" type="submit" [disabled]="!signupForm.valid" styleClass="p-mb-3"></p-button>
+                                  <p-messages></p-messages>
+                                </div>
+                            </div>
+                            <!-- <div class="p-col-1">
+                                <p-divider layout="vertical">
+                                    <b>OR</b>
+                                </p-divider>
+                            </div>
+                            <div class="p-col-5 p-ai-center p-jc-center">
+                              <button pButton type="button" label="Sign in with Google" class="p-button-outlined"></button>
+                              <button pButton type="button" label="Sign in with Facebook" class="p-button-outlined"></button>
+                            </div> -->
+                        </div>
+                      </div>
+                      <!-- <p-captcha siteKey="YOUR_SITE_KEY" (onResponse)="showCaptchaResponse($event)"></p-captcha> -->
+                    </div>
+                  </form>
+                  <ng-template pTemplate="footer">
+                      <p>Already have an account? <a routerLink="/login"> Login</a></p>
+                  </ng-template>
+                </p-card>
+              </div>
+          </div>
+
+          <p>A problem? <a routerLink="/resources/help">Click here</a> and let us help you.</p>
+      </div>
+  </div>
+</div>
