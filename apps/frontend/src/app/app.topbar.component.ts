@@ -99,6 +99,7 @@ export class AppTopBarComponent implements OnInit, OnDestroy {
 
         this.displayLoginDialog = false;
       } else {
+        // TODO: This is showing up after logout as well. It should only show up when an error occurs.
         this.formErrorMessages = [
           {
             severity: 'error',
@@ -114,14 +115,18 @@ export class AppTopBarComponent implements OnInit, OnDestroy {
     this.authStatusSub.unsubscribe();
   }
 
-  /** */
+  /**
+   * Event handler for clicking the logout button in the navbar.
+   * Calls the backend to log the user out of the system.
+   */
   logOut(): void {
     this.authService.logOut();
   }
 
   /**
-   *
-   * @param authModeType
+   * Event handler for when a user clicks the link to switch the "Auth Mode"
+   * i.e. if they are in the Login form but want to Sign Up or Reset their password instead.
+   * @param authModeType The "Auth Mode" e.g. Login, Sign Up, or Forgot Password.
    */
   showLoginDialog(authModeType: AuthModeType) {
     this.displayLoginDialog = true;
@@ -129,7 +134,8 @@ export class AppTopBarComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
+   * Event handler for when the user clicks the submit button on the Login form.
+   * Sends a request to the backend to login to their account.
    */
   onSubmitLoginForm(): void {
     // If the input for the usernameOrEmail field has an @ symbol, they are attempting to login with email.
@@ -146,7 +152,8 @@ export class AppTopBarComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
+   * Event handler for when the user clicks the submit button on the Sign Up form.
+   * Sends a request to the backend to create their account.
    */
   onSubmitSignupForm(): void {
     const user: SignUpDto = {
@@ -158,7 +165,8 @@ export class AppTopBarComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
+   * Event handler for when the user clicks the submit button on the Forgot Password form.
+   * Sends a request to the backend to send an email to the user to reset their password.
    */
   onSubmitForgotPassword(): void {
     const email = this.forgotPasswordForm.value.email.includes('@') ? this.forgotPasswordForm.value.email : null;
@@ -185,10 +193,10 @@ export class AppTopBarComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
-   * @param type
+   * Toggles whether the UI should display the Login, Sign Up, or Forgot Password form.
+   * @param type The "Auth Mode" e.g. Login, Sign Up, Forgot Password.
    */
-  setAuthMode(type: AuthModeType) {
+  setAuthMode(type: AuthModeType): void {
     this.authMode.type = type;
     this.authMode = new AuthMode(type, type);
   }
@@ -230,8 +238,9 @@ export class AppTopBarComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
-   * @param event
+   * Event handler for when a user types into the stock search autocomplete field.
+   * Calls the stock API to search for stocks by ticker symbol or company name.
+   * @param event An object representing the event of a user entering input into the stock search field.
    */
   searchStocks(event: { originalEvent: InputEvent; query: string }): void {
     this.stockSearchService.searchStocks(event.query).subscribe((result: IexCloudSearchDto[]) => {
@@ -240,8 +249,9 @@ export class AppTopBarComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
-   * @param selectStock
+   * Event handelr for when a stock is selected in the stock search autocomplete field
+   * that redirects to the stock page.
+   * @param selectStock The object representing the selected stock.
    */
   onSelectStock(selectStock: IexCloudSearchDto): void {
     const tickerSymbol: string = selectStock.symbol;

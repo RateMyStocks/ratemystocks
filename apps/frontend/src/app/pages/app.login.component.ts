@@ -51,9 +51,6 @@ export class AppLoginComponent implements OnInit {
 
     this.authStatusSub = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
       this.isAuth = authStatus;
-      if (this.isAuth) {
-        this.router.navigate(['/']);
-      }
     });
   }
 

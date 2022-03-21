@@ -6,6 +6,7 @@ import { AppLoginComponent } from './pages/app.login.component';
 import { AppHelpComponent } from './pages/app.help.component';
 import { AppResetPasswordComponent } from './pages/app.resetpassword.component';
 import { ResetPasswordLinkGuard } from './core/guards/reset-password-link.guard';
+import { AppSignupComponent } from './pages/app.signup.component';
 
 const routes: Routes = [
   {
@@ -35,8 +36,9 @@ const routes: Routes = [
   // { path: 'error', component: AppErrorComponent },
   // { path: 'access', component: AppAccessdeniedComponent },
   { path: 'notfound', component: AppNotfoundComponent },
-  // TODO: Add Login page
   { path: 'login', component: AppLoginComponent },
+  { path: 'signup', component: AppSignupComponent },
+  // { path: 'forgotpassword', component: },
   { path: 'resetpassword/:userid/:token', component: AppResetPasswordComponent, canActivate: [ResetPasswordLinkGuard] },
   { path: '**', redirectTo: '/notfound' },
 ];

@@ -41,6 +41,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import { AppSignupComponent } from './pages/app.signup.component';
 
 FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPlugin]);
 
@@ -70,6 +71,7 @@ FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPl
     AppTopBarComponent,
     AppFooterComponent,
     AppLoginComponent,
+    AppSignupComponent,
     AppHelpComponent,
     AppNotfoundComponent,
     AppErrorComponent,

@@ -97,8 +97,9 @@ export class AuthService {
   /**
    * Takes user supplied registration information and sends a request to creates a new user in the system.
    * @param signUpDto DTO containing the necessary fields to register an account (i.e. username, email, password, etc.)
+   * @param redirectAfterSignup True if the user should be redirected after a successful signup, false otherwise (defaults to false).
    */
-  signUp(signUpDto: SignUpDto): void {
+  signUp(signUpDto: SignUpDto, redirectAfterSignup: boolean = false): void {
     this.httpClient.post<{ message: string }>(`${BACKEND_URL}/signup`, signUpDto).subscribe(
       () => {
         const authCredentialDto: AuthCredentialDto = {
@@ -106,24 +107,24 @@ export class AuthService {
           email: signUpDto.email,
           password: signUpDto.password,
         };
-        this.signin(authCredentialDto, true);
+        this.signin(authCredentialDto, true, redirectAfterSignup);
       },
       (error: any) => {
         this.authStatusListener.next(false);
 
-        // if (error.status && error.status === StatusCodes.BAD_REQUEST) {
-        //   this.snackBar.open(
-        //     'Please make sure you register your credentials with the proper format.',
-        //     'Registration Error',
-        //     {
-        //       duration: 8000,
-        //     }
-        //   );
-        // } else if (error.status && error.status === StatusCodes.CONFLICT) {
-        //   this.snackBar.open('Username or email has already been taken.', 'Registration Error', {
-        //     duration: 8000,
-        //   });
-        // }
+        if (error.status && error.status === StatusCodes.BAD_REQUEST) {
+          this.messageService.add({
+            severity: 'error',
+            summary: `Error`,
+            detail: `Please make sure you register your credentials with the proper format.`,
+          });
+        } else if (error.status && error.status === StatusCodes.CONFLICT) {
+          this.messageService.add({
+            severity: 'error',
+            summary: `Oh noes!`,
+            detail: `Username or email has already been taken.`,
+          });
+        }
       }
     );
   }
@@ -156,19 +157,35 @@ export class AuthService {
           this.saveAuthData(token, expirationDate, this.userId, this.username, this.email, this.spiritAnimal);
 
           if (isNewUser) {
-            this.messageService.add({
-              severity: 'success',
-              // summary: `Welcome ${authCredentials.username}!`,
-              summary: `Welcome to ratemystocks.com ${authCredentials.username ? authCredentials.username : ''}!`,
-              detail: `We have sent an email to ${authCredentials.email}. Please verify your account by clicking the link in the email`,
-            });
-          } else {
             if (redirectAfterSignin) {
               this.router.navigate(['/']);
+              setTimeout(() => {
+                this.messageService.add({
+                  severity: 'success',
+                  summary: `Welcome to ratemystocks.com ${authCredentials.username ? authCredentials.username : ''}!`,
+                  detail: `We have sent an email to ${authCredentials.email}. Please verify your account by clicking the link in the email`,
+                });
+              }, 1000);
             } else {
               this.messageService.add({
                 severity: 'success',
-                // summary: `Welcome ${authCredentials.username}!`,
+                summary: `Welcome to ratemystocks.com ${authCredentials.username ? authCredentials.username : ''}!`,
+                detail: `We have sent an email to ${authCredentials.email}. Please verify your account by clicking the link in the email`,
+              });
+            }
+          } else {
+            if (redirectAfterSignin) {
+              this.router.navigate(['/']);
+              setTimeout(() => {
+                this.messageService.add({
+                  severity: 'success',
+                  summary: `Welcome ${authCredentials.username ? authCredentials.username : ''}!`,
+                  detail: 'You have logged in successfully.',
+                });
+              }, 1000);
+            } else {
+              this.messageService.add({
+                severity: 'success',
                 summary: `Welcome ${authCredentials.username ? authCredentials.username : ''}!`,
                 detail: 'You have logged in successfully.',
               });
