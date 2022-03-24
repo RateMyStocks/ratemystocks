@@ -42,6 +42,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { AppSignupComponent } from './pages/app.signup.component';
+import { AppForgotPasswordComponent } from './pages/app.forgotpassword.component';
 
 FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPlugin]);
 
@@ -70,6 +71,7 @@ FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPl
     AppBreadcrumbComponent,
     AppTopBarComponent,
     AppFooterComponent,
+    AppForgotPasswordComponent,
     AppLoginComponent,
     AppSignupComponent,
     AppHelpComponent,
