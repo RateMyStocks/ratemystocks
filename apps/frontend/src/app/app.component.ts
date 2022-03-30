@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, PLATFORM_ID, Renderer2 } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { AuthService } from './core/services/auth.service';
 import { LocalStorageService } from './core/services/local-storage.service';
@@ -10,7 +10,7 @@ import { WindowService } from './core/services/window.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   // TODO: Pass these settings as inputs to child components (topbar, menu, footer, & main)
   topbarTheme = 'light';
 
@@ -33,6 +33,7 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private windowService: WindowService,
     @Inject(PLATFORM_ID) private platformId: any,
+    private renderer: Renderer2,
     private localStorageService: LocalStorageService
   ) {}
 
@@ -51,6 +52,18 @@ export class AppComponent implements OnInit {
           }
         }
       });
+    }
+  }
+
+  ngAfterViewInit(): void {
+    // For the page loader animation to show with Angular universal, it must be outside of app-root
+    // and then hidden once the application has loaded in the browser.
+    if (isPlatformBrowser(this.platformId)) {
+      const loader = this.renderer.selectRootElement('.loader');
+
+      if (loader.style.display != "none") {
+        loader.style.display = "none";
+      }
     }
   }
 }
