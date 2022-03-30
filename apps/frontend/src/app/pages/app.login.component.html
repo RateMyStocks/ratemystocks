@@ -2,7 +2,8 @@
     <div class="login-wrapper">
         <div class="login-panel">
             <a [routerLink]="['/']" class="logo">
-                <img src="assets/layout/images/logo-ratemystocks.png" />
+              <!-- Inline styling is needed so the logo doesn't appear huge for a split second on page load. Angular Universal has a slight delay when loading CSS from stylesheets -->
+              <img src="assets/layout/images/logo-ratemystocks.png" [style]="{ height: '64px', width: 'auto' }" />
             </a>
             <div>
                 <div class="p-col-12">
