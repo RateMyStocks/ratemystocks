@@ -15,6 +15,7 @@ import { ShareOnSocialMediaSpeedDialComponent } from './components/share-on-soci
 import { FormsModule } from '@angular/forms';
 import { PrimeNGModule } from '../primeng.module';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { PhoneNumberPipe } from './pipes/phone-number.pipe';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     NgxPieChartComponent,
     PasswordFormFieldValidatorPipe,
     PasswordReenterFormFieldValidatorPipe,
+    PhoneNumberPipe,
     RoundingPipe,
     TruncatePipe,
     UsernameFormFieldValidatorPipe,
@@ -39,6 +41,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     NgxPieChartComponent,
     PasswordFormFieldValidatorPipe,
     PasswordReenterFormFieldValidatorPipe,
+    PhoneNumberPipe,
     RoundingPipe,
     ShareOnSocialMediaSpeedDialComponent,
     TruncatePipe,

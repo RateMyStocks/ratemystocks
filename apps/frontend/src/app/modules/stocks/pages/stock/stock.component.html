@@ -96,15 +96,7 @@
                     </div>
                 </div>
                 <div class="p-col-12">
-                    <div class="card sale-graph">
-                        <div class="card-header">
-                            <h6>Performance</h6>
-                        </div>
-                        <div class="overview-chart">
-                            <!-- <app-stock-performance-chart [ticker]="ticker"></app-stock-performance-chart> -->
-                            <app-trading-view-stock-chart [ticker]="ticker" [exchange]="stock.data.company?.exchange"></app-trading-view-stock-chart>
-                        </div>
-                    </div>
+                  <app-trading-view-stock-chart [ticker]="ticker" [exchange]="stock.data.company?.exchange"></app-trading-view-stock-chart>
                 </div>
             </div>
         </div>
@@ -184,6 +176,7 @@
             <div class="p-mb-2"><small><b>Industry:</b> {{ stock.data.company?.industry }}</small></div>
             <div class="p-mb-2"><small><b>Sector:</b> {{ stock.data.company?.sector }}</small></div>
             <div class="p-mb-2"><small><b>Website:</b> <a href="https://{{stock.data.company?.website}}" target="_blank"> {{ stock.data.company?.website }}</a></small></div>
+            <div class="p-mb-2"><small><b>Phone: </b> <a href="tel:{{ stock.data.company?.phone }}">{{ stock.data.company?.phone | phone }}</a></small></div>
             <div class="p-mb-2"><small><b>Exchange:</b> {{ stock.data.company?.exchange }}</small></div>
             <div class="p-mb-2"><small><b>Tags:</b> &nbsp; <p-tag *ngFor="let tag of stock.data.company?.tags" [value]="tag" [rounded]="true" class="p-mr-1"></p-tag></small></div>
           </div>
@@ -197,25 +190,65 @@
                 <div class="p-grid">
                   <div class="p-col-6">
                     <div class="p-mb-2"><small><b>Open:</b> ${{ stock.data.quote.open?.toFixed(2) }}</small></div>
-                    <div class="p-mb-2"><small><b>Close:</b> ${{ stock.data.quote.close?.toFixed(2) }}</small></div>
-                    <div class="p-mb-2"><small><b>Today's High:</b> ${{ stock.data.quote.high }}</small></div>
+                    <div class="p-mb-2"><small><b>Previous Close:</b> ${{ stock.data.quote?.previousClose?.toFixed(2) }}</small></div>
+                    <!-- <div class="p-mb-2"><small><b>Today's High:</b> ${{ stock.data.quote.high }}</small></div>
                     <div class="p-mb-2"><small><b>Today's Low:</b> ${{ stock.data.quote.low }}</small></div>
                     <div class="p-mb-2"><small><b>52 Week High:</b> ${{ stock.data.stats.week52high}}</small></div>
-                    <div class="p-mb-2"><small><b>52 Week Low:</b> ${{ stock.data.stats.week52low}}</small></div>
-                    <div class="p-mb-2"><small><b>YTD Change:</b> {{ (stock.data.stats.ytdChangePercent * 100).toFixed(2) }}%</small></div>
-                    <div class="p-mb-2"><small><b>1m Change: </b> {{ (stock.data.stats.month1ChangePercent * 100).toFixed(2) }}%</small></div>
-                    <div class="p-mb-2"><small><b>3m Change: </b> {{ (stock.data.stats.month3ChangePercent * 100).toFixed(2) }}%</small></div>
-                    <div class="p-mb-2"><small><b>6m Change: </b> {{ (stock.data.stats.month6ChangePercent * 100).toFixed(2) }}%</small></div>
-                    <div class="p-mb-2"><small><b>1y Change: </b> {{ (stock.data.stats.year1ChangePercent * 100).toFixed(2) }}%</small></div>
-                    <div class="p-mb-2"><small><b>5y Change: </b> {{ (stock.data.stats.year5ChangePercent * 100).toFixed(2) }}%</small></div>
+                    <div class="p-mb-2"><small><b>52 Week Low:</b> ${{ stock.data.stats.week52low}}</small></div> -->
+                    <div class="p-mb-2"><small><b>Day Range:</b> ${{ stock.data.quote.low }} - ${{ stock.data.quote.high }}</small></div>
+                    <div class="p-mb-2"><small><b>Year Range:</b> ${{ stock.data.stats.week52low}} - ${{ stock.data.stats.week52high}}</small></div>
+                    <div class="p-mb-2">
+                      <small>
+                        <b>YTD Change: </b>
+                        <span [ngStyle]="{ color: stock.data.stats.ytdChangePercent >= 0 ? '#3ac961' : 'red' }">{{ (stock.data.stats.ytdChangePercent * 100).toFixed(2) }}%</span>
+                      </small>
+                    </div>
+                    <div class="p-mb-2">
+                      <small>
+                        <b>1m Change: </b>
+                        <span [ngStyle]="{ color: stock.data.stats.month1ChangePercent  >= 0 ? '#3ac961' : 'red' }">{{ (stock.data.stats.month1ChangePercent * 100).toFixed(2) }}%</span>
+                      </small>
+                    </div>
+                    <div class="p-mb-2">
+                      <small>
+                        <b>3m Change: </b>
+                        <span [ngStyle]="{ color: stock.data.stats.month3ChangePercent  >= 0 ? '#3ac961' : 'red' }">{{ (stock.data.stats.month3ChangePercent * 100).toFixed(2) }}%</span>
+                      </small>
+                    </div>
+                    <div class="p-mb-2">
+                      <small>
+                        <b>6m Change: </b>
+                        <span [ngStyle]="{ color: stock.data.stats.month6ChangePercent  >= 0 ? '#3ac961' : 'red' }">{{ (stock.data.stats.month6ChangePercent * 100).toFixed(2) }}%</span>
+                      </small>
+                    </div>
+                    <div class="p-mb-2">
+                      <small>
+                        <b>1y Change: </b>
+                        <span [ngStyle]="{ color: stock.data.stats.year1ChangePercent  >= 0 ? '#3ac961' : 'red' }">{{ (stock.data.stats.year1ChangePercent * 100).toFixed(2) }}%</span>
+                      </small>
+                    </div>
+                    <div class="p-mb-2">
+                      <small>
+                        <b>5y Change: </b>
+                        <span [ngStyle]="{ color: stock.data.stats.year5ChangePercent  >= 0 ? '#3ac961' : 'red' }">{{ (stock.data.stats.year5ChangePercent * 100).toFixed(2) }}%</span>
+                      </small>
+                    </div>
                   </div>
                   <div class="p-col-6">
-                    <div class="p-mb-2"><small><b>Volume:</b> {{ stock.data.quote.volume?.toLocaleString() }}</small></div>
-                    <div class="p-mb-2"><small><b>Avg. Total Volume:</b> {{ stock.data.quote.avgTotalVolume?.toLocaleString() }}</small></div>
                     <div class="p-mb-2"><small><b>Market Cap:</b> {{ stock.data.stats.marketcap | abbreviatedCurrencyFormatterPipe }}</small></div>
                     <div class="p-mb-2"><small><b>P/E Ratio:</b> {{ stock.data.stats.peRatio.toFixed(2) }}</small></div>
+                    <div class="p-mb-2"><small><b>EPS (TTM):</b> {{ stock.data.stats?.ttmEPS.toFixed(2) }}</small></div>
                     <div class="p-mb-2"><small><b>Beta:</b> {{ stock.data.stats.beta.toFixed(2) }}</small></div>
                     <div class="p-mb-2"><small><b>Dividend Yield:</b> {{ (stock.data.stats.dividendYield * 100).toFixed(2) }}</small></div>
+                    <div class="p-mb-2"><small><b>Ex-Dividend Date:</b> {{ stock.data.stats?.exDividendDate }}</small></div>
+                    <div class="p-mb-2"><small><b>Earnings date:</b> {{ stock.data.stats?.nextEarningsDate }}</small></div>
+                    <div class="p-mb-2"><small><b>Volume:</b> {{ stock.data.quote?.volume?.toLocaleString() }}</small></div>
+                    <div class="p-mb-2"><small><b>Avg. Total Volume:</b> {{ stock.data.quote.avgTotalVolume?.toLocaleString() }}</small></div>
+                    <div class="p-mb-2"><small><b>Shares Outstanding:</b> {{ stock.data.stats?.sharesOutstanding | abbreviatedCurrencyFormatterPipe }}</small></div>
+                    <!-- <div class="p-mb-2"><small><b>Avg. Vol (30 Day):</b> {{ stock.data.stats?.avg30Volume?.toLocaleString() }}</small></div>
+                    <div class="p-mb-2"><small><b>Avg. Vol (10 Day):</b> {{ stock.data.stats?.avg10Volume?.toLocaleString() }}</small></div>
+                    <div class="p-mb-2"><small><b>50-Day Moving Average:</b> {{ stock.data.stats?.day50MovingAvg?.toLocaleString() }}</small></div>
+                    <div class="p-mb-2"><small><b>200-Day Moving Average:</b> {{ stock.data.stats?.day200MovingAvg?.toLocaleString() }}</small></div> -->
                   </div>
                 </div>
             </div>
@@ -281,9 +314,6 @@
             </div>
           </div>
         </div>
-
-
-
     </div>
 </div>
 <ng-template #stockNotLoaded>
