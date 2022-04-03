@@ -16,6 +16,7 @@ import { FormsModule } from '@angular/forms';
 import { PrimeNGModule } from '../primeng.module';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { PhoneNumberPipe } from './pipes/phone-number.pipe';
+import { ShareOnSocialMediaBarComponent } from './components/share-on-social-media-bar/share-on-social-media-bar.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { PhoneNumberPipe } from './pipes/phone-number.pipe';
     UsernameFormFieldValidatorPipe,
     CopyPageLinkComponent,
     ShareOnSocialMediaSpeedDialComponent,
+    ShareOnSocialMediaBarComponent,
   ],
   imports: [ClipboardModule, CommonModule, FormsModule, NgxChartsModule, PrimeNGModule],
   exports: [
@@ -44,6 +46,7 @@ import { PhoneNumberPipe } from './pipes/phone-number.pipe';
     PhoneNumberPipe,
     RoundingPipe,
     ShareOnSocialMediaSpeedDialComponent,
+    ShareOnSocialMediaBarComponent,
     TruncatePipe,
     UsernameFormFieldValidatorPipe,
   ],
