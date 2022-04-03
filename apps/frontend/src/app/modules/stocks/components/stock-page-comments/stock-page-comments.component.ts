@@ -1,47 +1,88 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, HostListener, Injectable, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { LazyLoadEvent } from 'primeng/api';
+import { Observable, of } from 'rxjs';
+import { PrimeNGConfig } from 'primeng/api';
+import { faker } from '@faker-js/faker';
 
 export interface Comments {
   username;
   comment;
+  avatar;
   datetime;
+}
+
+// TODO: DELETE
+@Injectable()
+export class ProductService {
+  status: string[] = ['OUTOFSTOCK', 'INSTOCK', 'LOWSTOCK'];
+
+  constructor(private http: HttpClient) {}
+
+  getStockComments(startIndex: number, numRows: number): Observable<Comments[]> {
+    const comments: Comments[] = [];
+
+    let commentDate = new Date();
+
+    Array.from({ length: Math.floor(Math.random() * 100) }).forEach(() => {
+      const zeroOr1 = Math.floor(Math.random() * 2);
+      const randomComment = {
+        username: faker.internet.userName(),
+        comment: zeroOr1 === 0 ? faker.lorem.paragraph() : faker.lorem.paragraphs(),
+        avatar: faker.image.avatar(),
+        datetime: commentDate,
+      };
+      comments.push(randomComment);
+      commentDate = new Date(commentDate.setDate(commentDate.getDate()-1))
+    });
+
+    const filteredComments: Comments[] = comments.slice(startIndex, startIndex + numRows);
+
+    return of(filteredComments);
+  }
 }
 
 @Component({
   selector: 'app-stock-page-comments',
   templateUrl: './stock-page-comments.component.html',
-  styleUrls: ['./stock-page-comments.component.scss'],
+  styleUrls: ['./stock-page-comments.component.scss', './stock-page-comments.component.css'],
+  providers: [ProductService],
 })
 export class StockPageCommentsComponent implements OnInit {
-  comments = [];
-  totalComments = 0;
+  comments$: Observable<any[]>;
+  isLoading$: Observable<boolean>;
+
+  comments: any[];
+  isLoading = false;
+  commentsLoaded = 0;
+
+  totalCommentsLength = 0;
+
+  selectedSortOption: any;
+  sortOptions = [
+    { displayValue: 'Newest', id: 1},
+    { displayValue: 'Oldest', id: 2},
+    { displayValue: 'Top Comments', id: 3},
+  ];
+
+  constructor(private productService: ProductService, private primeNGConfig: PrimeNGConfig) {}
 
   ngOnInit(): void {
-    this.comments = [
-      { username: 'gabelorenzo', comment: 'First Comment', datetime: '1/1/2022' },
-      { username: 'gabelorenzo2', comment: 'Second Comment', datetime: '1/1/2022' },
-      { username: 'gabelorenzo3', comment: 'Third Comment', datetime: '1/1/2022' },
-      { username: 'gabelorenzo4', comment: 'Fourth Comment', datetime: '1/1/2022' },
-      { username: 'gabelorenzo5', comment: 'Fifth Comment', datetime: '1/1/2022' },
-      { username: 'gabelorenzo6', comment: 'Sixth Comment', datetime: '1/1/2022' },
-      { username: 'gabelorenzo7', comment: 'Seventh Comment', datetime: '1/1/2022' },
-      { username: 'gabelorenzo8', comment: 'Eigth Comment', datetime: '1/1/2022' },
-      { username: 'gabelorenzo9', comment: 'Ninth Comment', datetime: '1/1/2022' },
-    ];
+    this.productService.getStockComments(0, 20).subscribe((comments) => {
+      this.comments = comments;
+      this.commentsLoaded = comments.length;
+      this.totalCommentsLength = 94;
+    });
   }
 
-  loadCommentsLazy(event: LazyLoadEvent) {
-    console.log('LAZY LOAD');
-    //simulate remote connection with a timeout
+  onScroll() {
+    this.isLoading = true;
     setTimeout(() => {
-      //load data of required page
-      const loadedComments = this.comments.slice(event.first, event.first + event.rows);
+      this.productService.getStockComments(this.commentsLoaded + 20, 20).subscribe((loadedComments) => {
+        Array.prototype.splice.apply(this.comments, [...[this.commentsLoaded + 20, 20], ...loadedComments]);
 
-      //populate page of virtual cars
-      Array.prototype.splice.apply(this.comments, [...[event.first, event.rows], ...loadedComments]);
-
-      //trigger change detection
-      this.comments = [...this.comments];
-    }, 4000);
+        this.isLoading = false;
+      });
+    }, 1000);
   }
 }

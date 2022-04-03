@@ -15,10 +15,14 @@ For more info on our development processes, visit our [wiki](https://github.com/
 # Prerequisites
 
 1. Install Node.js & npm: [Node.js Download](https://nodejs.org/en/download/). Currently this application is verified to work with `Node v14.x` & `npm v6.x` & may or may not work fine with the latest versions.
-2. Install Angular CLI: `npm install -g @angular/cli`. Currently this application is on `Angular 12`, but it may be fine to use later versions of the CLI.
-3. Install Nx CLI Globally: `npm install -g nx`.
-4. Install Docker: [Docker Download](https://docs.docker.com/get-docker/).
-5. (Optional) Install [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli).
+
+- We also recommend installing `nvm` in case you need to manage multiple Node versions on your machine. This project also has a `.nvmrc` file, so once you have nvm installed, you can just install the Node version specified in that file, and then whenever you have this project open, you can just run `nvm use` to use the Node version for that session.
+
+2. Install Angular CLI globally: `npm install -g @angular/cli`. Currently this application is on `Angular 12`, but it may be fine to use later versions of the CLI.
+3. Install Nest CLI globally: `npm install -g @nestjs/cli`
+4. Install Nx CLI globally: `npm install -g nx`.
+5. Install Docker: [Docker Download](https://docs.docker.com/get-docker/).
+6. (Optional) Install [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli).
 
 # Running the app locally
 
