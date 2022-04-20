@@ -1,17 +1,17 @@
-$bodyBgColor:linear-gradient(99deg, #394149 0%, #2F363E 100%)!default;
-$textColor:#E5E8EC !default;
-$textSecondaryColor:#CDD2DB !default;
+// $bodyBgColor: linear-gradient(99deg, #000000 0%, #2f363e 100%) !default;
+$bodyBgColor: black !default;
+$textColor: #e5e8ec !default;
+$textSecondaryColor: #cdd2db !default;
 
-$contentBgColor:#434B54 !default;
-$contentAltBgColor:#4E565F !default;
-$dividerColor:#4E565F !default;
+$contentBgColor: #171b25 !default;
+$contentAltBgColor: #4e565f !default;
+$dividerColor: #4e565f !default;
 
-$menuTooltipBgColor:#1c202c !default;
-$menuTooltipTextColor:#ffffff !default;
+$menuTooltipBgColor: #1c202c !default;
+$menuTooltipTextColor: #ffffff !default;
 
-
-:root{
-    --content-alt-bg-color:#{$contentAltBgColor};
+:root {
+  --content-alt-bg-color: #{$contentAltBgColor};
 }
 
 @import './_layout_common';

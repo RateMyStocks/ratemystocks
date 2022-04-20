@@ -1,0 +1,28 @@
+td,
+th {
+  .stock-logo {
+    margin-top: 5px;
+    width: 40px !important;
+    height: auto;
+  }
+
+  a {
+    font-weight: bold;
+  }
+}
+
+.stock-rating {
+  font-weight: bold;
+}
+
+.buy-stock-rating {
+  color: #3ac961;
+}
+
+.hold-stock-rating {
+  color: #c98b3a;
+}
+
+.sell-stock-rating {
+  color: red;
+}

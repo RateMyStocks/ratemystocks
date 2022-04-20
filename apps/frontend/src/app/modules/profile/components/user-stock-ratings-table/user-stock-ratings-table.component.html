@@ -1,0 +1,47 @@
+<div>
+  <p-table #dt1 [value]="stockRatings" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll" sortField="lastUpdated" [sortOrder]="-1" [globalFilterFields]="['ticker']" styleClass="p-datatable-gridlines">
+    <ng-template pTemplate="caption">
+      <div class="p-d-flex">
+          <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+          <span class="p-input-icon-left p-ml-auto">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword" />
+          </span>
+      </div>
+  </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="ticker">Ticker <p-sortIcon field="ticker"></p-sortIcon>  <p-columnFilter type="text" field="ticker" display="menu"></p-columnFilter></th>
+            <th pSortableColumn="stockRating">Rating <p-sortIcon field="stockRating"></p-sortIcon></th>
+            <th pSortableColumn="lastUpdated">
+              Last Updated
+              <p-sortIcon field="lastUpdated"></p-sortIcon>
+              <p-columnFilter field="lastUpdated" matchMode="equals" display="menu">
+                <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                  <p-dropdown [ngModel]="value" [options]="ratingTypes" (onChange)="filter($event.value)"
+                    placeholder="Any">
+                    <ng-template let-option pTemplate="item">
+                      <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                    </ng-template>
+                  </p-dropdown>
+                </ng-template>
+              </p-columnFilter>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-stockRating>
+        <tr *ngIf="stockRating">
+          <td><a routerLink="/stocks/{{ stockRating.ticker }}">{{ stockRating.ticker }}</a></td>
+          <td class="stock-rating" [ngClass]="{
+                'buy-stock-rating': stockRating.stockRating.toUpperCase() === 'BUY',
+                'hold-stock-rating': stockRating.stockRating.toUpperCase() === 'HOLD',
+                'sell-stock-rating': stockRating.stockRating.toUpperCase() === 'SELL'
+              }"
+          >
+              {{ stockRating.stockRating.toUpperCase() }}
+          </td>
+            <td><small>{{ stockRating.lastUpdated | momentFromNowDatePipe }}</small></td>
+        </tr>
+    </ng-template>
+  </p-table>
+</div>

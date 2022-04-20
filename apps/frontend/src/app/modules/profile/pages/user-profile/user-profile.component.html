@@ -1,9 +1,9 @@
 <div class="layout-dashboard">
     <div class="p-grid">
-      <div class="p-col-12 p-md-12 p-xl-3">
+      <div class="p-col-12 p-md-12 p-l-3 p-xl-3">
         <div class="p-grid">
           <div class="p-col-12 p-md-6 p-xl-12">
-            <p-card [header]="user?.username" subheader="Member Since" styleClass="p-card-shadow">
+            <p-card [header]="user?.username" [subheader]="'Joined ' + memberSinceDate" styleClass="p-card-shadow">
               <!-- <p-card> -->
               <ng-template pTemplate="header">
                 <div style="text-align: center; padding-top: 10px !important;" *ngIf="user">
@@ -12,15 +12,15 @@
                     style="width: 65%; height: auto;"
                     src="../../../../../assets/layout/images/avatars/{{ user.spiritAnimal }}.png"
                   />
-                  <!-- <h4>{{ user?.username }}</h4> -->
+                  <h4>{{ user?.username }}</h4>
                 </div>
               </ng-template>
 
               <small>6 Followers</small>
+              <span>&#8226;</span>
               <small>6 Following</small>
 
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt
-                  quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque quas!</p>
+              <p>{{ user?.bio }}</p>
 
               <hr>
 
@@ -31,60 +31,35 @@
             </p-card>
           </div>
         </div>
-        </div>
-        <div class="p-col-12 p-md-12 p-xl-9">
-          <p-tabView styleClass="tabview-custom">
-            <p-tabPanel>
-              <ng-template pTemplate="header">
-                <i class="pi pi-calendar"></i>
-                <span>Ratings</span>
-              </ng-template>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-                mollit anim id est laborum.
-              </p>
-            </p-tabPanel>
-            <p-tabPanel header="Portfolios">
-              <ng-template pTemplate="header">
-                <i class="pi pi-user"></i>
-                <span>Header II</span>
-              </ng-template>
-              <p>
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab
-                illo inventore veritatis et quasi architecto beatae vitae dicta sunt
-                explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut
-                odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
-                voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non
-                numquam eius modi.
-              </p>
-            </p-tabPanel>
-            <p-tabPanel header="Lists">
-              <ng-template pTemplate="header">
-                <i class="pi pi-search"></i>
-                <span>Header III</span>
-                <i class="pi pi-cog"></i>
-              </ng-template>
-              <p>
-                At vero eos et accusamus et iusto odio dignissimos ducimus qui
-                blanditiis praesentium voluptatum deleniti atque corrupti quos dolores
-                et quas molestias excepturi sint occaecati cupiditate non provident,
-                similique sunt in culpa qui officia deserunt mollitia animi, id est
-                laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita
-                distinctio. Nam libero tempore, cum soluta nobis est eligendi optio
-                cumque nihil impedit quo minus.
-              </p>
-            </p-tabPanel>
-          </p-tabView>
-        </div>
-
-
-
+      </div>
+      <div class="p-col-12 p-md-12 p-l-9 p-xl-9">
+        <p-tabView styleClass="tabview-custom">
+          <p-tabPanel>
+            <ng-template pTemplate="header">
+              <!-- <i class="pi pi-calendar"></i> -->
+              <span>Ratings</span>
+            </ng-template>
+            <div *ngIf="user">
+              <app-user-stock-ratings-table [user]="user"></app-user-stock-ratings-table>
+            </div>
+          </p-tabPanel>
+          <p-tabPanel header="Portfolios">
+            <ng-template pTemplate="header">
+              <!-- <i class="pi pi-user"></i> -->
+              <span>Portfolios</span>
+            </ng-template>
+            <p>
+              Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+              accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab
+              illo inventore veritatis et quasi architecto beatae vitae dicta sunt
+              explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut
+              odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
+              voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non
+              numquam eius modi.
+            </p>
+          </p-tabPanel>
+        </p-tabView>
+      </div>
 
     </div>
 </div>

@@ -1,20 +1,20 @@
 .layout-topbar-dark {
-    $topbarBgColor: #434B54;
-    $topbarBorderColor:#4E565F;
+  $topbarBgColor: #171b25;
+  $topbarBorderColor: #4e565f;
 
-    $topbarItemTextColor: #CACFDB;
-    $topbarItemSecondaryTextColor: rgba($topbarItemTextColor,.7);
-    $topbarItemTextHoverBgColor:#4E565F;
-    $topbarItemBgColor: rgba(#CACFDB,0.2);
-    $topbarMenuButtonBgColor: rgba(#CACFDB,0.1);
-    
-    $topbarItemSubmenuItemHoverBgColor:#434B54;
-    $topbarSubmenuHeaderBgColor:#434B54;
+  $topbarItemTextColor: #cacfdb;
+  $topbarItemSecondaryTextColor: rgba($topbarItemTextColor, 0.7);
+  $topbarItemTextHoverBgColor: #4e565f;
+  $topbarItemBgColor: rgba(#cacfdb, 0.2);
+  $topbarMenuButtonBgColor: rgba(#cacfdb, 0.1);
 
-    $topbarItemSubmenuBgColor: #434B54;
-    $topbarItemSubmenuTextColor: #f8fafc;
-    $topbarItemSubmenuSecondaryTextColor: rgba(#f8fafc, .7);
-    $topbarItemSubmenuBoxShadow:0 2px 12px 0 rgba(0, 0, 0, 0.06);
+  $topbarItemSubmenuItemHoverBgColor: #434b54;
+  $topbarSubmenuHeaderBgColor: #434b54;
 
-    @import '../_topbar_theme';
+  $topbarItemSubmenuBgColor: #434b54;
+  $topbarItemSubmenuTextColor: #f8fafc;
+  $topbarItemSubmenuSecondaryTextColor: rgba(#f8fafc, 0.7);
+  $topbarItemSubmenuBoxShadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
+
+  @import '../_topbar_theme';
 }
