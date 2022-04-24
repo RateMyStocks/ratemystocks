@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UserProfileDto } from '@ratemystocks/api-interface';
+import { Table } from 'primeng/table';
 import { StockService } from '../../../../core/services/stock.service';
 
 @Component({
@@ -23,5 +24,9 @@ export class UserStockRatingsTableComponent implements OnInit {
     this.stockService.getStockRatingsForUser(this.user.id, false).subscribe((stockRatings: any[]) => {
       this.stockRatings = stockRatings;
     });
+  }
+
+  clear(table: Table) {
+    table.clear();
   }
 }

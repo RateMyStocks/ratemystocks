@@ -26,3 +26,27 @@ th {
 .sell-stock-rating {
   color: red;
 }
+
+.stock-rating-badge {
+  border-radius: 2px;
+  padding: 0.25em 0.5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+
+  &.status-buy {
+      background: #3ac961;
+      color: #FFF;
+  }
+
+  &.status-hold {
+      background: #c98b3a;
+      color: #FFF;
+  }
+
+  &.status-sell {
+      background: red;
+      color: #FFF;
+  }
+}
