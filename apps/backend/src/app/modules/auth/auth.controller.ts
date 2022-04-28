@@ -9,6 +9,7 @@ import {
   Redirect,
   Response,
   Patch,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
@@ -80,7 +81,7 @@ export class AuthController {
    */
   @Get('/verifyuser/:userId')
   @Redirect(process.env.FRONTEND_HOST, 200)
-  async verifyEmail(@Param('userId') userId: string, @Response() res: ExpressResponse): Promise<void> {
+  async verifyEmail(@Param('userId', new ParseUUIDPipe()) userId: string, @Response() res: ExpressResponse): Promise<void> {
     try {
       await this.authService.verifyEmail(userId, res);
     } catch (error) {
@@ -106,7 +107,7 @@ export class AuthController {
    * @param token The JWT generated for the one-time link.
    */
   @Get('/resetpassword/validation/:userid/:token')
-  async validateUserResetPassword(@Param('userid') userId: string, @Param('token') token: string): Promise<void> {
+  async validateUserResetPassword(@Param('userid', new ParseUUIDPipe()) userId: string, @Param('token') token: string): Promise<void> {
     return this.authService.validateUserResetPassword(userId, token);
   }
 
@@ -118,7 +119,7 @@ export class AuthController {
    */
   @Patch('/resetpassword/:userid/:token')
   async resetPassword(
-    @Param('userid') userId: string,
+    @Param('userid', new ParseUUIDPipe()) userId: string,
     @Param('token') token: string,
     @Body() changePasswordDto: ChangePasswordDto
   ): Promise<boolean> {

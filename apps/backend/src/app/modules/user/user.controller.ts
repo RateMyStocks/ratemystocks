@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Patch, UseGuards } from '@nestjs/common';
 import { PortfolioDto, UserProfileDto } from '@ratemystocks/api-interface';
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -41,7 +41,7 @@ export class UserController {
   @UseGuards(AuthGuard())
   savePortfolioToUserAccount(
     @GetUser() userAccount: UserAccount,
-    @Param('portfolioId') portfolioId: string
+    @Param('portfolioId', new ParseUUIDPipe()) portfolioId: string
   ): Promise<void> {
     return this.userService.savePortfolioToUserAccount(userAccount, portfolioId);
   }
@@ -55,7 +55,7 @@ export class UserController {
   @UseGuards(AuthGuard())
   unsavePortfolioFromUserAccount(
     @GetUser() userAccount: UserAccount,
-    @Param('portfolioId') portfolioId: string
+    @Param('portfolioId', new ParseUUIDPipe()) portfolioId: string
   ): Promise<void> {
     return this.userService.unsavePortfolioFromUserAccount(userAccount, portfolioId);
   }

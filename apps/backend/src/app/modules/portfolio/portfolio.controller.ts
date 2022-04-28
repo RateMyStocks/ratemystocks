@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
   CreatePortfolioDto,
@@ -37,18 +37,18 @@ export class PortfolioController {
    * @return A list of DTOs representing the portfolios a user has created.
    */
   @Get('/list/:userId')
-  getPortfoliosByUserId(@Param('userId') userId: string): Promise<UserPortfolioDto[]> {
+  getPortfoliosByUserId(@Param('userId', new ParseUUIDPipe()) userId: string): Promise<UserPortfolioDto[]> {
     return this.portfolioService.getPortfoliosByUserId(userId);
   }
 
   // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
   @Get('/:id')
-  getPortfolioById(@Param('id') id: string): Promise<Portfolio> {
+  getPortfolioById(@Param('id', new ParseUUIDPipe()) id: string): Promise<Portfolio> {
     return this.portfolioService.getPortfolioById(id);
   }
 
   @Get('/:id/stocks')
-  getPortfolioStocks(@Param('id') id: string): Promise<PortfolioStockDto[]> {
+  getPortfolioStocks(@Param('id', new ParseUUIDPipe()) id: string): Promise<PortfolioStockDto[]> {
     return this.portfolioService.getPortfolioStocks(id);
   }
 
@@ -63,7 +63,9 @@ export class PortfolioController {
   }
 
   @Get('/:portfolioId/ratings')
-  getPortfolioRatingCounts(@Param('portfolioId') portfolioId: string): Promise<{ likes: number; dislikes: number }> {
+  getPortfolioRatingCounts(
+    @Param('portfolioId', new ParseUUIDPipe()) portfolioId: string
+  ): Promise<{ likes: number; dislikes: number }> {
     return this.portfolioService.getPortfolioRatingCounts(portfolioId);
   }
 
@@ -71,7 +73,7 @@ export class PortfolioController {
   @UseGuards(AuthGuard())
   getPortfolioUserRating(
     @GetUser() userAccount: UserAccount,
-    @Param('portfolioId') portfolioId: string
+    @Param('portfolioId', new ParseUUIDPipe()) portfolioId: string
   ): Promise<PortfolioRating> {
     return this.portfolioService.getPortfolioUserRating(portfolioId, userAccount.id);
   }
@@ -80,7 +82,7 @@ export class PortfolioController {
   @UseGuards(AuthGuard())
   createOrUpdatePortfolioRating(
     @GetUser() userAccount: UserAccount,
-    @Param('portfolioId') portfolioId,
+    @Param('portfolioId', new ParseUUIDPipe()) portfolioId: string,
     @Body() portfolioRatingDto: CreatePortfolioRatingDto
   ): Promise<PortfolioRating> {
     return this.portfolioService.createOrUpdatePortfolioRating(portfolioId, userAccount.id, portfolioRatingDto);
@@ -97,7 +99,7 @@ export class PortfolioController {
   @UseGuards(AuthGuard())
   updatePortfolioName(
     @GetUser() userAccount: UserAccount,
-    @Param('portfolioId') portfolioId,
+    @Param('portfolioId', new ParseUUIDPipe()) portfolioId: string,
     @Body() portfolioName: { name: string }
   ): Promise<Portfolio> {
     // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
@@ -115,7 +117,7 @@ export class PortfolioController {
   @UseGuards(AuthGuard())
   updatePortfolioDescription(
     @GetUser() userAccount: UserAccount,
-    @Param('portfolioId') portfolioId,
+    @Param('portfolioId', new ParseUUIDPipe()) portfolioId: string,
     @Body() portfolioDescription: { description: string }
   ): Promise<Portfolio> {
     // TODO: Don't return the entity and delete sensitive info - map the entity to a dto
@@ -133,7 +135,7 @@ export class PortfolioController {
   @UseGuards(AuthGuard())
   updatePortfolioHoldings(
     @GetUser() userAccount: UserAccount,
-    @Param('portfolioId') portfolioId,
+    @Param('portfolioId', new ParseUUIDPipe()) portfolioId,
     @Body(PortfolioHoldingsValidationPipe) portfolioHoldings: { holdings: CreatePortfolioStockDto[] }
   ): Promise<Portfolio> {
     // TODO: This should return a DTO
@@ -143,11 +145,11 @@ export class PortfolioController {
 
   /**
    * Deletes a Portfolio by it's unique id.
-   * @param portfolioId The UUID of the portfolio to delete.
+   * @param id The UUID of the portfolio to delete.
    */
   @Delete('/:id')
   @UseGuards(AuthGuard())
-  deletePortfolioById(@Param('id') id): Promise<void> {
+  deletePortfolioById(@Param('id', new ParseUUIDPipe()) id): Promise<void> {
     return this.portfolioService.deletePortfolioById(id);
   }
 
@@ -157,7 +159,7 @@ export class PortfolioController {
    */
   @Delete('/:portfolioRatingId/ratings/user')
   @UseGuards(AuthGuard())
-  deletePortfolioRating(@Param('portfolioRatingId') portfolioRatingId: string): Promise<void> {
+  deletePortfolioRating(@Param('portfolioRatingId', new ParseUUIDPipe()) portfolioRatingId: string): Promise<void> {
     return this.portfolioService.deletePortfolioRating(portfolioRatingId);
   }
 
@@ -168,7 +170,7 @@ export class PortfolioController {
    * @returns The number of page visits for a given portfolio
    */
   @Post('/visit-count/:portfolioId')
-  addStockPageVisit(@Param('portfolioId') portfolioId: string, @Query('userId') userId?: string): Promise<number> {
+  addStockPageVisit(@Param('portfolioId', new ParseUUIDPipe()) portfolioId: string, @Query('userId') userId?: string): Promise<number> {
     return this.portfolioService.addPortfolioPageVisit(portfolioId, userId);
   }
 
@@ -179,7 +181,7 @@ export class PortfolioController {
    * @returns A list of the portfolio page visit counts for the last N days.
    */
   @Get('/visit-counts/:portfolioId')
-  getVisitCounts(@Param('portfolioId') portfolioId: string, @Query('lastNDays') lastNDays = 6): Promise<any[]> {
+  getVisitCounts(@Param('portfolioId', new ParseUUIDPipe()) portfolioId: string, @Query('lastNDays') lastNDays = 6): Promise<any[]> {
     return this.portfolioService.getVisitCounts(portfolioId, lastNDays);
   }
 
@@ -191,7 +193,7 @@ export class PortfolioController {
    */
   @Post('/follow/:portfolioId')
   @UseGuards(AuthGuard())
-  followPortfolio(@GetUser() userAccount: UserAccount, @Param('portfolioId') portfolioId: string): Promise<void> {
+  followPortfolio(@GetUser() userAccount: UserAccount, @Param('portfolioId', new ParseUUIDPipe()) portfolioId: string): Promise<void> {
     return this.portfolioService.followPortfolio(userAccount, portfolioId);
   }
 
@@ -204,7 +206,7 @@ export class PortfolioController {
    */
   @Delete('/unfollow/:portfolioId')
   @UseGuards(AuthGuard())
-  unfollowStock(@GetUser() userAccount: UserAccount, @Param('portfolioId') portfolioId: string): Promise<void> {
+  unfollowStock(@GetUser() userAccount: UserAccount, @Param('portfolioId', new ParseUUIDPipe()) portfolioId: string): Promise<void> {
     return this.portfolioService.unfollowPortfolio(userAccount, portfolioId);
   }
 
@@ -214,7 +216,7 @@ export class PortfolioController {
    * @return The number of followers for a given portfolio.
    */
   @Get('/follower-count/:portfolioId')
-  getTotalFollowerCounts(@Param('portfolioId') portfolioId: string): Promise<number> {
+  getTotalFollowerCounts(@Param('portfolioId', new ParseUUIDPipe()) portfolioId: string): Promise<number> {
     return this.portfolioService.getTotalFollowerCounts(portfolioId);
   }
 
@@ -226,7 +228,7 @@ export class PortfolioController {
    */
   @Get('/follower-counts/:portfolioId')
   getFollowerCountsLastNDays(
-    @Param('portfolioId') portfolioId: string,
+    @Param('portfolioId', new ParseUUIDPipe()) portfolioId: string,
     @Query('lastNDays') lastNDays = 6
   ): Promise<any[]> {
     return this.portfolioService.getFollowerCountsLastNDays(portfolioId, lastNDays);
@@ -242,7 +244,7 @@ export class PortfolioController {
   @UseGuards(AuthGuard())
   isFollowingPortfolio(
     @GetUser() userAccount: UserAccount,
-    @Param('portfolioId') portfolioId: string
+    @Param('portfolioId', new ParseUUIDPipe()) portfolioId: string
   ): Promise<boolean> {
     return this.portfolioService.isFollowingPortfolio(userAccount, portfolioId);
   }

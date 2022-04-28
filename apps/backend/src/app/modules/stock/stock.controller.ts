@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
   IexCloudStockDataDto,
@@ -48,7 +48,7 @@ export class StockController {
    */
   @Get('/ratings/user/:userId')
   getStockRatingsForUser(
-    @Param('userId') userId: string,
+    @Param('userId', new ParseUUIDPipe()) userId: string,
     @Query('showInactive') showInactive: boolean // technically all query params come in as strings in NestJS, but this should still work
   ): Promise<StockRating[]> {
     return this.stockService.getUserStockRatings(userId, showInactive);
