@@ -1,5 +1,5 @@
-import { Controller, Get, Param, ParseUUIDPipe, Patch, UseGuards } from '@nestjs/common';
-import { PortfolioDto, UserProfileDto } from '@ratemystocks/api-interface';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, UseGuards } from '@nestjs/common';
+import { EditUserProfileDto, PortfolioDto, UserProfileDto } from '@ratemystocks/api-interface';
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/get-user.decorator';
@@ -80,5 +80,16 @@ export class UserController {
   @UseGuards(AuthGuard())
   getSavedStocksForUser(@GetUser() userAccount: UserAccount): Promise<any[]> {
     return this.userService.getSavedStocksForUser(userAccount);
+  }
+
+  /**
+   * Endpoint for updating the Profile information for the logged-in User.
+   * @param userAccount The userAccount object of the logged-in user.
+   * @param profileDto The DTO containing the User Profile data to be updated.
+   */
+  @Patch('/profile/info')
+  @UseGuards(AuthGuard())
+  updateUserProfile(@GetUser() userAccount: UserAccount, @Body() profileDto: EditUserProfileDto): Promise<void> {
+    return this.userService.updateUserProfile(userAccount, profileDto);
   }
 }

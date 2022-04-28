@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UserPortfolioDto, UserProfileDto } from '@ratemystocks/api-interface';
+import { ConfirmationService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../core/services/auth.service';
 import { PortfolioService } from '../../../../core/services/portfolio.service';
@@ -9,7 +10,7 @@ import { PortfolioService } from '../../../../core/services/portfolio.service';
   templateUrl: './user-portfolios-table.component.html',
   styleUrls: ['./user-portfolios-table.component.scss'],
 })
-export class UserPortfoliosTableComponent implements OnInit {
+export class UserPortfoliosTableComponent implements OnInit, OnDestroy {
   isAuth: boolean;
   authStatusSub: Subscription;
   loggedInUserId: string;
@@ -22,8 +23,7 @@ export class UserPortfoliosTableComponent implements OnInit {
   constructor(
     private portfolioService: PortfolioService,
     private authService: AuthService,
-    // public dialog: MatDialog,
-    // private snackbar: MatSnackBar,
+    private confirmationService: ConfirmationService,
     private changeDetectorRefs: ChangeDetectorRef
   ) {}
 
@@ -55,25 +55,14 @@ export class UserPortfoliosTableComponent implements OnInit {
    */
   onClickDeletePortfolioButton(portfolioId: string): void {
     if (this.isAuth && this.user.id === this.loggedInUserId) {
-      // const dialogData: ConfirmDialogModel = {
-      //   title: 'Delete Portfolio',
-      //   message: 'Are you sure you want to delete this portfolio?',
-      // };
-      // const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      //   maxWidth: '500px',
-      //   data: dialogData,
-      // });
-      // dialogRef.afterClosed().subscribe((isConfirmed: boolean) => {
-      //   if (isConfirmed) {
-      //     this.portfolioService.deletePortfolioById(portfolioId).subscribe(() => {
-      //       this.refreshPortfoliosTable();
-      //     });
-      //     this.snackbar.open(`Portfolio deleted!`, 'OK', {
-      //       duration: 2000,
-      //       panelClass: 'success-snackbar',
-      //     });
-      //   }
-      // });
+      this.confirmationService.confirm({
+        message: 'Are you sure you want to delete your portfolio?',
+        accept: () => {
+          this.portfolioService.deletePortfolioById(portfolioId).subscribe(() => {
+            this.portfolios = this.portfolios.filter(val => val.id !== portfolioId);
+          });
+        }
+      });
     }
   }
 }

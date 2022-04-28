@@ -1,16 +1,14 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AppBreadcrumbService } from '../../../../app.breadcrumb.service';
-// import { AppMainComponent } from '../../../../app.main.component';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ProductService } from '../../../../core/services/productservice';
 import { UserService } from '../../../../core/services/user.service';
-import { Product } from '../../../../shared/models/product';
-import { UserProfileDto } from '@ratemystocks/api-interface';
+import { EditUserProfileDto, UserProfileDto } from '@ratemystocks/api-interface';
 import * as moment from 'moment';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-user-profile',
@@ -19,6 +17,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
   isAuth: boolean;
+  loggedInUserId: string;
   authStatusSub: Subscription;
   userLoaded: boolean;
   user: UserProfileDto;
@@ -26,9 +25,13 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   followers = 0;
   following = 0;
 
+  displayEditProfileDialog = false;
+
   memberSinceDate!: string;
 
-  // asyncUser: Observable<UserProfileDto>;
+  profileForm: FormGroup = new FormGroup({
+    bio: new FormControl(null, {}),
+  });
 
   moment = moment;
 
@@ -44,14 +47,13 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isAuth = this.authService.isAuthorized();
+    this.loggedInUserId = this.authService.getUserId();
     this.authStatusSub = this.authService.getAuthStatusListener().subscribe((authStatus: boolean) => {
       this.isAuth = authStatus;
     });
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       const username = paramMap.get('username');
-
-      // this.asyncUser = this.userService.getUserByUsername(username);
 
       this.userService.getUserByUsername(username).subscribe(
         (user: UserProfileDto) => {
@@ -75,5 +77,20 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.authStatusSub.unsubscribe();
+  }
+
+  onClickEditProfile(): void {
+    this.displayEditProfileDialog = true;
+  }
+
+  onSubmitEditProfileForm(): void {
+    const profileInfo: EditUserProfileDto = {
+      bio: this.profileForm.value.bio,
+    };
+    this.userService.updateUserProfileInfo(profileInfo).subscribe(() => {
+      this.displayEditProfileDialog = false;
+
+      this.user = { ...this.user, bio: profileInfo.bio };
+    });
   }
 }

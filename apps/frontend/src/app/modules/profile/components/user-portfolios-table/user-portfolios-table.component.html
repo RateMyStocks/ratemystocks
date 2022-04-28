@@ -1,4 +1,5 @@
 <div>
+  <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
   <p-table #dt1 [value]="portfolios" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll" sortField="lastUpdated" [sortOrder]="-1" [globalFilterFields]="['name']" styleClass="p-datatable-gridlines">
     <ng-template pTemplate="caption">
       <div class="p-d-flex">
@@ -12,34 +13,25 @@
     <ng-template pTemplate="header">
         <tr>
             <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon>  <p-columnFilter type="text" field="name" display="menu"></p-columnFilter></th>
-            <!-- <th>
-              Rating
-              <p-columnFilter field="stockRating" matchMode="equals" display="menu">
-                <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                  <p-dropdown [ngModel]="value" [options]="ratingTypes" (onChange)="filter($event.value)"
-                    placeholder="Any">
-                    <ng-template let-option pTemplate="item">
-                      <span [class]="'stock-rating-badge status-' + option.value">{{option.label}}</span>
-                    </ng-template>
-                  </p-dropdown>
-                </ng-template>
-              </p-columnFilter>
-            </th>
-            <th pSortableColumn="lastUpdated">Last Updated<p-sortIcon field="lastUpdated"></p-sortIcon></th> -->
+            <th pSortableColumn="num_likes">Likes <p-sortIcon field="num_likes"></p-sortIcon></th>
+            <th pSortableColumn="num_dislikes">Dislikes <p-sortIcon field="num_dislikes"></p-sortIcon></th>
+            <th pSortableColumn="num_holdings"># of Holdings <p-sortIcon field="num_holdings"></p-sortIcon></th>
+            <th pSortableColumn="largest_holding">Largest Holding <p-sortIcon field="largest_holding"></p-sortIcon></th>
+            <th pSortableColumn="last_updated">Last Holding <p-sortIcon field="last_updated"></p-sortIcon></th>
+            <th *ngIf="isAuth && user.id === loggedInUserId" >Actions</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-portfolio>
         <tr *ngIf="portfolio">
           <td><a routerLink="/portfolios/{{ portfolio.id }}">{{ portfolio.name }}</a></td>
-          <!-- <td class="stock-rating" [ngClass]="{
-                'buy-stock-rating': stockRating.stockRating.toUpperCase() === 'BUY',
-                'hold-stock-rating': stockRating.stockRating.toUpperCase() === 'HOLD',
-                'sell-stock-rating': stockRating.stockRating.toUpperCase() === 'SELL'
-              }"
-          >
-              {{ stockRating.stockRating.toUpperCase() }}
+          <td>{{ portfolio.num_likes }}</td>
+          <td>{{ portfolio.num_dislikes }}</td>
+          <td>{{ portfolio.num_holdings }}</td>
+          <td><a routerLink="/stocks/{{ portfolio.largest_holding }}">{{ portfolio.largest_holding }}</a></td>
+          <td><small>{{ portfolio.last_updated | momentFromNowDatePipe }}</small></td>
+          <td *ngIf="isAuth && user.id === loggedInUserId">
+            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onClickDeletePortfolioButton(portfolio.id)"></button>
           </td>
-            <td><small>{{ stockRating.lastUpdated | momentFromNowDatePipe }}</small></td> -->
         </tr>
     </ng-template>
   </p-table>

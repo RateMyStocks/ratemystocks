@@ -149,7 +149,11 @@ export interface UserProfileDto {
   spiritAnimal: SpiritAnimal;
   dateJoined: Date;
   lastLogin: Date;
-  bio: string;
+  bio?: string;
+}
+
+export interface EditUserProfileDto {
+  bio?: string;
 }
 
 export interface UserSettingsDto {

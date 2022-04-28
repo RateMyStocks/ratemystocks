@@ -1,7 +1,7 @@
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PortfolioDto, UserProfileDto } from '@ratemystocks/api-interface';
+import { PortfolioDto, UserProfileDto, EditUserProfileDto } from '@ratemystocks/api-interface';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -55,5 +55,14 @@ export class UserService {
   getSavedStocksForUser(): Observable<any[]> {
     const endpoint = `${environment.apiUrl}/users/saved/stocks`;
     return this.http.get<any[]>(endpoint, { withCredentials: true });
+  }
+
+  /**
+   * Endpoint for updating the Profile information for the logged-in User.
+   * @param profileDto The DTO containing the User Profile data to be updated.
+   */
+  updateUserProfileInfo(profileDto: EditUserProfileDto): Observable<void> {
+    const endpoint = `${environment.apiUrl}/users/profile/info`;
+    return this.http.patch<void>(endpoint, profileDto, { withCredentials: true });
   }
 }

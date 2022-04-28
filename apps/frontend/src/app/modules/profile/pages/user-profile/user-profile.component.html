@@ -12,21 +12,23 @@
                     style="width: 65%; height: auto;"
                     src="../../../../../assets/layout/images/avatars/{{ user.spiritAnimal }}.png"
                   />
-                  <h4>{{ user?.username }}</h4>
+                  <!-- <h4>{{ user?.username }}</h4> -->
                 </div>
               </ng-template>
 
-              <small>6 Followers</small>
+              <!-- <small>6 Followers</small>
               <span>&#8226;</span>
-              <small>6 Following</small>
+              <small>6 Following</small> -->
 
               <p>{{ user?.bio }}</p>
 
               <hr>
 
               <ng-template pTemplate="footer">
-                <p-button label="Follow" icon="pi pi-plus"></p-button>
-                <p-button label="Edit Profile" icon="pi pi-pencil" styleClass="p-button-secondary" [style]="{'margin-left': '.5em'}"></p-button>
+                <p-button *ngIf="isAuth && user && user.id === loggedInUserId; else notProfileOwner" (click)="onClickEditProfile()" label="Edit Profile" icon="pi pi-pencil" styleClass="p-button-secondary" [style]="{'margin-left': '.5em'}"></p-button>
+                <ng-template #notProfileOwner>
+                  <p-button label="Follow" icon="pi pi-plus"></p-button>
+                </ng-template>
               </ng-template>
             </p-card>
           </div>
@@ -37,7 +39,7 @@
           <p-tabPanel>
             <ng-template pTemplate="header">
               <!-- <i class="pi pi-calendar"></i> -->
-              <span>Ratings</span>
+              <span>Stock Ratings</span>
             </ng-template>
             <div *ngIf="user">
               <app-user-stock-ratings-table [user]="user"></app-user-stock-ratings-table>
@@ -54,6 +56,17 @@
           </p-tabPanel>
         </p-tabView>
       </div>
-
     </div>
 </div>
+
+<p-dialog header="Edit Profile" [(visible)]="displayEditProfileDialog">
+  <form (ngSubmit)="onSubmitEditProfileForm()" [formGroup]="profileForm">
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="bio">Bio</label>
+        <textarea formControlName="bio" id="bio" type="text" pInputText type="text" [ngClass]="{'ng-invalid': profileForm.controls['bio'].invalid, 'ng-dirty': profileForm.controls['bio'].touched}" maxlength="500" rows="4"></textarea>
+      </div>
+      <p-button label="Save" type="submit" [disabled]="profileForm.invalid" styleClass="p-mb-3"></p-button>
+    </div>
+  </form>
+</p-dialog>
