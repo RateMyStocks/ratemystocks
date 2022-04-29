@@ -1,0 +1,38 @@
+<div>
+  <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+  <p-table #dt1 [value]="portfolios" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll" sortField="lastUpdated" [sortOrder]="-1" [globalFilterFields]="['name']" styleClass="p-datatable-gridlines">
+    <ng-template pTemplate="caption">
+      <div class="p-d-flex">
+          <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+          <span class="p-input-icon-left p-ml-auto">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword" />
+          </span>
+      </div>
+  </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon>  <p-columnFilter type="text" field="name" display="menu"></p-columnFilter></th>
+            <th pSortableColumn="num_likes">Likes <p-sortIcon field="num_likes"></p-sortIcon></th>
+            <th pSortableColumn="num_dislikes">Dislikes <p-sortIcon field="num_dislikes"></p-sortIcon></th>
+            <th pSortableColumn="num_holdings"># of Holdings <p-sortIcon field="num_holdings"></p-sortIcon></th>
+            <th pSortableColumn="largest_holding">Largest Holding <p-sortIcon field="largest_holding"></p-sortIcon></th>
+            <th pSortableColumn="last_updated">Last Holding <p-sortIcon field="last_updated"></p-sortIcon></th>
+            <th *ngIf="isAuth && user.id === loggedInUserId" >Actions</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-portfolio>
+        <tr *ngIf="portfolio">
+          <td><a routerLink="/portfolios/{{ portfolio.id }}">{{ portfolio.name }}</a></td>
+          <td>{{ portfolio.num_likes }}</td>
+          <td>{{ portfolio.num_dislikes }}</td>
+          <td>{{ portfolio.num_holdings }}</td>
+          <td><a routerLink="/stocks/{{ portfolio.largest_holding }}">{{ portfolio.largest_holding }}</a></td>
+          <td><small>{{ portfolio.last_updated | momentFromNowDatePipe }}</small></td>
+          <td *ngIf="isAuth && user.id === loggedInUserId">
+            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onClickDeletePortfolioButton(portfolio.id)"></button>
+          </td>
+        </tr>
+    </ng-template>
+  </p-table>
+</div>

@@ -1,21 +1,19 @@
 .layout-menu-dark {
-    $menuBgColor:#434B54;
-    $menuShadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
+  $menuBgColor: #171b25;
+  $menuShadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
 
-    $rootMenuTextColor:#CDD2DB;
+  $rootMenuTextColor: #cdd2db;
 
-    $rootMenuItemTextColor:#E5E8EC;
-    $rootMenuItemHoverBgColor:#4E565F;
-    $activeRootMenuItemTextColor:#ffffff;
-    $menuItemIconColor:#E5E8EC;
+  $rootMenuItemTextColor: #e5e8ec;
+  $rootMenuItemHoverBgColor: #4e565f;
+  $activeRootMenuItemTextColor: #ffffff;
+  $menuItemIconColor: #e5e8ec;
 
-    $submenuItemTextColor:#E5E8EC;
-    $submenuItemHoverBgColor:#676E77;
-    $activeSubmenuItemTextColor:#ffffff;
+  $submenuItemTextColor: #e5e8ec;
+  $submenuItemHoverBgColor: #676e77;
+  $activeSubmenuItemTextColor: #ffffff;
 
-    $externalSubmenuBgColor:#434B54;
+  $externalSubmenuBgColor: #434b54;
 
-
-    @import '../_menu_theme';
+  @import '../_menu_theme';
 }
-

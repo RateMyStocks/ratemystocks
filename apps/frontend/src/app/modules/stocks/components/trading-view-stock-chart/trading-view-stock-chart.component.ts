@@ -27,7 +27,6 @@ export class TradingViewStockChartComponent implements AfterViewInit, OnChanges 
     // IEX Cloud API returns exchanges in a different format than how Trading View needs
     // const exchange = this.exchange === 'NEW YORK STOCK EXCHANGE INC.' ? 'NYSE' : this.exchange;
     let exchange;
-
     if (this.exchange === 'NEW YORK STOCK EXCHANGE INC.') {
       exchange = 'NYSE';
     } else if (this.exchange === 'NYSE ARCA') {
@@ -42,7 +41,7 @@ export class TradingViewStockChartComponent implements AfterViewInit, OnChanges 
       symbol: `${exchange}:${this.ticker}`,
       interval: 'D',
       timezone: 'Etc/UTC',
-      theme: 'light',
+      theme: 'light', // has light and dark themes
       style: '1',
       locale: 'en',
       toolbar_bg: '#f1f3f6',

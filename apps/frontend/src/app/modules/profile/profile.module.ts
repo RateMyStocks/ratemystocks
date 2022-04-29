@@ -12,9 +12,11 @@ import { AccountInfoSettingsComponent } from './components/account-info-settings
 import { AccountSecuritySettingsComponent } from './components/account-security-settings/account-security-settings.component';
 import { SavedPortfoliosTableComponent } from './components/saved-portfolios-table/saved-portfolios-table.component';
 import { SavedStocksTableComponent } from './components/saved-stocks-table/saved-stocks-table.component';
+import { UserStockRatingsTableComponent } from './components/user-stock-ratings-table/user-stock-ratings-table.component';
+import { UserPortfoliosTableComponent } from './components/user-portfolios-table/user-portfolios-table.component';
 
 @NgModule({
-  declarations: [FavoritesComponent, UserProfileComponent, SettingsComponent, AccountInfoSettingsComponent, AccountSecuritySettingsComponent, SavedPortfoliosTableComponent, SavedStocksTableComponent],
+  declarations: [FavoritesComponent, UserProfileComponent, SettingsComponent, AccountInfoSettingsComponent, AccountSecuritySettingsComponent, SavedPortfoliosTableComponent, SavedStocksTableComponent, UserStockRatingsTableComponent, UserPortfoliosTableComponent],
   imports: [
     AppCodeModule,
     CommonModule,

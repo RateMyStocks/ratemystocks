@@ -5,7 +5,7 @@ import { UserRepository } from './user.repository';
 import { PortfolioRepository } from '../portfolio/portfolio.repository';
 import { Portfolio } from '../../../models/portfolio.entity';
 import { getConnection } from 'typeorm';
-import { PortfolioDto } from '@ratemystocks/api-interface';
+import { EditUserProfileDto, PortfolioDto } from '@ratemystocks/api-interface';
 import { StockFollowerRepository } from '../stock/stock-follower.repository';
 
 @Injectable()
@@ -101,5 +101,17 @@ export class UserService {
   async getSavedStocksForUser(userAccount: UserAccount): Promise<any[]> {
     const followedStocks = await this.stockFollowerRepository.getFollowedStocksByUser(userAccount);
     return followedStocks;
+  }
+
+  /**
+   * Endpoint for updating the Profile information for the logged-in User.
+   * @param userAccount The userAccount object of the logged-in user.
+   * @param profileDto The DTO containing the User Profile data to be updated.
+   */
+  async updateUserProfile(userAccount: UserAccount, profileDto: EditUserProfileDto): Promise<void> {
+    const { bio } = profileDto;
+    userAccount.bio = bio;
+
+    await userAccount.save();
   }
 }

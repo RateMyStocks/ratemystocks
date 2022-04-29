@@ -10,7 +10,6 @@ export class GlobalErrorHandler implements ErrorHandler {
   constructor(private injector: Injector, private ngZone: NgZone, private messageService: MessageService) {}
 
   handleError(error: Error | HttpErrorResponse) {
-    // const snackBar = this.injector.get(MatSnackBar);
     let errorType: string;
     if (error instanceof HttpErrorResponse) {
       if (error.status >= 500) {
