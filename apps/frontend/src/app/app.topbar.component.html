@@ -354,14 +354,13 @@
 </div>
 
 <!-- Login Dialog -->
-<p-dialog [header]="authMode.text" [(visible)]="displayLoginDialog" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '100vw'}"  [style]="{width: '22vw'}" [draggable]="false" [resizable]="false">
+<p-dialog [header]="authMode.text" [(visible)]="displayLoginDialog" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '100vw'}"  [style]="{width: '44vw'}" [draggable]="false" [resizable]="false">
   <div [ngSwitch]="authMode.type">
     <form (ngSubmit)="onSubmitLoginForm()" [formGroup]="loginForm" *ngSwitchCase="authModeType.LOGIN">
       <div class="login-form">
         <div class="p-col-12">
           <div class="p-grid">
-              <!-- <div class="p-col-5 p-d-flex p-ai-center p-jc-center"> -->
-                <div class="p-col-12 p-d-flex p-ai-center p-jc-center">
+              <div class="p-col-5 p-d-flex p-ai-center p-jc-center">
                   <div class="p-fluid">
                       <div class="p-field">
                           <label for="username">Username or Email</label>
@@ -385,15 +384,68 @@
                       <p><a (click)="setAuthMode(authModeType.FORGOT_PASSWORD)">Forgot Password?</a></p>
                   </div>
               </div>
-              <!-- <div class="p-col-1">
+              <div class="p-col-1">
                   <p-divider layout="vertical">
                       <b>OR</b>
                   </p-divider>
               </div>
               <div class="p-col-5 p-ai-center p-jc-center">
-                <button pButton type="button" label="Sign in with Google" class="p-button-outlined"></button>
-                <button pButton type="button" label="Sign in with Facebook" class="p-button-outlined"></button>
-              </div> -->
+                <!-- <button pButton type="button" label="Continue with Google" class="p-button-outlined"></button> -->
+                <!-- <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> -->
+                <!-- <div id="buttonDiv"></div> -->
+                <!-- <div id="g_id_onload"
+                    data-client_id="1028837375961-cpc5lrf7v0lf2njeencluvgbt033qggl.apps.googleusercontent.com"
+                    data-login_uri="http://localhost/auth/signin"
+                    data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin"
+                    data-type="standard"
+                    data-size="large"
+                    data-theme="outline"
+                    data-text="sign_in_with"
+                    data-shape="rectangular"
+                    data-logo_alignment="left">
+                </div> -->
+                <!-- <p-button styleClass="px-3">
+                  <ng-template pTemplate="content">
+                      <img alt="logo" src="assets/layout/images/google_signin_buttons/ios/1x/btn_google_dark_focus_ios.png" />
+                  </ng-template>
+                </p-button> -->
+                <!-- <p-button styleClass="p-button-outlined">
+                  <img alt="logo" src="assets/layout/images/login/google_signin_buttons/ios/1x/btn_google_signin_light_normal_ios.png" style="width: 2rem"/>
+                  <span class="ml-4 font-bold">Continue with Google</span>
+                </p-button> -->
+                <!-- <p-button styleClass="p-button-outlined">
+                  <img alt="logo" src="assets/layout/images/login/facebook/f_logo_RGB-Blue_114.png" style="width: 2rem"/>
+                  <span class="ml-4 font-bold">Continue with Facebook</span>
+                </p-button> -->
+                <div class="vertical-center">
+                  <div class="p-mb-3">
+                    <p-button styleClass="p-button-outlined p-button-secondary" [style]="{width: '100%'}">
+                      <ng-template pTemplate="content">
+                          <img alt="logo" src="assets/layout/images/login/google/google.png" style="width: 1.5rem"/>
+                          <span class="p-ml-4 p-text-bold">Continue with Google</span>
+                      </ng-template>
+                    </p-button>
+                  </div>
+                  <!-- <div class="p-mb-3">
+                    <p-button styleClass="p-button-outlined" [style]="{width: '100%'}">
+                      <ng-template pTemplate="content">
+                          <img alt="logo" src="assets/layout/images/login/google/google.png" style="width: 1.5rem"/>
+                          <span class="p-ml-4 p-text-bold">Continue with LinkedIn</span>
+                      </ng-template>
+                    </p-button>
+                  </div> -->
+                  <div class="p-mb-3">
+                    <p-button styleClass="p-button-outlined p-button-secondary" [style]="{width: '100%'}">
+                      <ng-template pTemplate="content">
+                          <img alt="logo" src="assets/layout/images/login/facebook/f_logo_RGB-Blue_114.png" style="width: 1.5rem"/>
+                          <span class="p-ml-4 p-text-bold">Continue with Facebook</span>
+                      </ng-template>
+                    </p-button>
+                  </div>
+                </div>
+              </div>
           </div>
         </div>
         <!-- <p-captcha siteKey="YOUR_SITE_KEY" (onResponse)="showCaptchaResponse($event)"></p-captcha> -->
@@ -403,8 +455,7 @@
       <div class="login-form">
         <div class="p-col-12">
           <div class="p-grid">
-              <!-- <div class="p-col-5 p-d-flex p-ai-center p-jc-center"> -->
-                <div class="p-col-12 p-d-flex p-ai-center p-jc-center">
+              <div class="p-col-5 p-d-flex p-ai-center p-jc-center">
                   <div class="p-fluid">
                       <div class="p-field">
                           <label for="username">Username</label>
@@ -448,15 +499,76 @@
                       <p>Already have an account? <a (click)="setAuthMode(authModeType.LOGIN)">Login</a></p>
                   </div>
               </div>
-              <!-- <div class="p-col-1">
+              <div class="p-col-1">
                   <p-divider layout="vertical">
                       <b>OR</b>
                   </p-divider>
               </div>
               <div class="p-col-5 p-ai-center p-jc-center">
-                <button pButton type="button" label="Sign in with Google" class="p-button-outlined"></button>
-                <button pButton type="button" label="Sign in with Facebook" class="p-button-outlined"></button>
-              </div> -->
+                <!-- <button pButton type="button" label="Continue with Google" class="p-button-outlined"></button> -->
+                <!-- <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> -->
+                <!-- <div id="buttonDiv"></div> -->
+                <!-- <div id="g_id_onload"
+                    data-client_id="1028837375961-cpc5lrf7v0lf2njeencluvgbt033qggl.apps.googleusercontent.com"
+                    data-login_uri="http://localhost/auth/signin"
+                    data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin"
+                    data-type="standard"
+                    data-size="large"
+                    data-theme="outline"
+                    data-text="sign_in_with"
+                    data-shape="rectangular"
+                    data-logo_alignment="left">
+                </div> -->
+                <!-- <p-button styleClass="px-3">
+                  <ng-template pTemplate="content">
+                      <img alt="logo" src="assets/layout/images/google_signin_buttons/ios/1x/btn_google_dark_focus_ios.png" />
+                  </ng-template>
+                </p-button> -->
+                <!-- <p-button styleClass="p-button-outlined">
+                  <img alt="logo" src="assets/layout/images/login/google_signin_buttons/ios/1x/btn_google_signin_light_normal_ios.png" style="width: 2rem"/>
+                  <span class="ml-4 font-bold">Continue with Google</span>
+                </p-button> -->
+                <!-- <p-button styleClass="p-button-outlined">
+                  <img alt="logo" src="assets/layout/images/login/facebook/f_logo_RGB-Blue_114.png" style="width: 2rem"/>
+                  <span class="ml-4 font-bold">Continue with Facebook</span>
+                </p-button> -->
+                <div class="vertical-center">
+                  <div class="p-mb-3">
+                    <p-button styleClass="p-button-outlined p-button-secondary" [style]="{width: '100%'}">
+                      <ng-template pTemplate="content">
+                          <img alt="logo" src="assets/layout/images/login/google/google.png" style="width: 1.5rem"/>
+                          <span class="p-ml-4 p-text-bold">Continue with Google</span>
+                      </ng-template>
+                    </p-button>
+                  </div>
+                  <!-- <div class="g_id_signin"
+                    data-type="standard"
+                    data-size="large"
+                    data-theme="outline"
+                    data-text="sign_in_with"
+                    data-shape="rectangular"
+                    data-logo_alignment="left">
+                  </div> -->
+                  <!-- <div class="p-mb-3">
+                    <p-button styleClass="p-button-outlined" [style]="{width: '100%'}">
+                      <ng-template pTemplate="content">
+                          <img alt="logo" src="assets/layout/images/login/google/google.png" style="width: 1.5rem"/>
+                          <span class="p-ml-4 p-text-bold">Continue with LinkedIn</span>
+                      </ng-template>
+                    </p-button>
+                  </div> -->
+                  <div class="p-mb-3">
+                    <p-button styleClass="p-button-outlined p-button-secondary" [style]="{width: '100%'}">
+                      <ng-template pTemplate="content">
+                          <img alt="logo" src="assets/layout/images/login/facebook/f_logo_RGB-Blue_114.png" style="width: 1.5rem"/>
+                          <span class="p-ml-4 p-text-bold">Continue with Facebook</span>
+                      </ng-template>
+                    </p-button>
+                  </div>
+                </div>
+              </div>
           </div>
         </div>
         <!-- <p-captcha siteKey="YOUR_SITE_KEY" (onResponse)="showCaptchaResponse($event)"></p-captcha> -->
