@@ -25,6 +25,7 @@ class AuthMode {
 @Component({
   selector: 'app-topbar',
   templateUrl: './app.topbar.component.html',
+  styleUrls: ['./app.topbar.component.scss']
 })
 export class AppTopBarComponent implements OnInit, OnDestroy {
   userName = '';
