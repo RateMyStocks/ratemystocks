@@ -18,6 +18,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { PhoneNumberPipe } from './pipes/phone-number.pipe';
 import { ShareOnSocialMediaBarComponent } from './components/share-on-social-media-bar/share-on-social-media-bar.component';
 import { InfiniteScrollComponent } from './components/infinite-scroll/infinite-scroll.component';
+import { CommentSectionComponent } from './components/comment-section/comment-section.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { InfiniteScrollComponent } from './components/infinite-scroll/infinite-s
     ShareOnSocialMediaSpeedDialComponent,
     ShareOnSocialMediaBarComponent,
     InfiniteScrollComponent,
+    CommentSectionComponent,
   ],
   imports: [ClipboardModule, CommonModule, FormsModule, NgxChartsModule, PrimeNGModule],
   exports: [
