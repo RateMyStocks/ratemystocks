@@ -4,12 +4,16 @@ import { UserSavedPortfoliosJoinTable1627260435599 } from '../migrations/1627260
 import { AddAdditionalUserColumns1631501858665 } from '../migrations/1631501858665-Add_Additional_User_Columns';
 import { CreateStockFollowerAndVisitsTables1640843121560 } from '../migrations/1640843121560-Create_Stock_Follower_And_Visits_Tables';
 import { CreatePortfolioFollowerAndVisitsTables1645382312844 } from '../migrations/1645382312844-Create_Portfolio_Follower_And_Visits_Tables';
+import { StockPageComments1658733021350 } from '../migrations/1658733021350-Stock_Page_Comments';
 import { Portfolio } from '../models/portfolio.entity';
 import { PortfolioFollower } from '../models/portfolioFollower.entity';
 import { PortfolioRating } from '../models/portfolioRating.entity';
 import { PortfolioStock } from '../models/portfolioStock.entity';
 import { PortfolioVisit } from '../models/portfolioVisit.entity';
 import { StockFollower } from '../models/stockFollower.entity';
+import { StockPageComment } from '../models/stockPageComment.entity';
+import { StockPageCommentLike } from '../models/stockPageCommentLike.entity';
+import { StockPageCommentReply } from '../models/stockPageCommentReply.entity';
 import { StockRating } from '../models/stockRating.entity';
 import { StockVisit } from '../models/stockVisit.entity';
 import { UserAccount } from '../models/userAccount.entity';
@@ -29,6 +33,9 @@ const typeOrmConfig: TypeOrmModuleOptions = {
     PortfolioStock,
     PortfolioVisit,
     StockFollower,
+    StockPageComment,
+    StockPageCommentLike,
+    StockPageCommentReply,
     StockVisit,
     StockRating,
     UserAccount,
@@ -45,6 +52,7 @@ const typeOrmConfig: TypeOrmModuleOptions = {
     AddAdditionalUserColumns1631501858665,
     CreateStockFollowerAndVisitsTables1640843121560,
     CreatePortfolioFollowerAndVisitsTables1645382312844,
+    StockPageComments1658733021350,
   ],
   // Run migrations automatically, you can disable this if you prefer running migration manually.
   // If you set migrationsRun to false, you will have to use npm run typeorm:run to apply the migration, otherwise all migrations are applied automatically at application start.

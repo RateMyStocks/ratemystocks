@@ -82,7 +82,7 @@ transform: translateY(-70%);"></i> -->
                 <div class="p-col-12 p-md-12 p-xl-4">
                     <div class="card  overview-box-1 orange">
                         <div class="card-header">
-                            <h6>Visits</h6>
+                            <h6>Views</h6>
                             <div class="header-buttons">
                                 <a><i class="pi pi-eye"></i></a>
                             </div>
@@ -157,7 +157,7 @@ transform: translateY(-70%);"></i> -->
                       <h6>About</h6>
                   </div>
                   <div style="max-height:250px;margin:0;overflow:auto;">
-                    <p>{{ stock.data.company?.description }}</p>
+                    <small>{{ stock.data.company?.description }}</small>
                     <p-scrollTop target="parent"></p-scrollTop>
                   </div>
                 </div>
@@ -313,7 +313,7 @@ transform: translateY(-70%);"></i> -->
                 <h6>Comments</h6>
             </div>
             <div>
-              <app-stock-page-comments></app-stock-page-comments>
+              <app-stock-page-comments [ticker]="ticker"></app-stock-page-comments>
             </div>
           </div>
         </div>

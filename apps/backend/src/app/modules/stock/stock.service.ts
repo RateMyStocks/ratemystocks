@@ -1,12 +1,19 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StockRatingRepository } from './stock-rating.repository';
-import { StockRatingCountDto, StockRatingDto, StockRatingListItem } from '@ratemystocks/api-interface';
+import {
+  StockPageCommentDto,
+  StockRatingCountDto,
+  StockRatingDto,
+  StockRatingListItem,
+} from '@ratemystocks/api-interface';
 import { StockRating, StockRatingEnum } from '../../../models/stockRating.entity';
 import { UserAccount } from '../../../models/userAccount.entity';
 import { StockVisitRepository } from './stock-visit.repository';
 import { StockFollowerRepository } from './stock-follower.repository';
 import { IexCloudService } from '../iex-cloud/iex-cloud.service';
+import { StockPageCommentRepository } from './stock-page-comment.repository';
+import { StockPageComment } from '../../../models/stockPageComment.entity';
 
 @Injectable()
 export class StockService {
@@ -14,6 +21,7 @@ export class StockService {
     @InjectRepository(StockRatingRepository) private stockRatingRepo: StockRatingRepository,
     @InjectRepository(StockVisitRepository) private stockVisitRepo: StockVisitRepository,
     @InjectRepository(StockFollowerRepository) private stockFollowerRepo: StockFollowerRepository,
+    @InjectRepository(StockPageCommentRepository) private stockPageCommentRepo: StockPageCommentRepository,
     private readonly iexCloudService: IexCloudService
   ) {}
 
@@ -343,6 +351,65 @@ export class StockService {
     }
 
     return this.getStocksWithQuotes(stocks.map((stockVisit) => stockVisit.ticker));
+  }
+
+  /**
+   *
+   * @param ticker
+   * @returns
+   */
+  async getStockPageComments(
+    ticker: string,
+    startIndex?: number,
+    pageSize?: number,
+    sortDirection?: 'ASC' | 'DESC'
+  ): Promise<StockPageCommentDto[]> {
+    const stockPageCommentsEntities: StockPageComment[] = await this.stockPageCommentRepo.getStockPageComments(
+      ticker,
+      startIndex,
+      pageSize,
+      sortDirection
+    );
+    const dtos: StockPageCommentDto[] = stockPageCommentsEntities.map((entity: StockPageComment) => {
+      return {
+        postId: entity.id,
+        comment: entity.comment,
+        ticker: entity.ticker,
+        user: {
+          username: entity.user.username,
+          avatar: entity.user.spiritAnimal,
+        },
+        datetimePosted: entity.datetimePosted.toISOString(),
+      };
+    });
+
+    return dtos;
+  }
+
+  /**
+   *
+   * @param userAccount
+   * @param ticker
+   */
+  async postStockPageComment(
+    userAccount: UserAccount,
+    ticker: string,
+    postedCommentDto: StockPageCommentDto
+  ): Promise<StockPageCommentDto> {
+    const entity: StockPageComment = await this.stockPageCommentRepo.postComment(userAccount, ticker, postedCommentDto);
+
+    const dto: StockPageCommentDto = {
+      postId: entity.id,
+      user: {
+        username: entity.user.username,
+        avatar: entity.user.spiritAnimal,
+      },
+      comment: entity.comment,
+      datetimePosted: entity.datetimePosted.toISOString(),
+      ticker: entity.ticker,
+    };
+
+    return dto;
   }
 
   private async getStocksWithQuotes(tickers: string[]): Promise<any[]> {

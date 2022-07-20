@@ -1,41 +1,47 @@
 <div class="container">
   <div>
-    <textarea pInputText maxlength="500" style="width: 100%;" rows="4" class="p-mb-2"></textarea>
+    <form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+      <textarea formControlName="comment" pInputText maxlength="500" style="width: 100%;" rows="4" class="p-mb-2"></textarea>
+      <!-- <p-captcha siteKey="YOUR_SITE_KEY" (onResponse)="showCaptchaResponse($event)"></p-captcha> -->
+      <p-button label="Post" class="p-button-text" type="submit"></p-button>
+    </form>
   </div>
-  <p-button label="Post" class="p-button-text"></p-button>
+
 
   <div class="p-mt-3 centered-content" style="display: flex; justify-content: space-between;">
-    <div><small>Showing <b>{{ commentsLoaded }}</b> of <b>{{ totalCommentsLength }}</b> Comments</small></div>
+    <div><small><b>{{ totalCommentsLength }} Comments</b></small></div>
     <div>
-      <p-dropdown placeholder="Sort By" [options]="sortOptions" [(ngModel)]="selectedSortOption" optionLabel="displayValue"></p-dropdown>
+      <p-dropdown placeholder="Sort By" [options]="sortOptions" [(ngModel)]="selectedSortOption" (onChange)="onSort($event)" optionLabel="displayValue"></p-dropdown>
     </div>
   </div>
 
   <p-divider></p-divider>
 
-  <app-infinite-scroll (scrolled)="onScroll()" style="height: 600px; overflow-y: auto">
+  <app-infinite-scroll (scrolled)="onScroll()" style="max-height: 600px; overflow-y: auto">
     <!-- TODO: Make a Comment component -->
     <div *ngFor="let comment of comments">
       <div class="product-item">
         <div>
-          <!-- <img src="assets/layout/images/avatars/{{comment.avatar}}.png" > -->
-          <img src="{{ comment.avatar }}" style="border-radius: 50%;">
+          <img src="assets/layout/images/avatars/{{comment.user.avatar}}.png" >
+          <!-- <img src="{{ comment.avatar }}" style="border-radius: 50%;"> -->
         </div>
         <div class="product-list-detail">
           <p class="p-mb-1">
-            <b>{{comment.username}}</b> &nbsp;
-            <small> {{ comment.datetime | momentFromNowDatePipe }}</small>
+            <b><a routerLink="/profile/users/{{comment.user.username}}" style="color: black">{{comment.user.username}}</a></b> &nbsp;
+            <small> {{ comment.datetimePosted | momentFromNowDatePipe }}</small>
             <p-chip label="BUY" styleClass="p-ml-2 buy-rating-chip"></p-chip>
           </p>
           <small>{{ comment.comment }}</small>
           <div class="p-mt-3">
             <i class="pi pi-thumbs-up p-mr-3"></i>
             <i class="pi pi-thumbs-down p-mr-3"></i>
-            <small><a>REPLY</a></small>
+            <!-- <small class="p-mr-3"><a>REPLY</a></small> -->
+            <!-- <small><a>REPORT</a></small> -->
+            <!-- <i class="pi pi-flag"></i> -->
           </div>
         </div>
       </div>
-      <p-divider></p-divider>
+      <!-- <p-divider></p-divider> -->
     </div>
 
     <p-scrollTop target="parent"></p-scrollTop>
@@ -45,5 +51,7 @@
     </div>
   </app-infinite-scroll>
 </div>
+
+<p-toast key="stockPageComment" position="bottom-center"></p-toast>
 
 <p-confirmPopup></p-confirmPopup>

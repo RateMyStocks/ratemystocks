@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { StocksComponent } from './pages/stocks/stocks.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { PrimeNGModule } from '../../primeng.module';
 import { SharedModule } from '../../shared/shared.module';
@@ -14,7 +14,13 @@ import { TradingViewStockChartComponent } from './components/trading-view-stock-
 import { StockPageCommentsComponent } from './components/stock-page-comments/stock-page-comments.component';
 
 @NgModule({
-  declarations: [StocksComponent, StockComponent, StockPageCommentsComponent, StockPerformanceChartComponent, TradingViewStockChartComponent],
+  declarations: [
+    StocksComponent,
+    StockComponent,
+    StockPageCommentsComponent,
+    StockPerformanceChartComponent,
+    TradingViewStockChartComponent,
+  ],
   imports: [
     ClipboardModule,
     CommonModule,
@@ -22,6 +28,7 @@ import { StockPageCommentsComponent } from './components/stock-page-comments/sto
     HighchartsChartModule,
     HttpClientModule,
     PrimeNGModule,
+    ReactiveFormsModule,
     SharedModule,
     StocksRoutingModule,
   ],

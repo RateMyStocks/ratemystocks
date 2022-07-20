@@ -2,7 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { StockRatingCountDto, IexCloudStockDataDto, StockRatingListItem } from '@ratemystocks/api-interface';
+import {
+  StockRatingCountDto,
+  IexCloudStockDataDto,
+  StockRatingListItem,
+  StockPageCommentDto,
+} from '@ratemystocks/api-interface';
+import { SortDirection } from '../../shared/models/enums/sort-direction';
 
 @Injectable({
   providedIn: 'root',
@@ -161,5 +167,41 @@ export class StockService {
    */
   getMostViewedStocksToday(limit?: number): Observable<any[]> {
     return this.httpClient.get<any[]>(`${this.baseApiUrl}/trending/today`);
+  }
+
+  /**
+   *
+   * @param ticker
+   * @param offset
+   * @param pageSize
+   * @returns
+   */
+  getStockPageComments(
+    ticker: string,
+    startIndex?: number,
+    pageSize?: number,
+    sortDirection?: SortDirection
+  ): Observable<StockPageCommentDto[]> {
+    let endpoint = `${this.baseApiUrl}/comments/${ticker}?startIndex=${startIndex}&pageSize=${pageSize}`;
+
+    console.log('SORT DIRECTION:', sortDirection)
+
+    if (sortDirection) endpoint += `&sortDirection=${sortDirection}`;
+
+    console.log(endpoint);
+
+    return this.httpClient.get<StockPageCommentDto[]>(endpoint);
+  }
+
+  /**
+   * TODO: Add return type
+   * @param ticker
+   * @param postedCommentDto
+   * @returns
+   */
+  postStockPageComment(ticker: string, postedCommentDto: StockPageCommentDto): Observable<any> {
+    return this.httpClient.post<any>(`${this.baseApiUrl}/comments/${ticker}`, postedCommentDto, {
+      withCredentials: true,
+    });
   }
 }

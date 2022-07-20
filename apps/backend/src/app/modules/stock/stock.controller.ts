@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Query, UseGu
 import { AuthGuard } from '@nestjs/passport';
 import {
   IexCloudStockDataDto,
+  StockPageCommentDto,
   StockRatingCountDto,
   StockRatingDto,
   StockRatingListItem,
@@ -189,5 +190,35 @@ export class StockController {
   @Get('/trending/today')
   getMostViewedStocksToday(@Query() numStocks?: number): Promise<any> {
     return this.stockService.getMostViewedStocksToday(numStocks);
+  }
+
+  /**
+   *
+   * @param ticker
+   * @returns
+   */
+  @Get('/comments/:ticker')
+  getStockPageComments(
+    @Param('ticker') ticker: string,
+    @Query('startIndex') startIndex?: number,
+    @Query('size') size?: number,
+    @Query('sortDirection') sortDirection?: 'ASC' | 'DESC'
+  ): Promise<StockPageCommentDto[]> {
+    return this.stockService.getStockPageComments(ticker, startIndex, size, sortDirection);
+  }
+
+  /**
+   *
+   * @param userAccount
+   * @param ticker
+   */
+  @Post('/comments/:ticker')
+  @UseGuards(AuthGuard())
+  postStockPageComment(
+    @GetUser() userAccount: UserAccount,
+    @Param('ticker') ticker: string,
+    @Body() postedCommentDto: StockPageCommentDto
+  ): Promise<StockPageCommentDto> {
+    return this.stockService.postStockPageComment(userAccount, ticker, postedCommentDto);
   }
 }

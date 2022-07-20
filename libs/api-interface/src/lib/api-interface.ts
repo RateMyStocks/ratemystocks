@@ -34,4 +34,8 @@ export {
   StockRatingDto,
 } from './models';
 
+export { CommentDto } from './comments/comment.dto';
+export { CommentsDto } from './comments/comments.dto';
+export { StockPageCommentDto } from './stocks/stock-page-comment.dto';
+
 export { StockUpcomingEventDto } from './stocks/stock-upcoming-event-dto';
