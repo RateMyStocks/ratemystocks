@@ -7,6 +7,8 @@ import {
   IexCloudStockDataDto,
   StockRatingListItem,
   StockPageCommentDto,
+  StockPageCommentsDto,
+  CommentRatingDto,
 } from '@ratemystocks/api-interface';
 import { SortDirection } from '../../shared/models/enums/sort-direction';
 
@@ -181,16 +183,12 @@ export class StockService {
     startIndex?: number,
     pageSize?: number,
     sortDirection?: SortDirection
-  ): Observable<StockPageCommentDto[]> {
+  ): Observable<StockPageCommentsDto> {
     let endpoint = `${this.baseApiUrl}/comments/${ticker}?startIndex=${startIndex}&pageSize=${pageSize}`;
-
-    console.log('SORT DIRECTION:', sortDirection)
 
     if (sortDirection) endpoint += `&sortDirection=${sortDirection}`;
 
-    console.log(endpoint);
-
-    return this.httpClient.get<StockPageCommentDto[]>(endpoint);
+    return this.httpClient.get<StockPageCommentsDto>(endpoint);
   }
 
   /**
@@ -203,5 +201,15 @@ export class StockService {
     return this.httpClient.post<any>(`${this.baseApiUrl}/comments/${ticker}`, postedCommentDto, {
       withCredentials: true,
     });
+  }
+
+  /**
+   *
+   * @param commentId
+   * @param commentRatingDto
+   * @returns
+   */
+  likeOrDislikeStockPageComment(commentId: string, commentRatingDto: CommentRatingDto): Observable<void> {
+    return this.httpClient.put<any>(`${this.baseApiUrl}/comments/${commentId}/rating`, commentRatingDto, { withCredentials: true});
   }
 }

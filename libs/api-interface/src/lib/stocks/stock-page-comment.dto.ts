@@ -7,12 +7,14 @@ export class StockPageCommentDto implements CommentDto {
     public ticker?: string,
     public datetimePosted?: string,
     public user?: { username: string; avatar: SpiritAnimal },
-    public postId?: string // only needed when returning this DTO, but not needed in POST requests.
+    public likeCount?: number,
+    public id?: string, // only needed when returning this DTO, but not needed in POST requests.
   ) {
-    this.postId = postId;
+    this.id = id;
     this.user = user;
     this.comment = comment;
     this.datetimePosted = datetimePosted;
     this.ticker = ticker;
+    this.likeCount = likeCount;
   }
 }

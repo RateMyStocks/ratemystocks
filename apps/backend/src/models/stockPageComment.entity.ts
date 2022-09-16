@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { StockPageCommentLike } from './stockPageCommentLike.entity';
-import { StockPageCommentReply } from './stockPageCommentReply.entity';
+import { StockPageCommentRating } from './stockPageCommentRating.entity';
+// import { StockPageCommentReply } from './stockPageCommentReply.entity';
 import { UserAccount } from './userAccount.entity';
 
 @Entity({ name: 'stock_page_comment' })
@@ -28,11 +28,11 @@ export class StockPageComment extends BaseEntity {
   @JoinColumn({ name: 'user_id' })
   user: UserAccount;
 
-  @OneToMany((type) => StockPageCommentLike, (StockPageCommentLike) => StockPageCommentLike.comment, { eager: false })
-  likes: StockPageCommentLike[];
+  @OneToMany((type) => StockPageCommentRating, (StockPageCommentRating) => StockPageCommentRating.comment, { eager: false })
+  ratings: StockPageCommentRating[];
 
-  @OneToMany((type) => StockPageCommentReply, (StockPageCommentReply) => StockPageCommentReply.comment, {
-    eager: false,
-  })
-  replies: StockPageCommentReply[];
+  // @OneToMany((type) => StockPageCommentReply, (StockPageCommentReply) => StockPageCommentReply.comment, {
+  //   eager: false,
+  // })
+  // replies: StockPageCommentReply[];
 }

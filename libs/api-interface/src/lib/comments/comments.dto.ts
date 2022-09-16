@@ -1,6 +1,6 @@
 import { CommentDto } from "./comment.dto";
 
 export interface CommentsDto {
-  totalSize: number;
+  total: number;
   comments: CommentDto[];
 }

@@ -33,7 +33,7 @@ import {
   `,
   // styleUrls: ['./infinite-scroll.component.css']
 })
-export class InfiniteScrollComponent implements OnInit, OnDestroy, AfterViewInit {
+export class InfiniteScrollComponent implements OnDestroy, AfterViewInit {
   @Input() options = {};
   @Output() scrolled = new EventEmitter();
   @ViewChild('anchor') anchor: ElementRef<HTMLElement>;
@@ -46,9 +46,21 @@ export class InfiniteScrollComponent implements OnInit, OnDestroy, AfterViewInit
     return this.host.nativeElement;
   }
 
-  ngOnInit(): void {}
+  // ngOnInit(): void {
+  //   const options = {
+  //     root: this.isHostScrollable() ? this.host.nativeElement : null,
+  //     ...this.options,
+  //   };
+
+  //   this.observer = new IntersectionObserver(([entry]) => {
+  //     entry.isIntersecting && this.scrolled.emit();
+  //   }, options);
+
+  //   this.observer.observe(this.anchor.nativeElement);
+  // }
 
   ngAfterViewInit() {
+    console.log('AFTER VIEW INIT')
     const options = {
       root: this.isHostScrollable() ? this.host.nativeElement : null,
       ...this.options,

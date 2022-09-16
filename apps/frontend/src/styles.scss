@@ -94,6 +94,13 @@ th {
   }
 }
 
+.clickable {
+  cursor: pointer;
+  &:hover {
+    color: #7a7a79;
+  }
+}
+
 /** PrimeNG Overrides */
 .p-invalid {
   color: red !important;

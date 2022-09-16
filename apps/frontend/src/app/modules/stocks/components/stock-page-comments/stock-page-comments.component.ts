@@ -1,10 +1,12 @@
 import { Component, Injectable, Input, OnChanges, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { faker } from '@faker-js/faker';
+import { Observable, of, Subject } from 'rxjs';
+// import { faker } from '@faker-js/faker';
 import { StockService } from '../../../../core/services/stock.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { StockPageCommentDto } from '@ratemystocks/api-interface';
+import { StockPageCommentDto, StockPageCommentsDto } from '@ratemystocks/api-interface';
 import { MessageService } from 'primeng/api';
+import { AuthService } from '../../../../core/services/auth.service';
+import { takeUntil } from 'rxjs/operators';
 
 export interface Comments {
   username;
@@ -52,10 +54,14 @@ export interface Comments {
 export class StockPageCommentsComponent implements OnInit, OnChanges {
   @Input() ticker: string;
 
+  isAuth: boolean;
+  private ngUnsubscribe = new Subject();
+
   comments$: Observable<any[]>;
   isLoading$: Observable<boolean>;
 
-  comments: any[];
+  comments: any[] = [];
+  // comments: StockPageCommentDto[] = [];
   isLoading = false;
   commentsLoaded = 0;
 
@@ -65,7 +71,7 @@ export class StockPageCommentsComponent implements OnInit, OnChanges {
   sortOptions = [
     { displayValue: 'Newest', id: 1 },
     { displayValue: 'Oldest', id: 2 },
-    { displayValue: 'Top Comments', id: 3 },
+    // { displayValue: 'Top Comments', id: 3 },
   ];
 
   commentForm = new FormGroup({
@@ -74,6 +80,7 @@ export class StockPageCommentsComponent implements OnInit, OnChanges {
 
   constructor(
     // private productService: ProductService,
+    private authService: AuthService,
     private stockService: StockService,
     private messageService: MessageService
   ) {}
@@ -84,14 +91,26 @@ export class StockPageCommentsComponent implements OnInit, OnChanges {
     //   this.commentsLoaded = comments.length;
     //   this.totalCommentsLength = 94;
     // });
+    this.isAuth = this.authService.isAuthorized();
+
+    // if (this.isAuth) {
+    // }
+    this.authService
+      .getAuthStatusListener()
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((isAuth: boolean) => {
+        this.isAuth = isAuth;
+      });
   }
 
   ngOnChanges(): void {
-    this.stockService.getStockPageComments(this.ticker, 0, 20).subscribe((comments) => {
-      this.comments = comments;
-      this.commentsLoaded = comments.length;
-      this.totalCommentsLength = 94;
-    });
+    // this.stockService.getStockPageComments(this.ticker, 0, 20).subscribe((response: StockPageCommentsDto) => {
+    //   this.comments = response.comments;
+    //   this.comments.filter((value, index, self) => index === self.findIndex((t) => t.postId === value.postId));
+    //   console.log('Comments loaded:', this.commentsLoaded)
+    //   this.commentsLoaded = response.comments.length;
+    //   this.totalCommentsLength = response.total;
+    // });
   }
 
   onScroll() {
@@ -102,18 +121,28 @@ export class StockPageCommentsComponent implements OnInit, OnChanges {
     //     this.isLoading = false;
     //   });
     // }, 1000);
-    if (this.ticker) {
+    if (this.ticker && !this.isLoading) {
       this.isLoading = true;
-      this.stockService.getStockPageComments(this.ticker, this.commentsLoaded, 20).subscribe((comments) => {
-        // console.log('COMMENTS: ', comments);
-        // Array.prototype.splice.apply(this.comments, [...[this.commentsLoaded + 20, 20], ...comments]);
+      setTimeout(() => {
+        this.stockService.getStockPageComments(this.ticker, this.commentsLoaded, 20).subscribe((response: StockPageCommentsDto) => {
+          console.log('On Scroll');
+          console.log("COMMENTS", response.comments);
+          if (this.comments.length === 0) {
+            this.comments = response.comments;
+            this.totalCommentsLength = response.total;
+          } else {
+            console.log(response.comments);
+            // Array.prototype.splice.apply(this.comments, [...[this.commentsLoaded, 20], ...response.comments]);
+            this.comments = this.comments.concat(response.comments);
+          }
 
-        // this.comments.filter((value, index, self) => index === self.findIndex((t) => t.postId === value.postId));
+          this.comments.filter((value, index, self) => index === self.findIndex((t) => t.postId === value.postId));
 
-        // this.commentsLoaded += comments.length;
+          this.commentsLoaded += response.comments.length;
 
-        this.isLoading = false;
-      });
+          this.isLoading = false;
+        });
+      }, 1000);
     }
   }
 
@@ -131,9 +160,9 @@ export class StockPageCommentsComponent implements OnInit, OnChanges {
     console.log('SORT DIRECTION IN COMPONENT', sortDirection)
 
     this.isLoading = true;
-    this.stockService.getStockPageComments(this.ticker, 0, 20, sortDirection).subscribe((comments) => {
-      this.comments = comments;
-      this.commentsLoaded = comments.length;
+    this.stockService.getStockPageComments(this.ticker, 0, 20, sortDirection).subscribe((response: StockPageCommentsDto) => {
+      this.comments = response.comments;
+      this.commentsLoaded = response.comments.length;
 
       this.isLoading = false;
     });
@@ -145,7 +174,7 @@ export class StockPageCommentsComponent implements OnInit, OnChanges {
    *
    */
   onSubmit(): void {
-    if (this.commentForm.valid && this.ticker) {
+    if (this.authService.isAuthorized() && this.commentForm.valid && this.ticker) {
       this.stockService
         .postStockPageComment(this.ticker, this.commentForm.value)
         .subscribe((postedComment: StockPageCommentDto) => {
@@ -157,6 +186,37 @@ export class StockPageCommentsComponent implements OnInit, OnChanges {
 
           this.messageService.add({key: 'stockPageComment', severity:'success', summary: 'Success!', detail: 'Your comment has been posted'});
         });
+    } else {
+      // TODO: Pop alert saying they are not logged-in
     }
+  }
+
+  onLikeComment(commentId: string, isLiked: boolean): void {
+    if (this.authService.isAuthorized()) {
+      console.log("LIKE ", commentId)
+      // this.comments.find(x => x.id === commentId).likeCount = 0; // TODO: remove this
+      // if (isLiked) {
+      //   this.comments.find(x => x.id === commentId).likeCount++;
+      // } else {
+      //   this.comments.find(x => x.id === commentId).likeCount--;
+      // }
+      this.stockService.likeOrDislikeStockPageComment(commentId, { isLiked }).subscribe(() => {
+        // Find comment in array by ID and just increment/decrement it by 1 rather than show
+        // the real number from the DB, as multiple people may liking/disliking a comment at the same time
+        // and it could be confusing to the user, and it isn't a critical action
+        if (isLiked) {
+          this.comments.find(x => x.id === commentId).likeCount++;
+        } else {
+          this.comments.find(x => x.id === commentId).likeCount--;
+        }
+      }, () => {
+        // TODO: If 409, alert user
+        console.log("ERROR")
+      });
+    }
+  }
+
+  onDislikeComment(): void {
+    // this.stockService.likeOrDislikeStockPageComment().subscribe();
   }
 }
