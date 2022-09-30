@@ -53,6 +53,7 @@ mark {
   transform: translateY(-50%);
 }
 
+
 .vertically-and-horizontally-centered {
   position: absolute;
   left: 50%;
@@ -72,6 +73,12 @@ mark {
   padding-bottom: 2px;
 }
 
+.sticky {
+  position: -webkit-sticky;
+  position: sticky !important;
+  top: 0;
+}
+
 td,
 th {
   .stock-logo {
@@ -84,6 +91,13 @@ th {
     width: 30px !important;
     height: auto;
     margin: 5px;
+  }
+}
+
+.clickable {
+  cursor: pointer;
+  &:hover {
+    color: #7a7a79;
   }
 }
 

@@ -460,7 +460,7 @@ export const enum StockPriceRange {
 //////////////////////////////////////////
 
 export class CreatePortfolioRatingDto {
-  id: string;
+  id?: string;
   isLiked: boolean;
 }
 

@@ -1,6 +1,13 @@
 <p-toast key="stockPageToast" position="top-center"></p-toast>
 
 <app-share-on-social-media-bar></app-share-on-social-media-bar>
+<!-- <i class="pi pi-comment" style="font-size: 2rem;   right: 2px;
+position: fixed;
+top: 70%;
+-webkit-transform: translateY(-70%);
+-ms-transform: translateY(-70%);
+transform: translateY(-70%);"></i> -->
+
 
 <div class="layout-dashboard" *ngIf="stock; else stockNotLoaded">
     <div class="p-grid">
@@ -25,10 +32,10 @@
                             <b>{{ ticker }}</b>
                           </h4>
                           <div>
-                            <h5 class="p-mb-0" [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }">
+                            <h5 class="p-mb-0" [appPositiveDirective]="stock.data.quote.change">
                               ${{ stock.data.quote.latestPrice?.toLocaleString(undefined, {minimumFractionDigits: 2}) }}
                             </h5>
-                            <small [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }"
+                            <small  [appPositiveDirective]="stock.data.quote.change"
                               ><span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote?.change?.toLocaleString(undefined, {minimumFractionDigits: 2}) }} ({{
                                 (stock.data.quote.changePercent * 100)?.toFixed(2)
                               }}%)</small
@@ -38,7 +45,7 @@
                         <div class="overview-footer">
                             <span *ngIf="stock.data.quote.extendedPrice">
                               <small class="p-ml-2">After Hours: </small>
-                              <small [ngStyle]="{ color: stock.data.quote.change >= 0 ? '#3ac961' : 'red' }">
+                              <small [appPositiveDirective]="stock.data.quote.change">
                                 ${{ stock.data.quote?.extendedPrice }}
                                 <span *ngIf="stock.data.quote.change >= 0">+</span>{{ stock.data.quote?.extendedChange?.toLocaleString(undefined, {minimumFractionDigits: 2}) }} ({{
                                   (stock.data.quote?.extendedChangePercent * 100)?.toFixed(2)
@@ -75,7 +82,7 @@
                 <div class="p-col-12 p-md-12 p-xl-4">
                     <div class="card  overview-box-1 orange">
                         <div class="card-header">
-                            <h6>Visits</h6>
+                            <h6>Views</h6>
                             <div class="header-buttons">
                                 <a><i class="pi pi-eye"></i></a>
                             </div>
@@ -150,7 +157,7 @@
                       <h6>About</h6>
                   </div>
                   <div style="max-height:250px;margin:0;overflow:auto;">
-                    <p>{{ stock.data.company?.description }}</p>
+                    <small>{{ stock.data.company?.description }}</small>
                     <p-scrollTop target="parent"></p-scrollTop>
                   </div>
                 </div>
@@ -178,7 +185,11 @@
             <div class="p-mb-2"><small><b>Website:</b> <a href="https://{{stock.data.company?.website}}" target="_blank"> {{ stock.data.company?.website }}</a></small></div>
             <div class="p-mb-2"><small><b>Phone: </b> <a href="tel:{{ stock.data.company?.phone }}">{{ stock.data.company?.phone | phone }}</a></small></div>
             <div class="p-mb-2"><small><b>Exchange:</b> {{ stock.data.company?.exchange }}</small></div>
-            <div class="p-mb-2"><small><b>Tags:</b> &nbsp; <p-tag *ngFor="let tag of stock.data.company?.tags" [value]="tag" [rounded]="true" class="p-mr-1"></p-tag></small></div>
+            <div class="p-mb-2">
+              <small>
+                <b>Tags:</b> &nbsp; <a *ngFor="let tag of stock.data.company?.tags; let isLast=last" class="p-mr-1"><b>{{ tag }}{{isLast ? '' : ', '}}</b></a>
+              </small>
+            </div>
           </div>
         </div>
 
@@ -200,37 +211,37 @@
                     <div class="p-mb-2">
                       <small>
                         <b>YTD Change: </b>
-                        <span [ngStyle]="{ color: stock.data.stats.ytdChangePercent >= 0 ? '#3ac961' : 'red' }">{{ (stock.data.stats.ytdChangePercent * 100).toFixed(2) }}%</span>
+                        <span [appPositiveDirective]="stock.data.stats.ytdChangePercent">{{ (stock.data.stats.ytdChangePercent * 100).toFixed(2) }}%</span>
                       </small>
                     </div>
                     <div class="p-mb-2">
                       <small>
                         <b>1m Change: </b>
-                        <span [ngStyle]="{ color: stock.data.stats.month1ChangePercent  >= 0 ? '#3ac961' : 'red' }">{{ (stock.data.stats.month1ChangePercent * 100).toFixed(2) }}%</span>
+                        <span [appPositiveDirective]="stock.data.stats.month1ChangePercent">{{ (stock.data.stats.month1ChangePercent * 100).toFixed(2) }}%</span>
                       </small>
                     </div>
                     <div class="p-mb-2">
                       <small>
                         <b>3m Change: </b>
-                        <span [ngStyle]="{ color: stock.data.stats.month3ChangePercent  >= 0 ? '#3ac961' : 'red' }">{{ (stock.data.stats.month3ChangePercent * 100).toFixed(2) }}%</span>
+                        <span [appPositiveDirective]="stock.data.stats.month3ChangePercent">{{ (stock.data.stats.month3ChangePercent * 100).toFixed(2) }}%</span>
                       </small>
                     </div>
                     <div class="p-mb-2">
                       <small>
                         <b>6m Change: </b>
-                        <span [ngStyle]="{ color: stock.data.stats.month6ChangePercent  >= 0 ? '#3ac961' : 'red' }">{{ (stock.data.stats.month6ChangePercent * 100).toFixed(2) }}%</span>
+                        <span [appPositiveDirective]="stock.data.stats.month6ChangePercent">{{ (stock.data.stats.month6ChangePercent * 100).toFixed(2) }}%</span>
                       </small>
                     </div>
                     <div class="p-mb-2">
                       <small>
                         <b>1y Change: </b>
-                        <span [ngStyle]="{ color: stock.data.stats.year1ChangePercent  >= 0 ? '#3ac961' : 'red' }">{{ (stock.data.stats.year1ChangePercent * 100).toFixed(2) }}%</span>
+                        <span [appPositiveDirective]="stock.data.stats.year1ChangePercent">{{ (stock.data.stats.year1ChangePercent * 100).toFixed(2) }}%</span>
                       </small>
                     </div>
                     <div class="p-mb-2">
                       <small>
                         <b>5y Change: </b>
-                        <span [ngStyle]="{ color: stock.data.stats.year5ChangePercent  >= 0 ? '#3ac961' : 'red' }">{{ (stock.data.stats.year5ChangePercent * 100).toFixed(2) }}%</span>
+                        <span [appPositiveDirective]="stock.data.stats.year5ChangePercent">{{ (stock.data.stats.year5ChangePercent * 100).toFixed(2) }}%</span>
                       </small>
                     </div>
                   </div>
@@ -280,7 +291,7 @@
         </div>
 
 
-        <div class="p-col-12 p-md-12 p-xl-8 p-l-8">
+        <!-- <div class="p-col-12 p-md-12 p-xl-8 p-l-8">
           <p-tabView>
             <p-tabPanel header="Financial">
               Coming Soon!
@@ -298,19 +309,16 @@
               Coming Soon!
             </p-tabPanel>
           </p-tabView>
-        </div>
+        </div> -->
 
-        <div class="p-col-12 p-md-12 p-xl-8 p-l-8">
+        <!-- <div class="p-col-12 p-md-12 p-xl-8 p-l-8"> -->
+        <div class="p-col-12">
           <div class="card product-list">
             <div class="card-header">
                 <h6>Comments</h6>
             </div>
             <div>
-              <h6>Coming Soon!</h6>
-              <!-- <div>
-                <textarea pInputText maxlength="500" style="width: 75%;" rows="4" class="p-mb-2"></textarea>
-              </div>
-              <p-button label="Post" class="p-button-text"></p-button> -->
+              <app-stock-page-comments [ticker]="ticker"></app-stock-page-comments>
             </div>
           </div>
         </div>
@@ -321,3 +329,4 @@
         <p-progressSpinner></p-progressSpinner>
     </div>
 </ng-template>
+

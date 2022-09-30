@@ -2,7 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { StockRatingCountDto, IexCloudStockDataDto, StockRatingListItem } from '@ratemystocks/api-interface';
+import {
+  StockRatingCountDto,
+  IexCloudStockDataDto,
+  StockRatingListItem,
+  StockPageCommentDto,
+  StockPageCommentsDto,
+  CommentRatingDto,
+} from '@ratemystocks/api-interface';
+import { SortDirection } from '../../shared/models/enums/sort-direction';
 
 @Injectable({
   providedIn: 'root',
@@ -161,5 +169,47 @@ export class StockService {
    */
   getMostViewedStocksToday(limit?: number): Observable<any[]> {
     return this.httpClient.get<any[]>(`${this.baseApiUrl}/trending/today`);
+  }
+
+  /**
+   *
+   * @param ticker
+   * @param offset
+   * @param pageSize
+   * @returns
+   */
+  getStockPageComments(
+    ticker: string,
+    startIndex?: number,
+    pageSize?: number,
+    sortDirection?: SortDirection
+  ): Observable<StockPageCommentsDto> {
+    let endpoint = `${this.baseApiUrl}/comments/${ticker}?startIndex=${startIndex}&pageSize=${pageSize}`;
+
+    if (sortDirection) endpoint += `&sortDirection=${sortDirection}`;
+
+    return this.httpClient.get<StockPageCommentsDto>(endpoint);
+  }
+
+  /**
+   * TODO: Add return type
+   * @param ticker
+   * @param postedCommentDto
+   * @returns
+   */
+  postStockPageComment(ticker: string, postedCommentDto: StockPageCommentDto): Observable<any> {
+    return this.httpClient.post<any>(`${this.baseApiUrl}/comments/${ticker}`, postedCommentDto, {
+      withCredentials: true,
+    });
+  }
+
+  /**
+   *
+   * @param commentId
+   * @param commentRatingDto
+   * @returns
+   */
+  likeOrDislikeStockPageComment(commentId: string, commentRatingDto: CommentRatingDto): Observable<void> {
+    return this.httpClient.put<any>(`${this.baseApiUrl}/comments/${commentId}/rating`, commentRatingDto, { withCredentials: true});
   }
 }
