@@ -14,7 +14,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   // TODO: Pass these settings as inputs to child components (topbar, menu, footer, & main)
   topbarTheme = 'light';
 
-  menuTheme = 'dim';
+  menuTheme = 'light';
 
   layoutMode = 'light';
 

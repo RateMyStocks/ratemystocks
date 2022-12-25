@@ -8,12 +8,12 @@
 
   <!-- <small class="p-mr-3" >Trending Stonkz:</small> -->
 
-  <div class="slider" style="background-color: black; color: white; font-weight: bold; padding: 8px;">
+  <div class="slider">
     <div class="slide-track" *ngIf="trendingStocks">
       <div *ngFor="let stock of trendingStocks" routerLink="/stocks/{{ stock.ticker }}" style="cursor: pointer;" class="slide">
         <small>
           <span class="p-mr-1">{{ stock.ticker }}</span>
-          <span [ngStyle]="{ color: stock.changePercent >= 0 ? '#39fc03' : 'red' }">
+          <span [ngStyle]="{ color: stock.changePercent >= 0 ? 'rgb(72, 168, 50)' : 'red' }">
             ${{ stock.price.toFixed(2) }} (<span *ngIf="stock.changePercent >= 0">+</span>{{ (stock.changePercent * 100).toFixed(2) }}%)
           </span>
         </small>
