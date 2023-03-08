@@ -62,7 +62,7 @@
     "@fullcalendar/interaction": "^5.8.0",
     "@fullcalendar/timegrid": "^5.8.0",
     "@nestjs/common": "^7.0.0",
-    "@nestjs/core": "^7.0.0",
+    "@nestjs/core": "^9.0.5",
     "@nestjs/jwt": "^7.1.0",
     "@nestjs/ng-universal": "^4.3.0",
     "@nestjs/passport": "^7.1.0",
