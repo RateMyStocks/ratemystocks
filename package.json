@@ -38,10 +38,12 @@
     "prerender": "ng run frontend:prerender",
     "prebuild:ssr": "ngcc",
     "dev:ssr": "ng run frontend:serve-ssr",
-    "build:ssr": "bash ./heroku-build.sh",
+    "build:ssr": "bash ./build-frontend-ssr.sh",
     "serve:ssr": "node dist/frontend/server/main.js",
     "heroku-postbuild": "npm run build:ssr",
-    "start:heroku": "npm run serve:ssr"
+    "start:heroku": "npm run serve:ssr",
+    "render:build": "npm run build:ssr",
+    "render:start": "npm run serve:ssr"
   },
   "private": true,
   "dependencies": {
