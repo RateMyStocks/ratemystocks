@@ -35,7 +35,8 @@ async function bootstrap() {
       'https://ratemystocks.com',
       'https://www.ratemystocks.com',
       'https://ratemystocks-staging.herokuapp.com',
-      'https://www.ratemystocks-staging.herokuapp.com'
+      'https://www.ratemystocks-staging.herokuapp.com',
+      'https://ratemystocks.onrender.com',
     ];
 
     app.enableCors({
