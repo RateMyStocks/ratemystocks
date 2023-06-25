@@ -43,7 +43,7 @@
     "heroku-postbuild": "npm run build:ssr",
     "start:heroku": "npm run serve:ssr",
     "render:build": "npm run build:ssr",
-    "render:start": "npm run serve:ssr"
+    "render:start": "node ../dist/frontend/server/main.js"
   },
   "private": true,
   "dependencies": {
