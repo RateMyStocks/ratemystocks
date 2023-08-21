@@ -9,8 +9,7 @@ if [[ $NODE_ENV = "staging" ]]; then
  eval "$build_staging"
 fi
 
-# build_prod='sass --update apps/frontend/src/assets:apps/frontend/src/assets --no-source-map && ng build --prod && ng run frontend:server:production'
-build_prod='npm run build:ssr:helper:prod'
+build_prod='sass --update apps/frontend/src/assets:apps/frontend/src/assets --no-source-map && ng build --prod && ng run frontend:server:production'
 echo $build_prod
 if [[ $NODE_ENV = "production" ]]; then
  echo "running $build_prod ..."

@@ -42,7 +42,6 @@
     "serve:ssr": "node dist/frontend/server/main.js",
     "heroku-postbuild": "npm run build:ssr",
     "start:heroku": "npm run serve:ssr",
-    "build:ssr:helper:prod": "sass --update apps/frontend/src/assets:apps/frontend/src/assets --no-source-map && ng build --prod && ng run frontend:server:production",
     "render:build": "npm run build:ssr",
     "render:start": "node dist/frontend/server/main.js"
   },
