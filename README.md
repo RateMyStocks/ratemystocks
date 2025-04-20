@@ -5,6 +5,8 @@ This is a Nx monorepo that contains a NestJS backend API that connects to a Post
 
 For more info on our development processes, visit our [wiki](https://github.com/RateMyStocks/ratemystocks/wiki)
 
+![ratemystocks example screenshot](https://gabelorenzo.github.io/assets/images/portfolio/ratemystocks-stock-page.png)
+
 # Getting Started
 
 ## Recommended Workspace Setup
