@@ -7,7 +7,7 @@ import { DOCUMENT } from '@angular/common';
 import { MoneyFormatter } from '../../../../shared/utilities/money-formatter';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { IexCloudSecurityType, PortfolioDto, PortfolioRatingDto, PortfolioStockDto } from '@ratemystocks/api-interface';
+import { CreatePortfolioRatingDto, IexCloudSecurityType, PortfolioDto, PortfolioRatingDto, PortfolioStockDto } from '@ratemystocks/api-interface';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { UserService } from '../../../../core/services/user.service';
@@ -72,6 +72,9 @@ export class PortfolioComponent implements OnInit {
   followerPercentChangeToday = 0;
   noNewFollowers = false;
   isLoggedInUserFollowing = false;
+
+  displayUpdatePortfolioNameDialog = false;
+  displayUpdatePortfolioDescriptionDialog = false;
 
   private ngUnsubscribe = new Subject();
 
@@ -504,6 +507,138 @@ export class PortfolioComponent implements OnInit {
 
       this.noNewFollowers = counts.map((countObj: any) => countObj.follower_count).every((num) => num === 0);
     });
+  }
+
+  /**
+   * Click handler function for the like & dislike buttons of the Portfolio. Calls the portfolio service
+   * to create, update, or delete a user rating for the portfolio.
+   * NOTE: visually, when the like button is pressed, it is okay that it is not in sync with the database
+   * When the page is loaded/refreshed, that value will be correct. We just want make sure the number is incremented
+   * only by 1 so it is not confusing to the user.
+   * @param isLiked True if the "Like" button is clicked, false if the "Dislike" button is clicked
+   */
+  onRatePortfolio(isLiked: boolean): void {
+    if (this.isAuth) {
+      const portfolioRatingDto: CreatePortfolioRatingDto = {
+        id: this.portfolioRating && this.portfolioRating.id ? this.portfolioRating.id : undefined,
+        isLiked,
+      };
+
+      // Rating Exists
+      if (this.portfolioRating) {
+        // Existing rating is a like
+        if (this.portfolioRating.isLiked) {
+          // DELETE Like Rating
+          this.portfolioService.deletePortfolioRating(this.portfolioRating.id).subscribe((result: void) => {
+            this.numLikes--;
+            this.portfolioRating = null;
+
+            // User clicked dislike
+            if (!isLiked) {
+              // CREATE Dislike Rating
+              this.portfolioService
+                .createOrUpdatePortfolioRating(this.portfolio.id, portfolioRatingDto)
+                .subscribe((rating: PortfolioRatingDto) => {
+                  this.numDislikes++;
+                  this.portfolioRating = rating;
+                });
+            }
+          });
+        } else {
+          // DELETE Dislike Rating
+          this.portfolioService.deletePortfolioRating(this.portfolioRating.id).subscribe((result: void) => {
+            this.numDislikes--;
+            this.portfolioRating = null;
+
+            // User clicked like
+            if (isLiked) {
+              // CREATE Like Rating
+              this.portfolioService
+                .createOrUpdatePortfolioRating(this.portfolio.id, portfolioRatingDto)
+                .subscribe((rating: PortfolioRatingDto) => {
+                  this.numLikes++;
+                  this.portfolioRating = rating;
+                });
+            }
+          });
+        }
+      } else {
+        this.portfolioService
+          .createOrUpdatePortfolioRating(this.portfolio.id, portfolioRatingDto)
+          .subscribe((rating: PortfolioRatingDto) => {
+            if (isLiked) {
+              this.numLikes++;
+            } else {
+              this.numDislikes++;
+            }
+
+            this.portfolioRating = rating;
+          });
+      }
+    } else {
+      // this.snackbar.open('You must login to rate portfolios.', 'OK', {
+      //   duration: 3000,
+      //   panelClass: 'warn-snackbar',
+      // });
+    }
+  }
+
+  /** Opens a dialog with a field to edit the portfolio name */
+  openEditPortfolioNameDialog(): void {
+    if (this.authService.isAuthorized()) {
+      this.displayUpdatePortfolioNameDialog = true;
+      // const dialogRef = this.dialog.open(UpdatePortfolioNameDialogComponent, {
+      //   data: {
+      //     portfolio: this.portfolio,
+      //   },
+      // });
+      // dialogRef.afterClosed().subscribe((result: PortfolioDto) => {
+      //   if (result) {
+      //     this.portfolio = result;
+      //   }
+      // });
+    }
+  }
+
+  /** Opens a dialog with a field to edit the portfolio description */
+  openEditPortfolioDescriptionDialog(): void {
+    if (this.authService.isAuthorized()) {
+      this.displayUpdatePortfolioDescriptionDialog = true;
+      // const dialogRef = this.dialog.open(UpdatePortfolioDescriptionDialogComponent, {
+      //   data: {
+      //     portfolio: this.portfolio,
+      //   },
+      // });
+      // dialogRef.afterClosed().subscribe((result: PortfolioDto) => {
+      //   if (result) {
+      //     this.portfolio = result;
+      //   }
+      // });
+    }
+  }
+
+  /** Opens the dialog for updating portfolio holdings */
+  onClickEditPortfolioHoldings(): void {
+    if (this.authService.isAuthorized()) {
+      // const dialogRef = this.dialog.open(UpdatePortfolioHoldingsDialogComponent, {
+      //   data: {
+      //     portfolio: this.portfolio,
+      //     portfolioStocks: this.portfolioStocks,
+      //   },
+      // });
+      // dialogRef.afterClosed().subscribe((result: PortfolioDto) => {
+      //   if (result) {
+      //     this.portfolio = result;
+
+      //     this.portfolioStocks = result.stocks;
+      //     this.setStockPieChartBreakdown();
+
+      //     if (this.portfolioStocks.length > 0) {
+      //       this.updateIexStockDataMap();
+      //     }
+      //   }
+      // });
+    }
   }
 
   /**
