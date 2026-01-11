@@ -23,6 +23,8 @@
 
     <script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=initRecaptcha" async defer></script>
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- <script src="https://apis.google.com/js/platform.js" async defer></script> -->
 </head>
 <body class="main-body">
   <div class="loader">
@@ -45,5 +47,25 @@
     </div>
   </div>
   <app-root></app-root>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    // This will get invoked after a user signs in with their Google account.
+    function handleCredentialResponse(response) {
+      // The decoded JWT contains the signed in user's email
+      console.log("Encoded JWT ID token: " + response.credential);
+    }
+    window.onload = function () {
+      google.accounts.id.initialize({
+        client_id: "1028837375961-cpc5lrf7v0lf2njeencluvgbt033qggl.apps.googleusercontent.com",
+        callback: handleCredentialResponse
+      });
+      google.accounts.id.renderButton(
+        document.getElementById("buttonDiv"),
+        { theme: "outline", size: "large" }  // customization attributes
+      );
+      google.accounts.id.prompt(); // also display the One Tap dialog
+    }
+  </script>
+  <div id="buttonDiv"></div>
 </body>
 </html>
