@@ -1,7 +1,10 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
+  CommentRatingDto,
   IexCloudStockDataDto,
+  StockPageCommentDto,
+  StockPageCommentsDto,
   StockRatingCountDto,
   StockRatingDto,
   StockRatingListItem,
@@ -190,4 +193,90 @@ export class StockController {
   getMostViewedStocksToday(@Query() numStocks?: number): Promise<any> {
     return this.stockService.getMostViewedStocksToday(numStocks);
   }
+
+  /**
+   *
+   * @param ticker
+   * @returns
+   */
+  @Get('/comments/:ticker')
+  getStockPageComments(
+    @Param('ticker') ticker: string,
+    @Query('startIndex') startIndex?: number,
+    @Query('pageSize') size?: number,
+    @Query('sortDirection') sortDirection?: 'ASC' | 'DESC'
+  ): Promise<StockPageCommentsDto> {
+    return this.stockService.getStockPageComments(ticker, startIndex, size, sortDirection);
+  }
+
+  /**
+   *
+   * @param userAccount
+   * @param ticker
+   */
+  @Post('/comments/:ticker')
+  @UseGuards(AuthGuard())
+  postStockPageComment(
+    @GetUser() userAccount: UserAccount,
+    @Param('ticker') ticker: string,
+    @Body() postedCommentDto: StockPageCommentDto
+  ): Promise<StockPageCommentDto> {
+    return this.stockService.postStockPageComment(userAccount, ticker, postedCommentDto);
+  }
+
+  /**
+   * Edits a user's own comment on a stock page.
+   * @param userAccount
+   * @returns
+   */
+   @Delete('/comments/:commentId')
+   @UseGuards(AuthGuard())
+   updateStockPageComment(@GetUser() userAccount: UserAccount): Promise<void> {
+      return null;
+    }
+
+  /**
+   * Deletes a user's own comment on a stock page.
+   * @param userAccount
+   * @returns
+   */
+  @Delete('/comments/:commentId')
+  @UseGuards(AuthGuard())
+  deleteStockPageComment(@GetUser() userAccount: UserAccount): Promise<void> {
+    return null;
+  }
+
+  /**
+   *
+   * @param userAccount
+   * @param commentId
+   * @param commentRatingDto
+   * @returns
+   */
+  @Put('/comments/:commentId/rating')
+  @UseGuards(AuthGuard())
+  likeOrDislikeStockPageComment(
+    @GetUser() userAccount: UserAccount,
+    @Param('commentId', new ParseUUIDPipe()) commentId: string,
+    @Body() commentRatingDto: CommentRatingDto
+  ): Promise<void> {
+    return this.stockService.likeOrDislikeStockPageComment(commentId, userAccount.id, commentRatingDto);
+  }
+
+  // @Get('/comments/:commentId')
+  // @UseGuards(AuthGuard())
+  // getUsersStockPageCommentRatings
+
+  // /**
+  //  *
+  //  * @param commentId
+  //  * @returns
+  //  */
+  // @Get('/comments/:commentId')
+  // getStockPageCommentLikeCount(@Param('commentId', new ParseUUIDPipe()) commentId: string): Promise<number> {
+  //   return this.stockService.getStockPageCommentLikeCount(commentId);
+  // }
+
+  // @Get('/comments/:commentId/user')
+  // getUserStockPageCommentRatings
 }

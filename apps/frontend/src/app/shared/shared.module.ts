@@ -17,6 +17,9 @@ import { PrimeNGModule } from '../primeng.module';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { PhoneNumberPipe } from './pipes/phone-number.pipe';
 import { ShareOnSocialMediaBarComponent } from './components/share-on-social-media-bar/share-on-social-media-bar.component';
+import { InfiniteScrollComponent } from './components/infinite-scroll/infinite-scroll.component';
+import { CommentSectionComponent } from './components/comment-section/comment-section.component';
+import { PositiveNegativeColorDirective } from './directives/positive-negative-color.directive';
 
 @NgModule({
   declarations: [
@@ -33,17 +36,22 @@ import { ShareOnSocialMediaBarComponent } from './components/share-on-social-med
     CopyPageLinkComponent,
     ShareOnSocialMediaSpeedDialComponent,
     ShareOnSocialMediaBarComponent,
+    InfiniteScrollComponent,
+    CommentSectionComponent,
+    PositiveNegativeColorDirective,
   ],
   imports: [ClipboardModule, CommonModule, FormsModule, NgxChartsModule, PrimeNGModule],
   exports: [
     AbbreviatedCurrencyFormatterPipe,
     CopyPageLinkComponent,
     EmailFormFieldValidatorPipe,
+    InfiniteScrollComponent,
     MomentFromNowDatePipe,
     NgxPieChartComponent,
     PasswordFormFieldValidatorPipe,
     PasswordReenterFormFieldValidatorPipe,
     PhoneNumberPipe,
+    PositiveNegativeColorDirective,
     RoundingPipe,
     ShareOnSocialMediaSpeedDialComponent,
     ShareOnSocialMediaBarComponent,

@@ -5,6 +5,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 import { BadgeModule } from 'primeng/badge';
+import {BlockUIModule} from 'primeng/blockui';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
@@ -97,6 +98,7 @@ FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPl
     AvatarGroupModule,
     AvatarModule,
     BadgeModule,
+    BlockUIModule,
     BreadcrumbModule,
     ButtonModule,
     CalendarModule,

@@ -8,6 +8,8 @@ import { StockFollower } from './stockFollower.entity';
 import { StockVisit } from './stockVisit.entity';
 import { PortfolioVisit } from './portfolioVisit.entity';
 import { PortfolioFollower } from './portfolioFollower.entity';
+import { StockPageComment } from './stockPageComment.entity';
+import { StockPageCommentRating } from './stockPageCommentRating.entity';
 
 @Entity({ name: 'user_account' })
 @Unique('uq_user_account_username', ['username'])
@@ -53,6 +55,12 @@ export class UserAccount extends BaseEntity {
     cascade: true,
   })
   portfolioFollowers: PortfolioFollower[];
+
+  @OneToMany((type) => StockPageComment, (stockPageComment) => stockPageComment.user, { eager: false, cascade: true })
+  stockPageComments: StockPageComment[];
+
+  @OneToMany((type) => StockPageCommentRating, (stockPageCommentLike) => stockPageCommentLike.user, { eager: false, cascade: true })
+  stockPageCommentLikes: StockPageCommentRating[];
 
   // @Column({
   //   type: 'enum',

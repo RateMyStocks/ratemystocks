@@ -1,12 +1,22 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StockRatingRepository } from './stock-rating.repository';
-import { StockRatingCountDto, StockRatingDto, StockRatingListItem } from '@ratemystocks/api-interface';
+import {
+  CommentRatingDto,
+  StockPageCommentDto,
+  StockPageCommentsDto,
+  StockRatingCountDto,
+  StockRatingDto,
+  StockRatingListItem,
+} from '@ratemystocks/api-interface';
 import { StockRating, StockRatingEnum } from '../../../models/stockRating.entity';
 import { UserAccount } from '../../../models/userAccount.entity';
 import { StockVisitRepository } from './stock-visit.repository';
 import { StockFollowerRepository } from './stock-follower.repository';
 import { IexCloudService } from '../iex-cloud/iex-cloud.service';
+import { StockPageCommentRepository } from './stock-page-comment.repository';
+import { StockPageComment } from '../../../models/stockPageComment.entity';
+import { StockPageCommentRatingRepository } from './stock-page-comment-rating.repository';
 
 @Injectable()
 export class StockService {
@@ -14,6 +24,8 @@ export class StockService {
     @InjectRepository(StockRatingRepository) private stockRatingRepo: StockRatingRepository,
     @InjectRepository(StockVisitRepository) private stockVisitRepo: StockVisitRepository,
     @InjectRepository(StockFollowerRepository) private stockFollowerRepo: StockFollowerRepository,
+    @InjectRepository(StockPageCommentRepository) private stockPageCommentRepo: StockPageCommentRepository,
+    @InjectRepository(StockPageCommentRatingRepository) private stockPageCommentRatingRepo: StockPageCommentRatingRepository,
     private readonly iexCloudService: IexCloudService
   ) {}
 
@@ -345,10 +357,108 @@ export class StockService {
     return this.getStocksWithQuotes(stocks.map((stockVisit) => stockVisit.ticker));
   }
 
+  /**
+   *
+   * @param ticker
+   * @returns
+   */
+  async getStockPageComments(
+    ticker: string,
+    startIndex?: number,
+    pageSize?: number,
+    sortDirection?: 'ASC' | 'DESC'
+  ): Promise<StockPageCommentsDto> {
+    // TODO: Try to consolidate the like counts into this query.
+    const stockPageCommentsEntities: StockPageComment[] = await this.stockPageCommentRepo.getStockPageComments(
+      ticker,
+      startIndex,
+      pageSize,
+      sortDirection
+    );
+
+    const count: number = await this.stockPageCommentRepo.count({ where: { ticker } })
+
+    const comments: StockPageCommentDto[] = await Promise.all(stockPageCommentsEntities.map(async (entity: StockPageComment) => {
+      // TODO: Try to consolidate these counts into the first query b/c now instead of 1 DB call we are making 1 + pageSize calls.
+      const likes = await this.stockPageCommentRatingRepo.count({ where: { commentId: entity.id, isLiked: true} });
+      const dislikes = await this.stockPageCommentRatingRepo.count({ where: { commentId: entity.id, isLiked: false } });
+
+      console.log("LIKES", likes);
+      console.log("DISLIKES", dislikes);
+
+      return {
+        id: entity.id,
+        comment: entity.comment,
+        ticker: entity.ticker,
+        user: {
+          username: entity.user.username,
+          avatar: entity.user.spiritAnimal,
+        },
+        datetimePosted: entity.datetimePosted.toISOString(),
+        likeCount: likes - dislikes
+      };
+    }));
+
+    const dto: StockPageCommentsDto = new StockPageCommentsDto(count, comments);
+
+    return dto;
+  }
+
+  /**
+   *
+   * @param userAccount
+   * @param ticker
+   */
+  async postStockPageComment(
+    userAccount: UserAccount,
+    ticker: string,
+    postedCommentDto: StockPageCommentDto
+  ): Promise<StockPageCommentDto> {
+    const entity: StockPageComment = await this.stockPageCommentRepo.postComment(userAccount, ticker, postedCommentDto);
+
+    const dto: StockPageCommentDto = {
+      id: entity.id,
+      user: {
+        username: entity.user.username,
+        avatar: entity.user.spiritAnimal,
+      },
+      comment: entity.comment,
+      datetimePosted: entity.datetimePosted.toISOString(),
+      ticker: entity.ticker,
+    };
+
+    return dto;
+  }
+
+  /**
+   *
+   * @param userAccount
+   * @param commentRatingDto
+   */
+  async likeOrDislikeStockPageComment(
+    commentId: string,
+    userId: string,
+    commentRatingDto: CommentRatingDto
+  ): Promise<void> {
+    await this.stockPageCommentRatingRepo.createOrUpdateLikeOrDislike(commentId, userId, commentRatingDto);
+  }
+
+  // /**
+  //  *
+  //  * @param commentId
+  //  * @returns
+  //  */
+  // async getStockPageCommentLikeCount(commentId: string): Promise<number> {
+  //   const likes = await this.stockPageCommentRatingRepo.count({ where: { commentId, isLiked: true} });
+  //   const dislikes = await this.stockPageCommentRatingRepo.count({ where: { commentId, isLiked: false } });
+
+  //   return likes - dislikes;
+  // }
+
   private async getStocksWithQuotes(tickers: string[]): Promise<any[]> {
     const iexCloudApiStockQuotes: any = await this.iexCloudService.batchGetStockStats(tickers.join(','), 'quote');
 
-    const stocksWithQuotes = tickers.map((ticker: any) => {
+    const stocksWithQuotes = tickers.map((ticker: string) => {
       const price = iexCloudApiStockQuotes[ticker].quote.latestPrice;
 
       const changePercent = iexCloudApiStockQuotes[ticker].quote.changePercent;

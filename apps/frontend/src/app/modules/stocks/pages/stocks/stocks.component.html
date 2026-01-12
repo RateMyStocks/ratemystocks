@@ -140,15 +140,15 @@
               </div>
             </td>
             <td>
-              <span class="p-column-title">Name</span>
+              <span class="p-column-title">Price</span>
               <div class="centered-content">
                 <span
-                  [ngStyle]="{ color: iexStockDataMap[stock.ticker]?.quote?.change >= 0 ? 'green' : 'red' }"
+                  [appPositiveDirective]="iexStockDataMap[stock.ticker]?.quote?.change"
                   *ngIf="iexStockDataMap"
                 >
                   ${{ iexStockDataMap[stock.ticker]?.quote?.latestPrice?.toLocaleString() }}
                   <br />
-                  <small [ngStyle]="{ color: iexStockDataMap[stock.ticker]?.quote?.change >= 0 ? 'green' : 'red' }"
+                  <small [appPositiveDirective]="iexStockDataMap[stock.ticker]?.quote?.change"
                     ><span *ngIf="iexStockDataMap[stock.ticker]?.quote.change >= 0">+</span
                     >{{ iexStockDataMap[stock.ticker]?.quote.change }} ({{
                       (iexStockDataMap[stock.ticker]?.quote.changePercent * 100).toFixed(2)

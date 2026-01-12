@@ -1,21 +1,84 @@
-<div class="card">
-  <p-virtualScroller [value]="comments" scrollHeight="500px" [itemSize]="totalComments" [rows]="100"
-      [lazy]="true" (onLazyLoad)="loadCommentsLazy($event)">
-      <ng-template let-comment pTemplate="item">
-          <div class="product-item">
-            <div class="product-list-detail">
-              <h5 class="p-mb-2">{{ comment.username }}</h5>
-              <!-- <i class="pi pi-tag product-category-icon"></i>
-              <span class="product-category">{{product.category}}</span> -->
-            </div>
-            <!-- <div class="product-list-action">
-              <h6 class="p-mb-2">${{product.price}}</h6>
-              <span [class]="'product-badge status-' + product.inventoryStatus.toLowerCase()">{{product.inventoryStatus}}</span>
-            </div> -->
+<div class="container">
+  <div>
+    <form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+      <!-- [attr.disabled]="isAuth"  -->
+      <textarea
+        pTooltip="Please Sign in to Comment"
+        tooltipPosition="bottom"
+        tooltipEvent="focus"
+        [tooltipDisabled]="isAuth"
+        formControlName="comment"
+        pInputText
+        maxlength="500"
+        style="width: 100%;"
+        rows="4"
+        class="p-mb-2">
+      </textarea>
+      <!-- <p-captcha siteKey="YOUR_SITE_KEY" (onResponse)="showCaptchaResponse($event)"></p-captcha> -->
+      <p-button
+        label="Post"
+        class="p-button-text"
+        type="submit"
+        pTooltip="Please Sign in to Comment"
+        tooltipPosition="bottom"
+        tooltipEvent="focus"
+        [tooltipDisabled]="isAuth">
+      </p-button>
+    </form>
+  </div>
+
+
+  <div class="p-mt-3 centered-content" style="display: flex; justify-content: space-between;">
+    <div><small><b>{{ totalCommentsLength }} Comments</b></small></div>
+    <div>
+      <!-- <p-dropdown placeholder="Sort By" [options]="sortOptions" [(ngModel)]="selectedSortOption" (onChange)="onSort($event)" optionLabel="displayValue"></p-dropdown> -->
+    </div>
+  </div>
+
+  <p-divider></p-divider>
+
+  <app-infinite-scroll (scrolled)="onScroll()" style="max-height: 600px; overflow-y: auto">
+    <!-- TODO: Make a Comment component -->
+    <div *ngFor="let comment of comments">
+      <div class="product-item">
+        <div>
+          <img src="assets/layout/images/avatars/{{comment.user.avatar}}.png" >
+          <!-- <img src="{{ comment.avatar }}" style="border-radius: 50%;"> -->
+        </div>
+        <div class="product-list-detail">
+          <p class="p-mb-1">
+            <b><a routerLink="/profile/users/{{comment.user.username}}" style="color: black">{{comment.user.username}}</a></b> &nbsp;
+            <small> {{ comment.datetimePosted | momentFromNowDatePipe }}</small>
+            <p-chip label="BUY" styleClass="p-ml-2 buy-rating-chip"></p-chip>
+          </p>
+          <small>{{ comment.comment }}</small>
+          <div class="p-mt-3">
+            <i
+              class="pi pi-thumbs-up p-mr-3 clickable"
+              (click)="onLikeComment(comment.id, true)"
+            ></i>
+            <small class="p-mr-3" [appPositiveDirective]="comment.likeCount">{{ comment.likeCount || '' }}</small>
+            <i
+              class="pi pi-thumbs-down p-mr-3 clickable"
+              (click)="onLikeComment(comment.id, false)"
+            ></i>
+            <!-- <small class="p-mr-3"><a>REPLY</a></small> -->
+            <!-- <small><a>REPORT</a></small> -->
+            <!-- <i class="pi pi-flag"></i> -->
           </div>
-      </ng-template>
-      <ng-template let-comment pTemplate="loadingItem">
-          Loading...
-      </ng-template>
-  </p-virtualScroller>
+        </div>
+      </div>
+      <!-- <p-divider></p-divider> -->
+    </div>
+
+    <p-scrollTop target="parent"></p-scrollTop>
+
+    <div class="alert alert-dark"*ngIf="isLoading">
+      <p-progressBar mode="indeterminate"></p-progressBar>
+    </div>
+  </app-infinite-scroll>
 </div>
+
+<p-toast key="stockPageComment" position="bottom-center"></p-toast>
+
+<p-confirmPopup></p-confirmPopup>
